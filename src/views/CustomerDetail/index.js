@@ -1,5 +1,5 @@
 import react from 'react';
-import { Stack, Button, Container, Typography, Card, Box ,Grid, TextField,Breadcrumbs,Divider, CardMedia,Switch} from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box ,Grid, TextField,Breadcrumbs,Divider, CardMedia,Switch,Avatar} from '@mui/material';
 import { Email } from '@mui/icons-material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -61,7 +61,8 @@ const CustomerDetail = () => {
         </Grid>
 
   <Grid spacing={2} container md={12} direction="column">  
-       <Box sx={{width:'100%', height:'200vh',  p:'4px' , backgroundColor:'white', borderRadius:'10px'}}>
+       <Box sx={{width:'100%', height:'200vh',  p:'4px' , backgroundColor:'white', borderRadius:'10px',
+}}>
 
 
 {/* main part */}
@@ -76,15 +77,15 @@ const CustomerDetail = () => {
          
           sx={{
             borderBottom: '1px solid #e0e0e0',
-            fontWeight:"bold"
-
+            
           }}
         >
           <Tab
-            icon={<AccountCircleIcon />}
+            icon={<AccountCircleIcon    sx={{ fontWeight: 'bold' }}/>}
             iconPosition="start"
             label="Profile"
             value="1"
+            sx={{ fontWeight:'bold' }}
           />
           <Tab
             icon={<InfoIcon />}
@@ -128,11 +129,14 @@ const CustomerDetail = () => {
                     
 
                     <Grid>
-                    <Box sx={{display:'flex',justifyContent:'center', alignItems:'center', p :'2px' , width:'100%',height:'15vh'
+                    <Box sx={{display:'flex',justifyContent:'space-between', alignItems:'center', width:'100%',height:'15vh',p:'5px'
                     }}>
-                       
-                    <Typography sx={{fontFamily:'-moz-initial',fontWeight:"400px",fontSize:'22px'}}>Pet User</Typography>
-                    
+                       <Stack  direction="row" spacing={2}>
+                        
+                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}>JWT User</Typography>
+
+                  </Stack>
+                
                     </Box>
                     </Grid>
                     <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>

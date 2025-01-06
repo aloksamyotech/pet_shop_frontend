@@ -15,11 +15,13 @@ const MYAccount = Loadable(lazy(() => import('views/CustomerDetail/Account')));
 const Customer = Loadable(lazy(() => import('views/Customer')));
 const ProductType = Loadable(lazy(() => import('views/ProductType')));
 const AddToCard = Loadable(lazy(() => import('views/AddToCard/AddFood')));
-const Email = Loadable(lazy(() => import('views/Card')));
+const Category = Loadable(lazy(() => import('views/Category')));
 const Profile = Loadable(lazy(() => import('views/Profile')));
 const MyInformation = Loadable(lazy(() => import('views/CustomerDetail/Information')));
 const Supplier = Loadable(lazy(() => import('views/Supplier')));
 const Purchase = Loadable(lazy(() => import('views/Purchase')));
+const Order = Loadable(lazy(() => import('views/Order/index')))
+
 
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -104,6 +106,14 @@ const MainRoutes = {
         {
           path: 'purchase',
           element: <Purchase />
+        },
+        {
+          path: 'category',
+          element: <Category />
+        },
+        {
+          path: 'order',
+          element: <Order/>
         }
 
       ]

@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 // @mui
 import { Stack, Button, Container, Typography, Box, Card,Grid ,Breadcrumbs} from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -10,40 +8,24 @@ import HomeIcon from '@mui/icons-material/Home';
 import TableStyle from '../../ui-component/TableStyle';
 import AddLead from './AddProduct.js';
 import { useNavigate } from 'react-router-dom';
-
-// ----------------------------------------------------------------------
-
-const leadData = [
+import { getApi } from 'views/Api/comman.js';
+import { urls } from 'views/Api/constant';
 
 
 
-
-
-
-
-
-  {
-    id: 1,
-    firstName: 'petter',
-    lastName: 'jhon',
-    gender: 'male',
-    phoneNumber: '9981923587',
-    emailAddress: 'ap@samyotech.com',
-    action: 'Edit'
-  }
-];
 
 const Lead = () => {
+  const [product,setProduct] = useState([])
 
-
-
-  const demoData = [
-    { id: 1, productName: 'Harsh', productId: '232', type: 'cat', productPrice: '633', discount: '35%' },
-
-    { id: 2, productName: 'Lucky', productId: '765', type: 'Dog', productPrice: '823', discount: '35%' },
-
-    { id: 3, productName: 'Kush', productId: '543', type: 'Food', productPrice: '6233', discount: '35%' }
-  ];
+ const fetchProduct = async () => {
+     
+   const response = await getApi(urls.product.get )
+      console.log(response.data);
+      setProduct(response?.data?.data);
+    };
+   useEffect(() => {
+     fetchProduct();
+   }, []);
 
 
   const navigate = useNavigate(); 
@@ -53,12 +35,7 @@ const Lead = () => {
   }
   const [openAdd, setOpenAdd] = useState(false);
   const columns = [
-    {
-      field: 'productId',
-      headerName: 'Product ID',
-      flex: 1,
-      cellClassName: 'name-column--cell name-column--cell--capitalize'
-    },
+  
     {
       field: 'productName',
       headerName: 'Product Name',
@@ -71,7 +48,7 @@ const Lead = () => {
       flex: 1
     },
     {
-      field: 'productPrice',
+      field: 'price',
       headerName: 'Product Price',
       flex: 1
     },
@@ -112,10 +89,10 @@ const Lead = () => {
           <Box width="100%">
             <Card style={{ height: '600px', marginTop:'-27px' }}>
               <DataGrid
-                rows={demoData}
+                rows={product}
                 columns={columns}
                 checkboxSelection
-                getRowId={(row) => row.id}
+                getRowId={(row) => row._id}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}
               />

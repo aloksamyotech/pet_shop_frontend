@@ -15,30 +15,58 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 
 import Palette from '../../ui-component/ThemePalette';
+import axios from 'axios';
 
 const ProductAdd = (props) => {
   const { open, handleClose } = props;
 
   
 // -----------  validationSchema
-  const validationSchema = yup.object({
-    companyId:yup.string().matches(/^[0-9]{4}$/, 'Product Id is invalid').required('company id is required'),
-    productName: yup.string().required('Product Name is required'),
-    quantity: yup.string().required('quantity is required'),
-  date: yup.date().required('Date is required'),
-  discount: yup.string().required('discount is required'),
- 
+const validationSchema = yup.object({
+  type: yup
+    .string()
+    .required('Type is required'),
+  
+  productName: yup
+    .string()
+    .required('Product Name is required')
+    .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
+  
+  quantity: yup
+    .number()
+    .positive('Quantity must be a positive number')
+    .integer('Quantity must be an integer')
+    .required('Quantity is required'),
+  
+  totalPrice: yup
+    .number()
+    .positive('Total Price must be a positive number')
+    .required('Total Price is required'),
+  
+  discount: yup
+    .number()
+    .min(0, 'Discount cannot be negative')
+    .max(100, 'Discount cannot exceed 100%')
+    .required('Discount is required'),
+  
+  paymentStatus: yup
+    .string()
+    .oneOf(["Pending", "Completed", "Failed"], 'Payment Status must be "Pending", "Completed", "Failed"')
+    .required('Payment Status is required'),
+});
 
-      });
 
   // -----------   initialValues
   const initialValues = {
    
-   companyId :'',
+   
    productName :'',
+   type:'',
    quantity:'',
    date:'',
-   description:''
+  totalPrice:'',
+  discount:'  ',
+  paymentStatus:''
 
 
   };
@@ -50,6 +78,7 @@ const ProductAdd = (props) => {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
+      const response = await axios.post("http://localhost:7200/purchase/save",values)
       
       console.log('values', values);
       toast.success('Product  Add successfully');
@@ -70,7 +99,7 @@ const ProductAdd = (props) => {
            
           }}
         >
-          <Typography variant="h6">Add New  Product</Typography>
+          <Typography variant="h6">Information</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -84,31 +113,31 @@ const ProductAdd = (props) => {
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Company ID</FormLabel>
+                  <FormLabel>Product Name</FormLabel>
                   <TextField
-                    id="companyId"
-                    name="companyId"
+                    id="productName"
+                    name="productName"
                     size="small"
                     fullWidth
-                    value={formik.values.companyId}
+                    value={formik.values.productName}
                     onChange={formik.handleChange}
-                    error={formik.touched.companyId && Boolean(formik.errors.companyId)}
-                      helperText={formik.touched.companyId && formik.errors.companyId}
+                    error={formik.touched.productName && Boolean(formik.errors.productName)}
+                      helperText={formik.touched.productName && formik.errors.productName}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Product Name</FormLabel>
+                    <FormLabel>Type</FormLabel>
                     <Select
 
-                      id="productName"
-                      name="productName"
+                      id="type"
+                      name="type"
                       size="small"
                       fullWidth
-                      value={formik.values.productName}
+                      value={formik.values.type}
                       onChange={formik.handleChange}
-                      error={formik.touched.productName && Boolean(formik.errors.productName)}
-                      helperText={formik.touched.productName && formik.errors.productName}
+                      error={formik.touched.type && Boolean(formik.errors.type)}
+                      helperText={formik.touched.type && formik.errors.type}
                     >
 
                       <MenuItem value="Wet canned food">Wet canned food
@@ -124,7 +153,7 @@ const ProductAdd = (props) => {
 
                     </Select>
                     <FormHelperText style={{ color: Palette.error.main }}>
-                      {formik.touched.productName && formik.errors.productName}
+                      {formik.touched.type && formik.errors.type}
                     </FormHelperText>
                   </FormControl>
                   </Grid>
@@ -133,16 +162,16 @@ const ProductAdd = (props) => {
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>Total Price</FormLabel>
                   <TextField
-                    name="date"
-                    type="date"
+                    name="totalPrice"
+                    type="totalPrice"
                     size="small"
                     fullWidth
-                    value={formik.values.date}
+                    value={formik.values.totalPrice}
                     onChange={formik.handleChange}
-                    error={formik.touched.date && Boolean(formik.errors.date)}
-                    helperText={formik.touched.date && formik.errors.date}
+                    error={formik.touched.totalPrice && Boolean(formik.errors.totalPrice)}
+                    helperText={formik.touched.totalPrice && formik.errors.totalPrice}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
@@ -173,6 +202,24 @@ const ProductAdd = (props) => {
                       helperText={formik.touched.discount && formik.errors.discount}
                   />
                 </Grid>
+
+
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Payment Status</FormLabel>
+                  <TextField
+                    id="paymentStatus"
+                    name="paymentStatus"
+                    size="small"
+                    fullWidth
+                    value={formik.values.paymentStatus}
+                    onChange={formik.handleChange}
+                    error={formik.touched.paymentStatus && Boolean(formik.errors.paymentStatus)}
+                      helperText={formik.touched.paymentStatus && formik.errors.paymentStatus}
+                  />
+                </Grid>
+
+
+
 
 
               </Grid>

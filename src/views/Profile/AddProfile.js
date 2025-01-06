@@ -30,12 +30,7 @@ import { toast } from 'react-toastify';
 // import { apiget, apipost } from '../../service/api';
 
 const AddTask = ({ open, handleClose }) => {
-  //   const [user, setUser] = useState([]);
-  //   const [leadData, setLeadData] = useState([]);
-  //   const [contactData, setContactData] = useState([]);
-  //   const userid = localStorage.getItem('user_id');
-  //   const userRole = localStorage.getItem('userRole');
-  //   const userdata = JSON.parse(localStorage.getItem('user'));
+  
 
   const validationSchema = yup.object({
     subject: yup.string().required('Subject is required'),
@@ -58,21 +53,9 @@ const AddTask = ({ open, handleClose }) => {
     textColor: '',
     priority: '',
     note: ''
-    //lead_id: _id
-    // contact_id: _id,
-    // createdBy: userid
+   
   };
-  //   const addTask = async (values) => {
-  //     const data = values;
-  //     const result = await apipost('task/add', data);
-  //     setUserAction(result);
-  //     if (result && result.status === 201) {
-  //       handleClose();
-  //       formik.resetForm();
-  //       toast.success(result?.data?.message);
-  //     }
-  //   };
-
+ 
   // formik
   const formik = useFormik({
     initialValues,
@@ -88,35 +71,7 @@ const AddTask = ({ open, handleClose }) => {
 
   console.log('errror', formik.errors);
 
-  // user api
-  //   const fetchdata = async () => {
-  //     const result = await apiget('user/list');
-  //     if (result && result.status === 200) {
-  //       setUser(result?.data?.result);
-  //     }
-  //   };
 
-  // lead api
-  //   const fetchLeadData = async () => {
-  //     const result = await apiget(userRole === 'admin' ? `lead/list` : `lead/list/?createdBy=${userid}`);
-  //     if (result && result.status === 200) {
-  //       setLeadData(result?.data?.result);
-  //     }
-  //   };
-
-  // contact api
-  //   const fetchContactData = async () => {
-  //     const result = await apiget(userRole === 'admin' ? `contact/list` : `contact/list/?createdBy=${userid}`);
-  //     if (result && result.status === 200) {
-  //       setContactData(result?.data?.result);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     fetchdata();
-  //     fetchLeadData();
-  //     fetchContactData();
-  //   }, [open]);
 
   return (
     <div>
@@ -126,8 +81,7 @@ const AddTask = ({ open, handleClose }) => {
           style={{
             display: 'flex',
             justifyContent: 'space-between'
-            // backgroundColor: "#2b4054",
-            // color: "white",
+            
           }}
         >
           <Typography variant="h6">Create Task </Typography>

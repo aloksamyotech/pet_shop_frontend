@@ -1,7 +1,7 @@
 
 import HomeIcon from '@mui/icons-material/Home';
 // @mui
-import { Stack, Button, Container, Typography, Card, Box ,Grid, TextField,Breadcrumbs} from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box ,Grid, TextField,Breadcrumbs,Avatar} from '@mui/material';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
@@ -25,17 +25,34 @@ const User = ({ open, handleClose }) =>{
 
 
 const validationSchema = yup.object({
-      firstName: yup.string().required('First Name is required'),
-      phoneNumber: yup.string().matches(/^[0-9]{10}$/, 'Phone number is invalid').required('Phone Number is required'),
-      emailAddress: yup.string().required('Email is required'),
-      registerDate: yup.string().required('Register  date is required'),
+      firstName: yup
+           .string()
+           .required(' Name is required')
+           .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters'),
+
+       phoneNumber: yup
+          .string()
+          .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
+          .required('Phone Number is required'),
+        
+         email: yup
+                .string()
+                .required('Email is required')
+                .email('Invalid email address'), 
+
+
+          registerDate: yup
+          .date()
+          .typeError('Register date must be a valid date') 
+          .required('Register date is required'),
+        
       
     });
 
  const initialValues = {
       firstName:'',
       phoneNumber:'',
-      emailAddress:'',
+      email:'',
       registerDate:''
     };
 
@@ -93,14 +110,15 @@ const validationSchema = yup.object({
       marginTop:'30px'}}>
 
 <Box
-      sx={{
+     
+    >
+      <Avatar alt="Cindy Baker" src="https://png.pngtree.com/png-clipart/20240702/original/pngtree-indian-office-girl-wearing-formal-black-and-white-dress-with-long-png-image_15465282.png"  sx={{
         width: 150,      
         height: 150,     
         borderRadius: '50%', 
         backgroundColor: '#7760f6', 
         marginBottom:'20px'
-      }}
-    >
+      }}/>  
      
     </Box>
     </Grid>
@@ -128,11 +146,11 @@ const validationSchema = yup.object({
 
         <Grid item xs={6}>
         <TextField  label="Email Address"
-        name="emailAddress"
-        value={formik.values.emailAddress}
+        name="email"
+        value={formik.values.email}
         onChange={formik.handleChange}
-        error={formik.touched.emailAddress && Boolean(formik.errors.emailAddress)}
-                    helperText={formik.touched.emailAddress && formik.errors.emailAddress}
+        error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
         fullWidth/>
         </Grid>  
 
@@ -149,11 +167,11 @@ const validationSchema = yup.object({
 
         <Grid item xs={6}>
         <TextField  label="Email Address"
-        name="emailAddress"
-        value={formik.values.emailAddress}
+        name="email"
+        value={formik.values.email}
         onChange={formik.handleChange}
-        error={formik.touched.emailAddress && Boolean(formik.errors.emailAddress)}
-                    helperText={formik.touched.emailAddress && formik.errors.emailAddress}
+        error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
         fullWidth/>
         </Grid>  
 

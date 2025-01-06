@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 // @mui
 import { Stack, Button, Container, Typography, Card, Box,Grid,Breadcrumbs,Link} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
@@ -12,30 +12,35 @@ import Iconify from '../../ui-component/iconify';
 import AddPolicy from './AddProductType';
 import { fontSize } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import { Description } from '@mui/icons-material';
+import axios from 'axios';
+import { urls } from 'views/Api/constant';
+import { getApi } from 'views/Api/comman';
+
+
 
 // ----------------------------------------------------------------------
 
-const policyData = [
-  {
-    id: 1,
-    productId: '',
-    productType: '',
-    Date: '',
-    paymentType:'',
-    parsonName:'',
-    premiumPayments:'',
-    
-    
-  }
-];
+
+
+
+
+
+
 const PolicyManagement = () => {
-  const demoData = [
-    { id: 1, parsonName: 'Harsh', productId: '232', productType: 'cat', productPrice: '633', Date: '12/27/2024' ,paymentType : 'online',premiumPayments:'1 Month'},
+  const [productType, setProductType] = useState([])
+  
+  
+  const fetchProductType = async () => {
+       
+       const response = await getApi(urls.productType.get )
+       console.log(response.data);
+       setProductType(response?.data?.data);
+     };
 
-    { id: 2, parsonName: 'Lucky', productId: '765', productType: 'Dog', productPrice: '823', Date: '12/27/2024', paymentType : 'offline',premiumPayments:'1 year'},
-
-    { id: 3, parsonName: 'Kush', productId: '543', productType: 'Food', productPrice: '6233', Date: '12/27/2024', paymentType : 'online',premiumPayments:'1 week'}
-  ];
+  useEffect(() => {
+    fetchProductType();
+  }, []);
 
 
  const navigate = useNavigate(); 
@@ -48,43 +53,19 @@ const PolicyManagement = () => {
 
   const [openAdd, setOpenAdd] = useState(false);
   const columns = [
-
-
-    {
-      field: 'productId',
-      headerName: 'Product ID',
+{
+      field: 'name',
+      headerName: 'Name',
       flex: 1,
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
     {
-      field: 'parsonName',
-      headerName: ' Parson Name',
+      field: 'description',
+      headerName: 'Description',
       flex: 1
     },
-    {
-      field: 'productType',
-      headerName: 'Product Type',
-      flex: 1,
-      cellClassName: 'name-column--cell--capitalize'
-    },
-    {
-      field: 'Date',
-      headerName: 'Date',
-      flex: 1
-    },
-    {
-      field: 'paymentType',
-      headerName: ' Payment Type',
-      flex: 1
-    },
-    {
-      field: 'premiumPayments',
-      headerName: ' Premium Payments',
-      flex: 1
-    },
-
-
-  ];
+   
+  ]
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
   return (
@@ -114,10 +95,10 @@ const PolicyManagement = () => {
           <Box width="100%" >
             <Card style={{ height: '600px' , marginTop:'-45px'}}>
               <DataGrid
-                rows={demoData}
+                rows={productType}
                 columns={columns}
                 checkboxSelection
-                getRowId={(row) => row.id}
+                getRowId={(row) => row._id}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}
               />

@@ -1,7 +1,7 @@
 
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 // @mui
 import { Stack, Button, Container, Typography, Card, Box,Grid,Breadcrumbs,Link} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
@@ -10,33 +10,32 @@ import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Iconify from '../../ui-component/iconify';
 
-import ProductAdd from './ProductAdd'
+import ProductAdd from './PrurchaseAdd'
 import { fontSize } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { getApi } from 'views/Api/comman.js';
+import { urls } from 'views/Api/constant';
+
 
 // ----------------------------------------------------------------------
 
-const policyData = [
-  {
-    id: 1,
-    productId: '',
-    productType: '',
-    Date: '',
-    paymentType:'',
-    parsonName:'',
-    premiumPayments:'',
-    
-    
-  }
-];
+
 const Purchase = () => {
-  const demoData = [
-    { id: 1, productName: 'XYZ', CompanyId: '232', quantity: '10',  Date: '12/27/2024', discount:'30%'},
+  const [purchase, setPurchase] = useState([])
+  
+  
+ const fetchPurchase = async () => {
+          
+          const response = await getApi(urls.purchase.get )
+          console.log(response.data);
+          setPurchase(response?.data?.data);
+        };
 
-    { id: 2, productName: 'XYZ', CompanyId: '765', quantity: '10' , Date: '12/27/2024', discount:'40%'},
+  useEffect(() => {
+    fetchPurchase();
+  }, []);
 
-    { id: 3, productName: 'XYZ', CompanyId: '543', quantity: '10',   Date: '12/27/2024' , discount:'30%'}
-  ];
 
 
  const navigate = useNavigate(); 
@@ -58,26 +57,31 @@ const Purchase = () => {
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
     {
-      field: 'CompanyId',
-      headerName: 'Company ID',
+      field: 'type',
+      headerName: 'Type',
       flex: 1
     },
     {
-      field: 'quantity',
-      headerName: 'Quantity',
+      field: 'totalPrice',
+      headerName: 'Total Price',
       flex: 1,
       cellClassName: 'name-column--cell--capitalize'
-    },
-    {
-      field: 'Date',
-      headerName: 'Date',
-      flex: 1
     },
     {
       field: 'discount',
       headerName: 'Discount',
       flex: 1
     },
+    {
+      field: 'quantity',
+      headerName: 'Quantity',
+      flex: 1
+    },{
+      field : "paymentStatus",
+      headerName: 'Payment Status',
+      flex: 1
+
+    }
     
 
 
@@ -111,10 +115,10 @@ const Purchase = () => {
           <Box width="100%" >
             <Card style={{ height: '600px' , marginTop:'-45px'}}>
               <DataGrid
-                rows={demoData}
+                rows={purchase}
                 columns={columns}
                 checkboxSelection
-                getRowId={(row) => row.id}
+                getRowId={(row) => row._id}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}
               />

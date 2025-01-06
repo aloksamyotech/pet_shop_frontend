@@ -13,51 +13,83 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import Palette from '../../ui-component/ThemePalette';
+
 
 const ProductAdd = (props) => {
   const { open, handleClose } = props;
 
-  
-// -----------  validationSchema
+  // -----------  validationSchema
   const validationSchema = yup.object({
-    companyId:yup.string().matches(/^[0-9]{4}$/, 'Product Id is invalid').required('Product id is required'),
-    companyName: yup.string().required('Person Name is required'),
-    address: yup.string().required('address is required'),
-  date: yup.date().required('Date is required'),
-  description: yup.string().required('description is required'),
+    companyName: yup
+      .string()
+      .required('Company Name is required')
+      .matches(/^[A-Za-z\s]+$/, 'Comapny Name must only contain letters'), 
+
+    
+    address: yup
+            .string()
+            .required('Address is required')
+            .max(10, 'Address must be at least 10 characters long'), 
+    
+    phoneNumber: yup
+      .string()
+      .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
+      .required('Phone Number is required'),
+    
+    email: yup
+      .string()
+      .email('Invalid email format')
+      .required('Email is required'),
+    
+    status: yup
+      .string()
+      .required('Status is required')
+      .oneOf(["active", "inactive", "blocked"], 'Payment Status must be "active", "inactive", "blocked"'),
+    
+
+    
+    companyType: yup
+      .string()
+      .required('Company Type is required')
+      .oneOf(["regular", "premium", "business"], 'Payment Status must be "regular", "premium", "business"'),
+    
+    description: yup
+      .string()
+      .required('Description is required'),
+  });
   
 
-      });
+
+  
 
   // -----------   initialValues
   const initialValues = {
-   companyId :'',
-   companyName :'',
-   address:'',
-   date:'',
-   description:''
-
-
+    companyName: '',
+    phoneNumber: '',
+    email: '',
+    address: '',
+    status: '',
+    companyType: '',
+    description: ''
   };
-
-  
 
   // formik
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      
-      console.log('values', values);
+      const response = await axios.post("http://localhost:7200/company/save", values)
+
+      console.log('values======', response);
       toast.success('Product  Add successfully');
       handleClose();
       formik.resetForm();
     }
   });
 
- 
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
@@ -66,10 +98,9 @@ const ProductAdd = (props) => {
           style={{
             display: 'flex',
             justifyContent: 'space-between'
-           
           }}
         >
-          <Typography variant="h6">Add New  Product</Typography>
+          <Typography variant="h6">Add Supplier</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -78,70 +109,52 @@ const ProductAdd = (props) => {
           <form>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
               <Typography style={{ marginBottom: '15px' }} variant="h6">
-                Product Details
+                Supplier Details
               </Typography>
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Company ID</FormLabel>
+                  <FormLabel>Company Name</FormLabel>
                   <TextField
-                    id="companyId"
-                    name="companyId"
+                    id="companyName"
+                    name="companyName"
                     size="small"
                     fullWidth
-                    value={formik.values.companyId}
+                    value={formik.values.companyName}
                     onChange={formik.handleChange}
-                    error={formik.touched.companyId && Boolean(formik.errors.companyId)}
-                      helperText={formik.touched.companyId && formik.errors.companyId}
+                    error={formik.touched.companyName && Boolean(formik.errors.companyName)}
+                    helperText={formik.touched.companyName && formik.errors.companyName}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Company Name</FormLabel>
-                    <Select
-
-                      id="companyName"
-                      name="companyName"
+                    <FormLabel>Email</FormLabel>
+                    <TextField
+                      id="email"
+                      name="email"
                       size="small"
                       fullWidth
-                      value={formik.values.companyName}
+                      value={formik.values.email}
                       onChange={formik.handleChange}
-                      error={formik.touched.companyName && Boolean(formik.errors.companyName)}
-                      helperText={formik.touched.companyName && formik.errors.companyName}
-                    >
-
-                      <MenuItem value="Wet canned food">Wet canned food
-                      </MenuItem>
-                      <MenuItem value="Freeze-dried or raw food">Freeze-dried or raw food
-                      </MenuItem>
-                      <MenuItem value="Treats and snacks">Treats and snacks
-                      </MenuItem>
-                      <MenuItem value="Vitamins and minerals">Vitamins and minerals
-
-                      </MenuItem>
-
-
-                    </Select>
-                    <FormHelperText style={{ color: Palette.error.main }}>
-                      {formik.touched.companyName && formik.errors.companyName}
-                    </FormHelperText>
+                      error={formik.touched.email && Boolean(formik.errors.email)}
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
                   </FormControl>
-                  </Grid>
                 </Grid>
+              </Grid>
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <TextField
-                    name="date"
-                    type="date"
+                    name="phoneNumber"
+                    type="phoneNumber"
                     size="small"
                     fullWidth
-                    value={formik.values.date}
+                    value={formik.values.phoneNumber}
                     onChange={formik.handleChange}
-                    error={formik.touched.date && Boolean(formik.errors.date)}
-                    helperText={formik.touched.date && formik.errors.date}
+                    error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+                    helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
@@ -154,10 +167,9 @@ const ProductAdd = (props) => {
                     value={formik.values.address}
                     onChange={formik.handleChange}
                     error={formik.touched.address && Boolean(formik.errors.address)}
-                      helperText={formik.touched.address && formik.errors.address}
+                    helperText={formik.touched.address && formik.errors.address}
                   />
                 </Grid>
-
 
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Description</FormLabel>
@@ -169,18 +181,36 @@ const ProductAdd = (props) => {
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     error={formik.touched.description && Boolean(formik.errors.description)}
-                      helperText={formik.touched.description && formik.errors.description}
+                    helperText={formik.touched.description && formik.errors.description}
                   />
                 </Grid>
-
-
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Company Type</FormLabel>
+                  <TextField
+                    id="companyType"
+                    name="companyType"
+                    size="small"
+                    fullWidth
+                    value={formik.values.companyType}
+                    onChange={formik.handleChange}
+                    error={formik.touched.companyType && Boolean(formik.errors.companyType)}
+                    helperText={formik.touched.companyType && formik.errors.companyType}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Status</FormLabel>
+                  <TextField
+                    id="status"
+                    name="status"
+                    size="small"
+                    fullWidth
+                    value={formik.values.status}
+                    onChange={formik.handleChange}
+                    error={formik.touched.status && Boolean(formik.errors.status)}
+                    helperText={formik.touched.status && formik.errors.status}
+                  />
+                </Grid>
               </Grid>
-
-
-    
-                
-              
-
             </DialogContentText>
           </form>
         </DialogContent>

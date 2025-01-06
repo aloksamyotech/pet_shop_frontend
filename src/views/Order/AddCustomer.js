@@ -16,7 +16,7 @@ import { FormControl, FormHelperText, FormLabel, Select } from '@mui/material';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-const AddDetail= (props) => {
+const AddCustomer= (props) => {
   const { open, handleClose } = props;
  
 
@@ -307,4 +307,4 @@ const formik = useFormik({
   );
 };
 
-export default AddDetail;
+export default AddCustomer;

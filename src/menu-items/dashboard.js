@@ -45,7 +45,7 @@ const dashboard = {
     },
 
     {
-      id: '05',
+      id: '01',
       title: 'POS',
       type: 'item',
       url: '/dashboard/addToCard',
@@ -53,7 +53,16 @@ const dashboard = {
       breadcrumbs: false
     },
     {
-      id: '01',
+      id: '09',
+      title: 'Order',
+      type: 'item',
+      url: '/dashboard/order',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    }, 
+    
+    {
+      id: '02',
       title: 'Product',
       type: 'item',
       url: '/dashboard/product',
@@ -71,7 +80,7 @@ const dashboard = {
     },
 
     {
-      id: '06',
+      id: '04',
       title: 'Customer',
       type: 'item',
       url: '/dashboard/customer',
@@ -80,7 +89,7 @@ const dashboard = {
     },
     
     {
-      id: '04',
+      id: '05',
       title: 'Profile',
       type: 'item',
       url: '/dashboard/profile',
@@ -89,7 +98,7 @@ const dashboard = {
     },
     
     {
-      id: '07',
+      id: '06',
       title: 'Supplier',
       type: 'item',
       url: '/dashboard/supplier',
@@ -98,10 +107,19 @@ const dashboard = {
     },
     
     {
-      id: '08',
+      id: '07',
       title: 'Purchase',
       type: 'item',
       url: '/dashboard/purchase',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    },
+
+    {
+      id: '08',
+      title: 'Category',
+      type: 'item',
+      url: '/dashboard/category',
       icon: icons.IconUsers,
       breadcrumbs: false
     },

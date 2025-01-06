@@ -1,101 +1,51 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState,useEffect } from 'react';
-// @mui
+import { useState } from 'react';
 import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Link as MuiLink } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
+import axios from 'axios';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNavigate, Link } from 'react-router-dom';
 import Iconify from 'ui-component/iconify';
-import AddDetail from './AddDetail';
+import AddDetail from './addCategory';
+
+import { useEffect } from 'react';
 import { urls } from 'views/Api/constant.js';
 import { getApi } from 'views/Api/comman.js';
-
 
 const Customer = () => {
   const navigate = useNavigate();
   const [openAdd, setOpenAdd] = useState(false);
-  const [customer, setCustomer] = useState([]);
+  const [category, setCategory] = useState([]);
 
+   const handleView = (id) => {
+    navigate(`/dashboard/customer/user/${_id}`);
+  };
 
-  
+  const fetchCategories = async () => {
+    
+    const response = await getApi(urls.category.get )
+    console.log(response.data);
+    setCategory(response?.data);
+  };
 
-const fetchCustomer = async  () =>{
-  const response = await getApi(urls.customer.get);
-  console.log(response);
-  setCustomer(response?.data?.data)
-}
-
-useEffect(()=>{
-  fetchCustomer();
-
-} ,[])
-
-
-
-
-  
-
-  const handleView = (id) => {
-    navigate(`/dashboard/customer/user/${id}`);
-  }
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const columns = [
     {
-      field: 'firstName',
-      headerName: 'First Name',
+      field: 'name',
+      headerName: 'Name',
       flex: 1,
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
     {
-      field: 'lastName',
-      headerName: 'Last Name',
-      flex: 1,
-      cellClassName: 'name-column--cell name-column--cell--capitalize'
-    },
-    {
-      field: 'gender',
-      headerName: 'Gender',
+      field: 'description',
+      headerName: 'description',
       flex: 1
     },
-
-  {
-      field: 'email',
-      headerName: 'Email',
-      flex: 1,
-      cellClassName: 'name-column--cell--capitalize'
-    },
-   
-    {
-      field: 'address',
-      headerName: 'Address',
-      flex: 1
-    },
-    {
-      field: 'phoneNumber',
-      headerName: 'Phone Number',
-      flex: 1
-    },
-    {
-      field: 'dateOfBirth',
-      headerName: 'DOB',
-      flex: 1
-    },
-    {
-      field: 'customerType',
-      headerName: 'Customer Type To',
-      flex: 1
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      flex: 1
-    },
-    
     {
       field: 'Action',
       headerName: 'Action ',
@@ -103,7 +53,7 @@ useEffect(()=>{
       sortable: false,
       renderCell: (params) => (
         <IconButton>
-          <VisibilityIcon onClick={() => handleView(params.row?.id)}/>
+          <VisibilityIcon onClick={() => handleView(params.row?.id)} />
         </IconButton>
       )
     }
@@ -144,7 +94,7 @@ useEffect(()=>{
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
-                  New Customer
+                  Add category
                 </Button>
               </Card>
             </Stack>
@@ -155,7 +105,7 @@ useEffect(()=>{
           <Box width="100%">
             <Card style={{ height: '600px', marginTop: '-27px' }}>
               <DataGrid
-                rows={customer}
+                rows={category}
                 columns={columns}
                 checkboxSelection
                 getRowId={(row) => row._id}

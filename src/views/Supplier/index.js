@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { Stack, Button, Container, Typography, Card, Box,Grid,Breadcrumbs,Link} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
@@ -12,33 +12,32 @@ import Iconify from '../../ui-component/iconify';
 import ProductAdd from './ProductAdd'
 import { fontSize } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { urls } from 'views/Api/constant.js';
+import { getApi } from 'views/Api/comman.js';
+
 
 // ----------------------------------------------------------------------
 
-const policyData = [
-  {
-    id: 1,
-    productId: '',
-    productType: '',
-    Date: '',
-    paymentType:'',
-    parsonName:'',
-    premiumPayments:'',
-    
-    
-  }
-];
+
 const Supplier = () => {
-  const demoData = [
-    { id: 1, companyName: 'XYZ', CompanyId: '232', Address: 'indore',  Date: '12/27/2024',description:'Food Type'},
+ 
 
-    { id: 2, companyName: 'XYZ', CompanyId: '765', Address: 'Pune',  Date: '12/27/2024', description:'Food Type'},
+  const [supplier, setSupplier] = useState([])
+  
+  
+  const fetchSupplier = async () => {
+         
+         const response = await getApi(urls.company.get )
+         console.log(response.data);
+         setSupplier(response?.data?.data);
+       };
 
-    { id: 3, companyName: 'XYZ', CompanyId: '543', Address: 'Bhopal',   Date: '12/27/2024',description:'Food Type'}
-  ];
+  useEffect(() => {
+    fetchSupplier();
+  }, []);
 
-
- const navigate = useNavigate(); 
+const navigate = useNavigate(); 
 
   const handleClick = () =>{
     navigate('/dashboard/default');
@@ -57,24 +56,35 @@ const Supplier = () => {
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
     {
-      field: 'CompanyId',
-      headerName: 'Company ID',
+      field: 'email',
+      headerName: 'Email',
       flex: 1
     },
     {
-      field: 'Address',
+      field: 'phoneNumber',
+      headerName: 'Phone NUmber',
+      flex: 1
+    },
+    {
+      field: 'address',
       headerName: 'Address',
       flex: 1,
       cellClassName: 'name-column--cell--capitalize'
     },
-    {
-      field: 'Date',
-      headerName: 'Date',
-      flex: 1
-    },
+    
     {
       field: 'description',
       headerName: 'Description',
+      flex: 1
+    },
+    {
+      field: 'companyType',
+      headerName: 'Company Type',
+      flex: 1
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
       flex: 1
     },
     
@@ -110,10 +120,10 @@ const Supplier = () => {
           <Box width="100%" >
             <Card style={{ height: '600px' , marginTop:'-45px'}}>
               <DataGrid
-                rows={demoData}
+                rows={supplier}
                 columns={columns}
                 checkboxSelection
-                getRowId={(row) => row.id}
+                getRowId={(row) => row._id}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}
               />

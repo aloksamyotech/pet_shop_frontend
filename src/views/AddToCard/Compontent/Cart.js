@@ -23,8 +23,16 @@ import AddEdit from './AddEdit';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { shadows } from '@mui/system';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const Cart = ({ cartItems, setCartItems }) => {
+
+  const navigate = useNavigate();
+
+  const handleBuyNow = () =>{
+    navigate('/dashboard/order',{state:{cartItems}})
+  };
+
   const [add, setAdd] = useState();
 
   const [open, setOpen] = useState(false);
@@ -60,7 +68,7 @@ const Cart = ({ cartItems, setCartItems }) => {
       <Paper sx={{ display: 'flex', flexDirection: 'column', height: '480px', borderRadius: '8px', overflow: 'hidden' }}>
         <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
           {cartItems?.length === 0 ? (
-            <></>
+            <>Cart is Em</>
           ) : (
             <>
               <Grid container spacing={2} direction="column">
@@ -150,6 +158,10 @@ const Cart = ({ cartItems, setCartItems }) => {
           <Typography variant="h6" color="secondary">
             Total: Rs.{totalPrice.toFixed(2)}
           </Typography>
+          <Button variant="contained" sx={{backgroundColor:'#0d8929'}} onClick={handleBuyNow}>
+            BUY NOW
+          </Button>
+
           <Button variant="contained" color="secondary" onClick={deleteAll}>
             Clear Cart
           </Button>
