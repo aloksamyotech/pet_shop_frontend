@@ -186,29 +186,33 @@ const ProductAdd = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Company Type</FormLabel>
-                  <TextField
-                    id="companyType"
-                    name="companyType"
-                    size="small"
-                    fullWidth
-                    value={formik.values.companyType}
-                    onChange={formik.handleChange}
-                    error={formik.touched.companyType && Boolean(formik.errors.companyType)}
-                    helperText={formik.touched.companyType && formik.errors.companyType}
-                  />
+                 <Select
+                                      id="companyType"
+                                      name="companyType"
+                                      size="small"
+                                      fullWidth
+                                      value={formik.values.companyType}
+                                      onChange={formik.handleChange}
+                                    >
+                                      <MenuItem value="regular">regular</MenuItem>
+                                      <MenuItem value="premium">premium</MenuItem>
+                                      <MenuItem value="business">business</MenuItem>
+                                      </Select>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Status</FormLabel>
-                  <TextField
-                    id="status"
-                    name="status"
-                    size="small"
-                    fullWidth
-                    value={formik.values.status}
-                    onChange={formik.handleChange}
-                    error={formik.touched.status && Boolean(formik.errors.status)}
-                    helperText={formik.touched.status && formik.errors.status}
-                  />
+                <Select
+                                      id="status"
+                                      name="status"
+                                      size="small"
+                                      fullWidth
+                                      value={formik.values.status}
+                                      onChange={formik.handleChange}
+                                    >
+                                      <MenuItem value="active">active</MenuItem>
+                                      <MenuItem value="inactive">inactive</MenuItem>
+                                      </Select>
+                                
                 </Grid>
               </Grid>
             </DialogContentText>

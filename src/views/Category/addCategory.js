@@ -17,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { toast } from 'react-toastify';
 import Palette from '../../ui-component/ThemePalette';
 import axios from 'axios';
+import { useEffect } from 'react';
 
 
 const AddDetail= (props) => {
@@ -61,6 +62,8 @@ const AddDetail= (props) => {
     }
   });
 
+
+  
  
 
   return (

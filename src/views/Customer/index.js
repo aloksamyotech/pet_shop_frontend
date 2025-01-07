@@ -57,11 +57,7 @@ useEffect(()=>{
       flex: 1,
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
-    {
-      field: 'gender',
-      headerName: 'Gender',
-      flex: 1
-    },
+   
 
   {
       field: 'email',

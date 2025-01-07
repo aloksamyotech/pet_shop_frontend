@@ -16,17 +16,29 @@ import { urls } from 'views/Api/constant';
 
 const Lead = () => {
   const [product,setProduct] = useState([])
+ 
 
  const fetchProduct = async () => {
      
    const response = await getApi(urls.product.get )
-      console.log(response.data);
-      setProduct(response?.data?.data);
+     // console.log( " priti+++++++++++++++++++===",response.data);
+    setProduct(response?.data?.data);
     };
+
+
+  
+
+
+
    useEffect(() => {
      fetchProduct();
+    
    }, []);
 
+
+
+
+   
 
   const navigate = useNavigate(); 
 
@@ -43,9 +55,13 @@ const Lead = () => {
       cellClassName: 'name-column--cell--capitalize'
     },
     {
-      field: 'type',
-      headerName: ' Product Type',
-      flex: 1
+      field: 'categoryName',
+      headerName: 'Category',
+      flex: 1,
+      valueGetter :(params) =>{
+        return params.row.category[0].name;
+       }
+     
     },
     {
       field: 'price',
@@ -96,6 +112,7 @@ const Lead = () => {
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}
               />
+
             </Card>
           </Box>
         </TableStyle>

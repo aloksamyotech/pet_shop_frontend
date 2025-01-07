@@ -20,66 +20,49 @@ import axios from 'axios';
 const ProductAdd = (props) => {
   const { open, handleClose } = props;
 
-  
-// -----------  validationSchema
-const validationSchema = yup.object({
-  type: yup
-    .string()
-    .required('Type is required'),
-  
-  productName: yup
-    .string()
-    .required('Product Name is required')
-    .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
-  
-  quantity: yup
-    .number()
-    .positive('Quantity must be a positive number')
-    .integer('Quantity must be an integer')
-    .required('Quantity is required'),
-  
-  totalPrice: yup
-    .number()
-    .positive('Total Price must be a positive number')
-    .required('Total Price is required'),
-  
-  discount: yup
-    .number()
-    .min(0, 'Discount cannot be negative')
-    .max(100, 'Discount cannot exceed 100%')
-    .required('Discount is required'),
-  
-  paymentStatus: yup
-    .string()
-    .oneOf(["Pending", "Completed", "Failed"], 'Payment Status must be "Pending", "Completed", "Failed"')
-    .required('Payment Status is required'),
-});
+  // -----------  validationSchema
+  const validationSchema = yup.object({
+    type: yup.string().required('Type is required'),
 
+    productName: yup
+      .string()
+      .required('Product Name is required')
+      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
+
+    quantity: yup
+      .number()
+      .positive('Quantity must be a positive number')
+      .integer('Quantity must be an integer')
+      .required('Quantity is required'),
+
+    totalPrice: yup.number().positive('Total Price must be a positive number').required('Total Price is required'),
+
+    discount: yup.number().min(0, 'Discount cannot be negative').max(100, 'Discount cannot exceed 100%').required('Discount is required'),
+
+    paymentStatus: yup
+      .string()
+      .oneOf(['Pending', 'Completed', 'Failed'], 'Payment Status must be "Pending", "Completed", "Failed"')
+      .required('Payment Status is required')
+  });
 
   // -----------   initialValues
   const initialValues = {
-   
-   
-   productName :'',
-   type:'',
-   quantity:'',
-   date:'',
-  totalPrice:'',
-  discount:'  ',
-  paymentStatus:''
-
-
+    productName: '',
+    type: '',
+    quantity: '',
+    date: '',
+    totalPrice: '',
+    discount: '  ',
+    paymentStatus: ''
   };
-
-  
 
   // formik
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      const response = await axios.post("http://localhost:7200/purchase/save",values)
-      
+      const response = await axios.post('http://localhost:7200/purchase/save', values);
+
       console.log('values', values);
       toast.success('Product  Add successfully');
       handleClose();
@@ -87,7 +70,6 @@ const validationSchema = yup.object({
     }
   });
 
- 
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
@@ -96,7 +78,6 @@ const validationSchema = yup.object({
           style={{
             display: 'flex',
             justifyContent: 'space-between'
-           
           }}
         >
           <Typography variant="h6">Information</Typography>
@@ -108,7 +89,7 @@ const validationSchema = yup.object({
           <form>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
               <Typography style={{ marginBottom: '15px' }} variant="h6">
-                Purchase  Details
+                Purchase Details
               </Typography>
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
@@ -122,14 +103,13 @@ const validationSchema = yup.object({
                     value={formik.values.productName}
                     onChange={formik.handleChange}
                     error={formik.touched.productName && Boolean(formik.errors.productName)}
-                      helperText={formik.touched.productName && formik.errors.productName}
+                    helperText={formik.touched.productName && formik.errors.productName}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
                     <FormLabel>Type</FormLabel>
                     <Select
-
                       id="type"
                       name="type"
                       size="small"
@@ -139,28 +119,17 @@ const validationSchema = yup.object({
                       error={formik.touched.type && Boolean(formik.errors.type)}
                       helperText={formik.touched.type && formik.errors.type}
                     >
-
-                      <MenuItem value="Wet canned food">Wet canned food
-                      </MenuItem>
-                      <MenuItem value="Freeze-dried or raw food">Freeze-dried or raw food
-                      </MenuItem>
-                      <MenuItem value="Treats and snacks">Treats and snacks
-                      </MenuItem>
-                      <MenuItem value="Vitamins and minerals">Vitamins and minerals
-
-                      </MenuItem>
-
-
+                      <MenuItem value="Wet canned food">Wet canned food</MenuItem>
+                      <MenuItem value="Freeze-dried or raw food">Freeze-dried or raw food</MenuItem>
+                      <MenuItem value="Treats and snacks">Treats and snacks</MenuItem>
+                      <MenuItem value="Vitamins and minerals">Vitamins and minerals</MenuItem>
                     </Select>
-                    <FormHelperText style={{ color: Palette.error.main }}>
-                      {formik.touched.type && formik.errors.type}
-                    </FormHelperText>
+                    <FormHelperText style={{ color: Palette.error.main }}>{formik.touched.type && formik.errors.type}</FormHelperText>
                   </FormControl>
-                  </Grid>
                 </Grid>
+              </Grid>
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Total Price</FormLabel>
                   <TextField
@@ -184,51 +153,28 @@ const validationSchema = yup.object({
                     value={formik.values.quantity}
                     onChange={formik.handleChange}
                     error={formik.touched.quantity && Boolean(formik.errors.quantity)}
-                      helperText={formik.touched.quantity && formik.errors.quantity}
+                    helperText={formik.touched.quantity && formik.errors.quantity}
                   />
                 </Grid>
-
 
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Discount</FormLabel>
-                  <TextField
-                    id="discount"
-                    name="discount"
-                    size="small"
-                    fullWidth
-                    value={formik.values.discount}
-                    onChange={formik.handleChange}
-                    error={formik.touched.discount && Boolean(formik.errors.discount)}
-                      helperText={formik.touched.discount && formik.errors.discount}
-                  />
+                  <Select id="discount" name="discount" size="small" fullWidth value={formik.values.discount} onChange={formik.handleChange}>
+                    <MenuItem value="20">20</MenuItem>
+                    <MenuItem value="60">60</MenuItem>
+                    <MenuItem value="80">80</MenuItem>
+                  </Select>
                 </Grid>
-
 
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Payment Status</FormLabel>
-                  <TextField
-                    id="paymentStatus"
-                    name="paymentStatus"
-                    size="small"
-                    fullWidth
-                    value={formik.values.paymentStatus}
-                    onChange={formik.handleChange}
-                    error={formik.touched.paymentStatus && Boolean(formik.errors.paymentStatus)}
-                      helperText={formik.touched.paymentStatus && formik.errors.paymentStatus}
-                  />
+                  <Select id="paymentStatus" name="paymentStatus" size="small" fullWidth value={formik.values.paymentStatus} onChange={formik.handleChange}>
+                    <MenuItem value="Pending">Pending</MenuItem>
+                    <MenuItem value="Completed">Completed</MenuItem>
+                    <MenuItem value="Failed">Failed</MenuItem>
+                  </Select>
                 </Grid>
-
-
-
-
-
               </Grid>
-
-
-    
-                
-              
-
             </DialogContentText>
           </form>
         </DialogContent>

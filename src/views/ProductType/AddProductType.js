@@ -14,6 +14,9 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { getApi } from 'views/Api/comman';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { urls } from 'views/Api/constant';
 
 import Palette from '../../ui-component/ThemePalette';
 import axios from 'axios';
@@ -58,8 +61,8 @@ const AddProduct = (props) => {
   });
 
 
-   const [productType, setProductType] = useState([])
-    
+   
+     const [productType, setProductType] = useState([])
     
     const fetchProductType = async () => {
          

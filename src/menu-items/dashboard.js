@@ -70,14 +70,7 @@ const dashboard = {
       breadcrumbs: false
     },
 
-    {
-      id: '03',
-      title: 'Product Type',
-      type: 'item',
-      url: '/dashboard/productType',
-      icon: icons.IconNotebook,
-      breadcrumbs: false
-    },
+  
 
     {
       id: '04',

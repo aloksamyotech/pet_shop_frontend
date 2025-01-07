@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { FormControl, FormHelperText, FormLabel, Select } from '@mui/material';
+import { FormControl, FormHelperText, FormLabel, Select ,MenuItem} from '@mui/material';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -55,12 +55,10 @@ const AddDetail= (props) => {
     address: yup
         .string()
         .required('Address is required')
-        .max(10, 'Address must be at least 10 characters long'), 
+        .max(10, 'Address must be at least 10 characters long')
+        .matches(/^[A-Za-z\s]+$/, 'address must only contain letters'), 
+
     
-    gender: yup
-        .string()
-        .required('Gender is required')
-        .oneOf(["male", "female", "other"], 'gender must be "male", "female", "other"'),
     
     customerType: yup
         .string()
@@ -79,7 +77,7 @@ const AddDetail= (props) => {
    dateOfBirth:'',
    status:"",
    customerType:"",
-   gender:''
+   
   };
 
 // formik
@@ -156,22 +154,7 @@ const formik = useFormik({
                    
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                <FormControl fullWidth>
-                  <FormLabel>Gender</FormLabel>
-                  <TextField
-                    id="gender"
-                    name="gender"
-                    size="small"
-                  fullWidth
-                    value={formik.values.gender}
-                    onChange={formik.handleChange}
-                    error={formik.touched.gender && Boolean(formik.errors.gender)}
-                    helperText={formik.touched.gender && formik.errors.gender}
-                  />
-                 
-                    </FormControl>
-                </Grid>
+
                
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
@@ -248,36 +231,36 @@ const formik = useFormik({
                 <Grid item xs={12} sm={6} md={6}>
                 <FormControl fullWidth>
                   <FormLabel>Customer Type </FormLabel>
-                  <TextField
-                    id="customerType"
-                    name="customerType"
-                    size="small"
-                    fullWidth
-                   
-               
-                    value={formik.values.customerType}
-                    onChange={formik.handleChange}
-                    error={formik.touched.customerType && Boolean(formik.errors.customerType)}
-                    helperText={formik.touched.customerType && formik.errors.customerType}
-                  />
+                  <Select
+                      id="customerType"
+                      name="customerType"
+                      size="small"
+                      fullWidth
+                      value={formik.values.customerType}
+                      onChange={formik.handleChange}
+                    >
+                      <MenuItem value="regular">regular</MenuItem>
+                      <MenuItem value="premium">premium</MenuItem>
+                      <MenuItem value="business">business</MenuItem>
+                      </Select>
+                
                   
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                 <FormControl fullWidth>
                   <FormLabel>Status</FormLabel>
-                  <TextField
-                    id="status"
-                    name="status"
-                    size="small"
-                    fullWidth
-                   
-                   
-                    value={formik.values.status}
-                    onChange={formik.handleChange}
-                    error={formik.touched.status && Boolean(formik.errors.status)}
-                    helperText={formik.touched.status && formik.errors.status}
-                  />
+                  <Select
+                      id="status"
+                      name="status"
+                      size="small"
+                      fullWidth
+                      value={formik.values.status}
+                      onChange={formik.handleChange}
+                    >
+                      <MenuItem value="active">active</MenuItem>
+                      <MenuItem value="inactive">inactive</MenuItem>
+                      </Select>
                 
                   </FormControl>
                 </Grid>

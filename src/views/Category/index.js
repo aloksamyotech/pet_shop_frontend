@@ -88,7 +88,7 @@ const Customer = () => {
               <MuiLink component={Link} to="/dashboard/default" color="inherit">
                 <HomeIcon sx={{ color: '#5E35B1' }} />
               </MuiLink>
-              <Typography variant="h5">Customer</Typography>
+              <Typography variant="h5">Category</Typography>
             </Breadcrumbs>
 
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>

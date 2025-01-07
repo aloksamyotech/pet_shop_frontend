@@ -1,15 +1,7 @@
-
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import {
-  FormControl,
-  FormLabel,
-  Grid,
-MenuItem,
-Select,
-  TextField
-} from '@mui/material';
+import { FormControl, FormLabel, Grid, MenuItem, Select, TextField } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -19,50 +11,55 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-import Palette from '../../ui-component/ThemePalette';
+import { getApi } from 'views/Api/comman.js';
+import { urls } from 'views/Api/constant';
 
 const AddLead = (props) => {
   const { open, handleClose } = props;
 
+  const [categories, setCategories] = useState([]);
+  
+
+  const fetchCategory = async () => {
+    const response = await getApi(urls.category.get);
+    setCategories(response?.data);
+  };
 
  
+
+  useEffect(() => {
+    fetchCategory();
+    }, []);
 
   // -----------  validationSchema
   const validationSchema = yup.object({
     productName: yup
-        .string()
-        .required('Product Name is required')
-        .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
-    
-    type: yup
-        .string()
-        .required('Product Type is required')
-        .matches(/^[A-Za-z\s]+$/, 'Product Type must only contain letters'),
-    
-    price: yup
-        .number()
-        .required('Price is required')
-        .typeError('Price must be a number') // Custom error for non-numeric input
-        .positive('Price must be greater than zero'),
-    
-    discount: yup
-        .number()
-        .required('Discount is required')
-        .typeError('Discount must be a number') // Custom error for non-numeric input
-        .min(0, 'Discount cannot be negative') // Additional validation for discount
-        .max(100, 'Discount cannot exceed 100%'), // Example constraint for max discount
-});
+      .string()
+      .required('Product Name is required')
+      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
 
+    categoryId: yup.string().required('category  is required'),
+
+  
+
+    price: yup.number().required('Price is required').typeError('Price must be a number').positive('Price must be greater than zero'),
+
+    discount: yup
+      .number()
+      .required('Discount is required')
+      .typeError('Discount must be a number')
+      .min(0, 'Discount cannot be negative')
+      .max(100, 'Discount cannot exceed 100%')
+  });
 
   // -----------   initialValues
   const initialValues = {
-  productName:'',
-  type:'',
-  price:'',
-  discount:''
+    productName: '',
+    categoryId: '',
+    price: '',
+    discount: ''
     
   };
 
@@ -73,30 +70,22 @@ const AddLead = (props) => {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      const response = await axios.post('http://localhost:7200/product/save',values);
+      console.log(values);
+      const response = await axios.post('http://localhost:7200/product/save', values);
       console.log('Product Value', response);
       handleClose();
       toast.success('Product Add successfully');
-    
     }
   });
- 
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-       
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
         <DialogTitle
           id="scroll-dialog-title"
           style={{
             display: 'flex',
             justifyContent: 'space-between'
-           
           }}
         >
           <Typography variant="h6">Add New Product </Typography>
@@ -105,7 +94,7 @@ const AddLead = (props) => {
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
-          <form>
+          <form onSubmit={formik.handleSubmit}>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
               <Typography variant="h6" style={{ marginBottom: '65px' }}>
                 Basic Information
@@ -115,7 +104,6 @@ const AddLead = (props) => {
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}></Grid>
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-               
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Product Name</FormLabel>
                   <TextField
@@ -131,15 +119,24 @@ const AddLead = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Product Type</FormLabel>
-                  <Select id="type" name="type" size="small" fullWidth value={formik.values.type}    onChange={formik.handleChange}
-                    >
-                      <MenuItem value="20">20</MenuItem>
-                      <MenuItem value="40">40</MenuItem>
-                      <MenuItem value="60">60</MenuItem>
-                      <MenuItem value="80">80</MenuItem>
-                    </Select>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    id="categoryId"
+                    name="categoryId"
+                    size="small"
+                    fullWidth
+                    value={formik.values.categoryId}
+                    onChange={formik.handleChange}
+                    error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category._id} value={category._id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
+               
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Product Price</FormLabel>
                   <TextField
@@ -156,7 +153,13 @@ const AddLead = (props) => {
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
                     <FormLabel>Discount(%)</FormLabel>
-                    <Select id="discount" name="discount" size="small" fullWidth value={formik.values.discount}    onChange={formik.handleChange}
+                    <Select
+                      id="discount"
+                      name="discount"
+                      size="small"
+                      fullWidth
+                      value={formik.values.discount}
+                      onChange={formik.handleChange}
                     >
                       <MenuItem value="20">20</MenuItem>
                       <MenuItem value="40">40</MenuItem>
@@ -166,8 +169,6 @@ const AddLead = (props) => {
                   </FormControl>
                 </Grid>
               </Grid>
-
-             
             </DialogContentText>
           </form>
         </DialogContent>
