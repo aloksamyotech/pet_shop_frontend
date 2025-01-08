@@ -58,6 +58,7 @@ const AddDetail= (props) => {
        console.log('CallValues', response);
       handleClose();
       toast.success('Calls Add successfully');
+      window.location.reload();
     
     }
   });

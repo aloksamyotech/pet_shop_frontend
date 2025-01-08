@@ -83,10 +83,11 @@ const ProductAdd = (props) => {
     onSubmit: async (values) => {
       const response = await axios.post("http://localhost:7200/company/save", values)
 
-      console.log('values======', response);
+   
       toast.success('Product  Add successfully');
       handleClose();
       formik.resetForm();
+      window.location.reload()
     }
   });
 

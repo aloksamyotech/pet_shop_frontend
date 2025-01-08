@@ -24,10 +24,10 @@ const Customer = () => {
   };
 
   const fetchCategories = async () => {
-    
-    const response = await getApi(urls.category.get )
+     const response = await getApi(urls.category.get )
     console.log(response.data);
-    setCategory(response?.data);
+    setCategory(response?.data?.data);
+    
   };
 
   useEffect(() => {

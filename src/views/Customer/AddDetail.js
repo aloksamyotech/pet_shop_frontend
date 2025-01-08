@@ -89,18 +89,12 @@ const formik = useFormik({
     console.log('Product Value', response);
     handleClose();
     toast.success('Product Add successfully');
+    window.location.reload();
   
   }
 });
 
-
-
-
-
-
-
-
-  return (
+return (
     <div>
       <Dialog open={open} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
         <DialogTitle

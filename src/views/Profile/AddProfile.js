@@ -66,6 +66,7 @@ const AddTask = ({ open, handleClose }) => {
       handleClose();
       formik.resetForm();
       toast.success('Task Add successfully');
+      window.location.reload();
     }
   });
 

@@ -21,24 +21,14 @@ const Lead = () => {
  const fetchProduct = async () => {
      
    const response = await getApi(urls.product.get )
-     // console.log( " priti+++++++++++++++++++===",response.data);
+     //console.log( " priti+++++++++++++++++++===",response.data.data[0].category[0].name);
     setProduct(response?.data?.data);
     };
-
-
-  
-
-
 
    useEffect(() => {
      fetchProduct();
     
    }, []);
-
-
-
-
-   
 
   const navigate = useNavigate(); 
 
@@ -58,9 +48,11 @@ const Lead = () => {
       field: 'categoryName',
       headerName: 'Category',
       flex: 1,
-      valueGetter :(params) =>{
-        return params.row.category[0].name;
-       }
+      valueGetter :(product) =>{
+         console.log("priti__________________-",product.row.category[0].name)
+         
+         return product.row.category[0].name;
+        }
      
     },
     {

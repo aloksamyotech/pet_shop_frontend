@@ -24,7 +24,8 @@ const AddLead = (props) => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-    setCategories(response?.data);
+    //console.log(response)
+    setCategories(response?.data?.data);
   };
 
  
@@ -48,9 +49,7 @@ const AddLead = (props) => {
 
     discount: yup
       .number()
-      .required('Discount is required')
       .typeError('Discount must be a number')
-      .min(0, 'Discount cannot be negative')
       .max(100, 'Discount cannot exceed 100%')
   });
 
@@ -59,7 +58,7 @@ const AddLead = (props) => {
     productName: '',
     categoryId: '',
     price: '',
-    discount: ''
+    discount: 0
     
   };
 
@@ -72,9 +71,10 @@ const AddLead = (props) => {
     onSubmit: async (values) => {
       console.log(values);
       const response = await axios.post('http://localhost:7200/product/save', values);
-      console.log('Product Value', response);
+     // console.log('Product Value', response);
       handleClose();
       toast.success('Product Add successfully');
+      window.location.reload();
     }
   });
 
@@ -129,7 +129,7 @@ const AddLead = (props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
                   >
-                    {categories.map((category) => (
+                    {Array.isArray(categories) && categories.map((category) => (
                       <MenuItem key={category._id} value={category._id}>
                         {category.name}
                       </MenuItem>
@@ -153,19 +153,17 @@ const AddLead = (props) => {
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
                     <FormLabel>Discount(%)</FormLabel>
-                    <Select
-                      id="discount"
-                      name="discount"
-                      size="small"
-                      fullWidth
-                      value={formik.values.discount}
-                      onChange={formik.handleChange}
-                    >
-                      <MenuItem value="20">20</MenuItem>
-                      <MenuItem value="40">40</MenuItem>
-                      <MenuItem value="60">60</MenuItem>
-                      <MenuItem value="80">80</MenuItem>
-                    </Select>
+                    <TextField
+                    id="discount"
+                    name="discount"
+                    size="small"
+                    fullWidth
+                    value={formik.values.discount}
+                    onChange={formik.handleChange}
+                    error={formik.touched.discount && Boolean(formik.errors.discount)}
+                    helperText={formik.touched.discount && formik.errors.discount}
+                  />
+                   
                   </FormControl>
                 </Grid>
               </Grid>

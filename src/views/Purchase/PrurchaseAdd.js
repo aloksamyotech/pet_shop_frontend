@@ -13,21 +13,19 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-
-import Palette from '../../ui-component/ThemePalette';
 import axios from 'axios';
+import { urls } from 'views/Api/constant';
+import { getApi } from 'views/Api/comman.js';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const ProductAdd = (props) => {
   const { open, handleClose } = props;
 
   // -----------  validationSchema
   const validationSchema = yup.object({
-    type: yup.string().required('Type is required'),
 
-    productName: yup
-      .string()
-      .required('Product Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
+    productId: yup.string().required('Product Name is required'),
 
     quantity: yup
       .number()
@@ -39,20 +37,15 @@ const ProductAdd = (props) => {
 
     discount: yup.number().min(0, 'Discount cannot be negative').max(100, 'Discount cannot exceed 100%').required('Discount is required'),
 
-    paymentStatus: yup
-      .string()
-      .oneOf(['Pending', 'Completed', 'Failed'], 'Payment Status must be "Pending", "Completed", "Failed"')
-      .required('Payment Status is required')
+    paymentStatus: yup.string().required('Payment Status is required')
   });
 
   // -----------   initialValues
   const initialValues = {
-    productName: '',
-    type: '',
+    productId: '',
     quantity: '',
-    date: '',
     totalPrice: '',
-    discount: '  ',
+    discount: 0,
     paymentStatus: ''
   };
 
@@ -62,13 +55,24 @@ const ProductAdd = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       const response = await axios.post('http://localhost:7200/purchase/save', values);
-
-      console.log('values', values);
       toast.success('Product  Add successfully');
-      handleClose();
-      formik.resetForm();
+       handleClose();
+        formik.resetForm();
+        window.location.reload();
     }
   });
+
+  const [product, setProduct] = useState([]);
+
+  const fetchProduct = async () => {
+    const response = await getApi(urls.product.get);
+  
+    setProduct(response?.data?.data);
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
 
   return (
     <div>
@@ -95,41 +99,23 @@ const ProductAdd = (props) => {
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Product Name</FormLabel>
-                  <TextField
-                    id="productName"
-                    name="productName"
+                  <Select
+                    id="productId"
+                    name="productId"
                     size="small"
                     fullWidth
-                    value={formik.values.productName}
+                    value={formik.values.productId}
                     onChange={formik.handleChange}
-                    error={formik.touched.productName && Boolean(formik.errors.productName)}
-                    helperText={formik.touched.productName && formik.errors.productName}
-                  />
+                    error={formik.touched.productId && Boolean(formik.errors.productId)}
+                  >
+                    {Array.isArray(product) &&
+                      product.map((products) => (
+                        <MenuItem key={products._id} value={products._id}>
+                          {products.productName}
+                        </MenuItem>
+                      ))}
+                  </Select>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormControl fullWidth>
-                    <FormLabel>Type</FormLabel>
-                    <Select
-                      id="type"
-                      name="type"
-                      size="small"
-                      fullWidth
-                      value={formik.values.type}
-                      onChange={formik.handleChange}
-                      error={formik.touched.type && Boolean(formik.errors.type)}
-                      helperText={formik.touched.type && formik.errors.type}
-                    >
-                      <MenuItem value="Wet canned food">Wet canned food</MenuItem>
-                      <MenuItem value="Freeze-dried or raw food">Freeze-dried or raw food</MenuItem>
-                      <MenuItem value="Treats and snacks">Treats and snacks</MenuItem>
-                      <MenuItem value="Vitamins and minerals">Vitamins and minerals</MenuItem>
-                    </Select>
-                    <FormHelperText style={{ color: Palette.error.main }}>{formik.touched.type && formik.errors.type}</FormHelperText>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Total Price</FormLabel>
                   <TextField
@@ -141,6 +127,22 @@ const ProductAdd = (props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.totalPrice && Boolean(formik.errors.totalPrice)}
                     helperText={formik.touched.totalPrice && formik.errors.totalPrice}
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Discount</FormLabel>
+                  <TextField
+                    id="discount"
+                    name="discount"
+                    size="small"
+                    fullWidth
+                    value={formik.values.discount}
+                    onChange={formik.handleChange}
+                    error={formik.touched.discount && Boolean(formik.errors.discount)}
+                    helperText={formik.touched.discount && formik.errors.discount}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
@@ -158,20 +160,18 @@ const ProductAdd = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Discount</FormLabel>
-                  <Select id="discount" name="discount" size="small" fullWidth value={formik.values.discount} onChange={formik.handleChange}>
-                    <MenuItem value="20">20</MenuItem>
-                    <MenuItem value="60">60</MenuItem>
-                    <MenuItem value="80">80</MenuItem>
-                  </Select>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Payment Status</FormLabel>
-                  <Select id="paymentStatus" name="paymentStatus" size="small" fullWidth value={formik.values.paymentStatus} onChange={formik.handleChange}>
-                    <MenuItem value="Pending">Pending</MenuItem>
-                    <MenuItem value="Completed">Completed</MenuItem>
-                    <MenuItem value="Failed">Failed</MenuItem>
+                  <Select
+                    id="paymentStatus"
+                    name="paymentStatus"
+                    size="small"
+                    fullWidth
+                    value={formik.values.paymentStatus}
+                    onChange={formik.handleChange}
+                  >
+                    <MenuItem value="pending">pending</MenuItem>
+                    <MenuItem value="completed">completed</MenuItem>
+                    <MenuItem value="failed">failed</MenuItem>
                   </Select>
                 </Grid>
               </Grid>

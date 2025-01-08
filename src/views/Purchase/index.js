@@ -1,21 +1,15 @@
-
-/* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState ,useEffect} from 'react';
 // @mui
 import { Stack, Button, Container, Typography, Card, Box,Grid,Breadcrumbs,Link} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
-import HomeIcon from '@mui/icons-material/Home';
-
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import HomeIcon from '@mui/icons-material/Home';import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Iconify from '../../ui-component/iconify';
-
-import ProductAdd from './PrurchaseAdd'
+import ProductAdd from './PrurchaseAdd.js'
 import { fontSize } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getApi } from 'views/Api/comman.js';
-import { urls } from 'views/Api/constant';
+import { urls } from 'views/Api/constant.js';
 
 
 // ----------------------------------------------------------------------
@@ -28,7 +22,7 @@ const Purchase = () => {
  const fetchPurchase = async () => {
           
           const response = await getApi(urls.purchase.get )
-          console.log(response.data);
+          //console.log(response.data.data[0].productName[0].productName);
           setPurchase(response?.data?.data);
         };
 
@@ -54,13 +48,14 @@ const Purchase = () => {
       field: 'productName',
       headerName: 'Product Name',
       flex: 1,
-      cellClassName: 'name-column--cell name-column--cell--capitalize'
+      valueGetter :(purchase) =>{
+       // console.log(params.row.productName[0].productName)
+       console.log("sahu______________",purchase.row.productName[0].productName)
+          return  purchase.row.productName[0].productName ;
+      
+       }
     },
-    {
-      field: 'type',
-      headerName: 'Type',
-      flex: 1
-    },
+    
     {
       field: 'totalPrice',
       headerName: 'Total Price',

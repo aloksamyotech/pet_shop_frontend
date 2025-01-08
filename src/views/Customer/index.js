@@ -32,13 +32,7 @@ const fetchCustomer = async  () =>{
 
 useEffect(()=>{
   fetchCustomer();
-
 } ,[])
-
-
-
-
-  
 
   const handleView = (id) => {
     navigate(`/dashboard/customer/user/${id}`);
