@@ -19,15 +19,18 @@ const Customer = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [category, setCategory] = useState([]);
 
-   const handleView = (id) => {
+  const handleView = (id) => {
     navigate(`/dashboard/customer/user/${_id}`);
   };
 
+  const home =() =>{
+    navigate('/');
+  }
+
   const fetchCategories = async () => {
-     const response = await getApi(urls.category.get )
-    console.log(response.data);
+    const response = await getApi(urls.category.get);
+
     setCategory(response?.data?.data);
-    
   };
 
   useEffect(() => {
@@ -53,7 +56,7 @@ const Customer = () => {
       sortable: false,
       renderCell: (params) => (
         <IconButton>
-          <VisibilityIcon onClick={() => handleView(params.row?.id)} />
+          <VisibilityIcon sx={{ color: '#1d4587' }} onClick={() => handleView(params.row?.id)} />
         </IconButton>
       )
     }
@@ -64,7 +67,7 @@ const Customer = () => {
 
   return (
     <>
-      <AddDetail open={openAdd} handleClose={handleCloseAdd} />
+      <AddDetail open={openAdd} handleClose={handleCloseAdd} fetchCategories={fetchCategories} />
       <Container>
         <Stack direction="row" alignItems="center" mb={5}>
           <Box
@@ -85,9 +88,8 @@ const Customer = () => {
               aria-label="breadcrumb"
               sx={{ display: 'flex', alignItems: 'center' }}
             >
-              <MuiLink component={Link} to="/dashboard/default" color="inherit">
-                <HomeIcon sx={{ color: '#5E35B1' }} />
-              </MuiLink>
+              
+              <HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
               <Typography variant="h5">Category</Typography>
             </Breadcrumbs>
 
@@ -107,7 +109,6 @@ const Customer = () => {
               <DataGrid
                 rows={category}
                 columns={columns}
-                checkboxSelection
                 getRowId={(row) => row._id}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}

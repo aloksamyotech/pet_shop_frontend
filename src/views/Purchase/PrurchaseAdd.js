@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -15,16 +14,15 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { urls } from 'views/Api/constant';
-import { getApi } from 'views/Api/comman.js';
+import { getApi, postApi } from 'views/Api/comman.js';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { maxHeight } from '@mui/system';
 
 const ProductAdd = (props) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, fetchPurchase } = props;
 
-  // -----------  validationSchema
   const validationSchema = yup.object({
-
     productId: yup.string().required('Product Name is required'),
 
     quantity: yup
@@ -33,32 +31,30 @@ const ProductAdd = (props) => {
       .integer('Quantity must be an integer')
       .required('Quantity is required'),
 
-    totalPrice: yup.number().positive('Total Price must be a positive number').required('Total Price is required'),
+    // totalPrice: yup.number().positive('Total Price must be a positive number').required('Total Price is required'),
 
     discount: yup.number().min(0, 'Discount cannot be negative').max(100, 'Discount cannot exceed 100%'),
 
     paymentStatus: yup.string().required('Payment Status is required')
   });
 
-  // -----------   initialValues
   const initialValues = {
     productId: '',
     quantity: '',
-    totalPrice: '',
-    discount: '',
+    // totalPrice: '',
+    discount: '0',
     paymentStatus: ''
   };
 
-  // formik
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      const response = await axios.post('http://localhost:7200/purchase/save', values);
+      await postApi(urls.purchase.create, values);
+      await fetchPurchase();
       toast.success('Product  Add successfully');
-       handleClose();
-        formik.resetForm();
-        window.location.reload();
+      handleClose();
+      formik.resetForm();
     }
   });
 
@@ -66,7 +62,7 @@ const ProductAdd = (props) => {
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
-  
+
     setProduct(response?.data?.data);
   };
 
@@ -107,6 +103,16 @@ const ProductAdd = (props) => {
                     value={formik.values.productId}
                     onChange={formik.handleChange}
                     error={formik.touched.productId && Boolean(formik.errors.productId)}
+                    MenuProps={{
+                      PaperProps:{
+                        style:{
+                          maxHeight : 200,
+                        }
+
+                      }
+                      ,
+
+                    }}
                   >
                     {Array.isArray(product) &&
                       product.map((products) => (
@@ -116,8 +122,8 @@ const ProductAdd = (props) => {
                       ))}
                   </Select>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Total Price</FormLabel>
+                {/* <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Amount</FormLabel>
                   <TextField
                     name="totalPrice"
                     type="totalPrice"
@@ -127,6 +133,19 @@ const ProductAdd = (props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.totalPrice && Boolean(formik.errors.totalPrice)}
                     helperText={formik.touched.totalPrice && formik.errors.totalPrice}
+                  />
+                </Grid> */}
+                                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Quantity</FormLabel>
+                  <TextField
+                    id="quantity"
+                    name="quantity"
+                    size="small"
+                    fullWidth
+                    value={formik.values.quantity}
+                    onChange={formik.handleChange}
+                    error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                    helperText={formik.touched.quantity && formik.errors.quantity}
                   />
                 </Grid>
               </Grid>
@@ -145,7 +164,7 @@ const ProductAdd = (props) => {
                     helperText={formik.touched.discount && formik.errors.discount}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
+                {/* <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Quantity</FormLabel>
                   <TextField
                     id="quantity"
@@ -157,7 +176,7 @@ const ProductAdd = (props) => {
                     error={formik.touched.quantity && Boolean(formik.errors.quantity)}
                     helperText={formik.touched.quantity && formik.errors.quantity}
                   />
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Payment Status</FormLabel>
@@ -169,9 +188,11 @@ const ProductAdd = (props) => {
                     value={formik.values.paymentStatus}
                     onChange={formik.handleChange}
                   >
-                    <MenuItem value="pending">pending</MenuItem>
-                    <MenuItem value="completed">completed</MenuItem>
-                    <MenuItem value="failed">failed</MenuItem>
+                    <MenuItem value="Pending">
+                    
+                    Pending</MenuItem>
+                    <MenuItem value="Completed">Completed</MenuItem>
+                    <MenuItem value="Failed">Failed</MenuItem>
                   </Select>
                 </Grid>
               </Grid>
