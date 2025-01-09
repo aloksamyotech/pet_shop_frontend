@@ -35,7 +35,7 @@ const ProductAdd = (props) => {
 
     totalPrice: yup.number().positive('Total Price must be a positive number').required('Total Price is required'),
 
-    discount: yup.number().min(0, 'Discount cannot be negative').max(100, 'Discount cannot exceed 100%').required('Discount is required'),
+    discount: yup.number().min(0, 'Discount cannot be negative').max(100, 'Discount cannot exceed 100%'),
 
     paymentStatus: yup.string().required('Payment Status is required')
   });
@@ -45,7 +45,7 @@ const ProductAdd = (props) => {
     productId: '',
     quantity: '',
     totalPrice: '',
-    discount: 0,
+    discount: '',
     paymentStatus: ''
   };
 
