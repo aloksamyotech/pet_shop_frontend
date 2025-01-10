@@ -12,29 +12,25 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getApi } from 'views/Api/comman.js';
+
+import { getApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 
 const AddLead = (props) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, fetchProduct } = props;
 
   const [categories, setCategories] = useState([]);
-  
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-    //console.log(response)
+
     setCategories(response?.data?.data);
   };
 
- 
-
   useEffect(() => {
     fetchCategory();
-    }, []);
+  }, []);
 
-  // -----------  validationSchema
   const validationSchema = yup.object({
     productName: yup
       .string()
@@ -43,44 +39,38 @@ const AddLead = (props) => {
 
     categoryId: yup.string().required('category  is required'),
 
-  
-
     price: yup.number().required('Price is required').typeError('Price must be a number').positive('Price must be greater than zero'),
 
-    discount: yup
-      .number()
-      .typeError('Discount must be a number')
-      .max(100, 'Discount cannot exceed 100%')
+    discount: yup.number().typeError('Discount must be a number').max(100, 'Discount cannot exceed 100%')
   });
 
-  // -----------   initialValues
   const initialValues = {
     productName: '',
     categoryId: '',
     price: '',
-    discount: 0
-    
+    discount: '0'
   };
 
-  
-
-  // formik
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
-      const response = await axios.post('http://localhost:7200/product/save', values);
-     // console.log('Product Value', response);
+      await postApi(urls.product.create, values);
+      fetchProduct();
       handleClose();
       toast.success('Product Add successfully');
-      window.location.reload();
     }
   });
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+        fetchProduct={fetchProduct}
+      >
         <DialogTitle
           id="scroll-dialog-title"
           style={{
@@ -128,15 +118,26 @@ const AddLead = (props) => {
                     value={formik.values.categoryId}
                     onChange={formik.handleChange}
                     error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
+                    MenuProps={{
+                                          PaperProps:{
+                                            style:{
+                                              maxHeight : 200,
+                                            }
+                    
+                                          }
+                                          ,
+                    
+                                        }}
                   >
-                    {Array.isArray(categories) && categories.map((category) => (
-                      <MenuItem key={category._id} value={category._id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
+                    {Array.isArray(categories) &&
+                      categories.map((category) => (
+                        <MenuItem key={category._id} value={category._id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </Grid>
-               
+
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Product Price</FormLabel>
                   <TextField
@@ -154,16 +155,15 @@ const AddLead = (props) => {
                   <FormControl fullWidth>
                     <FormLabel>Discount(%)</FormLabel>
                     <TextField
-                    id="discount"
-                    name="discount"
-                    size="small"
-                    fullWidth
-                    value={formik.values.discount}
-                    onChange={formik.handleChange}
-                    error={formik.touched.discount && Boolean(formik.errors.discount)}
-                    helperText={formik.touched.discount && formik.errors.discount}
-                  />
-                   
+                      id="discount"
+                      name="discount"
+                      size="small"
+                      fullWidth
+                      value={formik.values.discount}
+                      onChange={formik.handleChange}
+                      error={formik.touched.discount && Boolean(formik.errors.discount)}
+                      helperText={formik.touched.discount && formik.errors.discount}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>

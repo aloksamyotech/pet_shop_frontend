@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
-/* eslint-disable arrow-body-style */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -9,7 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {
-  //   Autocomplete,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -21,24 +17,21 @@ import {
   Select,
   TextField
 } from '@mui/material';
-// import { useState, useEffect } from 'react';
+
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Typography from '@mui/material/Typography';
 import ClearIcon from '@mui/icons-material/Clear';
 import { toast } from 'react-toastify';
-// import { apiget, apipost } from '../../service/api';
 
 const AddTask = ({ open, handleClose }) => {
-  
-
   const validationSchema = yup.object({
     subject: yup.string().required('Subject is required'),
     status: yup.string().required('Status is required'),
     startDate: yup.string().required('Start Date is required'),
     endDate: yup.string().required('End date is required'),
     priority: yup.string().required('Priority is required'),
-    // assignTo: yup.string().required('Assign To is required'),
+
     relatedTo: yup.string().required('Related To is required')
   });
 
@@ -53,15 +46,12 @@ const AddTask = ({ open, handleClose }) => {
     textColor: '',
     priority: '',
     note: ''
-   
   };
- 
-  // formik
+
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      //   addTask(values);
       console.log('taskValues', values);
       handleClose();
       formik.resetForm();
@@ -72,8 +62,6 @@ const AddTask = ({ open, handleClose }) => {
 
   console.log('errror', formik.errors);
 
-
-
   return (
     <div>
       <Dialog open={open} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
@@ -82,7 +70,6 @@ const AddTask = ({ open, handleClose }) => {
           style={{
             display: 'flex',
             justifyContent: 'space-between'
-            
           }}
         >
           <Typography variant="h6">Create Task </Typography>
@@ -174,90 +161,6 @@ const AddTask = ({ open, handleClose }) => {
                     </FormHelperText>
                   </FormControl>
                 </Grid>
-                {/* <Grid item xs={12} sm={6} md={4}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Assign To</FormLabel>
-                  <FormControl fullWidth>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id=""
-                      name="assignTo"
-                      label=""
-                      size="small"
-                      value={formik.values.assignTo}
-                      onChange={formik.handleChange}
-                      error={formik.touched.assignTo && Boolean(formik.errors.assignTo)}
-                    >
-                      {user.role === 'admin' ? (
-                        user.map((user) => {
-                          if (user.role === 'admin') {
-                            return (
-                              <MenuItem key={user._id} value={user._id}>
-                                {`${user.firstName} ${user.lastName}`}
-                              </MenuItem>
-                            );
-                          }
-                          return null;
-                        })
-                      ) : (
-                        <MenuItem key={userdata._id} value={userdata._id}>
-                          {`${userdata.firstName} ${userdata.lastName}`}
-                        </MenuItem>
-                      )}
-                    </Select>
-                    <FormHelperText error={formik.touched.assignTo && Boolean(formik.errors.assignTo)}>
-                      {formik.touched.assignTo && formik.errors.assignTo}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid> */}
-                {/* {formik.values.relatedTo === 'Lead' && (
-                  <Grid item xs={12} sm={12} md={12}>
-                    <FormLabel id="demo-row-radio-buttons-group-label">Related To Lead</FormLabel>
-                    <FormControl fullWidth>
-                      <Autocomplete
-                        id="lead-autocomplete"
-                        options={leadData}
-                        getOptionLabel={(lead) => `${lead.firstName} ${lead.lastName}`}
-                        value={leadData.find((lead) => lead._id === formik.values.lead_id) || null}
-                        onChange={(event, newValue) => {
-                          formik.setFieldValue('lead_id', newValue ? newValue._id : '');
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            size="small"
-                            error={formik.touched.lead_id && Boolean(formik.errors.lead_id)}
-                            helperText={formik.touched.lead_id && formik.errors.lead_id}
-                          />
-                        )}
-                      />
-                    </FormControl>
-                  </Grid>
-                )}
-
-                {formik.values.relatedTo === 'Contact' && (
-                  <Grid item xs={12} sm={12} md={12}>
-                    <FormLabel id="demo-row-radio-buttons-group-label">Related To Contact</FormLabel>
-                    <FormControl fullWidth>
-                      <Autocomplete
-                        id="contact-autocomplete"
-                        options={contactData}
-                        getOptionLabel={(contact) => `${contact.firstName} ${contact.lastName}`}
-                        value={contactData.find((contact) => contact._id === formik.values.contact_id) || null}
-                        onChange={(event, newValue) => {
-                          formik.setFieldValue('contact_id', newValue ? newValue._id : '');
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            size="small"
-                            error={formik.touched.contact_id && Boolean(formik.errors.contact_id)}
-                            helperText={formik.touched.contact_id && formik.errors.contact_id}
-                          />
-                        )}
-                      />
-                    </FormControl>
-                  </Grid>
-                )} */}
 
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Start Date</FormLabel>

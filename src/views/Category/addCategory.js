@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -18,54 +17,44 @@ import { toast } from 'react-toastify';
 import Palette from '../../ui-component/ThemePalette';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useState } from 'react';
+import { urls } from 'views/Api/constant.js';
+import { postApi } from 'views/Api/comman.js';
+
+const AddDetail = (props) => {
+  const { open, handleClose, fetchCategories } = props;
 
 
-const AddDetail= (props) => {
-  const { open, handleClose } = props;
- 
-
-  // -----------  validationSchema
   const validationSchema = yup.object({
- name: yup
-         .string()
-         .required(' Name is required')
-         .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters'), 
-     
-     description: yup
-         .string()
-         .required('Description is required')
-         .matches(/^[A-Za-z\s]+$/, 'description must only contain letters'), 
- 
-  
+    name: yup
+      .string()
+      .required(' Name is required')
+      .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters'),
+
+    description: yup
+      .string()
+      .required('Description is required')
+      .matches(/^[A-Za-z\s]+$/, 'description must only contain letters')
   });
 
-  // -----------   initialValues
+  
   const initialValues = {
-   name :'',
-   description:'',
-   
+    name: '',
+    description: ''
   };
 
- 
-  // formik
+  
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      console.log('CallValues', values);
-        const response = await axios.post("http://localhost:7200/category/save",values)
-
-       console.log('CallValues', response);
+     
+    await postApi(urls.category.create , values);
+      await fetchCategories();
       handleClose();
-      toast.success('Calls Add successfully');
-      window.location.reload();
-    
+      toast.success('Category Add successfully');
     }
   });
-
-
-  
- 
 
   return (
     <div>
@@ -86,47 +75,38 @@ const AddDetail= (props) => {
         <DialogContent dividers>
           <form>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-          
-               <Grid container columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-
-               <Grid item xs={12} sm={12} md={12}>
+              <Grid container columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+                <Grid item xs={12} sm={12} md={12}>
                   <FormControl fullWidth>
                     <FormLabel>Name</FormLabel>
                     <TextField
-                    id="name"
-                    name="name"
-                    size="small"
-                    fullWidth
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    error={formik.touched.name && Boolean(formik.errors.name)}
+                      id="name"
+                      name="name"
+                      size="small"
+                      fullWidth
+                      value={formik.values.name}
+                      onChange={formik.handleChange}
+                      error={formik.touched.name && Boolean(formik.errors.name)}
                       helperText={formik.touched.name && formik.errors.name}
-                  />
-                     </FormControl>
-               
-                  </Grid>
-                <Grid item xs={12} sm={12} md={12}>
-                <FormControl fullWidth>
-                  <FormLabel>Description</FormLabel>
-                  <TextField
-                    id="description"
-                    name="description"
-                    size="small"
-                    fullWidth
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                      helperText={formik.touched.description && formik.errors.description}
-                  />
+                    />
                   </FormControl>
-               
-                </Grid>  
-               
-              
                 </Grid>
-
-
-
+                <Grid item xs={12} sm={12} md={12}>
+                  <FormControl fullWidth>
+                    <FormLabel>Description</FormLabel>
+                    <TextField
+                      id="description"
+                      name="description"
+                      size="small"
+                      fullWidth
+                      value={formik.values.description}
+                      onChange={formik.handleChange}
+                      error={formik.touched.description && Boolean(formik.errors.description)}
+                      helperText={formik.touched.description && formik.errors.description}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
             </DialogContentText>
           </form>
         </DialogContent>

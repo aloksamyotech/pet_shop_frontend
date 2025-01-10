@@ -1,7 +1,4 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useState,useEffect } from 'react';
-// @mui
+import { useState, useEffect } from 'react';
 import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Link as MuiLink } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -14,28 +11,30 @@ import Iconify from 'ui-component/iconify';
 import AddDetail from './AddDetail';
 import { urls } from 'views/Api/constant.js';
 import { getApi } from 'views/Api/comman.js';
-
+import { color } from '@mui/system';
 
 const Customer = () => {
   const navigate = useNavigate();
   const [openAdd, setOpenAdd] = useState(false);
   const [customer, setCustomer] = useState([]);
 
+  const fetchCustomer = async () => {
+    const response = await getApi(urls.customer.get);
+    console.log(response);
+    setCustomer(response?.data?.data);
+  };
 
-  
-
-const fetchCustomer = async  () =>{
-  const response = await getApi(urls.customer.get);
-  console.log(response);
-  setCustomer(response?.data?.data)
-}
-
-useEffect(()=>{
-  fetchCustomer();
-} ,[])
+  useEffect(() => {
+    fetchCustomer();
+  }, []);
 
   const handleView = (id) => {
     navigate(`/dashboard/customer/user/${id}`);
+  };
+
+
+  const home = () =>{
+    navigate('/');
   }
 
   const columns = [
@@ -51,15 +50,14 @@ useEffect(()=>{
       flex: 1,
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
-   
 
-  {
+    {
       field: 'email',
       headerName: 'Email',
       flex: 1,
       cellClassName: 'name-column--cell--capitalize'
     },
-   
+
     {
       field: 'address',
       headerName: 'Address',
@@ -78,14 +76,52 @@ useEffect(()=>{
     {
       field: 'customerType',
       headerName: 'Customer Type To',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor:
+              params.value === 'Premium' ? 'green' : params.value === 'Regular' ? '#1b2ec7' : params.value === 'Business' ? '#b03e10' : '',
+            width: '100px',
+            textAlign: 'center',
+            padding: '6px ',
+
+            '&:hover': {
+              backgroundColor:
+                params.value === 'Premium' ? 'green' : params.value === 'Regular' ? '#1b2ec7' : params.value === 'Business' ? '#b03e10' : ''
+            }
+          }}
+        >
+          {params.value}
+        </Button>
+      )
     },
     {
       field: 'status',
       headerName: 'Status',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor:
+              params.value === 'Active' ? 'green' : params.value === 'Inactive' ? '#05707b' : params.value === 'Blocked' ? '#463e3a' : '',
+            width: '100px',
+            textAlign: 'center',
+            padding: '6px ',
+
+            '&:hover': {
+              backgroundColor:
+                params.value === 'Active' ? 'green' : params.value === 'Inactive' ? '#05707b' : params.value === 'Blocked' ? '#463e3a' : ''
+            }
+          }}
+        >
+          {params.value}
+        </Button>
+      )
     },
-    
+
     {
       field: 'Action',
       headerName: 'Action ',
@@ -93,7 +129,7 @@ useEffect(()=>{
       sortable: false,
       renderCell: (params) => (
         <IconButton>
-          <VisibilityIcon onClick={() => handleView(params.row?.id)}/>
+          <VisibilityIcon sx={{ color: '#1d4587' }} onClick={() => handleView(params.row?.id)} />
         </IconButton>
       )
     }
@@ -104,7 +140,7 @@ useEffect(()=>{
 
   return (
     <>
-      <AddDetail open={openAdd} handleClose={handleCloseAdd} />
+      <AddDetail open={openAdd} handleClose={handleCloseAdd} fetchCustomer={fetchCustomer} />
       <Container>
         <Stack direction="row" alignItems="center" mb={5}>
           <Box
@@ -124,10 +160,8 @@ useEffect(()=>{
               separator={<NavigateNextIcon fontSize="small" />}
               aria-label="breadcrumb"
               sx={{ display: 'flex', alignItems: 'center' }}
-            >
-              <MuiLink component={Link} to="/dashboard/default" color="inherit">
-                <HomeIcon sx={{ color: '#5E35B1' }} />
-              </MuiLink>
+            ><HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
+              
               <Typography variant="h5">Customer</Typography>
             </Breadcrumbs>
 
@@ -147,7 +181,6 @@ useEffect(()=>{
               <DataGrid
                 rows={customer}
                 columns={columns}
-                checkboxSelection
                 getRowId={(row) => row._id}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{ toolbar: { showQuickFilter: true } }}
