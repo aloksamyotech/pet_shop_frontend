@@ -60,6 +60,7 @@ const ProductAdd = (props) => {
     onSubmit: async (values) => {
       await postApi(urls.company.create, values);
       await fetchSupplier();
+      formik.resetForm();
       toast.success('Company Add successfully');
       handleClose();
       formik.resetForm();

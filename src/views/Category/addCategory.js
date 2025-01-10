@@ -15,7 +15,6 @@ import { FormControl, FormHelperText, FormLabel, Select } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { toast } from 'react-toastify';
 import Palette from '../../ui-component/ThemePalette';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { urls } from 'views/Api/constant.js';
@@ -23,7 +22,7 @@ import { postApi } from 'views/Api/comman.js';
 
 const AddDetail = (props) => {
   const { open, handleClose, fetchCategories } = props;
-
+  
 
   const validationSchema = yup.object({
     name: yup
@@ -48,13 +47,18 @@ const AddDetail = (props) => {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-     
-    await postApi(urls.category.create , values);
+     await postApi(urls.category.create , values);
       await fetchCategories();
+      formik.resetForm();
       handleClose();
       toast.success('Category Add successfully');
     }
   });
+
+
+
+
+
 
   return (
     <div>
@@ -73,7 +77,7 @@ const AddDetail = (props) => {
         </DialogTitle>
 
         <DialogContent dividers>
-          <form>
+          <form> 
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
               <Grid container columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={12} md={12}>

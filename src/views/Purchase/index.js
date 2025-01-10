@@ -20,6 +20,7 @@ const Purchase = () => {
     const response = await getApi(urls.purchase.get);
     console.log(response)
     setPurchase(response?.data?.data);
+    
   };
 
   useEffect(() => {
@@ -38,9 +39,9 @@ const Purchase = () => {
       field: 'productName',
       headerName: 'Product Name',
       flex: 1,
-      valueGetter: (purchase) => {
-        // console.log("data----------------------------",purchase.row.quantity);
-        return purchase.row.productName[0].productName;
+      valueGetter: (params) => {
+        console.log("data----------------------------",params);
+        //return purchase.row.productName[0].productName;
        
       }
     },
@@ -50,14 +51,8 @@ const Purchase = () => {
       headerName: 'Amount',
       flex: 1,
       editable: false, 
-      valueGetter: (purchase) => {
-       // console.log("data----------------------------",purchase.row.productName[0].price);
-        const response= (purchase.row.productName[0].price ) *(purchase.row.quantity);
-        return response;
-       
-      }
       
-    },
+},
     {
       field: 'discount',
       headerName: 'Discount',
