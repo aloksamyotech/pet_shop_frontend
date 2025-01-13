@@ -39,7 +39,7 @@ const ProductAdd = (props) => {
 
     status: yup.string().required('Status is required'),
 
-    companyType: yup.string().required('Company Type is required'),
+   
 
     description: yup.string().required('Description is required')
   });
@@ -50,7 +50,7 @@ const ProductAdd = (props) => {
     email: '',
     address: '',
     status: '',
-    companyType: '',
+    
     description: ''
   };
 
@@ -161,21 +161,7 @@ const ProductAdd = (props) => {
                     helperText={formik.touched.description && formik.errors.description}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Company Type</FormLabel>
-                  <Select
-                    id="companyType"
-                    name="companyType"
-                    size="small"
-                    fullWidth
-                    value={formik.values.companyType}
-                    onChange={formik.handleChange}
-                  >
-                    <MenuItem value="Regular">Regular</MenuItem>
-                    <MenuItem value="Premium">Premium</MenuItem>
-                    <MenuItem value="Business">Business</MenuItem>
-                  </Select>
-                </Grid>
+               
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Status</FormLabel>
                   <Select id="status" name="status" size="small" fullWidth value={formik.values.status} onChange={formik.handleChange}>

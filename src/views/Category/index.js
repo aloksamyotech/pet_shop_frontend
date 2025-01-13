@@ -96,7 +96,7 @@ const Customer = () => {
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
-                  Add category
+                  New  category
                 </Button>
               </Card>
             </Stack>

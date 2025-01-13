@@ -25,10 +25,7 @@ import { urls } from 'views/Api/constant';
 
 const ProductAdd = (props) => {
   const { open, handleClose, fetchPurchase } = props;
-
-  const [dataStore, setDataStore] = useState(1);
-  const [discountStore, setDiscountStore] = useState(0);
-  const [product, setProduct] = useState([]);
+ const [product, setProduct] = useState([]);
 
   const initialValues = {
     productId: '',
@@ -48,9 +45,9 @@ const ProductAdd = (props) => {
       .required('Quantity is required'),
     totalPrice: yup
       .number()
-      .positive('Total Price must be a positive number')
-      .required('Total Price is required'),
-    discount: yup.number().min(0, 'Discount cannot be negative').max(100, 'Discount cannot exceed 100%'),
+      .positive('Total Price must be greater than 0   ')
+      .required('Total Price is required') , 
+    discount: yup.number(),
     paymentStatus: yup.string().required('Payment Status is required'),
     productPrice: yup
       .number()
@@ -70,12 +67,13 @@ const ProductAdd = (props) => {
     },
   });
 
-  const calculateAmount = (dataStore, discountStore) => {
+  const calculateAmount = (quantity, discount) => {
     const selectedProduct = product.find((p) => p._id === formik.values.productId);
     const price = selectedProduct ? selectedProduct.price : 0;
-    
+
     formik.setFieldValue('productPrice', price);
-    return price * dataStore - ( discountStore);
+    return price * quantity - (discount);
+    
   };
 
   const fetchProduct = async () => {
@@ -84,9 +82,12 @@ const ProductAdd = (props) => {
   };
 
   useEffect(() => {
-    const dataPrice = calculateAmount(dataStore, discountStore);
-    formik.setFieldValue('totalPrice', dataPrice);
-  }, [dataStore, discountStore, formik.values.productId]);
+    const  quantity = formik.values.quantity || 1;
+    const discount = formik.values.discount ||  0;
+    const dataPrice = calculateAmount(quantity, discount);
+
+  formik.setFieldValue('totalPrice', dataPrice);
+  }, [formik.values.quantity, formik.values.discount, formik.values.productId]);
 
 
   useEffect(() => {
@@ -156,15 +157,14 @@ const ProductAdd = (props) => {
                   value={formik.values.quantity}
                   onChange={(e) => {
                     const data = parseInt(e.target.value, 10) || 0;
-                    setDataStore(data);
-                    formik.setFieldValue('quantity', data);
+                  formik.setFieldValue('quantity', data);
                   }}
                   error={formik.touched.quantity && Boolean(formik.errors.quantity)}
                   helperText={formik.touched.quantity && formik.errors.quantity}
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Discount (%)</FormLabel>
+                <FormLabel>Discount </FormLabel>
                 <TextField
                   id="discount" 
                   name="discount"
@@ -173,8 +173,7 @@ const ProductAdd = (props) => {
                   value={formik.values.discount}
                   onChange={(e) => {
                     const discount = parseFloat(e.target.value) || 0;
-                    setDiscountStore(discount);
-                    formik.setFieldValue('discount', discount);
+                formik.setFieldValue('discount', discount);
                   }}
                   error={formik.touched.discount && Boolean(formik.errors.discount)}
                   helperText={formik.touched.discount && formik.errors.discount}
@@ -191,7 +190,7 @@ const ProductAdd = (props) => {
                   onChange={formik.handleChange}
                 >
                   <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="Completed">Completed</MenuItem>
+                  <MenuItem value="Success">Success</MenuItem>
                   <MenuItem value="Failed">Failed</MenuItem>
                 </Select>
               </Grid>
@@ -219,7 +218,7 @@ const ProductAdd = (props) => {
         <Button
           onClick={() => {
             formik.resetForm();
-            handleClose();
+            handleClose();  
           }}
           variant="outlined"
           color="error"
