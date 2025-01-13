@@ -57,6 +57,7 @@ const AddLead = (props) => {
     onSubmit: async (values) => {
       await postApi(urls.product.create, values);
       fetchProduct();
+      formik.resetForm();
       handleClose();
       toast.success('Product Add successfully');
     }
