@@ -3,15 +3,19 @@ import { useState } from 'react';
 import {
   Stack,
   Button,
+  Select,
   Container,
+  MenuItem,
   Typography,
   Card,
   Box,
   CardMedia,
-  CardContent,
+  FormLabel,
   Breadcrumbs,
   Grid,
-  getAccordionActionsUtilityClass
+  getAccordionActionsUtilityClass,
+  Input,
+  InputBase
 } from '@mui/material';
 import Dashboard from '../dashboard/Default/index';
 import HomeIcon from '@mui/icons-material/Home';
@@ -21,16 +25,24 @@ import { useEffect } from 'react';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import Cart from './Compontent/Cart';
+import SearchIcon from '@mui/icons-material/Search';
+import { useFormik } from 'formik';
 
 const AddFood = () => {
   const navigate = useNavigate();
   const [categoryData, setCategoryData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [search, setSearch] = useState('');
 
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
 
-  console.log(selectedCategory);
-  console.log(productData);
+  const formik = useFormik({
+});
+
+  
 
   const [food, setFood] = useState([]);
   const [item, setItem] = useState([]);
@@ -45,7 +57,16 @@ const AddFood = () => {
     setProductData(response.data?.data);
   };
 
-  const filterProduct = selectedCategory ? productData.filter((product) => product.categoryId == selectedCategory) : productData;
+
+  // const filterProduct = productData.filter((product) => product.productName.toLowerCase().includes(search));
+
+  const filterProduct = productData.filter((product) => {
+    const matchCategory = selectedCategory ? product.categoryId == selectedCategory : true;
+    console.log("matchCategory---------------",matchCategory)
+   const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
+   console.log("matchSearch---------------------",matchSearch)
+    return matchCategory && matchSearch;
+  });
 
   useEffect(() => {
     fetchCategory();
@@ -74,6 +95,8 @@ const AddFood = () => {
     setItem(item);
   };
 
+  
+
   return (
     <>
       <Container maxWidth="xl">
@@ -100,12 +123,43 @@ const AddFood = () => {
           </Box>
         </Stack>
 
+        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white', padding: '5px' }}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '10px'
+            }}
+          >
+            <Box
+              sx={{
+                width: '80%',
+                height: '40px',
+                border: '1px solid #ccc',
+                borderRadius: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                mr: '10px',
+                type: 'text'
+              }}
+            >
+              <SearchIcon  sx={{ml:'8px'}}/>
+              <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
+            </Box>
+          </Box>
+        </Stack>
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={2}>
             <Box sx={{ flex: 1, overflowY: 'auto', height: '70vh', width: '100%', ml: '-5px' }}>
               {categoryData.map((category) => (
                 <Card
-                  key={category.name}
+                  key={category._id}
                   onClick={() => setSelectedCategory(category._id)}
                   sx={{
                     backgroundColor: 'white',
@@ -165,11 +219,8 @@ const AddFood = () => {
                         {product.productName}
                       </Typography>
                       <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                        {product.price}  <Button sx={{backgroundColor:'#420a78', border:'20px', color:'#ffff',borderRadius:'20px' , minWidth:'auto',  padding: '4px 8px','&:hover': {
-              backgroundColor: '#420a78'
-            }}}>{product.discount}</Button>
+                        {product.price}
                       </Typography>
-                      
                     </Card>
                   </Grid>
                 ))}
