@@ -40,8 +40,8 @@ const Purchase = () => {
       headerName: 'Product Name',
       flex: 1,
       valueGetter: (params) => {
-        console.log("data----------------------------",params);
-        //return purchase.row.productName[0].productName;
+       
+        return params.row.productName[0].productName;
        
       }
     },
@@ -58,12 +58,7 @@ const Purchase = () => {
       headerName: 'Discount',
       flex: 1,
 
-      // valueGetter: (purchase) => {
-      //   // console.log("data----------------------------",purchase);
-        
-      //    return ;
-        
-      //  }
+     
       
     },
     {
@@ -80,14 +75,14 @@ const Purchase = () => {
           variant="contained"
           sx={{
             backgroundColor:
-              params.value === 'Completed' ? 'green' : params.value === 'Pending' ? '#1b2ec7' : params.value === 'Failed' ? '#b03e10' : '',
+              params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : '',
             width: '100px',
             textAlign: 'center',
             padding: '6px ',
 
             '&:hover': {
               backgroundColor:
-                params.value === 'Completed' ? 'green' : params.value === 'Pending' ? '#1b2ec7' : params.value === 'Failed' ? '#b03e10' : ''
+                params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : ''
             }
           }}
         >
@@ -127,7 +122,7 @@ const Purchase = () => {
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
-                  Information
+                  New Purchase 
                 </Button>
               </Card>
             </Stack>

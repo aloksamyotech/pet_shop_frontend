@@ -74,30 +74,6 @@ const Customer = () => {
       flex: 1
     },
     {
-      field: 'customerType',
-      headerName: 'Customer Type To',
-      flex: 1,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor:
-              params.value === 'Premium' ? 'green' : params.value === 'Regular' ? '#1b2ec7' : params.value === 'Business' ? '#b03e10' : '',
-            width: '100px',
-            textAlign: 'center',
-            padding: '6px ',
-
-            '&:hover': {
-              backgroundColor:
-                params.value === 'Premium' ? 'green' : params.value === 'Regular' ? '#1b2ec7' : params.value === 'Business' ? '#b03e10' : ''
-            }
-          }}
-        >
-          {params.value}
-        </Button>
-      )
-    },
-    {
       field: 'status',
       headerName: 'Status',
       flex: 1,
@@ -106,14 +82,14 @@ const Customer = () => {
           variant="contained"
           sx={{
             backgroundColor:
-              params.value === 'Active' ? 'green' : params.value === 'Inactive' ? '#05707b' : params.value === 'Blocked' ? '#463e3a' : '',
+              params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ?  '#FF5733'  : '',
             width: '100px',
             textAlign: 'center',
             padding: '6px ',
 
             '&:hover': {
               backgroundColor:
-                params.value === 'Active' ? 'green' : params.value === 'Inactive' ? '#05707b' : params.value === 'Blocked' ? '#463e3a' : ''
+                params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ?'#12aae8': params.value === 'Blocked' ?  '#FF5733'  : ''
             }
           }}
         >

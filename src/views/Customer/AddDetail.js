@@ -47,7 +47,7 @@ const AddDetail = (props) => {
       .max(10, 'Address must be at least 10 characters long')
       .matches(/^[A-Za-z\s]+$/, 'address must only contain letters'),
 
-    customerType: yup.string().required('Customer Type is required')
+   
   });
 
   const initialValues = {
@@ -58,7 +58,7 @@ const AddDetail = (props) => {
     phoneNumber: '',
     dateOfBirth: '',
     status: '',
-    customerType: ''
+    
   };
 
   const formik = useFormik({
@@ -185,23 +185,7 @@ const AddDetail = (props) => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormControl fullWidth>
-                    <FormLabel>Customer Type </FormLabel>
-                    <Select
-                      id="customerType"
-                      name="customerType"
-                      size="small"
-                      fullWidth
-                      value={formik.values.customerType}
-                      onChange={formik.handleChange}
-                    >
-                      <MenuItem value="Regular">Regular</MenuItem>
-                      <MenuItem value="Premium">Premium</MenuItem>
-                      <MenuItem value="Business">Business</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
+               
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
                     <FormLabel>Status</FormLabel>

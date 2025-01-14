@@ -62,43 +62,6 @@ const Supplier = () => {
       flex: 1
     },
     {
-      field: 'companyType',
-      headerName: 'Company Type',
-      flex: 1,
-
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor:
-              params.value === 'Regular'
-                ? '#60383e'
-                : params.value === 'Premium'
-                ? '#1b2ec7'
-                : params.value === 'Business'
-                ? '#b03e10'
-                : '',
-            width: '100px',
-            textAlign: 'center',
-            padding: '6px',
-
-            '&:hover': {
-              backgroundColor:
-                params.value === 'Regular'
-                  ? '#60383e'
-                  : params.value === 'Premium'
-                  ? '#1b2ec7'
-                  : params.value === 'Business'
-                  ? '#b03e10'
-                  : ''
-            }
-          }}
-        >
-          {params.value}
-        </Button>
-      )
-    },
-    {
       field: 'status',
       headerName: 'Status',
       flex: 1,
@@ -107,13 +70,13 @@ const Supplier = () => {
           variant="contained"
           sx={{
             backgroundColor:
-              params.value === 'Active' ? 'green' : params.value === 'Inactive' ? '#471a7b' : params.value === 'Blocked' ? '#b03e10' : '',
+              params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ? '#FF5733' : '',
             width: '100px',
             textAlign: 'center',
 
             '&:hover': {
               backgroundColor:
-                params.value === 'Active' ? 'green' : params.value === 'Inactive' ? '#471a7b' : params.value === 'Blocked' ? '#b03e10' : ''
+                params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ? '#FF5733'  : ''
             },
 
             '&:focus': {
@@ -158,7 +121,7 @@ const Supplier = () => {
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
-                  Supplier Information
+                   New Supplier 
                 </Button>
               </Card>
             </Stack>
