@@ -10,7 +10,7 @@ import {
   Card,
   Box,
   CardMedia,
-  FormLabel,
+  InputBase,
   Breadcrumbs,
   Grid,
   getAccordionActionsUtilityClass,
@@ -25,7 +25,7 @@ import { useEffect } from 'react';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import Cart from './Compontent/Cart';
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import { useFormik } from 'formik';
 
 const AddFood = () => {
@@ -40,9 +40,9 @@ const AddFood = () => {
   };
 
   const formik = useFormik({
-});
+  });
 
-  
+
 
   const [food, setFood] = useState([]);
   const [item, setItem] = useState([]);
@@ -58,13 +58,12 @@ const AddFood = () => {
   };
 
 
-  // const filterProduct = productData.filter((product) => product.productName.toLowerCase().includes(search));
 
   const filterProduct = productData.filter((product) => {
     const matchCategory = selectedCategory ? product.categoryId == selectedCategory : true;
-    console.log("matchCategory---------------",matchCategory)
-   const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
-   console.log("matchSearch---------------------",matchSearch)
+
+    const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
+
     return matchCategory && matchSearch;
   });
 
@@ -95,7 +94,7 @@ const AddFood = () => {
     setItem(item);
   };
 
-  
+
 
   return (
     <>
@@ -148,7 +147,7 @@ const AddFood = () => {
                 type: 'text'
               }}
             >
-              <SearchIcon  sx={{ml:'8px'}}/>
+              <SearchIcon sx={{ ml: '8px' }} />
               <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
             </Box>
           </Box>
@@ -219,7 +218,7 @@ const AddFood = () => {
                         {product.productName}
                       </Typography>
                       <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                        {product.price}
+                        {product.price} 
                       </Typography>
                     </Card>
                   </Grid>

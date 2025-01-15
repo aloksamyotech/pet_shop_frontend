@@ -40,9 +40,10 @@ purchase: {
         create: base + '/category/save',
         get: base + '/category/fetch',
         update: base + '/category/update',
-        delete:  base + '/category/:categoryId'
+        delete:  base + '/category/:categoryId',
+        bulkSave: base + '/category/bulkUpload',
     },
-    
+  
     
 
     }

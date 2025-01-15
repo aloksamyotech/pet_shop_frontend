@@ -9,6 +9,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNavigate, Link } from 'react-router-dom';
 import Iconify from 'ui-component/iconify';
 import AddDetail from './addCategory';
+import AddBulkUpload   from './categoryBulk';
 
 import { useEffect } from 'react';
 import { urls } from 'views/Api/constant.js';
@@ -18,6 +19,7 @@ const Customer = () => {
   const navigate = useNavigate();
   const [openAdd, setOpenAdd] = useState(false);
   const [category, setCategory] = useState([]);
+  const[open , setOpen] = useState(false);
 
   const handleView = (id) => {
     navigate(`/dashboard/customer/user/${_id}`);
@@ -65,8 +67,13 @@ const Customer = () => {
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
 
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <>
+    <AddBulkUpload open={open} handleClose={handleClose} fetchCategories={fetchCategories} />
       <AddDetail open={openAdd} handleClose={handleCloseAdd} fetchCategories={fetchCategories} />
       <Container>
         <Stack direction="row" alignItems="center" mb={5}>
@@ -94,6 +101,11 @@ const Customer = () => {
             </Breadcrumbs>
 
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
+            <Card>
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen} size="small">
+                  Bulk Upload
+                </Button>
+              </Card>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
                   New  category
