@@ -6,7 +6,9 @@ export const urls = Object.freeze({
         create: base + '/product/save',
         get: base + '/product/fetch',
         update: base + '/product/update',
-        delete:  base + '/product/:categoryId'
+        delete:  base + '/product/:categoryId',
+        bulkSave: base + '/product/bulkUpload'
+
     },
     productType: {
         create: base + '/productType/save',

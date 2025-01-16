@@ -12,6 +12,9 @@ export const postApi = async (url, data, headers = {}) => {
         throw new Error(error.response ? error.response.data : error.message);
     }
 };
+
+
+
 export const getApi = async (url, params = {}, headers = {}) => {
     try {
         const defaultHeaders = {
