@@ -56,6 +56,7 @@ const AddLead = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       await postApi(urls.product.create, values);
+      //console.log("values--------------",values);
       fetchProduct();
       formik.resetForm();
       handleClose();

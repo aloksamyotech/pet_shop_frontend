@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { urls } from 'views/Api/constant.js';
 import { postApi } from 'views/Api/comman.js';
 
+
 const AddDetail = (props) => {
   const { open, handleClose, fetchCategories } = props;
   

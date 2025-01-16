@@ -7,15 +7,19 @@ import Iconify from '../../ui-component/iconify';
 import HomeIcon from '@mui/icons-material/Home';
 import TableStyle from '../../ui-component/TableStyle';
 import AddLead from './AddProduct.js';
+import AddBulkUpload from './productBulkUpload.js';
 import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 
 const Lead = () => {
   const [product, setProduct] = useState([]);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [open,setOpen] = useState(false)
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
+    //console.log("v---------------------",response?.data?.data)
     setProduct(response?.data?.data);
   };
 
@@ -28,7 +32,7 @@ const Lead = () => {
   const handleClick = () => {
     navigate('/dashboard/default');
   };
-  const [openAdd, setOpenAdd] = useState(false);
+  
   const columns = [
     {
       field: 'productName',
@@ -41,6 +45,7 @@ const Lead = () => {
       headerName: 'Category',
       flex: 1,
       valueGetter: (product) => {
+       // console.log("product_____________",product.row.category[0]._id)
         return product.row.category[0].name;
       }
     },
@@ -58,8 +63,15 @@ const Lead = () => {
 
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
+
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <>
+    <AddBulkUpload open={open}  handleClose={handleClose} fetchProduct={fetchProduct}/>
+
       <AddLead open={openAdd} handleClose={handleCloseAdd} fetchProduct={fetchProduct} />
       <Grid>
         <Stack direction="row" alignItems="center" mb={5}>
@@ -85,10 +97,17 @@ const Lead = () => {
 
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
+              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen} size="small">
+                  BulkUpload
+                </Button>
+                </Card>
+                <Card>
+
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
                   New Product
                 </Button>
-              </Card>
+                </Card>
+             
             </Stack>
           </Box>
         </Stack>

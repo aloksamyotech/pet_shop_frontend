@@ -10,13 +10,14 @@ import {
   Card,
   Box,
   CardMedia,
-  FormLabel,
+  InputBase,
   Breadcrumbs,
   Grid,
-  getAccordionActionsUtilityClass,
+ 
   Input,
-  InputBase
+  
 } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Dashboard from '../dashboard/Default/index';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +26,7 @@ import { useEffect } from 'react';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import Cart from './Compontent/Cart';
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import { useFormik } from 'formik';
 
 const AddFood = () => {
@@ -40,9 +41,9 @@ const AddFood = () => {
   };
 
   const formik = useFormik({
-});
+  });
 
-  
+
 
   const [food, setFood] = useState([]);
   const [item, setItem] = useState([]);
@@ -58,13 +59,12 @@ const AddFood = () => {
   };
 
 
-  // const filterProduct = productData.filter((product) => product.productName.toLowerCase().includes(search));
 
   const filterProduct = productData.filter((product) => {
     const matchCategory = selectedCategory ? product.categoryId == selectedCategory : true;
-    console.log("matchCategory---------------",matchCategory)
-   const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
-   console.log("matchSearch---------------------",matchSearch)
+
+    const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
+
     return matchCategory && matchSearch;
   });
 
@@ -95,7 +95,7 @@ const AddFood = () => {
     setItem(item);
   };
 
-  
+
 
   return (
     <>
@@ -123,7 +123,7 @@ const AddFood = () => {
           </Box>
         </Stack>
 
-        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white', padding: '5px' }}>
+        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '35px', backgroundColor: 'white', padding: '5px' }}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -148,15 +148,31 @@ const AddFood = () => {
                 type: 'text'
               }}
             >
-              <SearchIcon  sx={{ml:'8px'}}/>
+              <SearchIcon sx={{ ml: '8px' }} />
               <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
             </Box>
           </Box>
         </Stack>
 
+
+
+
+
+
+
+        {/* <Box sx={{backgroundColor:'#ffff'}}> */}
         <Grid container spacing={2}>
+        
           <Grid item xs={12} md={2}>
-            <Box sx={{ flex: 1, overflowY: 'auto', height: '70vh', width: '100%', ml: '-5px' }}>
+            <Box sx={{ flex: 1, overflowY: 'auto', height: '70vh', width: '100%', ml: '-5px' ,backgroundColor:'#fff'}}>
+            <Box sx={{position: 'sticky',
+    top: 0,           
+    backgroundColor: 'white', 
+    zIndex: 10,        
+    display: 'flex',
+    justifyContent: 'center',
+    fontSize: '20px',
+    padding: '15px',}}>Category</Box>
               {categoryData.map((category) => (
                 <Card
                   key={category._id}
@@ -175,6 +191,7 @@ const AddFood = () => {
                     height: '20vh'
                   }}
                 >
+                  
                   <CardMedia
                     component="img"
                     height="90vh"
@@ -182,7 +199,7 @@ const AddFood = () => {
                     sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                   />
 
-                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>{category.name}</Typography>
+                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center',padding:'5px' }}>{category.name}</Typography>
                 </Card>
               ))}
             </Box>
@@ -190,7 +207,16 @@ const AddFood = () => {
 
           <Grid item xs={12} md={6}>
             <Box sx={{ height: '70vh', borderRadius: '8px', flex: 1, overflowY: 'auto', backgroundColor: 'white' }}>
+            <Box sx={{ position: 'sticky',
+    top: 0,           
+    backgroundColor: 'white', 
+    zIndex: 10,        
+    display: 'flex',
+    justifyContent: 'center',
+    fontSize: '20px',
+    padding: '15px',}}>Product</Box>
               <Grid container spacing={2}>
+              
                 {filterProduct.map((product) => (
                   <Grid item xs={12} sm={4} md={4} key={product.id}>
                     <Card
@@ -215,11 +241,11 @@ const AddFood = () => {
                         sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                       />
 
-                      <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
+                      <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center' , padding:'5px' }}>
                         {product.productName}
                       </Typography>
                       <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                        {product.price}
+                        {product.price} 
                       </Typography>
                     </Card>
                   </Grid>
@@ -229,11 +255,15 @@ const AddFood = () => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card sx={{ width: '110%', p: 0 }}>
-              <Cart cartItems={food} setCartItems={setFood} />
-            </Card>
-          </Grid>
+            <Box sx={{ width: '110%', p: 0 , backgroundColor:'#fff' , height:'70vh' , display:'flex',justifyContent:'center', alignItems:'center'}}>
+              {/* <Cart cartItems={food} setCartItems={setFood} /> */}
+              <ShoppingCartIcon sx={{fontSize:'100px'}} />
+
+            </Box>
         </Grid>
+         
+        </Grid>
+        {/* </Box> */}
       </Container>
     </>
   );
