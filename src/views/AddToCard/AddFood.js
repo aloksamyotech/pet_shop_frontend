@@ -21,6 +21,8 @@ import { useFormik } from 'formik';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import Checkout from 'views/Order/index';
+
 
 const AddFood = () => {
   const navigate = useNavigate();
@@ -28,36 +30,65 @@ const AddFood = () => {
   const [productData, setProductData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [search, setSearch] = useState('');
-  const [food, setFood] = useState([]);
   const [cartItems, setCartItems] = useState([]);
 
-  const handleDecrementQuantity = (id) => {
+  const handleDecrementQuantity = (_id) => {
     setCartItems((prevCart) =>
       prevCart.map((cartItem) =>
-        cartItem.id === id && cartItem.quantity > 1
+        cartItem._id === _id && cartItem.quantity > 1
           ? { ...cartItem, quantity: cartItem.quantity - 1 }
           : cartItem
       )
     );
   };
 
-  const handleIncrementQuantity = (id) => {
+
+
+     const handleBuyNow = () =>{
+     navigate('/dashboard/order',{state:{cartItems}})
+
+   };
+  
+  const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
-      prevCart.map((cartItem) =>
-        cartItem.id === id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+       prevCart.map((cartItem) =>
+        // console.log("setCartItems.............",prevCart)
+        cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
       )
     );
   };
 
-  const removeItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
+
+   const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
+
+   const deleteAll = () => {
+    setCartItems([]);
+   };
+
+
+  const removeItem = (_id) => {
+  
+    const updatedCart = cartItems.filter((item) =>   item._id !== _id);
+    setCartItems(updatedCart);  
+
+
   };
 
   const handleAddToCart = (product) => {
-    setFood((prevFood) => [...prevFood, product]);
-    const updatedCart = [...cartItems, { ...product, quantity: 1 }];
-    setCartItems(updatedCart);
+    console.log("product........",product)
+   setCartItems((prevCart) =>{
+    console.log("prevCart..........",prevCart)
+const exitingItem = prevCart.find((item) => item._id === product._id);
+
+if(exitingItem){
+  return prevCart.map((item)=>
+  item._id === product._id ? {...item , quantity : item.quantity +1} : item
+  )
+}
+else{
+  return [...prevCart ,{... product, quantity : 1}]
+}
+})
   };
 
   const handleSearch = (event) => {
@@ -86,11 +117,12 @@ const AddFood = () => {
   }, []);
 
   const handleClick = () => {
-    navigate('/dashboard/default');
+    navigate('/dashboard/default',{state:{cartItems}});
   };
 
   return (
     <>
+    
       <Container maxWidth="xl">
         <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '103%', mb: '15px', backgroundColor: 'white' }}>
           <Box sx={{ backgroundColor: 'white', height: '50px', width: '100%', display: 'flex', borderRadius: '10px', justifyContent: 'space-between', alignItems: 'center', padding: '0 25px', marginTop: '-4px' }}>
@@ -144,25 +176,75 @@ const AddFood = () => {
             <Box sx={{ height: '70vh', borderRadius: '8px', flex: 1, overflowY: 'auto', backgroundColor: 'white' }}>
               <Grid container spacing={2}>
                 {cartItems.map((cartItem) => (
-                  <Grid item xs={12} key={cartItem.id}>
+                  <Grid item xs={12} key={cartItem._id}>
                     <Card sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', transition: 'box-shadow 1s, transform 1s', border: '1px solid black', cursor: 'pointer', '&:hover': { transform: 'scale(1.03)', boxShadow: (theme) => theme.shadows[3] }, p: 1 }}>
                       <CardMedia component="img" image={cartItem.image} sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }} />
                       <Box sx={{ flex: 1 }}>
                         
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>{cartItem.productName}</Typography>
-                        <Typography variant="body2" color="text.secondary">₹ {cartItem.price}</Typography>
+                        <Typography variant="body2" color="text.secondary">{cartItem.price}</Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton onClick={() => handleIncrementQuantity(cartItem.id)} size="small"><AddIcon fontSize="small" /></IconButton>
+                        <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small"><AddIcon fontSize="small" /></IconButton>
                         {cartItem.quantity}
-                        <IconButton onClick={() => handleDecrementQuantity(cartItem.id)} size="small"><RemoveIcon fontSize="small" /></IconButton>
+                        <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small"><RemoveIcon fontSize="small" /></IconButton>
                       </Box>
-                      <Button onClick={() => removeItem(cartItem.id)} variant="outlined" color="error">Remove</Button>
+                      <Button 
+                      
+                      color='error'
+                      onClick={() => {
+     Swal.fire({
+       title: 'Are you sure?',
+       text: 'Do you want to remove this item?',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#3085d6',
+       cancelButtonColor: '#d33',
+       confirmButtonText: 'Yes, remove it!',
+       cancelButtonText: 'Cancel',
+     }).then((result) => {
+       if (result.isConfirmed) {
+        removeItem(cartItem._id); 
+         Swal.fire('Removed!', 'The item has been removed.', 'success');
+       }
+     });
+   }}
+>Remove</Button>
                     </Card>
+                   
                   </Grid>
                 ))}
               </Grid>
+              
             </Box>
+            <Box
+           sx={{
+             borderTop: '1px solid #ccc',
+            
+             display: 'flex',
+             justifyContent: 'space-between',
+             alignItems: 'center',
+             backgroundColor: '#f9f9f9'
+           }}
+         >
+           <Typography variant="h6" color="secondary">
+             Total: 
+             Rs.{totalPrice.toFixed(2)}
+
+           </Typography>
+           <Button  sx={{backgroundColor:'#0d8929' , color:"#fff" , '&:hover': {
+            backgroundColor:'#0d8929' , color:"#fff" 
+              
+            },}} onClick={handleBuyNow}>
+             BUY NOW
+           </Button>
+         <Button  sx={{backgroundColor:'#7011bc' , color:"#fff" , '&:hover': {
+            backgroundColor:'#7011bc' , color:"#fff" 
+              
+            }, }} onClick={deleteAll}>
+             Clear Cart
+           </Button>
+         </Box>
           </Grid>
         </Grid>
       </Container>
