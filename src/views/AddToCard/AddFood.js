@@ -10,6 +10,8 @@ import {
   Typography,
   Container,
   Breadcrumbs,
+  Select,
+  MenuItem
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
@@ -31,6 +33,28 @@ const AddFood = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState([]);
+const [customerData, setCustomerData] = useState([]);
+const [selectedCustomer,setSelectedCustomer] = useState('');
+
+
+
+
+
+
+const fetchCustomer= async() =>{
+  const response = await getApi(urls.customer.get);
+  setCustomerData(response?.data?.data)
+
+}
+const handleCustomerChange = (event) => {
+  const customerId = event.target.value;
+  const customerDetails = customerData.find((customer) => customer._id === customerId);
+  setSelectedCustomer(customerDetails);
+}
+
+
+
+
 
   const handleDecrementQuantity = (_id) => {
     setCartItems((prevCart) =>
@@ -44,15 +68,24 @@ const AddFood = () => {
 
 
 
-     const handleBuyNow = () =>{
-     navigate('/dashboard/order',{state:{cartItems}})
-
-   };
+  const handleBuyNow = () => {
+    if (!selectedCustomer) {
+      Swal.fire({
+        title: 'Please select a customer',
+        text: 'You need to select a customer before proceeding to checkout.',
+        icon: 'warning',
+        confirmButtonText: 'Okay',
+      });
+      return;
+    }
+    navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
+  };
+  
   
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
        prevCart.map((cartItem) =>
-        // console.log("setCartItems.............",prevCart)
+        
         cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
       )
     );
@@ -75,9 +108,9 @@ const AddFood = () => {
   };
 
   const handleAddToCart = (product) => {
-    console.log("product........",product)
+ 
    setCartItems((prevCart) =>{
-    console.log("prevCart..........",prevCart)
+  
 const exitingItem = prevCart.find((item) => item._id === product._id);
 
 if(exitingItem){
@@ -114,6 +147,7 @@ else{
   useEffect(() => {
     fetchCategory();
     fetchProduct();
+    fetchCustomer();
   }, []);
 
   const handleClick = () => {
@@ -139,6 +173,39 @@ else{
               <SearchIcon sx={{ ml: '8px' }} />
               <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
             </Box>
+
+            <Box
+  sx={{
+    width: '30%',
+    height: '40px',
+    border: '1px solid #ccc',
+    borderRadius: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    mr: '10px',
+    overflow: 'hidden',
+  }}
+>
+    <Select 
+    value={selectedCustomer}
+    onChange={handleCustomerChange}
+    displayEmpty
+    fullWidth
+    sx={{
+      border: 'none',
+      outline: 'none',
+      fontSize: '14px',
+      color: '#000',
+    }}>
+      {customerData.map((item)=>(
+        <MenuItem key={item._id} value={item._id}>{item.firstName}</MenuItem>
+      ))}
+     
+
+    </Select>
+
+</Box>
+
           </Box>
         </Stack>
 

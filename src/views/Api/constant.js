@@ -46,7 +46,16 @@ purchase: {
         bulkSave: base + '/category/bulkUpload',
     },
   
-    
+    order :{
+        create : base + '/order/save',
+        get: base + '/order/fetch',
+    },
+
+    invoice :{
+        create : base + '/invoice/save',
+        get: base + '/invoice/fetch',
+
+    }
 
     }
 );
