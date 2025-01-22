@@ -37,7 +37,7 @@ const Checkout = () => {
   const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
 
 
-  console.log("-cartItems1-----------",cartItems)
+ 
   const selectedCustomer = location.state?.selectedCustomer || null;
 
   const navigate = useNavigate();
@@ -71,13 +71,12 @@ const Checkout = () => {
   };
 
   const handleInvoice = () => {
-    console.log("selectedCustomer---------------",selectedCustomer)
-    console.log("cartItems...............",cartItems)
+  
     navigate('/dashboard/productType', { state: { cartItems, selectedCustomer } });
   };
 
   const handleCreateInvoice = async () => {
-    console.log('Invoice Data:');
+   
     const values = await cartItems.map((item) => ({
       productId: item._id,
       productName: item.productName,
@@ -98,22 +97,10 @@ const Checkout = () => {
       <Container maxWidth="xl">
         <Box>
           <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white' }}>
-            <Box
-              sx={{
-                backgroundColor: 'white',
-                height: '50px',
-                width: '100%',
-                display: 'flex',
-                borderRadius: '10px',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '0 25px',
-                marginTop: '-4px'
-              }}
-            >
+            <Box className="boxStyle">
               <Breadcrumbs aria-label="breadcrumb" sx={{ fontSize: '20px' }}>
                 <HomeIcon sx={{ color: '#2067db', mr: '-4px' }} fontSize="large" onClick={handleClick} />
-                <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black', ml: '-3px', fontSize: '15px' }}>
+                <Typography variant="h5" className='font'>
                   Card
                 </Typography>
               </Breadcrumbs>
@@ -126,18 +113,7 @@ const Checkout = () => {
                 <Grid container spacing={2}>
                   {cartItems.map((cartItem) => (
                     <Grid item xs={12} key={cartItem._id}>
-                      <Card
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          backgroundColor: 'white',
-                          transition: 'box-shadow 1s, transform 1s',
-                          border: '1px solid black',
-                          cursor: 'pointer',
-                          '&:hover': { transform: 'scale(1.03)', boxShadow: (theme) => theme.shadows[3] },
-                          p: 1
-                        }}
-                      >
+                      <Card classname="boxStyle1">
                         <CardMedia
                           component="img"
                           image={cartItem.image}
@@ -204,14 +180,7 @@ const Checkout = () => {
                 </Box>
                 <Box sx={{ display: 'flex', gap: '10px' }}>
                   <Button
-                    sx={{
-                      backgroundColor: '#0d8929',
-                      color: '#fff',
-                      '&:hover': {
-                        backgroundColor: '#0d8929',
-                        color: '#fff'
-                      }
-                    }}
+                    classname="buttonStyle"
                     onClick={handleCreateInvoice}
                   >
                     Create Invoice
