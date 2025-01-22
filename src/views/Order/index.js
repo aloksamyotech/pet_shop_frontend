@@ -180,6 +180,56 @@ const Checkout = () => {
                 </Box>
                 <Box sx={{ display: 'flex', gap: '10px' }}>
                   <Button
+                    sx={{
+                      backgroundColor: '#0d8929',
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: '#0d8929',
+                        color: '#fff'
+                      }
+                    }}
+                    onClick={handleCreateInvoice}
+                  >
+                    Create Invoice
+                  </Button>
+                  <Button
+                    sx={{
+                      backgroundColor: '#7011bc',
+                      color: '#fff',
+                      '&:hover': {
+                        backgroundColor: '#7011bc',
+                        color: '#fff'
+                      }
+                    }}
+                    onClick={deleteAll}
+                  >
+                    Clear Cart
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+    </>
+              </Box>
+            </Grid>
+            <Grid item xs={8}>
+              <Box sx={{ backgroundColor: '#fff', p: 3, borderRadius: 2, boxShadow: 3, width: '100%' }}>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  Price Details
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body1">Price: ₹{totalPrice.toFixed(2)}</Typography>
+                  <Typography variant="body1">Quantity: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
+                </Box>
+                <Divider sx={{ mb: 2 }} />
+                <Box>
+                  <Typography variant="h6">Total Payable: ₹{totalPrice.toFixed(2)}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: '10px' }}>
+                  <Button
                     classname="buttonStyle"
                     onClick={handleCreateInvoice}
                   >
@@ -206,6 +256,7 @@ const Checkout = () => {
       </Container>
     </>
   );
-};
+  }
+}
 
 export default Checkout;

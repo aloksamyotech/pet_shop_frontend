@@ -10,8 +10,8 @@ import {
   Typography,
   Container,
   Breadcrumbs,
-  Select,
-  MenuItem
+
+  TextField
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
@@ -38,7 +38,7 @@ const [selectedCustomer,setSelectedCustomer] = useState('');
 
 
 
-
+console.log(selectedCustomer)
 
 
 const fetchCustomer= async() =>{
@@ -50,6 +50,7 @@ const handleCustomerChange = (event) => {
   const customerId = event.target.value;
   const customerDetails = customerData.find((customer) => customer._id === customerId);
   setSelectedCustomer(customerDetails);
+
 }
 
 
@@ -107,22 +108,22 @@ const handleCustomerChange = (event) => {
 
   };
 
-  const handleAddToCart = (product) => {
+//   const handleAddToCart = (product) => {
  
-   setCartItems((prevCart) =>{
+//    setCartItems((prevCart) =>{
   
-const exitingItem = prevCart.find((item) => item._id === product._id);
+// const exitingItem = prevCart.find((item) => item._id === product._id);
 
-if(exitingItem){
-  return prevCart.map((item)=>
-  item._id === product._id ? {...item , quantity : item.quantity +1} : item
-  )
-}
-else{
-  return [...prevCart ,{... product, quantity : 1}]
-}
-})
-  };
+// if(exitingItem){
+//   return prevCart.map((item)=>
+//   item._id === product._id ? {...item , quantity : item.quantity +1} : item
+//   )
+// }
+// else{
+//   return [...prevCart ,{... product, quantity : 1}]
+// }
+// })
+//   };
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -167,9 +168,9 @@ else{
           </Box>
         </Stack>
 
-        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white', padding: '5px' }}>
+        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white', padding: '5px' , display:'flex', justifyContent:'space-between'}}>
           <Box sx={{ backgroundColor: 'white', height: '50px', width: '100%', display: 'flex', borderRadius: '10px', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}>
-            <Box sx={{ width: '80%', height: '40px', border: '1px solid #ccc', borderRadius: '20px', display: 'flex', alignItems: 'center', mr: '10px', type: 'text' }}>
+            <Box sx={{ width:'40%', height: '40px', border: '1px solid #ccc', borderRadius: '20px', display: 'flex', alignItems: 'center', mr: '10px', type: 'text' }}>
               <SearchIcon sx={{ ml: '8px' }} />
               <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
             </Box>
@@ -187,7 +188,6 @@ else{
   }}
 >
     <Select 
-    value={selectedCustomer}
     onChange={handleCustomerChange}
     displayEmpty
     fullWidth
@@ -203,6 +203,33 @@ else{
      
 
     </Select>
+
+</Box>
+<Box
+  sx={{
+    width: '30%',
+    height: '40px',
+    border: '1px solid #ccc',
+    borderRadius: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    mr: '10px',
+    overflow: 'hidden',
+  }}
+>
+  <TextField 
+  value={selectedCustomer?.email || ''}
+  readOnly
+  fullWidth
+  sx={{
+    border: 'none',
+    outline: 'none',
+    fontSize: '14px',
+    color: '#000',
+  }}
+  
+  
+  />
 
 </Box>
 
