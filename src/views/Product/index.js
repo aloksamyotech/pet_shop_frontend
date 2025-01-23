@@ -58,6 +58,11 @@ const Lead = () => {
       field: 'discount',
       headerName: 'Discount',
       flex: 1
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      flex: 1
     }
   ];
 

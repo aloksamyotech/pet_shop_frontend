@@ -118,7 +118,7 @@ const dashboard = {
     },
 
     {
-      id: '09',
+      id: '03',
       title: 'History',
       type: 'item',
       url: '/dashboard/history',

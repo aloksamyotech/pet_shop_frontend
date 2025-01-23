@@ -66,9 +66,13 @@ const AddDetail = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       await postApi(urls.customer.create, values);
-      await fetchCustomer();
-      formik.resetForm();
-      handleClose();
+     await fetchCustomer();
+        formik.resetForm();
+        handleClose();
+    
+    
+     
+
       toast.success('Customer Add successfully');
     }
   });

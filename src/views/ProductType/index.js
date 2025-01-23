@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState ,useEffect} from 'react';
 // @mui
-import { Stack, Button, TableHead,TableContainer,TableBody,TableRow,Divider,Table, Typography, Card, Box,Grid,Breadcrumbs,TableCell} from '@mui/material';
+import { Paper, Button, TableHead,TableContainer,TableBody,TableRow,Divider,Table, Typography, Card, Box,Grid,Breadcrumbs,TableCell} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 
@@ -16,6 +16,7 @@ import { Description } from '@mui/icons-material';
 import axios from 'axios';
 import { urls } from 'views/Api/constant';
 import { getApi } from 'views/Api/comman';
+import { useLocation } from 'react-router-dom';
 
 const PolicyManagement = () => {
   const location = useLocation();
