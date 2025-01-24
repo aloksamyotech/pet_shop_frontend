@@ -48,6 +48,31 @@ const Customer = () => {
       field: 'description',
       headerName: 'description',
       flex: 1,
+    },{
+      field: 'categoryImage',
+      headerName: 'Item',
+      flex: 1,
+      valueGetter:(params)=>{
+       
+        return params.row.imageUrl
+
+      },
+      renderCell: (params) => {
+        
+        const imageUrl = params.row.imageUrl;
+        
+        return (
+          <img
+            src={imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+            alt="product"
+            style={{
+              width: '50px',
+              height: '50px',
+              objectFit: 'cover',
+            }}
+          />
+        );
+      },
     },
     {
       field: 'Action',

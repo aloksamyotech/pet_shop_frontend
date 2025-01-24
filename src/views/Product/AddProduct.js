@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import { FormControl, FormLabel, Grid, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, FormLabel, Grid, MenuItem, Select, TextField, Box } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -15,11 +15,15 @@ import { useState, useEffect } from 'react';
 
 import { getApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
+import Header from 'ui-component/Header';
+import { constrainPoint } from '@fullcalendar/core/internal';
+import axios from 'axios';
 
 const AddLead = (props) => {
   const { open, handleClose, fetchProduct } = props;
 
   const [categories, setCategories] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
@@ -55,14 +59,42 @@ const AddLead = (props) => {
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      await postApi(urls.product.create, values);
-      //console.log("values--------------",values);
-      fetchProduct();
-      formik.resetForm();
-      handleClose();
-      toast.success('Product Add successfully');
+      const formData = new FormData();
+      formData.append('productName', values.productName);
+      formData.append('categoryId', values.categoryId);
+      formData.append('price', values.price);
+      formData.append('discount', values.discount);
+      if (values.image) {
+        formData.append('image', values.image);
+      }
+    
+    
+      try {
+      const response = await postApi(urls.product.create, formData, {
+                  headers: { 'Content-Type': 'multipart/form-data' }
+                });
+        fetchProduct(); 
+        formik.resetForm();
+        setSelectedImage(null);
+        handleClose();
+        toast.success('Product added successfully');
+      } catch (error) {
+        console.error('Error adding product:', error);
+        toast.error('Failed to add product');
+      }
     }
   });
+
+ 
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    console.log("file",file)
+    formik.setFieldValue('image', file);
+    setSelectedImage(file);
+  };
+
+
 
   return (
     <div>
@@ -121,15 +153,12 @@ const AddLead = (props) => {
                     onChange={formik.handleChange}
                     error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
                     MenuProps={{
-                                          PaperProps:{
-                                            style:{
-                                              maxHeight : 200,
-                                            }
-                    
-                                          }
-                                          ,
-                    
-                                        }}
+                      PaperProps: {
+                        style: {
+                          maxHeight: 200
+                        }
+                      }
+                    }}
                   >
                     {Array.isArray(categories) &&
                       categories.map((category) => (
@@ -168,6 +197,36 @@ const AddLead = (props) => {
                     />
                   </FormControl>
                 </Grid>
+                <Grid item xs={12} sm={6} sx={{ marginTop: '15px' }}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    minHeight="200px"
+                    border={1}
+                    borderColor="grey.300"
+                    borderRadius={1}
+                    bgcolor="background.paper"
+                    position="relative"
+                  >
+                    {formik.values.image ? (
+                      <img src={URL.createObjectURL(formik.values.image)} alt="product" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        Preview Image
+                      </Typography>
+                    )}
+                    <Box position="absolute" left={0} bottom={0} p={2}>
+                      <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={handleFileChange} 
+                        style={{ display: 'block' }}
+                      />
+                    </Box>
+                  </Box>
+                </Grid>
               </Grid>
             </DialogContentText>
           </form>
@@ -179,6 +238,7 @@ const AddLead = (props) => {
           <Button
             onClick={() => {
               formik.resetForm();
+              setSelectedImage(null);
               handleClose();
             }}
             variant="outlined"

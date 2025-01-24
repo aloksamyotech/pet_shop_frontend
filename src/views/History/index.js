@@ -15,8 +15,7 @@ const History = () => {
 
   const fetchProduct = async () => {
     const response = await getApi(urls.order.get);
-  //  console.log("v---------------------",response)
-     setProduct(response?.data?.data);
+ setProduct(response?.data?.data);
     
   };
 
@@ -67,7 +66,7 @@ const History = () => {
       },
       {
         field: 'productName',
-        headerName: 'Item',
+        headerName: 'Date',
         flex: 0.5,
         valueGetter:(params) =>{
           if(params.row?.createdAt){
