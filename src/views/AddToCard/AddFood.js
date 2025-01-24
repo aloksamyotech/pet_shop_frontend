@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Stack,
+  Autocomplete,
   Button,
   InputBase,
   Grid,
@@ -11,8 +12,12 @@ import {
   Container,
   Breadcrumbs,
   Select,
-  MenuItem
+CustomTabPanel,
+  TextField,
+  FormLabel,
+  Tab
 } from '@mui/material';
+
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +30,6 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Checkout from 'views/Order/index';
 
-
 const AddFood = () => {
   const navigate = useNavigate();
   const [categoryData, setCategoryData] = useState([]);
@@ -33,40 +37,33 @@ const AddFood = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState([]);
-const [customerData, setCustomerData] = useState([]);
-const [selectedCustomer,setSelectedCustomer] = useState('');
+  const [customerData, setCustomerData] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState('Customer');
+  const [value,setValue] =useState('1');
+
+  console.log("selectedCustomer----------",selectedCustomer)
 
 
+ 
+  const fetchCustomer = async () => {
+    const response = await getApi(urls.customer.get);
+    setCustomerData(response?.data?.data);
+  };
 
-
-
-
-const fetchCustomer= async() =>{
-  const response = await getApi(urls.customer.get);
-  setCustomerData(response?.data?.data)
-
-}
-const handleCustomerChange = (event) => {
-  const customerId = event.target.value;
-  const customerDetails = customerData.find((customer) => customer._id === customerId);
-  setSelectedCustomer(customerDetails);
-}
-
-
-
-
+  const handleCustomerChange = (event) => {
+    const customerId = event.target.value;
+    const customerDetails = customerData.find((customer) => customer._id === customerId);
+    setSelectedCustomer(customerDetails);
+  };
+ 
 
   const handleDecrementQuantity = (_id) => {
     setCartItems((prevCart) =>
       prevCart.map((cartItem) =>
-        cartItem._id === _id && cartItem.quantity > 1
-          ? { ...cartItem, quantity: cartItem.quantity - 1 }
-          : cartItem
+        cartItem._id === _id && cartItem.quantity > 1 ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
       )
     );
   };
-
-
 
   const handleBuyNow = () => {
     if (!selectedCustomer) {
@@ -74,54 +71,40 @@ const handleCustomerChange = (event) => {
         title: 'Please select a customer',
         text: 'You need to select a customer before proceeding to checkout.',
         icon: 'warning',
-        confirmButtonText: 'Okay',
+        confirmButtonText: 'Okay'
       });
       return;
     }
     navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
   };
-  
-  
+
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
-       prevCart.map((cartItem) =>
-        
-        cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-      )
+      prevCart.map((cartItem) => (cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
     );
   };
 
+  const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
 
-   const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
-
-   const deleteAll = () => {
+  const deleteAll = () => {
     setCartItems([]);
-   };
-
+  };
 
   const removeItem = (_id) => {
-  
-    const updatedCart = cartItems.filter((item) =>   item._id !== _id);
-    setCartItems(updatedCart);  
-
-
+    const updatedCart = cartItems.filter((item) => item._id !== _id);
+    setCartItems(updatedCart);
   };
 
   const handleAddToCart = (product) => {
- 
-   setCartItems((prevCart) =>{
-  
-const exitingItem = prevCart.find((item) => item._id === product._id);
+    setCartItems((prevCart) => {
+      const existingItem = prevCart.find((item) => item._id === product._id);
 
-if(exitingItem){
-  return prevCart.map((item)=>
-  item._id === product._id ? {...item , quantity : item.quantity +1} : item
-  )
-}
-else{
-  return [...prevCart ,{... product, quantity : 1}]
-}
-})
+      if (existingItem) {
+        return prevCart.map((item) => (item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item));
+      } else {
+        return [...prevCart, { ...product, quantity: 1 }];
+      }
+    });
   };
 
   const handleSearch = (event) => {
@@ -151,30 +134,89 @@ else{
   }, []);
 
   const handleClick = () => {
-    navigate('/dashboard/default',{state:{cartItems}});
+    navigate('/dashboard/default', { state: { cartItems } });
   };
+
+
+  const handleTab = (newValue) =>{
+    setValue(newValue);
+  }
 
   return (
     <>
-    
       <Container maxWidth="xl">
         <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '103%', mb: '15px', backgroundColor: 'white' }}>
-          <Box sx={{ backgroundColor: 'white', height: '50px', width: '100%', display: 'flex', borderRadius: '10px', justifyContent: 'space-between', alignItems: 'center', padding: '0 25px', marginTop: '-4px' }}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+              marginTop: '-4px'
+            }}
+          >
             <Breadcrumbs aria-label="breadcrumb" sx={{ fontSize: '20px' }}>
               <HomeIcon sx={{ color: '#2067db', mr: '-4px' }} fontSize="large" onClick={handleClick} />
-              <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black', ml: '-3px', fontSize: '15px' }}>Card</Typography>
+              <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black', ml: '-3px', fontSize: '15px' }}>
+                Card
+              </Typography>
             </Breadcrumbs>
           </Box>
         </Stack>
+<TabList value={value} onChange={handleTab}>
+  <Tab label="POS" value="1/>
+  <Tab label='History'/>
+</TabList>
 
-        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white', padding: '5px' }}>
-          <Box sx={{ backgroundColor: 'white', height: '50px', width: '100%', display: 'flex', borderRadius: '10px', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}>
-            <Box sx={{ width: '80%', height: '40px', border: '1px solid #ccc', borderRadius: '20px', display: 'flex', alignItems: 'center', mr: '10px', type: 'text' }}>
+<TabPanel>
+        <Stack
+          spacing={2}
+          direction="row"
+          sx={{
+            height: '10vh',
+            width: '100%',
+            mb: '15px',
+            backgroundColor: 'white',
+            padding: '5px',
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '10px'
+            }}
+          >
+            <Box
+              sx={{
+                width: '40%',
+                height: '40px',
+                border: '1px solid #ccc',
+                borderRadius: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                mr: '10px',
+                type: 'text'
+              }}
+            >
               <SearchIcon sx={{ ml: '8px' }} />
               <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
             </Box>
 
-            <Box
+           
+
+  <Box
   sx={{
     width: '30%',
     height: '40px',
@@ -184,39 +226,95 @@ else{
     alignItems: 'center',
     mr: '10px',
     overflow: 'hidden',
+
   }}
+
 >
-    <Select 
-    value={selectedCustomer}
-    onChange={handleCustomerChange}
-    displayEmpty
+  
+  <Autocomplete
+    onChange={(event, newValue) =>{
+      setSelectedCustomer(newValue),
+      handleCustomerChange(newValue)}}
+      value={selectedCustomer}
+    options={customerData}
     fullWidth
-    sx={{
-      border: 'none',
-      outline: 'none',
-      fontSize: '14px',
-      color: '#000',
-    }}>
-      {customerData.map((item)=>(
-        <MenuItem key={item._id} value={item._id}>{item.firstName}</MenuItem>
-      ))}
-     
-
-    </Select>
-
+    getOptionLabel={(option) =>  option.firstName}
+    renderInput={(params) => (
+      <TextField {...params} label="customer"/>
+    )}
+    isOptionEqualToValue={(option, value) => option._id === value._id} 
+  />
+ 
 </Box>
 
+            <Box
+              sx={{
+                width: '30%',
+                height: '40px',
+                border: '1px solid #ccc',
+                borderRadius: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                mr: '10px',
+                overflow: 'hidden'
+              }}
+            >
+              <TextField
+                value={selectedCustomer?.email || ''}
+                readOnly
+                fullWidth
+                sx={{
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '14px',
+                  color: '#000'
+                }}
+              />
+            </Box>
           </Box>
         </Stack>
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={2}>
             <Box sx={{ flex: 1, overflowY: 'auto', height: '70vh', width: '100%', ml: '-5px', backgroundColor: '#fff' }}>
-              <Box sx={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 10, display: 'flex', justifyContent: 'center', fontSize: '20px', padding: '15px' }}>Category</Box>
+              <Box
+                sx={{
+                  position: 'sticky',
+                  top: 0,
+                  backgroundColor: 'white',
+                  zIndex: 10,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  fontSize: '20px',
+                  padding: '15px'
+                }}
+              >
+                Category
+              </Box>
               {categoryData.map((category) => (
-                <Card key={category._id} onClick={() => setSelectedCategory(category._id)} sx={{ backgroundColor: 'white', mt: '4px', transition: 'box-shadow 1.3s, transform 1.3s', border: '1px solid black', cursor: 'pointer', '&:hover': { transform: 'scale(1.1)', boxShadow: (theme) => theme.shadows[8] }, width: '100%', height: '20vh' }}>
-                  <CardMedia component="img" height="90vh" image={category.image} sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }} />
-                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>{category.name}</Typography>
+                <Card
+                  key={category._id}
+                  onClick={() => setSelectedCategory(category._id)}
+                  sx={{
+                    backgroundColor: 'white',
+                    mt: '4px',
+                    transition: 'box-shadow 1.3s, transform 1.3s',
+                    border: '1px solid black',
+                    cursor: 'pointer',
+                   
+                    width: '100%',
+                    height: '20vh'
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="90vh"
+                    image={category.image}
+                    sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
+                  />
+                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
+                    {category.name}
+                  </Typography>
                 </Card>
               ))}
             </Box>
@@ -224,14 +322,46 @@ else{
 
           <Grid item xs={12} md={6}>
             <Box sx={{ height: '70vh', borderRadius: '8px', flex: 1, overflowY: 'auto', backgroundColor: 'white' }}>
-              <Box sx={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 10, display: 'flex', justifyContent: 'center', fontSize: '20px', padding: '15px' }}>Product</Box>
+              <Box
+                sx={{
+                  position: 'sticky',
+                  top: 0,
+                  backgroundColor: 'white',
+                  zIndex: 10,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  fontSize: '20px',
+                  padding: '15px'
+                }}
+              >
+                Product
+              </Box>
               <Grid container spacing={2}>
                 {filterProduct.map((product) => (
                   <Grid item xs={12} sm={4} md={4} key={product.id}>
-                    <Card onClick={() => handleAddToCart(product)} sx={{ backgroundColor: 'white', transition: 'box-shadow 1s, transform 1s', border: '1px solid black', cursor: 'pointer', '&:hover': { transform: 'scale(1.1)', boxShadow: (theme) => theme.shadows[2] }, width: '100%', height: '25vh' }}>
-                      <CardMedia component="img" height="90vh" image={product.image} sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }} />
-                      <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>{product.productName}</Typography>
-                      <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>{product.price}</Typography>
+                    <Card
+                      onClick={() => handleAddToCart(product)}
+                      sx={{
+                        backgroundColor: 'white',
+                        transition: 'box-shadow 1s, transform 1s',
+                        border: '1px solid black',
+                        cursor: 'pointer',
+                       width: '100%',
+                        height: '25vh'
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        height="70vh"
+                        image={product.image}
+                        sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
+                      />
+                      <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
+                        {product.productName}
+                      </Typography>
+                      <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
+                        {product.price}
+                      </Typography>
                     </Card>
                   </Grid>
                 ))}
@@ -244,76 +374,109 @@ else{
               <Grid container spacing={2}>
                 {cartItems.map((cartItem) => (
                   <Grid item xs={12} key={cartItem._id}>
-                    <Card sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', transition: 'box-shadow 1s, transform 1s', border: '1px solid black', cursor: 'pointer', '&:hover': { transform: 'scale(1.03)', boxShadow: (theme) => theme.shadows[3] }, p: 1 }}>
-                      <CardMedia component="img" image={cartItem.image} sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }} />
+                    <Card
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: 'white',
+                        transition: 'box-shadow 1s, transform 1s',
+                        border: '1px solid black',
+                        cursor: 'pointer',
+                      
+                        p: 1
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={cartItem.image}
+                        sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
+                      />
                       <Box sx={{ flex: 1 }}>
-                        
-                        <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>{cartItem.productName}</Typography>
-                        <Typography variant="body2" color="text.secondary">{cartItem.price}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                          {cartItem.productName}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {cartItem.price}
+                        </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small"><AddIcon fontSize="small" /></IconButton>
+                        <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
+                          <AddIcon fontSize="small" />
+                        </IconButton>
                         {cartItem.quantity}
-                        <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small"><RemoveIcon fontSize="small" /></IconButton>
+                        <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
+                          <RemoveIcon fontSize="small" />
+                        </IconButton>
                       </Box>
-                      <Button 
-                      
-                      color='error'
-                      onClick={() => {
-     Swal.fire({
-       title: 'Are you sure?',
-       text: 'Do you want to remove this item?',
-       icon: 'warning',
-       showCancelButton: true,
-       confirmButtonColor: '#3085d6',
-       cancelButtonColor: '#d33',
-       confirmButtonText: 'Yes, remove it!',
-       cancelButtonText: 'Cancel',
-     }).then((result) => {
-       if (result.isConfirmed) {
-        removeItem(cartItem._id); 
-         Swal.fire('Removed!', 'The item has been removed.', 'success');
-       }
-     });
-   }}
->Remove</Button>
+                      <Button
+                        color="error"
+                        onClick={() => {
+                          Swal.fire({
+                            title: 'Are you sure?',
+                            text: 'Do you want to remove this item?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, remove it!',
+                            cancelButtonText: 'Cancel'
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              removeItem(cartItem._id);
+                              Swal.fire('Removed!', 'The item has been removed.', 'success');
+                            }
+                          });
+                        }}
+                      >
+                        Remove
+                      </Button>
                     </Card>
-                   
                   </Grid>
                 ))}
               </Grid>
-              
             </Box>
             <Box
-           sx={{
-             borderTop: '1px solid #ccc',
-            
-             display: 'flex',
-             justifyContent: 'space-between',
-             alignItems: 'center',
-             backgroundColor: '#f9f9f9'
-           }}
-         >
-           <Typography variant="h6" color="secondary">
-             Total: 
-             Rs.{totalPrice.toFixed(2)}
-
-           </Typography>
-           <Button  sx={{backgroundColor:'#0d8929' , color:"#fff" , '&:hover': {
-            backgroundColor:'#0d8929' , color:"#fff" 
-              
-            },}} onClick={handleBuyNow}>
-             BUY NOW
-           </Button>
-         <Button  sx={{backgroundColor:'#7011bc' , color:"#fff" , '&:hover': {
-            backgroundColor:'#7011bc' , color:"#fff" 
-              
-            }, }} onClick={deleteAll}>
-             Clear Cart
-           </Button>
-         </Box>
+              sx={{
+                borderTop: '1px solid #ccc',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: '#f9f9f9'
+              }}
+            >
+              <Typography variant="h6" color="secondary">
+                Total: Rs.{totalPrice.toFixed(2)}
+              </Typography>
+              <Button
+                sx={{
+                  backgroundColor: '#2067db',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor:'#2067db',
+                    color: '#fff'
+                  }
+                }}
+                onClick={handleBuyNow}
+              >
+                BUY NOW
+              </Button>
+              <Button
+                sx={{
+                  backgroundColor: '#7011bc',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor: '#7011bc',
+                    color: '#fff'
+                  }
+                }}
+                onClick={deleteAll}
+              >
+                Clear Cart
+              </Button>
+            </Box>
           </Grid>
         </Grid>
+        </TabPanel>
       </Container>
     </>
   );

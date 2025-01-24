@@ -14,16 +14,11 @@ import * as yup from 'yup';
 import { FormControl, FormHelperText, FormLabel, Select } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { toast } from 'react-toastify';
-import Palette from '../../ui-component/ThemePalette';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { urls } from 'views/Api/constant.js';
 import { postApi } from 'views/Api/comman.js';
-
+import { urls } from 'views/Api/constant.js';
 
 const AddDetail = (props) => {
   const { open, handleClose, fetchCategories } = props;
-  
 
   const validationSchema = yup.object({
     name: yup
@@ -34,53 +29,45 @@ const AddDetail = (props) => {
     description: yup
       .string()
       .required('Description is required')
-      .matches(/^[A-Za-z\s]+$/, 'description must only contain letters')
+      .matches(/^[A-Za-z\s]+$/, 'Description must only contain letters')
   });
 
-  
   const initialValues = {
     name: '',
     description: ''
   };
 
-  
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-     await postApi(urls.category.create , values);
+      await postApi(urls.category.create, values);
       await fetchCategories();
       formik.resetForm();
       handleClose();
-      toast.success('Category Add successfully');
+      toast.success('Category added successfully');
     }
   });
 
-
-
-
-
-
   return (
     <div>
-      <Dialog open={open} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
+      <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
         <DialogTitle
           id="scroll-dialog-title"
           style={{
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            padding: '20px',
           }}
         >
-          <Typography variant="h6">Add category</Typography>
-          <Typography>
-            <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
-          </Typography>
+          <Typography variant="h6">Add Category</Typography>
+          <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
         </DialogTitle>
 
         <DialogContent dividers>
-          <form> 
+          <form onSubmit={formik.handleSubmit}>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-              <Grid container columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+              <Grid container spacing={3}>
                 <Grid item xs={12} sm={12} md={12}>
                   <FormControl fullWidth>
                     <FormLabel>Name</FormLabel>
@@ -115,8 +102,10 @@ const AddDetail = (props) => {
             </DialogContentText>
           </form>
         </DialogContent>
+
         <DialogActions>
-          <Button type="submit" variant="contained" onClick={formik.handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
+         
+        <Button type="submit" variant="contained" onClick={formik.handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
             Save
           </Button>
           <Button

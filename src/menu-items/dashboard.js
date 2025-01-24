@@ -116,6 +116,15 @@ const dashboard = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
+
+    {
+      id: '03',
+      title: 'History',
+      type: 'item',
+      url: '/dashboard/history',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    },
     
    
   

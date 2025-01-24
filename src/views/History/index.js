@@ -2,26 +2,24 @@ import { useState, useEffect } from 'react';
 
 import { Stack, Button, Container, Typography, Box, Card, Grid, Breadcrumbs } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-
 import Iconify from '../../ui-component/iconify';
 import HomeIcon from '@mui/icons-material/Home';
 import TableStyle from '../../ui-component/TableStyle';
-import AddLead from './AddProduct.js';
-import AddBulkUpload from './productBulkUpload.js';
 import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 
-const Lead = () => {
+const History = () => {
   const [product, setProduct] = useState([]);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [open,setOpen] = useState(false)
+  
 
   const fetchProduct = async () => {
-    const response = await getApi(urls.product.get);
-    //console.log("v---------------------",response?.data?.data)
-    setProduct(response?.data?.data);
+    const response = await getApi(urls.order.get);
+  //  console.log("v---------------------",response)
+     setProduct(response?.data?.data);
+    
   };
+
 
   useEffect(() => {
     fetchProduct();
@@ -35,49 +33,62 @@ const Lead = () => {
   
   const columns = [
     {
-      field: 'productName',
-      headerName: 'Product Name',
-      flex: 1,
+      field: 'customerName',
+      headerName: 'Customer Name',
+      flex: 0.5,
       cellClassName: 'name-column--cell--capitalize'
     },
     {
-      field: 'categoryName',
-      headerName: 'Category',
-      flex: 1,
-      valueGetter: (product) => {
-       // console.log("product_____________",product.row.category[0]._id)
-        return product.row.category[0].name;
+      field: 'customerEmail',
+      headerName: 'Email',
+      flex: 0.5,
+      },
+    {
+      field: 'customerPhone',
+      headerName: 'Phone',
+      flex: 0.5
+    },
+    {
+      field: 'productName',
+      headerName: 'Item',
+      flex: 0.5,
+      valueGetter:(params) =>{
+        if(params.row?.products?.length>0){
+            return params.row.products?.map((product) => `${product?.productName}(${product?.quantity})`).join(',')
+        }
+        return 'N/A'
       }
     },
-    {
-      field: 'price',
-      headerName: 'Product Price',
-      flex: 1
-    },
-    {
-      field: 'discount',
-      headerName: 'Discount',
-      flex: 1
-    },
-    {
-      field: 'action',
-      headerName: 'Action',
-      flex: 1
-    }
+
+{
+        field: 'totalAmount',
+        headerName: 'totalAmount',
+        flex: 0.5
+      },
+      {
+        field: 'productName',
+        headerName: 'Item',
+        flex: 0.5,
+        valueGetter:(params) =>{
+          if(params.row?.createdAt){
+            const orderDate= params.row.createdAt;
+            const date = new Date(orderDate);
+  const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  return formattedDate;
+        }
+        return '';
+        }
+      },
   ];
 
-  const handleOpenAdd = () => setOpenAdd(true);
-  const handleCloseAdd = () => setOpenAdd(false);
+ 
 
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  
 
   return (
     <>
-    <AddBulkUpload open={open}  handleClose={handleClose} fetchProduct={fetchProduct}/>
-
-      <AddLead open={openAdd} handleClose={handleCloseAdd} fetchProduct={fetchProduct} />
+    
       <Grid>
         <Stack direction="row" alignItems="center" mb={5}>
           <Box
@@ -100,24 +111,10 @@ const Lead = () => {
               </Typography>
             </Breadcrumbs>
 
-            <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
-              <Card>
-              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen} size="small">
-                  BulkUpload
-                </Button>
-                </Card>
-                <Card>
-
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
-                  New Product
-                </Button>
-                </Card>
-             
-            </Stack>
-          </Box>
+          
+        </Box>
         </Stack>
-
-        <TableStyle>
+ <TableStyle>
           <Box width="100%">
             <Card style={{ height: '600px', marginTop: '-27px' }}>
               <DataGrid
@@ -135,4 +132,4 @@ const Lead = () => {
   );
 };
 
-export default Lead;
+export default History;
