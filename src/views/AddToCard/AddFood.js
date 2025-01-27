@@ -14,8 +14,7 @@ import {
   Select,
 CustomTabPanel,
   TextField,
-  FormLabel,
-  Tab
+  FormLabel
 } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -39,14 +38,14 @@ const AddFood = () => {
   const [cartItems, setCartItems] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState('Customer');
-  const [value,setValue] =useState('1');
+  
 
-  console.log("selectedCustomer----------",selectedCustomer)
 
 
  
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
+
     setCustomerData(response?.data?.data);
   };
 
@@ -113,11 +112,13 @@ const AddFood = () => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
+    console.log("777777",response)
     setCategoryData(response.data?.data);
   };
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
+    console.log("ooo>>>",response)
     setProductData(response.data?.data);
   };
 
@@ -136,11 +137,6 @@ const AddFood = () => {
   const handleClick = () => {
     navigate('/dashboard/default', { state: { cartItems } });
   };
-
-
-  const handleTab = (newValue) =>{
-    setValue(newValue);
-  }
 
   return (
     <>
@@ -167,12 +163,9 @@ const AddFood = () => {
             </Breadcrumbs>
           </Box>
         </Stack>
-<TabList value={value} onChange={handleTab}>
-  <Tab label="POS" value="1/>
-  <Tab label='History'/>
-</TabList>
 
-<TabPanel>
+
+
         <Stack
           spacing={2}
           direction="row"
@@ -309,7 +302,7 @@ const AddFood = () => {
                   <CardMedia
                     component="img"
                     height="90vh"
-                    image={category.image}
+                    image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                     sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                   />
                   <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
@@ -353,7 +346,7 @@ const AddFood = () => {
                       <CardMedia
                         component="img"
                         height="70vh"
-                        image={product.image}
+                        image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                         sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                       />
                       <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
@@ -388,7 +381,7 @@ const AddFood = () => {
                     >
                       <CardMedia
                         component="img"
-                        image={cartItem.image}
+                        image={cartItem.imageUrl}
                         sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                       />
                       <Box sx={{ flex: 1 }}>
@@ -476,7 +469,7 @@ const AddFood = () => {
             </Box>
           </Grid>
         </Grid>
-        </TabPanel>
+                
       </Container>
     </>
   );

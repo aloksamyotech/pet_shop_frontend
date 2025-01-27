@@ -1,8 +1,23 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState ,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 // @mui
-import { Paper, Button, TableHead,TableContainer,TableBody,TableRow,Divider,Table, Typography, Card, Box,Grid,Breadcrumbs,TableCell} from '@mui/material';
+import {
+  Paper,
+  Button,
+  TableHead,
+  TableContainer,
+  TableBody,
+  TableRow,
+  Divider,
+  Table,
+  Typography,
+  Card,
+  Box,
+  Grid,
+  Breadcrumbs,
+  TableCell
+} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 
@@ -22,26 +37,61 @@ const PolicyManagement = () => {
   const location = useLocation();
   const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
   const selectedCustomer = location.state?.selectedCustomer || null;
-  const [orderDate , setOrderDate] = useState();
+  const [orderDate, setOrderDate] = useState();
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
 
-  useEffect( async ()=>{
+  useEffect(async () => {
     const response = await getApi(urls.order.get);
     setOrderDate(response.data.data[0].createdAt);
-  },[]);
+  }, []);
 
   const date = new Date(orderDate);
   const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
   const printInvoice = () => {
-    const content = document.getElementById('invoice-content'); 
-    const printWindow = window.open('', '', 'width=600,height=400'); 
-    printWindow.document.write('<html><head><title>Invoice</title></head><body>');
-    printWindow.document.write(content.innerHTML); 
-    printWindow.document.write('</body></html>');
-    printWindow.document.close(); 
-    printWindow.print(); 
+    const content = document.getElementById('invoice-content');
+    const printWindow = window.open('', '', 'width=800,height=600');
+
+    const styles = Array.from(document.styleSheets)
+      .map((styleSheet) => {
+        try {
+          return Array.from(styleSheet.cssRules)
+            .map((rule) => rule.cssText)
+            .join('\n');
+        } catch (e) {
+          return '';
+        }
+      })
+      .join('\n');
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            ${styles} 
+            @media print {
+              body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+              }
+              .no-print {
+                display: none; 
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${content.innerHTML} 
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
   };
 
   return (
@@ -52,24 +102,24 @@ const PolicyManagement = () => {
           width: '80%',
           minHeight: '100vh',
           padding: '15px',
-          ml:'90px'
+          ml: '90px'
         }}
       >
         <Box
-          id="invoice-content" 
+          id="invoice-content"
           sx={{
             backgroundColor: '#fff',
-            padding: '15px',
+            padding: '15px'
           }}
         >
           <Box
             sx={{
-              backgroundColor:'#9053bc',
+              backgroundColor: '#9053bc',
               height: '20vh',
               padding: '10px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'space-between'
             }}
           >
             <Box>
@@ -93,12 +143,14 @@ const PolicyManagement = () => {
                 width: '30%',
                 display: 'flex',
                 justifyContent: 'flex-start',
-                textAlign: 'right',
+                textAlign: 'right'
               }}
             >
               <Typography sx={{ color: '#fff' }}>
-                The Pet Stop<br />
-                1234 Happy Paws Street 87876<br />
+                The Pet Stop
+                <br />
+                1234 Happy Paws Street 87876
+                <br />
                 United States
               </Typography>
             </Box>
@@ -107,9 +159,7 @@ const PolicyManagement = () => {
           <Divider sx={{ mb: 3 }} />
 
           <Box sx={{ marginBottom: '10px' }}>
-            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
-              Customer Information
-            </Typography>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>Customer Information</Typography>
             <Box sx={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
               <Typography sx={{ marginBottom: '10px' }}>
                 <strong>Name:</strong> {selectedCustomer?.firstName} {selectedCustomer?.lastName}
@@ -133,7 +183,7 @@ const PolicyManagement = () => {
               overflowY: 'auto',
               maxHeight: '60vh',
               padding: 0,
-              margin: 0,
+              margin: 0
             }}
           >
             {Array.isArray(cartItems) && (
@@ -164,9 +214,7 @@ const PolicyManagement = () => {
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'end', padding: '10px' }}>
-              <Typography sx={{ fontWeight: 'bold' }}>
-                Total: Rs.{totalPrice.toFixed(2)}
-              </Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>Total: Rs.{totalPrice.toFixed(2)}</Typography>
             </Box>
           </Box>
         </Box>
@@ -178,9 +226,9 @@ const PolicyManagement = () => {
               backgroundColor: '#6d42b9',
               padding: '5px',
               color: '#fff',
-              '&:hover': { backgroundColor: '#6d42b9' },
+              '&:hover': { backgroundColor: '#6d42b9' }
             }}
-            onClick={printInvoice} 
+            onClick={printInvoice}
           >
             Print
           </Button>
@@ -188,7 +236,8 @@ const PolicyManagement = () => {
 
         <Box>
           <Typography sx={{ color: 'gray', padding: '10px' }}>
-            Thank you for visiting our shop! We truly appreciate your trust in us to care for your beloved pets. We look forward to serving you again soon!
+            Thank you for visiting our shop! We truly appreciate your trust in us to care for your beloved pets. We look forward to serving
+            you again soon!
           </Typography>
         </Box>
       </Box>

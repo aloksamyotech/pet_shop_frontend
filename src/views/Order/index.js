@@ -25,6 +25,8 @@ const Checkout = () => {
   const selectedCustomer = location.state?.selectedCustomer || null;
   const navigate = useNavigate();
 
+  
+
   const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
 
   const handleDecrementQuantity = (_id) => {
@@ -62,9 +64,7 @@ const Checkout = () => {
       quantity: item.quantity
     }));
 
-    
-
-    const orderData = {
+     const orderData = {
       products: values,
       customerId: selectedCustomer._id,
       customerName : selectedCustomer.firstName,
@@ -98,7 +98,7 @@ const Checkout = () => {
                   <Card sx={{ display: 'flex', mb: 2, p: 2 }}>
                     <CardMedia
                       component="img"
-                      image={cartItem.image}
+                      image={cartItem.imageUrl}
                       sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                     />
                     <Box sx={{ flex: 1 }}>

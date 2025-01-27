@@ -11,14 +11,17 @@ import TextField from '@mui/material/TextField';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { FormControl, FormHelperText, FormLabel, Select } from '@mui/material';
+import { FormControl, FormHelperText, FormLabel, Select, Box } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { toast } from 'react-toastify';
 import { postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
+import axios from 'axios';
+import { useState } from 'react';
 
 const AddDetail = (props) => {
   const { open, handleClose, fetchCategories } = props;
+  const [selectImage, setSelectedImage] = useState();
 
   const validationSchema = yup.object({
     name: yup
@@ -40,14 +43,36 @@ const AddDetail = (props) => {
   const formik = useFormik({
     initialValues,
     validationSchema,
+
     onSubmit: async (values) => {
-      await postApi(urls.category.create, values);
-      await fetchCategories();
-      formik.resetForm();
-      handleClose();
-      toast.success('Category added successfully');
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('description', values.description);
+
+      if (values.categoryImage) {
+        formData.append('categoryImage', values.categoryImage);
+      }
+
+      try {
+        const response = await postApi(urls.category.create, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        await fetchCategories();
+        formik.resetForm();
+        handleClose();
+        toast.success('Category added successfully');
+      } catch (error) {
+        console.error('Error adding category:', error);
+        toast.error('Failed to add category');
+      }
     }
   });
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    formik.setFieldValue('categoryImage', file);
+    setSelectedImage(file);
+  };
 
   return (
     <div>
@@ -57,7 +82,7 @@ const AddDetail = (props) => {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            padding: '20px',
+            padding: '20px'
           }}
         >
           <Typography variant="h6">Add Category</Typography>
@@ -98,14 +123,40 @@ const AddDetail = (props) => {
                     />
                   </FormControl>
                 </Grid>
+                <Grid item xs={12} sm={6} sx={{ marginTop: '15px' }}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    minHeight="200px"
+                    border={1}
+                    borderColor="grey.300"
+                    borderRadius={1}
+                    position="relative"
+                  >
+                    {formik.values.categoryImage ? (
+                      <img
+                        src={URL.createObjectURL(formik.values.categoryImage)}
+                        alt="category"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        Preview Image
+                      </Typography>
+                    )}
+                    <Box position="absolute" left={0} bottom={0} p={2}>
+                      <input type="file" name="categoryImage" accept="image/*" onChange={handleFileChange} style={{ display: 'block' }} />
+                    </Box>
+                  </Box>
+                </Grid>
               </Grid>
             </DialogContentText>
           </form>
         </DialogContent>
 
         <DialogActions>
-         
-        <Button type="submit" variant="contained" onClick={formik.handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
+          <Button type="submit" variant="contained" onClick={formik.handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
             Save
           </Button>
           <Button

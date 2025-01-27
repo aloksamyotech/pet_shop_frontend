@@ -2,8 +2,8 @@ import axios from 'axios';
 export const postApi = async (url, data, headers = {}) => {
     try {
         const defaultHeaders = {
+            ...headers,
             'Content-Type': 'application/json',
-            ...headers
         };
         const response = await axios.post(url, data, { headers: defaultHeaders });
         return response.data;

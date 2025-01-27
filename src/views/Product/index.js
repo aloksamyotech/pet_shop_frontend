@@ -11,6 +11,8 @@ import AddBulkUpload from './productBulkUpload.js';
 import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
+import { WidgetsTwoTone } from '@mui/icons-material';
+import { width } from '@mui/system';
 
 const Lead = () => {
   const [product, setProduct] = useState([]);
@@ -19,9 +21,10 @@ const Lead = () => {
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
-    //console.log("v---------------------",response?.data?.data)
-    setProduct(response?.data?.data);
+   
+     setProduct(response?.data?.data);
   };
+
 
   useEffect(() => {
     fetchProduct();
@@ -44,9 +47,9 @@ const Lead = () => {
       field: 'categoryName',
       headerName: 'Category',
       flex: 1,
-      valueGetter: (product) => {
-       // console.log("product_____________",product.row.category[0]._id)
-        return product.row.category[0].name;
+      valueGetter: (params) => {
+        
+       return params.row.category[0].name;
       }
     },
     {
@@ -59,11 +62,33 @@ const Lead = () => {
       headerName: 'Discount',
       flex: 1
     },
+  
     {
-      field: 'action',
-      headerName: 'Action',
-      flex: 1
+      field: 'image',
+      headerName: 'Item',
+      flex: 1,
+      valueGetter: (params) => {
+        return params.row.imageUrl;
+      },
+      renderCell: (params) => {
+       
+        const imageUrl = params.row.imageUrl;
+        
+        return (
+          <img
+            src={imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+            alt="product"
+            style={{
+              width: '50px',
+              height: '50px',
+              objectFit: 'cover',
+            }}
+          />
+        );
+      },
     }
+    
+    
   ];
 
   const handleOpenAdd = () => setOpenAdd(true);
