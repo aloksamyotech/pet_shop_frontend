@@ -5,6 +5,7 @@ export const postApi = async (url, data, headers = {}) => {
             ...headers,
             'Content-Type': 'application/json',
         };
+        console.log('header', defaultHeaders)
         const response = await axios.post(url, data, { headers: defaultHeaders });
         return response.data;
     } catch (error) {
@@ -12,6 +13,22 @@ export const postApi = async (url, data, headers = {}) => {
         throw new Error(error.response ? error.response.data : error.message);
     }
 };
+
+export const postApiForFormData = async (url, data, headers = {}) => {
+    try {
+        const defaultHeaders = {
+            ...headers,
+            'Content-Type': 'multipart/form-data',
+        };
+        console.log('header', defaultHeaders)
+        const response = await axios.post(url, data, { headers: defaultHeaders });
+        return response.data;
+    } catch (error) {
+        console.error('API Error:', error.response || error.message);
+        throw new Error(error.response ? error.response.data : error.message);
+    }
+};
+
 
 
 

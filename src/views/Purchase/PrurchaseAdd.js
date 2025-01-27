@@ -15,6 +15,7 @@ import {
   DialogContentText,
   DialogTitle,
   Typography,
+  
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
@@ -26,6 +27,7 @@ import { urls } from 'views/Api/constant';
 const ProductAdd = (props) => {
   const { open, handleClose, fetchPurchase } = props;
  const [product, setProduct] = useState([]);
+ const [Selectproduct,setSelectedProduct] =('')
 
   const initialValues = {
     productId: '',
@@ -131,9 +133,10 @@ const ProductAdd = (props) => {
                       </MenuItem>
                     ))}
                 </Select>
+                 
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Product Price</FormLabel>
+                <FormLabel>Product Price (₹)</FormLabel>
                 <TextField
                   id="productPrice"
                   name="productPrice"
@@ -195,7 +198,7 @@ const ProductAdd = (props) => {
                 </Select>
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Amount</FormLabel>
+                <FormLabel>Amount(₹)</FormLabel>
                 <TextField
                 id="totalPrice"
                   name="totalPrice"

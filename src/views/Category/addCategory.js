@@ -14,7 +14,7 @@ import * as yup from 'yup';
 import { FormControl, FormHelperText, FormLabel, Select, Box } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { toast } from 'react-toastify';
-import { postApi } from 'views/Api/comman.js';
+import { postApi, postApiForFormData } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import axios from 'axios';
 import { useState } from 'react';
@@ -32,12 +32,14 @@ const AddDetail = (props) => {
     description: yup
       .string()
       .required('Description is required')
-      .matches(/^[A-Za-z\s]+$/, 'Description must only contain letters')
+      // .test('word-limit',desription)
+    
   });
 
   const initialValues = {
     name: '',
-    description: ''
+    description: '',
+    categoryImage: null
   };
 
   const formik = useFormik({
@@ -45,18 +47,14 @@ const AddDetail = (props) => {
     validationSchema,
 
     onSubmit: async (values) => {
+      console.log('value for category', values)
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description);
-
-      if (values.categoryImage) {
-        formData.append('categoryImage', values.categoryImage);
-      }
-
+      formData.append('categoryImage', values.categoryImage);
       try {
-        const response = await postApi(urls.category.create, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const response = await postApiForFormData(urls.category.create, formData);
+
         await fetchCategories();
         formik.resetForm();
         handleClose();
@@ -70,8 +68,11 @@ const AddDetail = (props) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    formik.setFieldValue('categoryImage', file);
-    setSelectedImage(file);
+    console.log('data----------', file);
+    if (file) {
+      formik.setFieldValue('categoryImage', file);
+      setSelectedImage(file);
+    }
   };
 
   return (

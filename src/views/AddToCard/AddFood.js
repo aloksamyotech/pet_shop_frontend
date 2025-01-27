@@ -14,7 +14,11 @@ import {
   Select,
 CustomTabPanel,
   TextField,
-  FormLabel
+  FormLabel,
+  Tabs,
+  Tab,
+  
+
 } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -28,6 +32,8 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Checkout from 'views/Order/index';
+import { TabContext, TabPanel,TabList } from '@mui/lab';
+import History from 'views/History';
 
 const AddFood = () => {
   const navigate = useNavigate();
@@ -37,8 +43,15 @@ const AddFood = () => {
   const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [customerData, setCustomerData] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState('Customer');
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const[value,setValue]= useState("1")
+
+
+const handleChange = (event,newValue) =>{
   
+setValue(newValue);
+
+}
 
 
 
@@ -88,6 +101,7 @@ const AddFood = () => {
   const deleteAll = () => {
     setCartItems([]);
   };
+ 
 
   const removeItem = (_id) => {
     const updatedCart = cartItems.filter((item) => item._id !== _id);
@@ -112,13 +126,13 @@ const AddFood = () => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-    console.log("777777",response)
+
     setCategoryData(response.data?.data);
   };
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
-    console.log("ooo>>>",response)
+   
     setProductData(response.data?.data);
   };
 
@@ -139,9 +153,9 @@ const AddFood = () => {
   };
 
   return (
-    <>
+<>
       <Container maxWidth="xl">
-        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '103%', mb: '15px', backgroundColor: 'white' }}>
+        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white' }}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -164,21 +178,10 @@ const AddFood = () => {
           </Box>
         </Stack>
 
-
-
-        <Stack
-          spacing={2}
-          direction="row"
-          sx={{
-            height: '10vh',
-            width: '100%',
-            mb: '15px',
-            backgroundColor: 'white',
-            padding: '5px',
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
+<Box sx={{backgroundColor:'#fff' }}>
+       
+        <TabContext value={value}>
+           <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '100%', mb: '15px', backgroundColor: 'white' }}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -188,84 +191,48 @@ const AddFood = () => {
               borderRadius: '10px',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '10px'
+             
+              marginTop: '-4px'
             }}
           >
-            <Box
-              sx={{
-                width: '40%',
-                height: '40px',
-                border: '1px solid #ccc',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                mr: '10px',
-                type: 'text'
-              }}
-            >
-              <SearchIcon sx={{ ml: '8px' }} />
-              <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
-            </Box>
-
-           
-
-  <Box
-  sx={{
-    width: '30%',
-    height: '40px',
-    border: '1px solid #ccc',
-    borderRadius: '20px',
-    display: 'flex',
-    alignItems: 'center',
-    mr: '10px',
-    overflow: 'hidden',
-
-  }}
-
->
-  
-  <Autocomplete
-    onChange={(event, newValue) =>{
-      setSelectedCustomer(newValue),
-      handleCustomerChange(newValue)}}
-      value={selectedCustomer}
-    options={customerData}
-    fullWidth
-    getOptionLabel={(option) =>  option.firstName}
-    renderInput={(params) => (
-      <TextField {...params} label="customer"/>
-    )}
-    isOptionEqualToValue={(option, value) => option._id === value._id} 
-  />
- 
-</Box>
-
-            <Box
-              sx={{
-                width: '30%',
-                height: '40px',
-                border: '1px solid #ccc',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                mr: '10px',
-                overflow: 'hidden'
-              }}
-            >
-              <TextField
-                value={selectedCustomer?.email || ''}
-                readOnly
-                fullWidth
-                sx={{
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '14px',
-                  color: '#000'
-                }}
-              />
-            </Box>
-          </Box>
+        <TabList onChange={handleChange}>
+          <Tab label='POS' value="1"/>
+          <Tab label='History'  value="2"/>
+         </TabList>
+        </Box>
         </Stack>
+
+
+<TabPanel value="1">
+<Stack spacing={2} sx={{ mb: '15px' ,marginTop: '-27px' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ width: '30%', display: 'flex', alignItems: 'center' }}>
+                  <SearchIcon />
+                  <InputBase
+                    placeholder="Search Product..."
+                    sx={{ ml: 1, flex: 1 }}
+                    onChange={handleSearch}
+                    value={search}
+                  />
+                </Box>
+                <Autocomplete
+                  options={customerData}
+                  value={selectedCustomer}
+                  onChange={(event, newValue) => setSelectedCustomer(newValue)}
+                  getOptionLabel={(option) => option.firstName || ''}
+                  renderInput={(params) => <TextField {...params} label="Customer"  size="small" />}
+                  sx={{ width: '30%' }}
+                />
+                <TextField
+                  value={selectedCustomer?.email || ''}
+                  fullWidth
+                  readOnly
+                   size="small"
+                  sx={{ width: '30%' }}
+                />
+              </Box>
+            </Stack>
+
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={2}>
@@ -353,7 +320,7 @@ const AddFood = () => {
                         {product.productName}
                       </Typography>
                       <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                        {product.price}
+                      (₹){product.price}
                       </Typography>
                     </Card>
                   </Grid>
@@ -381,7 +348,7 @@ const AddFood = () => {
                     >
                       <CardMedia
                         component="img"
-                        image={cartItem.imageUrl}
+                        image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                         sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                       />
                       <Box sx={{ flex: 1 }}>
@@ -389,7 +356,7 @@ const AddFood = () => {
                           {cartItem.productName}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {cartItem.price}
+                        (₹){cartItem.price}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -434,8 +401,7 @@ const AddFood = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: '#f9f9f9'
-              }}
+               }}
             >
               <Typography variant="h6" color="secondary">
                 Total: Rs.{totalPrice.toFixed(2)}
@@ -469,7 +435,11 @@ const AddFood = () => {
             </Box>
           </Grid>
         </Grid>
-                
+        </TabPanel> 
+        <TabPanel value='2'><History/></TabPanel>
+       
+        </TabContext>
+        </Box>
       </Container>
     </>
   );

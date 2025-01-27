@@ -41,7 +41,9 @@ const Purchase = () => {
       flex: 1,
       valueGetter: (params) => {
        
-        return params.row.productName[0].productName;
+       console.log("priti",params.row.productName[0].productName)
+         return params.row.productName[0].productName
+        ;
        
       }
     },

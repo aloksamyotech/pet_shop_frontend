@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 
-import { getApi, postApi } from 'views/Api/comman.js';
+import { getApi, postApi,postApiForFormData } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 import Header from 'ui-component/Header';
 import { constrainPoint } from '@fullcalendar/core/internal';
@@ -45,7 +45,7 @@ const AddLead = (props) => {
 
     price: yup.number().required('Price is required').typeError('Price must be a number').positive('Price must be greater than zero'),
 
-    discount: yup.number().typeError('Discount must be a number').max(100, 'Discount cannot exceed 100%')
+    discount: yup.number().typeError('Discount must be a number')
   });
 
   const initialValues = {
@@ -70,7 +70,7 @@ const AddLead = (props) => {
     
     
       try {
-      const response = await postApi(urls.product.create, formData, {
+      const response = await postApiForFormData(urls.product.create, formData, {
                   headers: { 'Content-Type': 'multipart/form-data' }
                 });
         fetchProduct(); 
@@ -170,7 +170,7 @@ const AddLead = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Product Price</FormLabel>
+                  <FormLabel>Product Price(₹)</FormLabel>
                   <TextField
                     id="price"
                     name="price"
@@ -184,7 +184,7 @@ const AddLead = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount(%)</FormLabel>
+                    <FormLabel>Discount</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"

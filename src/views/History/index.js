@@ -47,17 +47,7 @@ const History = () => {
       headerName: 'Phone',
       flex: 0.5
     },
-    {
-      field: 'productName',
-      headerName: 'Item',
-      flex: 0.5,
-      valueGetter:(params) =>{
-        if(params.row?.products?.length>0){
-            return params.row.products?.map((product) => `${product?.productName}(${product?.quantity})`).join(',')
-        }
-        return 'N/A'
-      }
-    },
+   
 
 {
         field: 'totalAmount',
@@ -89,7 +79,7 @@ const History = () => {
     <>
     
       <Grid>
-        <Stack direction="row" alignItems="center" mb={5}>
+        {/* <Stack direction="row" alignItems="center" mb={5}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -112,7 +102,7 @@ const History = () => {
 
           
         </Box>
-        </Stack>
+        </Stack> */}
  <TableStyle>
           <Box width="100%">
             <Card style={{ height: '600px', marginTop: '-27px' }}>

@@ -98,7 +98,7 @@ const Checkout = () => {
                   <Card sx={{ display: 'flex', mb: 2, p: 2 }}>
                     <CardMedia
                       component="img"
-                      image={cartItem.imageUrl}
+                      image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                       sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                     />
                     <Box sx={{ flex: 1 }}>
