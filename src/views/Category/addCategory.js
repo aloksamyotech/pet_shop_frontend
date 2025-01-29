@@ -24,15 +24,17 @@ const AddDetail = (props) => {
   const [selectImage, setSelectedImage] = useState();
 
   const validationSchema = yup.object({
-    name: yup
-      .string()
-      .required(' Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters'),
+      name: yup
+        .string()
+        .required(' Name is required')
+        .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters')
+        .max(20 , 'category Name cannot be more then 10'),
+        
 
-    description: yup
-      .string()
-      .required('Description is required')
-      .matches(/^[A-Za-z\s]+$/, 'Description must only contain letters')
+      description: yup.string()
+      
+     .max(100, 'Description cannot be more than 100')
+    
   });
 
   const initialValues = {
@@ -45,6 +47,7 @@ const AddDetail = (props) => {
     validationSchema,
 
     onSubmit: async (values) => {
+      
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description);
@@ -63,15 +66,18 @@ const AddDetail = (props) => {
         toast.success('Category added successfully');
       } catch (error) {
         console.error('Error adding category:', error);
-        toast.error('Failed to add category');
+        toast.error('Already exist Category');
       }
     }
   });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    formik.setFieldValue('categoryImage', file);
-    setSelectedImage(file);
+   
+    if (file) {
+      formik.setFieldValue('categoryImage', file);
+      setSelectedImage(file);
+    }
   };
 
   return (

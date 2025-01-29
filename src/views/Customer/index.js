@@ -79,13 +79,14 @@ const Customer = () => {
       flex: 1,
       renderCell: (params) => (
         <Button
+        size='small'
           variant="contained"
           sx={{
             backgroundColor:
               params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ?  '#FF5733'  : '',
-            width: '100px',
+            width: '50px',
             textAlign: 'center',
-            padding: '6px ',
+            padding: '2px ',
 
             '&:hover': {
               backgroundColor:
@@ -105,7 +106,7 @@ const Customer = () => {
       sortable: false,
       renderCell: (params) => (
         <IconButton>
-          <VisibilityIcon sx={{ color: '#1d4587' }} onClick={() => handleView(params.row?.id)} />
+          <VisibilityIcon  sx={{ color: '#1d4587' }} onClick={() => handleView(params.row?.id)} />
         </IconButton>
       )
     }

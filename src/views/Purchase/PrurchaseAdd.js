@@ -26,13 +26,15 @@ import { urls } from 'views/Api/constant';
 const ProductAdd = (props) => {
   const { open, handleClose, fetchPurchase } = props;
  const [product, setProduct] = useState([]);
+ const [company, setCompany] = useState([]);
+ const [Selectproduct,setSelectedProduct] =('')
 
   const initialValues = {
     productId: '',
     quantity: '',
     totalPrice: '',
-    discount: '',
-    paymentStatus: '',
+    discount: '0',
+    paymentStatus: 'Pending',
     productPrice: '',
   };
 
@@ -42,18 +44,24 @@ const ProductAdd = (props) => {
       .number()
       .positive('Quantity must be a positive number')
       .integer('Quantity must be an integer')
-      .required('Quantity is required'),
+      .required('Quantity is required')
+      .max('1000',"max 1000 quantity"),
+
     totalPrice: yup
       .number()
       .positive('Total Price must be greater than 0   ')
       .required('Total Price is required') , 
-    discount: yup.number(),
+    discount: yup.number()
+    .integer('discount must be an integer'),
+
     paymentStatus: yup.string().required('Payment Status is required'),
     productPrice: yup
       .number()
       .positive('Product Price must be a positive number')
       .required('Product Price is required'),
   });
+
+ 
 
   const formik = useFormik({
     initialValues,
@@ -76,10 +84,22 @@ const ProductAdd = (props) => {
     
   };
 
+
+
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
     setProduct(response?.data?.data);
   };
+
+  
+  const fetchCompany = async () => {
+    const response = await getApi(urls.company.get);
+    console.log("response",response)
+    setCompany(response?.data?.data);
+  };
+
+
+
 
   useEffect(() => {
     const  quantity = formik.values.quantity || 1;
@@ -92,6 +112,9 @@ const ProductAdd = (props) => {
 
   useEffect(() => {
     fetchProduct();
+    fetchCompany();
+    
+
   }, []);
 
   return (
@@ -103,7 +126,7 @@ const ProductAdd = (props) => {
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="h6">Add Product</Typography>
+        <Typography variant="h6">Add Purchase</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
@@ -133,6 +156,46 @@ const ProductAdd = (props) => {
                 </Select>
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
+                <FormLabel>Company</FormLabel>
+                <Select
+                  id="companyId"
+                  name="companyId"
+                  size="small"
+                  fullWidth
+                  value={formik.values.companyId}
+                  onChange={formik.handleChange}
+                  error={formik.touched.companyId && Boolean(formik.errors.companyId)}
+                >
+                  {Array.isArray(company) &&
+                    company.map((companies) => (
+                      <MenuItem key={companies._id} value={companies._id}>
+                        {companies.companyName}
+                      </MenuItem>
+                    ))}
+                </Select>
+                 
+              </Grid>
+              <Grid item xs={12} sm={6} md={6}>
+                <FormLabel>Company</FormLabel>
+                <Select
+                  id="companyId"
+                  name="companyId"
+                  size="small"
+                  fullWidth
+                  value={formik.values.companyId}
+                  onChange={formik.handleChange}
+                  error={formik.touched.companyId && Boolean(formik.errors.companyId)}
+                >
+                  {Array.isArray(company) &&
+                    company.map((companies) => (
+                      <MenuItem key={companies._id} value={companies._id}>
+                        {companies.companyName}
+                      </MenuItem>
+                    ))}
+                </Select>
+                 
+              </Grid>
+              <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Product Price</FormLabel>
                 <TextField
                   id="productPrice"
@@ -145,8 +208,6 @@ const ProductAdd = (props) => {
                   helperText={formik.touched.productPrice && formik.errors.productPrice}
                 />
               </Grid>
-            </Grid>
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
               <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Quantity</FormLabel>
                 <TextField
@@ -157,12 +218,18 @@ const ProductAdd = (props) => {
                   value={formik.values.quantity}
                   onChange={(e) => {
                     const data = parseInt(e.target.value, 10) || 0;
-                  formik.setFieldValue('quantity', data);
+                    
+                      formik.setFieldValue('quantity', data);
+                    
+                 
                   }}
                   error={formik.touched.quantity && Boolean(formik.errors.quantity)}
                   helperText={formik.touched.quantity && formik.errors.quantity}
                 />
-              </Grid>
+              </Grid> 
+            </Grid>
+            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+              
               <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Discount </FormLabel>
                 <TextField
@@ -173,7 +240,15 @@ const ProductAdd = (props) => {
                   value={formik.values.discount}
                   onChange={(e) => {
                     const discount = parseFloat(e.target.value) || 0;
-                formik.setFieldValue('discount', discount);
+                    if(discount <=formik.values.totalPrice)
+                    {
+                      formik.setFieldValue('discount', discount);
+                    }
+                    else {
+                      toast("discount less then productPrice")
+                    }
+                 
+                
                   }}
                   error={formik.touched.discount && Boolean(formik.errors.discount)}
                   helperText={formik.touched.discount && formik.errors.discount}
@@ -207,6 +282,7 @@ const ProductAdd = (props) => {
                   helperText={formik.touched.totalPrice && formik.errors.totalPrice}
                 />
               </Grid>
+             
             </Grid>
           </DialogContentText>
         </form>

@@ -11,8 +11,8 @@ import AddBulkUpload from './productBulkUpload.js';
 import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
-import { WidgetsTwoTone } from '@mui/icons-material';
-import { width } from '@mui/system';
+
+
 
 const Lead = () => {
   const [product, setProduct] = useState([]);
@@ -48,8 +48,9 @@ const Lead = () => {
       headerName: 'Category',
       flex: 1,
       valueGetter: (params) => {
+       
         
-       return params.row.category[0].name;
+      return params.row.category[0];
       }
     },
     {

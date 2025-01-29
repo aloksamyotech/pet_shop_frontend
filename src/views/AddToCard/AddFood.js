@@ -14,7 +14,8 @@ import {
   Select,
 CustomTabPanel,
   TextField,
-  FormLabel
+  FormLabel,
+  Tab
 } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -28,6 +29,11 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Checkout from 'views/Order/index';
+import { TabContext, TabPanel,TabList } from '@mui/lab';
+import History from 'views/History';
+import DeleteIcon from '@mui/icons-material/Delete';
+import './cart.css'
+
 
 const AddFood = () => {
   const navigate = useNavigate();
@@ -37,16 +43,21 @@ const AddFood = () => {
   const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [customerData, setCustomerData] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState('Customer');
-  
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const[value,setValue]= useState("1")
+
+
+const handleChange = (event,newValue) =>{
+setValue(newValue);
+
+}
 
 
 
  
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
-
-    setCustomerData(response?.data?.data);
+   setCustomerData(response?.data?.data);
   };
 
   const handleCustomerChange = (event) => {
@@ -79,7 +90,9 @@ const AddFood = () => {
 
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
-      prevCart.map((cartItem) => (cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
+   prevCart.map((cartItem) => 
+    
+    cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity < 20 ? cartItem.quantity +1 :cartItem.quantity } : cartItem)
     );
   };
 
@@ -112,14 +125,14 @@ const AddFood = () => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-    console.log("777777",response)
-    setCategoryData(response.data?.data);
+    console.log(response.data?.data)
+ setCategoryData(response.data?.data);
   };
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
-    console.log("ooo>>>",response)
-    setProductData(response.data?.data);
+    console.log(response.data?.data)
+   setProductData(response.data?.data);
   };
 
   const filterProduct = productData.filter((product) => {
@@ -139,21 +152,11 @@ const AddFood = () => {
   };
 
   return (
-    <>
-      <Container maxWidth="xl">
-        <Stack spacing={2} direction="row" sx={{ height: '10vh', width: '103%', mb: '15px', backgroundColor: 'white' }}>
+<>
+      <Container>
+        <Stack spacing={2} direction="row" sx={{ height: '10vh', backgroundColor: 'white' }}>
           <Box
-            sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '0 25px',
-              marginTop: '-4px'
-            }}
+             className="container"
           >
             <Breadcrumbs aria-label="breadcrumb" sx={{ fontSize: '20px' }}>
               <HomeIcon sx={{ color: '#2067db', mr: '-4px' }} fontSize="large" onClick={handleClick} />
@@ -164,108 +167,48 @@ const AddFood = () => {
           </Box>
         </Stack>
 
+<Box  >
+       
+      
+        <TabContext value={value}>
+          <Box   className="container" sx={{mt:'20px'}}>
+         <TabList onChange={handleChange}>
+          <Tab label='POS' value="1"/>
+          <Tab label='History'  value="2"/>
+         </TabList>
+         </Box>
+      
 
 
-        <Stack
-          spacing={2}
-          direction="row"
-          sx={{
-            height: '10vh',
-            width: '100%',
-            mb: '15px',
-            backgroundColor: 'white',
-            padding: '5px',
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '10px'
-            }}
-          >
-            <Box
-              sx={{
-                width: '40%',
-                height: '40px',
-                border: '1px solid #ccc',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                mr: '10px',
-                type: 'text'
-              }}
-            >
-              <SearchIcon sx={{ ml: '8px' }} />
-              <InputBase placeholder="Search Product........." sx={{ flex: 1, ml: 1 }} onChange={handleSearch} value={search} />
-            </Box>
+<TabPanel value="1">
+ <Box   className="search" >
+                <Box>
+                  <SearchIcon />
+                  <InputBase
+                    placeholder="Search Product..."
+                  
+                    onChange={handleSearch}
+                    value={search}
+                  />
+                </Box>
+                <Autocomplete
+  options={customerData}
+  value={selectedCustomer}
+  onChange={(event, newValue) => setSelectedCustomer(newValue)}
+  getOptionLabel={(option) => `${option.firstName} (${option.email})`}
+  renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
+  sx={{ width: '30%' }}
+/>
 
-           
-
-  <Box
-  sx={{
-    width: '30%',
-    height: '40px',
-    border: '1px solid #ccc',
-    borderRadius: '20px',
-    display: 'flex',
-    alignItems: 'center',
-    mr: '10px',
-    overflow: 'hidden',
-
-  }}
-
->
-  
-  <Autocomplete
-    onChange={(event, newValue) =>{
-      setSelectedCustomer(newValue),
-      handleCustomerChange(newValue)}}
-      value={selectedCustomer}
-    options={customerData}
-    fullWidth
-    getOptionLabel={(option) =>  option.firstName}
-    renderInput={(params) => (
-      <TextField {...params} label="customer"/>
-    )}
-    isOptionEqualToValue={(option, value) => option._id === value._id} 
-  />
- 
-</Box>
-
-            <Box
-              sx={{
-                width: '30%',
-                height: '40px',
-                border: '1px solid #ccc',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                mr: '10px',
-                overflow: 'hidden'
-              }}
-            >
-              <TextField
-                value={selectedCustomer?.email || ''}
-                readOnly
-                fullWidth
-                sx={{
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '14px',
-                  color: '#000'
-                }}
-              />
-            </Box>
-          </Box>
-        </Stack>
+                <TextField
+                  value={selectedCustomer?.email || ''}
+                  fullWidth
+                  readOnly
+                   size="small"
+                  sx={{ width: '30%',backgroundColor:'#fff' }}
+                />
+              </Box>
+            
 
         <Grid container spacing={2}>
           <Grid item xs={12} md={2}>
@@ -279,7 +222,7 @@ const AddFood = () => {
                   display: 'flex',
                   justifyContent: 'center',
                   fontSize: '20px',
-                  padding: '15px'
+                  
                 }}
               >
                 Category
@@ -294,15 +237,14 @@ const AddFood = () => {
                     transition: 'box-shadow 1.3s, transform 1.3s',
                     border: '1px solid black',
                     cursor: 'pointer',
-                   
                     width: '100%',
-                    height: '20vh'
+                    height: '15vh'
                   }}
                 >
                   <CardMedia
                     component="img"
-                    height="90vh"
-                    image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                    height="50vh"
+                   image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                     sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                   />
                   <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
@@ -353,7 +295,7 @@ const AddFood = () => {
                         {product.productName}
                       </Typography>
                       <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                        {product.price}
+                      ₹{product.price}
                       </Typography>
                     </Card>
                   </Grid>
@@ -363,7 +305,7 @@ const AddFood = () => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Box sx={{ height: '70vh', borderRadius: '8px', flex: 1, overflowY: 'auto', backgroundColor: 'white' }}>
+            <Box sx={{ height: '70vh', borderRadius: '8px', flex:0.5, overflowY: 'auto', backgroundColor: 'white' }}>
               <Grid container spacing={2}>
                 {cartItems.map((cartItem) => (
                   <Grid item xs={12} key={cartItem._id}>
@@ -375,21 +317,22 @@ const AddFood = () => {
                         transition: 'box-shadow 1s, transform 1s',
                         border: '1px solid black',
                         cursor: 'pointer',
-                      
-                        p: 1
+                      width:'100%',
+                      height:'70px',
+                        p: "2px"
                       }}
                     >
                       <CardMedia
                         component="img"
-                        image={cartItem.imageUrl}
-                        sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
+                        image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                        sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                       />
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
                           {cartItem.productName}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {cartItem.price}
+                        ₹{cartItem.price}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -421,7 +364,7 @@ const AddFood = () => {
                           });
                         }}
                       >
-                        Remove
+                     <DeleteIcon /> 
                       </Button>
                     </Card>
                   </Grid>
@@ -469,7 +412,12 @@ const AddFood = () => {
             </Box>
           </Grid>
         </Grid>
-                
+        </TabPanel> 
+        <TabPanel value='2'>
+          <History/></TabPanel>
+       
+        </TabContext>
+        </Box>
       </Container>
     </>
   );

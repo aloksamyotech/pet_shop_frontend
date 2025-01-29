@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 import { urls } from 'views/Api/constant.js';
 import { postApi } from 'views/Api/comman.js';
 import { useLocation } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Checkout = () => {
   const location = useLocation();
@@ -39,7 +40,9 @@ const Checkout = () => {
 
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
-      prevCart.map((cartItem) => (cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
+   prevCart.map((cartItem) => 
+    
+    cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity < 20 ? cartItem.quantity +1 :cartItem.quantity } : cartItem)
     );
   };
 
@@ -138,7 +141,7 @@ const Checkout = () => {
                         });
                       }}
                     >
-                      Remove
+                     <DeleteIcon /> 
                     </Button>
                   </Card>
                 </Grid>
@@ -161,24 +164,26 @@ const Checkout = () => {
             <Typography variant="h6">Total Payable: ₹{totalPrice.toFixed(2)}</Typography>
             <Box sx={{ display: 'flex', gap: '10px' }}>
               <Button
+               size="medium" 
                 sx={{
-                  backgroundColor: '#0d8929',
+                  backgroundColor: '#72d89b',
                   color: '#fff',
-                  '&:hover': { backgroundColor: '#0d8929' }
+                  '&:hover': { backgroundColor: '#72d89b' }
                 }}
                 onClick={handleCreateInvoice}
               >
-                Create Invoice
+              Confirmed
               </Button>
               <Button
+               size="medium" 
                 sx={{
-                  backgroundColor: '#7011bc',
+                  backgroundColor: '#da2c11',
                   color: '#fff',
-                  '&:hover': { backgroundColor: '#7011bc' }
+                  '&:hover': { backgroundColor: '#da2c11' }
                 }}
                 onClick={() => setCartItems([])}
               >
-                Clear Cart
+                Cancel
               </Button>
             </Box>
           </Box>
