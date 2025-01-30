@@ -131,9 +131,7 @@ const History = () => {
                 rows={product}
                 columns={columns}
                 getRowId={(row) => row._id}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
-              />
+                />
             </Card>
           </Box>
         </TableStyle>

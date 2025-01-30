@@ -82,19 +82,41 @@ const Checkout = () => {
   };
 
   return (
-    <Container maxWidth="xl">
-      <Stack spacing={2} direction="row" sx={{ height: '10vh', mb: '15px', backgroundColor: 'white' }}>
-        <Box className="boxStyle">
-          <Breadcrumbs aria-label="breadcrumb" sx={{ fontSize: '20px' }}>
-            <HomeIcon sx={{ color: '#2067db', mr: '-4px' }} fontSize="large" onClick={handleClick} />
-            <Typography variant="h5">Card</Typography>
-          </Breadcrumbs>
-        </Box>
-      </Stack>
+    <Grid maxWidth="xl">
+      <Stack direction="row" alignItems="center" mb={5}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+              marginTop: '-7px'
+            }}
+          >
+            <Breadcrumbs
+          aria-label="breadcrumb"
+              sx={{ display: 'flex', alignItems: 'center' }}
+            ><HomeIcon sx={{ color: '#2067db' }}  onClick={handleClick} />
+               <Typography variant="h5">Order</Typography>
+            </Breadcrumbs>
 
-      <Grid container spacing={2}>
+          </Box>
+        </Stack>
+
+      <Grid container spacing={2} sx={{mt:'-35px'}}>
+      
         <Grid item xs={4}>
-          <Box sx={{ width: '100%', height: '70vh', backgroundColor: '#fff', overflowY: 'auto' }}>
+          <Box sx={{ width: '100%', height: 'auto', backgroundColor: '#fff', overflowY: 'auto' }}>
+         
+          <Typography variant="h4" sx={{ mt: 2,padding:'5px'}}>
+              ADD TO CART
+            </Typography>
+           
+            <Divider sx={{ mb: 2 }} />
             <Grid container spacing={2}>
               {cartItems.map((cartItem) => (
                 <Grid item xs={12} key={cartItem._id}>
@@ -109,7 +131,7 @@ const Checkout = () => {
                         {cartItem.productName}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        ₹{cartItem.price}
+                        ₹ {cartItem.price} 
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -152,27 +174,28 @@ const Checkout = () => {
 
         <Grid item xs={8}>
           <Box sx={{ backgroundColor: '#fff', p: 3, borderRadius: 2, boxShadow: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Price Details
+            <Typography variant="h4" sx={{ mb: 2 }}>
+              Order Summary
             </Typography>
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ mb: 2 }}>
-              <Typography variant="body1">Price: ₹{totalPrice.toFixed(2)}</Typography>
-              <Typography variant="body1">Quantity: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
+              <Typography variant="h6">Price: ₹{totalPrice.toFixed(2)} * {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
+              <Typography variant="h6">Quantity: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
             </Box>
             <Divider sx={{ mb: 2 }} />
-            <Typography variant="h6">Total Payable: ₹{totalPrice.toFixed(2)}</Typography>
-            <Box sx={{ display: 'flex', gap: '10px' }}>
+            <Typography variant="h5">Total Payable: ₹{totalPrice.toFixed(2)}</Typography>
+
+            <Box sx={{ display: 'flex', gap: '10px' ,mt:'10px'}}>
               <Button
                size="medium" 
                 sx={{
-                  backgroundColor: '#72d89b',
+                  backgroundColor: '#4CAF50',
                   color: '#fff',
-                  '&:hover': { backgroundColor: '#72d89b' }
+                  '&:hover': { backgroundColor: '#4CAF50' }
                 }}
                 onClick={handleCreateInvoice}
               >
-              Confirmed
+              Confirm
               </Button>
               <Button
                size="medium" 
@@ -188,8 +211,9 @@ const Checkout = () => {
             </Box>
           </Box>
         </Grid>
+      
       </Grid>
-    </Container>
+    </Grid>
   );
 };
 

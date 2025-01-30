@@ -5,16 +5,15 @@ import { useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { getApi,updateApi } from 'views/Api/comman.js';
-
 import { urls } from 'views/Api/constant.js';
+import { toast } from 'react-toastify';
 
 
 const AddEdit = (props) => {
   const { open, handleClose, category,fetchCategories } = props;
 
-  console.log('category',category)
- 
 
+  
   const validationSchema = yup.object({
     name: yup.string().required('Name is required').max(20, 'Name cannot be more than 20 characters'),
     description: yup.string().max(100, 'Description cannot be more than 100 characters'),
@@ -28,28 +27,37 @@ const AddEdit = (props) => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (category) => {
-        updateApi(urls.category.update, category._id);
-        fetchCategories()
+    onSubmit: async (values) => {
+      const updatedCategory = {
+      name: values.name,
+        description: values.description,
+      };
+     await updateApi(urls.category.update.replace(":id", category._id), updatedCategory); 
+     toast.success("Category updated successfully!")
+       await fetchCategories(); 
+      handleClose(); 
+     
     },
   });
+  
 
-useEffect(() => {
-   
+  useEffect(() => {
     if (category) {
       formik.setValues({
         name: category?.name || '',
         description: category?.description || '',
       });
+      fetchCategories();
     }
-  }, [category]);
+  }, [category, open]);
+  
 
  
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title">
       <DialogTitle id="scroll-dialog-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h6">{category ? 'Edit Category' : 'Add Category'}</Typography>
+        <Typography variant="h4">Updated Category</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
 
@@ -86,7 +94,7 @@ useEffect(() => {
 
       <DialogActions>
         <Button type="submit" variant="contained" color="secondary" onClick={formik.handleSubmit}>
-          Save
+          Update
         </Button>
         <Button variant="outlined" onClick={() => { formik.resetForm(); handleClose(); }} color="error">
           Cancel

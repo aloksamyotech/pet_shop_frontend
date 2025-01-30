@@ -94,7 +94,7 @@ const ProductAdd = (props) => {
   
   const fetchCompany = async () => {
     const response = await getApi(urls.company.get);
-    console.log("response",response)
+    
     setCompany(response?.data?.data);
   };
 
@@ -126,16 +126,14 @@ const ProductAdd = (props) => {
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="h6">Add Purchase</Typography>
+        <Typography variant="h4">Add Purchase</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
         <form>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            <Typography style={{ marginBottom: '15px' }} variant="h6">
-              Purchase Details
-            </Typography>
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+           
+            <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
               <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Product Name</FormLabel>
                 <Select
@@ -176,39 +174,6 @@ const ProductAdd = (props) => {
                  
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Company</FormLabel>
-                <Select
-                  id="companyId"
-                  name="companyId"
-                  size="small"
-                  fullWidth
-                  value={formik.values.companyId}
-                  onChange={formik.handleChange}
-                  error={formik.touched.companyId && Boolean(formik.errors.companyId)}
-                >
-                  {Array.isArray(company) &&
-                    company.map((companies) => (
-                      <MenuItem key={companies._id} value={companies._id}>
-                        {companies.companyName}
-                      </MenuItem>
-                    ))}
-                </Select>
-                 
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Product Price</FormLabel>
-                <TextField
-                  id="productPrice"
-                  name="productPrice"
-                  size="small"
-                  fullWidth
-                  value={formik.values.productPrice}
-                  disabled
-                  error={formik.touched.productPrice && Boolean(formik.errors.productPrice)}
-                  helperText={formik.touched.productPrice && formik.errors.productPrice}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Quantity</FormLabel>
                 <TextField
                   id="quantity"
@@ -227,9 +192,20 @@ const ProductAdd = (props) => {
                   helperText={formik.touched.quantity && formik.errors.quantity}
                 />
               </Grid> 
-            </Grid>
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-              
+              <Grid item xs={12} sm={6} md={6}>
+                <FormLabel>Product Price</FormLabel>
+                <TextField
+                  id="productPrice"
+                  name="productPrice"
+                  size="small"
+                  fullWidth
+                  value={formik.values.productPrice}
+                  disabled
+                  error={formik.touched.productPrice && Boolean(formik.errors.productPrice)}
+                  helperText={formik.touched.productPrice && formik.errors.productPrice}
+                />
+              </Grid>
+
               <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Discount </FormLabel>
                 <TextField
@@ -269,7 +245,11 @@ const ProductAdd = (props) => {
                   <MenuItem value="Failed">Failed</MenuItem>
                 </Select>
               </Grid>
-              <Grid item xs={12} sm={6} md={6}>
+            
+            </Grid>
+
+            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+            <Grid item xs={12} sm={6} md={6}>
                 <FormLabel>Amount</FormLabel>
                 <TextField
                 id="totalPrice"
@@ -282,8 +262,8 @@ const ProductAdd = (props) => {
                   helperText={formik.touched.totalPrice && formik.errors.totalPrice}
                 />
               </Grid>
-             
-            </Grid>
+              </Grid>
+           
           </DialogContentText>
         </form>
       </DialogContent>

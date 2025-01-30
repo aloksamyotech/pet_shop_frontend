@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton,Grid } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -10,12 +10,12 @@ import Iconify from 'ui-component/iconify';
 import AddDetail from './addCategory.js';
 import ViewCategory from './viewCategory.js';
 import { urls } from 'views/Api/constant.js';
-import { getApi,deleteApi } from 'views/Api/comman.js';
+import { getApi, deleteApi } from 'views/Api/comman.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import AddEdit from './Edit';
-
-
+import AddEdit from './Edit.js';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 const Customer = () => {
   const navigate = useNavigate();
@@ -23,7 +23,8 @@ const Customer = () => {
   const [category, setCategory] = useState([]);
   const [openView, setOpenView] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categoryUpdated,setCategoryUpdated] = useState(null)
+  const [categoryUpdated, setCategoryUpdated] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
 
   const home = () => navigate('/');
 
@@ -45,17 +46,36 @@ const Customer = () => {
     setOpenView(true);
   };
 
-  const handleDelete = async (id) => {
-      await deleteApi(urls.category.delete.replace(":id", id));
-       setCategory((prevCategories) => prevCategories.filter(cat => cat._id !== id));
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to remove this category?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteApi(urls.category.delete.replace(':id', id));
+          setCategory((prevCategories) => prevCategories.filter((cat) => cat._id !== id));
+          Swal.fire('Removed!', 'The category has been deleted.', 'success');
+         
+        } catch (error) {
+          Swal.fire('Error!', 'Failed to delete category.', 'error');
+          
+        }
+      }
+    });
   };
-  
 
-const handleUpdate = (category) =>{
-  console.log("id",category)
-  setCategoryUpdated(category)
-  setOpenAdd(true);
-}
+
+  const handleUpdate = (category) => {
+    setCategoryUpdated(category);
+    setOpenEdit(true);
+  };
 
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
@@ -68,9 +88,9 @@ const handleUpdate = (category) =>{
         <img
           src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
           alt="product"
-          style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+          style={{ width: '25px', height: '25px', objectFit: 'cover' }}
         />
-      ),
+      )
     },
     {
       field: 'Action',
@@ -79,29 +99,27 @@ const handleUpdate = (category) =>{
       sortable: false,
       renderCell: (params) => (
         <>
-        <IconButton onClick={() => handleView(params.row)}> 
-          <VisibilityIcon sx={{ color: '#1d4587' }} />
-        </IconButton>
-        <IconButton onClick={() => handleDelete(params.row._id)}>
-        <DeleteIcon sx={{ color: '#d32f2f' }} />
-        </IconButton>
+          <IconButton onClick={() => handleView(params.row)}>
+            <VisibilityIcon sx={{ color:'#00bbff'}} />
+          </IconButton>
         <IconButton onClick={() => handleUpdate(params.row)}>
-        <EditIcon sx={{ color: '#5acd7e' }} />
-        </IconButton>
-
-
+            <EditIcon sx={{ color:'#5f0497' }} />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(params.row._id)}>
+            <DeleteIcon sx={{ color: '#d32f2f' }} />
+          </IconButton>
         </>
-      ),
-    },
+      )
+    }
   ];
 
   return (
     <>
-          <AddEdit open={openAdd} handleClose={() => setOpenAdd(false)}  fetchCategories={fetchCategories} category={categoryUpdated}/>
+      <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
       <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} />
-      <AddDetail open={openAdd} handleClose={() => setOpenAdd(false)} fetchCategories={fetchCategories}/>
-      <Container>
-        <Stack direction="row" alignItems="center" mb={5} spacing={2}>
+      <AddDetail open={openAdd} handleClose={() => setOpenAdd(false)} fetchCategories={fetchCategories} />
+      <Grid>
+      <Stack direction="row" alignItems="center" mb={5}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -115,8 +133,8 @@ const handleUpdate = (category) =>{
               marginTop: '-7px'
             }}
           >
-            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
+            <Breadcrumbs aria-label="breadcrumb">
+              <HomeIcon sx={{ color: '#2067db' }} onClick={home} />
               <Typography variant="h5">Category</Typography>
             </Breadcrumbs>
             <Stack direction="row" alignItems="center" spacing={2}>
@@ -130,18 +148,16 @@ const handleUpdate = (category) =>{
         </Stack>
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-27px' }}>
+            <Card style={{ height: '600px', marginTop: '-25px' }}>
               <DataGrid
                 rows={category}
                 columns={columns}
                 getRowId={(row) => row._id}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
               />
             </Card>
           </Box>
         </TableStyle>
-      </Container>
+      </Grid>
     </>
   );
 };

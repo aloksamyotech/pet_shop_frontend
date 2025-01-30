@@ -12,7 +12,7 @@ import {
   Container,
   Breadcrumbs,
   Select,
-CustomTabPanel,
+  CustomTabPanel,
   TextField,
   FormLabel,
   Tab
@@ -29,11 +29,10 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Checkout from 'views/Order/index';
-import { TabContext, TabPanel,TabList } from '@mui/lab';
+import { TabContext, TabPanel, TabList } from '@mui/lab';
 import History from 'views/History';
 import DeleteIcon from '@mui/icons-material/Delete';
-import './cart.css'
-
+import './cart.css';
 
 const AddFood = () => {
   const navigate = useNavigate();
@@ -44,20 +43,15 @@ const AddFood = () => {
   const [cartItems, setCartItems] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState('');
-  const[value,setValue]= useState("1")
+  const [value, setValue] = useState('1');
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-const handleChange = (event,newValue) =>{
-setValue(newValue);
-
-}
-
-
-
- 
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
-   setCustomerData(response?.data?.data);
+    setCustomerData(response?.data?.data);
   };
 
   const handleCustomerChange = (event) => {
@@ -65,7 +59,6 @@ setValue(newValue);
     const customerDetails = customerData.find((customer) => customer._id === customerId);
     setSelectedCustomer(customerDetails);
   };
- 
 
   const handleDecrementQuantity = (_id) => {
     setCartItems((prevCart) =>
@@ -90,9 +83,9 @@ setValue(newValue);
 
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
-   prevCart.map((cartItem) => 
-    
-    cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity < 20 ? cartItem.quantity +1 :cartItem.quantity } : cartItem)
+      prevCart.map((cartItem) =>
+        cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity < 20 ? cartItem.quantity + 1 : cartItem.quantity } : cartItem
+      )
     );
   };
 
@@ -125,14 +118,14 @@ setValue(newValue);
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-    console.log(response.data?.data)
- setCategoryData(response.data?.data);
+
+    setCategoryData(response.data?.data);
   };
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
-    console.log(response.data?.data)
-   setProductData(response.data?.data);
+
+    setProductData(response.data?.data);
   };
 
   const filterProduct = productData.filter((product) => {
@@ -152,271 +145,287 @@ setValue(newValue);
   };
 
   return (
-<>
+    <>
       <Container>
-        <Stack spacing={2} direction="row" sx={{ height: '10vh', backgroundColor: 'white' }}>
-          <Box
-             className="container"
+        <Box
+            sx={{
+              backgroundColor: 'white',
+              padding: '0 25px',
+              height : '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '-7px'
+            }}
           >
-            <Breadcrumbs aria-label="breadcrumb" sx={{ fontSize: '20px' }}>
-              <HomeIcon sx={{ color: '#2067db', mr: '-4px' }} fontSize="large" onClick={handleClick} />
-              <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black', ml: '-3px', fontSize: '15px' }}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <HomeIcon sx={{ color: '#2067db' }} fontSize="medium" onClick={handleClick} />
+              <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black' }}>
                 Card
               </Typography>
             </Breadcrumbs>
-          </Box>
-        </Stack>
+            </Box>
 
-<Box  >
-       
-      
-        <TabContext value={value}>
-          <Box   className="container" sx={{mt:'20px'}}>
-         <TabList onChange={handleChange}>
-          <Tab label='POS' value="1"/>
-          <Tab label='History'  value="2"/>
-         </TabList>
-         </Box>
-      
+        <Box sx={{mt : 2}}>
+          <TabContext value={value}>
+            <Box
+              sx={{
+                backgroundColor: 'white',
+                display: 'flex',
+                borderRadius: '10px',
+                alignItems: 'center',
+                padding: '10px',
+                height: '40px'
+              }}
+            >
+              <TabList onChange={handleChange}>
+                <Tab label="POS" value="1" />
+                <Tab label="History" value="2" />
+              </TabList>
+            </Box>
 
-
-<TabPanel value="1">
- <Box   className="search" >
+            <TabPanel value="1">
+              <Box
+                sx={{
+                  backgroundColor: 'white',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '24px',
+                  height: '60px',
+                  borderRadius: '10px'
+                }}
+              >
                 <Box>
                   <SearchIcon />
-                  <InputBase
-                    placeholder="Search Product..."
-                  
-                    onChange={handleSearch}
-                    value={search}
-                  />
+                  <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
                 </Box>
                 <Autocomplete
-  options={customerData}
-  value={selectedCustomer}
-  onChange={(event, newValue) => setSelectedCustomer(newValue)}
-  getOptionLabel={(option) => `${option.firstName} (${option.email})`}
-  renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
-  sx={{ width: '30%' }}
-/>
+                  options={customerData}
+                  value={selectedCustomer}
+                  onChange={(event, newValue) => setSelectedCustomer(newValue)}
+                  getOptionLabel={(option) => `${option.firstName} (${option.email})`}
+                  renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
+                  sx={{ width: '30%' }}
+                />
 
                 <TextField
                   value={selectedCustomer?.email || ''}
                   fullWidth
                   readOnly
-                   size="small"
-                  sx={{ width: '30%',backgroundColor:'#fff' }}
+                  size="small"
+                  sx={{ width: '30%', backgroundColor: '#fff' }}
                 />
               </Box>
-            
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={2}>
-            <Box sx={{ flex: 1, overflowY: 'auto', height: '70vh', width: '100%', ml: '-5px', backgroundColor: '#fff' }}>
-              <Box
-                sx={{
-                  position: 'sticky',
-                  top: 0,
-                  backgroundColor: 'white',
-                  zIndex: 10,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  fontSize: '20px',
-                  
-                }}
-              >
-                Category
-              </Box>
-              {categoryData.map((category) => (
-                <Card
-                  key={category._id}
-                  onClick={() => setSelectedCategory(category._id)}
-                  sx={{
-                    backgroundColor: 'white',
-                    mt: '4px',
-                    transition: 'box-shadow 1.3s, transform 1.3s',
-                    border: '1px solid black',
-                    cursor: 'pointer',
-                    width: '100%',
-                    height: '15vh'
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="50vh"
-                   image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                    sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
-                  />
-                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
-                    {category.name}
-                  </Typography>
-                </Card>
-              ))}
-            </Box>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Box sx={{ height: '70vh', borderRadius: '8px', flex: 1, overflowY: 'auto', backgroundColor: 'white' }}>
-              <Box
-                sx={{
-                  position: 'sticky',
-                  top: 0,
-                  backgroundColor: 'white',
-                  zIndex: 10,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  fontSize: '20px',
-                  padding: '15px'
-                }}
-              >
-                Product
-              </Box>
               <Grid container spacing={2}>
-                {filterProduct.map((product) => (
-                  <Grid item xs={12} sm={4} md={4} key={product.id}>
-                    <Card
-                      onClick={() => handleAddToCart(product)}
+                <Grid item xs={12} md={2}>
+                  <Box sx={{ flex: 1, overflowY: 'auto', height: '70vh', width: '100%', ml: '-5px', backgroundColor: '#fff' }}>
+                    <Box
                       sx={{
+                        position: 'sticky',
+                        top: 0,
                         backgroundColor: 'white',
-                        transition: 'box-shadow 1s, transform 1s',
-                        border: '1px solid black',
-                        cursor: 'pointer',
-                       width: '100%',
-                        height: '25vh'
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        height="70vh"
-                        image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                        sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
-                      />
-                      <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
-                        {product.productName}
-                      </Typography>
-                      <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                      ₹{product.price}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Box sx={{ height: '70vh', borderRadius: '8px', flex:0.5, overflowY: 'auto', backgroundColor: 'white' }}>
-              <Grid container spacing={2}>
-                {cartItems.map((cartItem) => (
-                  <Grid item xs={12} key={cartItem._id}>
-                    <Card
-                      sx={{
+                        zIndex: 10,
                         display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: 'white',
-                        transition: 'box-shadow 1s, transform 1s',
-                        border: '1px solid black',
-                        cursor: 'pointer',
-                      width:'100%',
-                      height:'70px',
-                        p: "2px"
+                        justifyContent: 'center',
+                        fontSize: '20px'
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                        sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
-                      />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                          {cartItem.productName}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                        ₹{cartItem.price}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
-                          <AddIcon fontSize="small" />
-                        </IconButton>
-                        {cartItem.quantity}
-                        <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
-                          <RemoveIcon fontSize="small" />
-                        </IconButton>
-                      </Box>
-                      <Button
-                        color="error"
-                        onClick={() => {
-                          Swal.fire({
-                            title: 'Are you sure?',
-                            text: 'Do you want to remove this item?',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Yes, remove it!',
-                            cancelButtonText: 'Cancel'
-                          }).then((result) => {
-                            if (result.isConfirmed) {
-                              removeItem(cartItem._id);
-                              Swal.fire('Removed!', 'The item has been removed.', 'success');
-                            }
-                          });
+                      Category
+                    </Box>
+                    {categoryData.map((category) => (
+                      <Card
+                        key={category._id}
+                        onClick={() => setSelectedCategory(category._id)}
+                        sx={{
+                          backgroundColor: 'white',
+                          mt: '4px',
+                          transition: 'box-shadow 1.3s, transform 1.3s',
+                          border: '1px solid black',
+                          cursor: 'pointer',
+                          width: '100%',
+                          height: '15vh'
                         }}
                       >
-                     <DeleteIcon /> 
-                      </Button>
-                    </Card>
-                  </Grid>
-                ))}
+                        <CardMedia
+                          component="img"
+                          height="50vh"
+                          image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                          sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
+                        />
+                        <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
+                          {category.name}
+                        </Typography>
+                      </Card>
+                    ))}
+                  </Box>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ height: '70vh', borderRadius: '8px', flex: 1, overflowY: 'auto', backgroundColor: 'white' }}>
+                    <Box
+                      sx={{
+                        position: 'sticky',
+                        top: 0,
+                        backgroundColor: 'white',
+                        zIndex: 10,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        fontSize: '20px',
+                        padding: '15px'
+                      }}
+                    >
+                      Product
+                    </Box>
+                    <Grid container spacing={2}>
+                      {filterProduct.map((product) => (
+                        <Grid item xs={12} sm={4} md={4} key={product.id}>
+                          <Card
+                            onClick={() => handleAddToCart(product)}
+                            sx={{
+                              backgroundColor: 'white',
+                              transition: 'box-shadow 1s, transform 1s',
+                              border: '1px solid black',
+                              cursor: 'pointer',
+                              width: '100%',
+                              height: '25vh'
+                            }}
+                          >
+                            <CardMedia
+                              component="img"
+                              height="70vh"
+                              image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                              sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
+                            />
+                            <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
+                              {product.productName}
+                            </Typography>
+                            <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
+                              ₹{product.price}
+                            </Typography>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <Box sx={{ height: '70vh', borderRadius: '8px', flex: 0.5, overflowY: 'auto', backgroundColor: 'white' }}>
+                    <Grid container spacing={2}>
+                      {cartItems.map((cartItem) => (
+                        <Grid item xs={12} key={cartItem._id}>
+                          <Card
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              backgroundColor: 'white',
+                              transition: 'box-shadow 1s, transform 1s',
+                              border: '1px solid black',
+                              cursor: 'pointer',
+                              width: '100%',
+                              height: '70px',
+                              p: '2px'
+                            }}
+                          >
+                            <CardMedia
+                              component="img"
+                              image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                              sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
+                            />
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                                {cartItem.productName}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{cartItem.price}
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
+                                <AddIcon fontSize="small" />
+                              </IconButton>
+                              {cartItem.quantity}
+                              <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
+                                <RemoveIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                            <Button
+                              color="error"
+                              onClick={() => {
+                                Swal.fire({
+                                  title: 'Are you sure?',
+                                  text: 'Do you want to remove this item?',
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonColor: '#3085d6',
+                                  cancelButtonColor: '#d33',
+                                  confirmButtonText: 'Yes, remove it!',
+                                  cancelButtonText: 'Cancel'
+                                }).then((result) => {
+                                  if (result.isConfirmed) {
+                                    removeItem(cartItem._id);
+                                    Swal.fire('Removed!', 'The item has been removed.', 'success');
+                                  }
+                                });
+                              }}
+                            >
+                              <DeleteIcon />
+                            </Button>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                  <Box
+                    sx={{
+                      borderTop: '1px solid #ccc',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      backgroundColor: '#f9f9f9'
+                    }}
+                  >
+                    <Typography variant="h6" color="secondary">
+                      Total: Rs.{totalPrice.toFixed(2)}
+                    </Typography>
+                    <Button
+                      sx={{
+                        backgroundColor: '#2067db',
+                        color: '#fff',
+                        '&:hover': {
+                          backgroundColor: '#2067db',
+                          color: '#fff'
+                        }
+                      }}
+                      onClick={handleBuyNow}
+                    >
+                      BUY NOW
+                    </Button>
+                    <Button
+                      sx={{
+                        backgroundColor: '#7011bc',
+                        color: '#fff',
+                        '&:hover': {
+                          backgroundColor: '#7011bc',
+                          color: '#fff'
+                        }
+                      }}
+                      onClick={deleteAll}
+                    >
+                      Clear Cart
+                    </Button>
+                  </Box>
+                </Grid>
               </Grid>
-            </Box>
-            <Box
-              sx={{
-                borderTop: '1px solid #ccc',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                backgroundColor: '#f9f9f9'
-              }}
-            >
-              <Typography variant="h6" color="secondary">
-                Total: Rs.{totalPrice.toFixed(2)}
-              </Typography>
-              <Button
-                sx={{
-                  backgroundColor: '#2067db',
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor:'#2067db',
-                    color: '#fff'
-                  }
-                }}
-                onClick={handleBuyNow}
-              >
-                BUY NOW
-              </Button>
-              <Button
-                sx={{
-                  backgroundColor: '#7011bc',
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: '#7011bc',
-                    color: '#fff'
-                  }
-                }}
-                onClick={deleteAll}
-              >
-                Clear Cart
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-        </TabPanel> 
-        <TabPanel value='2'>
-          <History/></TabPanel>
-       
-        </TabContext>
+            </TabPanel>
+            <TabPanel value="2">
+              <History />
+            </TabPanel>
+          </TabContext>
         </Box>
       </Container>
     </>

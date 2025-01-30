@@ -5,11 +5,11 @@ export const urls = Object.freeze({
     product: {
         create: base + '/product/save',
         get: base + '/product/fetch',
-        update: base + '/product/update',
-        delete:  base + '/product/:categoryId',
+        update: base + '/product/update/:id',
+        delete:  base + '/product/:id',
         bulkSave: base + '/product/bulkUpload'
-
     },
+
     productType: {
         create: base + '/productType/save',
         get: base + '/productType/fetch',
@@ -20,14 +20,14 @@ export const urls = Object.freeze({
 customer: {
         create: base + '/customer/save',
         get: base + '/customer/fetch',
-        update: base + '/customer/update',
-        delete:  base + '/customer/:customerId'
+        update: base + '/customer/update/:id',
+        delete:  base + '/customer/:id'
     },
     
     company: {
         create: base + '/company/save',
         get: base + '/company/fetch',
-        update: base + '/company/update',
+        update: base + '/company/update/:id',
         delete:  base + '/company/:id'
     },
 
@@ -41,7 +41,7 @@ purchase: {
      category: {
         create: base + '/category/save',
         get: base + '/category/fetch',
-        update: base + '/category/update',
+        update: base + '/category/update/:id',
         delete:  base + '/category/:id',
         bulkSave: base + '/category/bulkUpload',
     },

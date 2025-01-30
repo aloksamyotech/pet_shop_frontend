@@ -53,7 +53,7 @@ const AddProduct = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       const response = await axios.post("http://localhost:7200/productType/save",values);
-      console.log('values', values);
+     
       toast.success('Product  Add successfully');
       handleClose();
       formik.resetForm();
@@ -67,7 +67,7 @@ const AddProduct = (props) => {
     const fetchProductType = async () => {
          
          const response = await getApi(urls.category.get )
-         console.log(response.data);
+    
          setProductType(response?.data?.data);
        };
   
