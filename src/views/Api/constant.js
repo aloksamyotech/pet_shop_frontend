@@ -28,7 +28,7 @@ customer: {
         create: base + '/company/save',
         get: base + '/company/fetch',
         update: base + '/company/update',
-        delete:  base + '/company/:companyId'
+        delete:  base + '/company/:id'
     },
 
 purchase: {
@@ -42,7 +42,7 @@ purchase: {
         create: base + '/category/save',
         get: base + '/category/fetch',
         update: base + '/category/update',
-        delete:  base + '/category/:categoryId',
+        delete:  base + '/category/:id',
         bulkSave: base + '/category/bulkUpload',
     },
   

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, Link } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, Link,IconButton } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -9,12 +9,18 @@ import ProductAdd from './ProductAdd';
 import { fontSize } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { urls } from 'views/Api/constant.js';
-import { getApi } from 'views/Api/comman.js';
+import { getApi,deleteApi } from 'views/Api/comman.js';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ViewCompany from './ViewSupplier';
+
 
 
 
 const Supplier = () => {
   const [supplier, setSupplier] = useState([]);
+  const [selectedCompany,setSelectedCompany]= useState(null)
+  const [openView,setOpenView] = useState(false)
 
   const fetchSupplier = async () => {
     const response = await getApi(urls.company.get);
@@ -30,6 +36,17 @@ const Supplier = () => {
   const handleClick = () => {
     navigate('/dashboard/default');
   };
+
+  const handleView = (supplier) => {
+   setSelectedCompany(supplier);
+    setOpenView(true);
+  };
+
+  const handleDelete = (id) =>{
+    console.log("id",id)
+    deleteApi(urls.company.delete.replace(":id", id));
+    setSupplier((prevSupplier) => prevSupplier.filter(com => com._id !== id));
+}
 
   const [openAdd, setOpenAdd] = useState(false);
   const columns = [
@@ -89,11 +106,28 @@ const Supplier = () => {
         </Button>
       )
     }
+    ,{
+      field: 'Action',
+      headerName: 'Action',
+      flex: 1,
+      sortable: false,
+      renderCell: (params) => (
+        <>
+        <IconButton onClick={() => handleView(params.row)}> 
+          <VisibilityIcon sx={{ color: '#1d4587' }} />
+        </IconButton>
+        <IconButton onClick={() => handleDelete(params.row._id)}>
+        <DeleteIcon sx={{ color: '#d32f2f' }} />
+        </IconButton>
+        </>
+      ),
+    },
   ];
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
   return (
     <>
+    <ViewCompany open={openView} handleClose={()=> setOpenView(false)} supplier={selectedCompany} />
       <ProductAdd open={openAdd} handleClose={handleCloseAdd} fetchSupplier={fetchSupplier} />
 
       <Grid>

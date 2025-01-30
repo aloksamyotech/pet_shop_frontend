@@ -23,14 +23,16 @@ const AddDetail = (props) => {
     firstName: yup
       .string()
       .required('First Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters'),
+      .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
+      .max(10 , 'first Name cannot be more then 10'),
 
     lastName: yup
       .string()
       .required('Last Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Last Name must only contain letters'),
+      .matches(/^[A-Za-z\s]+$/, 'Last Name must only contain letters')
+      .max(10 , 'lastName cannot be more then 10'),
 
-    dateOfBirth: yup.date().required('Date of Birth is required').max(new Date(), 'Date of Birth cannot be in the future'),
+  
 
     email: yup.string().required('Email is required').email('Invalid email address'),
 
@@ -45,7 +47,8 @@ const AddDetail = (props) => {
       .string()
       .required('Address is required')
       .max(10, 'Address must be at least 10 characters long')
-      .matches(/^[A-Za-z\s]+$/, 'address must only contain letters'),
+      .matches(/^[A-Za-z\s]+$/, 'address must only contain letters')
+      .max(20 , 'Address cannot be more then 20'),
 
    
   });
@@ -56,25 +59,28 @@ const AddDetail = (props) => {
     email: '',
     address: '',
     phoneNumber: '',
-    dateOfBirth: '',
-    status: '',
+  
+    status: 'Active',
     
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema,
+    
     onSubmit: async (values) => {
-      await postApi(urls.customer.create, values);
+      
+      const response = await postApi(urls.customer.create, values);
      await fetchCustomer();
         formik.resetForm();
         handleClose();
-    
-    
-     
-
-      toast.success('Customer Add successfully');
+  toast.success('Customer Add successfully');
+      
+      
     }
+  
+
+  
   });
 
   return (
@@ -166,29 +172,19 @@ const AddDetail = (props) => {
                       id="phoneNumber"
                       name="phoneNumber"
                       size="small"
+
                       fullWidth
                       value={formik.values.phoneNumber}
-                      onChange={formik.handleChange}
+                      onChange={(e) => {
+                        const sanitizedValue = e.target.value.replace(/[^0-9]/g,'');
+                        formik.setFieldValue("phoneNumber",sanitizedValue);
+                      }}
                       error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                       helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormControl fullWidth>
-                    <FormLabel>DOB</FormLabel>
-                    <TextField
-                      id="dateOfBirth"
-                      name="dateOfBirth"
-                      size="small"
-                      fullWidth
-                      value={formik.values.dateOfBirth}
-                      onChange={formik.handleChange}
-                      error={formik.touched.dateOfBirth && Boolean(formik.errors.dateOfBirth)}
-                      helperText={formik.touched.dateOfBirth && formik.errors.dateOfBirth}
-                    />
-                  </FormControl>
-                </Grid>
+              
                
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>

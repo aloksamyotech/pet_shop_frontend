@@ -12,15 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 
-
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
 
   const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
-    console.log(response)
+
     setPurchase(response?.data?.data);
-    
   };
 
   useEffect(() => {
@@ -29,7 +27,7 @@ const Purchase = () => {
 
   const navigate = useNavigate();
 
-  const home= () => {
+  const home = () => {
     navigate('/dashboard/default');
   };
 
@@ -40,9 +38,7 @@ const Purchase = () => {
       headerName: 'Product Name',
       flex: 1,
       valueGetter: (params) => {
-       
         return params.row.productName[0].productName;
-       
       }
     },
 
@@ -50,16 +46,12 @@ const Purchase = () => {
       field: 'totalPrice',
       headerName: 'Amount',
       flex: 1,
-      editable: false, 
-      
-},
+      editable: false
+    },
     {
       field: 'discount',
       headerName: 'Discount',
-      flex: 1,
-
-     
-      
+      flex: 1
     },
     {
       field: 'quantity',
@@ -113,7 +105,7 @@ const Purchase = () => {
             }}
           >
             <Breadcrumbs aria-label="breadcrumb">
-            <HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
+              <HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
               <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black' }}>
                 Purchase-Information
               </Typography>
@@ -122,7 +114,7 @@ const Purchase = () => {
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
-                  New Purchase 
+                  New Purchase
                 </Button>
               </Card>
             </Stack>

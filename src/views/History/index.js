@@ -33,19 +33,30 @@ const History = () => {
   const columns = [
     {
       field: 'customerName',
-      headerName: 'Customer Name',
-      flex: 0.5,
+      headerName: 'Name',
+      flex: 1,
       cellClassName: 'name-column--cell--capitalize'
     },
     {
       field: 'customerEmail',
       headerName: 'Email',
-      flex: 0.5,
+      flex: 1,
       },
     {
       field: 'customerPhone',
       headerName: 'Phone',
-      flex: 0.5
+      flex: 1
+    },
+    {
+      field:'products',
+      headerName:'Item',
+      flex: 1,
+      valueGetter: (params) => {
+        if (params.row?.products?.length > 0) {
+          return params.row.products?.map((product) => `${product?.productName}(${product?.quantity})`).join(', ');
+        }
+        return 'N/A';
+      }
     },
     {
       field: 'productName',
@@ -62,12 +73,12 @@ const History = () => {
 {
         field: 'totalAmount',
         headerName: 'totalAmount',
-        flex: 0.5
+        flex: 1
       },
       {
         field: 'productName',
-        headerName: 'Date',
-        flex: 0.5,
+        headerName: 'Order Date',
+        flex: 1,
         valueGetter:(params) =>{
           if(params.row?.createdAt){
             const orderDate= params.row.createdAt;

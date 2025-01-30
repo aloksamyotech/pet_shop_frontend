@@ -26,9 +26,11 @@ const ProductAdd = (props) => {
     companyName: yup
       .string()
       .required('Company Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters'),
+      .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters')
+      .max(20 , 'company Name cannot be more then 10'),
 
-    address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long'),
+    address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long')
+    .max(50 , 'company Name cannot be more then 50'),
 
     phoneNumber: yup
       .string()
@@ -41,7 +43,7 @@ const ProductAdd = (props) => {
 
    
 
-    description: yup.string().required('Description is required')
+    description: yup.string().required('Description is required').max(20 , 'Description cannot be more then 20'),
   });
 
   const initialValues = {
@@ -49,7 +51,7 @@ const ProductAdd = (props) => {
     phoneNumber: '',
     email: '',
     address: '',
-    status: '',
+    status: 'Active',
     
     description: ''
   };
@@ -129,7 +131,11 @@ const ProductAdd = (props) => {
                     size="small"
                     fullWidth
                     value={formik.values.phoneNumber}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      const sanitizedValue = e.target.value.replace(/[^0-9]/g,'');
+                      formik.setFieldValue("phoneNumber",sanitizedValue);
+
+                    }}
                     error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                     helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                   />

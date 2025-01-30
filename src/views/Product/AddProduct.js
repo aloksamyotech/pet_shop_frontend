@@ -15,9 +15,9 @@ import { useState, useEffect } from 'react';
 
 import { getApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
-import Header from 'ui-component/Header';
-import { constrainPoint } from '@fullcalendar/core/internal';
-import axios from 'axios';
+
+
+
 
 const AddLead = (props) => {
   const { open, handleClose, fetchProduct } = props;
@@ -39,13 +39,15 @@ const AddLead = (props) => {
     productName: yup
       .string()
       .required('Product Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters'),
+      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
+      .max(20 , "product name cannot be more then 20 letter"),
 
     categoryId: yup.string().required('category  is required'),
 
-    price: yup.number().required('Price is required').typeError('Price must be a number').positive('Price must be greater than zero'),
+    price: yup.number().required('Price is required').max(10000,"product price less then 10000"),
 
-    discount: yup.number().typeError('Discount must be a number').max(100, 'Discount cannot exceed 100%')
+    discount: yup.number()
+       .integer('discount must be an integer'),
   });
 
   const initialValues = {
@@ -112,7 +114,7 @@ const AddLead = (props) => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h6">Add New Product </Typography>
+          <Typography variant="h6">Add Product </Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -191,7 +193,17 @@ const AddLead = (props) => {
                       size="small"
                       fullWidth
                       value={formik.values.discount}
-                      onChange={formik.handleChange}
+                      onChange={(e) =>{ 
+                        const discountPrices = parseFloat(e.target.value) || 0
+                        if(discountPrices < formik.values.price){
+                          formik.setFieldValue('discount',discountPrices)
+                        }
+                        else{
+                          toast("discount less then Product")
+                        }
+                      }
+
+                      }
                       error={formik.touched.discount && Boolean(formik.errors.discount)}
                       helperText={formik.touched.discount && formik.errors.discount}
                     />
