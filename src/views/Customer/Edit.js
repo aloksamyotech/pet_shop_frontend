@@ -1,25 +1,20 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import ClearIcon from '@mui/icons-material/Clear';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { FormControl, FormLabel, Select, MenuItem } from '@mui/material';
+import { useEffect } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography ,DialogContentText,FormControl,FormLabel,Select,MenuItem} from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import { getApi,updateApi } from 'views/Api/comman.js';
+import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
-import { urls } from 'views/Api/constant';
-import { postApi } from 'views/Api/comman';
 
-const AddDetail = (props) => {
-  const { open, handleClose, fetchCustomer } = props;
 
-  const validationSchema = yup.object({
+const AddEdit = (props) => {
+  const { open, handleClose, customer,fetchCustomer } = props;
+
+
+  
+ const validationSchema = yup.object({
     firstName: yup
       .string()
       .required('First Name is required')
@@ -45,9 +40,10 @@ const AddDetail = (props) => {
    
   });
 
+
   const initialValues = {
     firstName: '',
-  email: '',
+ email: '',
     address: '',
     phoneNumber: '',
    status: 'Active',
@@ -57,22 +53,36 @@ const AddDetail = (props) => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    
     onSubmit: async (values) => {
-      
-      const response = await postApi(urls.customer.create, values);
-     await fetchCustomer();
-        formik.resetForm();
-        handleClose();
-  toast.success('Customer Add successfully');
-      
-      
-    }
-  
-
-  
+      const updatedCustomer = {
+      firstName: values.firstName,
+     email: values.email,
+      address: values.address,
+      phoneNumber: values.phoneNumber,
+      status: values.status
+    };
+     await updateApi(urls.customer.update.replace(":id", customer._id), updatedCustomer); 
+     toast.success("customer updated successfully!")
+     await fetchCustomer(); 
+      handleClose(); 
+     
+    },
   });
+  
 
+  useEffect(() => {
+    if (customer) {
+      formik.setValues({
+        firstName: customer?.firstName,
+     email: customer?.email,
+        address: customer?.address,
+        phoneNumber: customer?.phoneNumber,
+        status: customer?.status
+      });
+      fetchCustomer();
+    }
+  }, [customer, open]);
+  
   return (
     <div>
       <Dialog open={open} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
@@ -83,7 +93,7 @@ const AddDetail = (props) => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h4">Create Customer</Typography>
+          <Typography variant="h4">Update Customer</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -108,7 +118,8 @@ const AddDetail = (props) => {
                     />
                   </FormControl>
                 </Grid>
-                    <Grid item xs={12} sm={6} md={6}>
+               
+ <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
                     <FormLabel>Email</FormLabel>
                     <TextField
@@ -176,7 +187,7 @@ const AddDetail = (props) => {
         </DialogContent>
         <DialogActions>
           <Button type="submit" variant="contained" onClick={formik.handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
-            Save
+            Update
           </Button>
           <Button
             type="reset"
@@ -196,4 +207,4 @@ const AddDetail = (props) => {
   );
 };
 
-export default AddDetail;
+export default AddEdit;

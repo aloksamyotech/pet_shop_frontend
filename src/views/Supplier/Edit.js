@@ -1,73 +1,91 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import { FormControl, FormHelperText, FormLabel, Grid, MenuItem, Select, TextField } from '@mui/material';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Typography from '@mui/material/Typography';
-import ClearIcon from '@mui/icons-material/Clear';
-
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { useEffect } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography,DialogContentText,FormLabel,FormControl,Select,MenuItem } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import {updateApi } from 'views/Api/comman.js';
+import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
-import Palette from '../../ui-component/ThemePalette';
-import { postApi } from 'views/Api/comman';
-import { urls } from 'views/Api/constant';
 
-const ProductAdd = (props) => {
-  const { open, handleClose, fetchSupplier } = props;
+const AddEdit = (props) => {
+  const { open, handleClose, company,fetchSupplier } = props;
 
-  // -----------  validationSchema
+
+  
   const validationSchema = yup.object({
-    companyName: yup
-      .string()
-      .required('Company Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters')
-      .max(20 , 'company Name cannot be more then 10'),
+     companyName: yup
+       .string()
+       .required('Company Name is required')
+       .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters')
+       .max(20 , 'company Name cannot be more then 10'),
+ 
+     address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long')
+     .max(50 , 'company Name cannot be more then 50'),
+ 
+     phoneNumber: yup
+       .string()
+       .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
+       .required('Phone Number is required'),
+ 
+     email: yup.string().email('Invalid email format').required('Email is required'),
+ 
+     status: yup.string().required('Status is required'),
+ 
+    
+ 
+     description: yup.string().required('Description is required').max(20 , 'Description cannot be more then 20'),
+   });
 
-    address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long')
-    .max(50 , 'company Name cannot be more then 50'),
-
-    phoneNumber: yup
-      .string()
-      .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
-      .required('Phone Number is required'),
-
-    email: yup.string().email('Invalid email format').required('Email is required'),
-
-    status: yup.string().required('Status is required'),
-
-   
-
-    description: yup.string().required('Description is required').max(20 , 'Description cannot be more then 20'),
-  });
-
-  const initialValues = {
+   const initialValues = {
     companyName: '',
     phoneNumber: '',
     email: '',
     address: '',
     status: 'Active',
-    
-    description: ''
+     description: ''
   };
+
+  
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      await postApi(urls.company.create, values);
-      await fetchSupplier();
-      formik.resetForm();
-      toast.success('Company Add successfully');
-      handleClose();
-      formik.resetForm();
-    }
+      const updatedCompany = {
+        companyName: values.companyName,
+        description: values.description,
+        status: values.status,
+        address: values.address,
+        email: values.email,
+        phoneNumber:values.phoneNumber,
+      };
+     await updateApi(urls.company.update.replace(":id", company._id), updatedCompany); 
+     toast.success("company updated successfully!")
+       await fetchSupplier(); 
+      handleClose(); 
+     
+    },
   });
+  
+
+  useEffect(() => {
+    if (company) {
+      formik.setValues({
+        companyName: company?.companyName,
+        description: company?.description,
+        status: company?.status,
+        address: company?.address,
+        email: company?.email,
+        phoneNumber:company?.phoneNumber,
+      });
+      fetchSupplier();
+    }
+  }, [company, open]);
+  
+
+ 
 
   return (
     <div>
@@ -79,7 +97,7 @@ const ProductAdd = (props) => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h4">Add Supplier</Typography>
+          <Typography variant="h4">Update Supplier</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -87,8 +105,6 @@ const ProductAdd = (props) => {
         <DialogContent dividers>
           <form>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            
-
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Company Name</FormLabel>
@@ -180,7 +196,7 @@ const ProductAdd = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={formik.handleSubmit} variant="contained" color="primary">
-            Save
+            Update
           </Button>
           <Button
             onClick={() => {
@@ -198,4 +214,4 @@ const ProductAdd = (props) => {
   );
 };
 
-export default ProductAdd;
+export default AddEdit;

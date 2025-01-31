@@ -91,7 +91,7 @@ const AddDetail = (props) => {
             padding: '20px'
           }}
         >
-          <Typography variant="h6">Add Category</Typography>
+          <Typography variant="h4">Add Category</Typography>
           <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
         </DialogTitle>
 

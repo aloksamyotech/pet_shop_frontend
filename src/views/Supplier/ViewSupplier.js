@@ -4,11 +4,11 @@ import '../Category/category.css'
 
 
 const ViewCompany = ({ open, handleClose, supplier }) => {
- console.log("supplier date ",supplier)
+ 
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle variant='h5'>View Supplier Details</DialogTitle>
+      <DialogTitle variant='h4'>View Supplier Details</DialogTitle>
       <Divider></Divider>
     
       <DialogContent>

@@ -65,12 +65,13 @@ const Purchase = () => {
       renderCell: (params) => (
         <Button
           variant="contained"
+            size='small'
           sx={{
             backgroundColor:
               params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : '',
-            width: '100px',
+              width: '50px',
             textAlign: 'center',
-            padding: '6px ',
+            padding: '2px ',
 
             '&:hover': {
               backgroundColor:
@@ -105,7 +106,7 @@ const Purchase = () => {
             }}
           >
             <Breadcrumbs aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
+              <HomeIcon sx={{ color: '#2067db' }}  onClick={home} />
               <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black' }}>
                 Purchase-Information
               </Typography>
@@ -128,8 +129,7 @@ const Purchase = () => {
                 rows={purchase}
                 columns={columns}
                 getRowId={(row) => row._id}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
+               
               />
             </Card>
           </Box>

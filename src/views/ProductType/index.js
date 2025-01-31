@@ -16,7 +16,8 @@ import {
   Box,
   Grid,
   Breadcrumbs,
-  TableCell
+  TableCell,
+  Stack
 } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
@@ -40,6 +41,9 @@ const PolicyManagement = () => {
   const [orderDate, setOrderDate] = useState();
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
+  const home = () =>{
+    navigate('/');
+  }
 
   useEffect(async () => {
     const response = await getApi(urls.order.get);
@@ -96,6 +100,30 @@ const PolicyManagement = () => {
 
   return (
     <>
+
+
+<Stack direction="row" alignItems="center" mb={5} >
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '10px',
+              marginTop: '-7px'
+            }}
+          >
+            <Breadcrumbs
+              aria-label="breadcrumb"
+              sx={{ display: 'flex', alignItems: 'center' }}
+            ><HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
+             <Typography variant="h5">Invoice </Typography>
+            </Breadcrumbs>
+            </Box>
+        </Stack>
       <Box
         sx={{
           backgroundColor: '#fff',
@@ -105,6 +133,7 @@ const PolicyManagement = () => {
           ml: '90px'
         }}
       >
+           
         <Box
           id="invoice-content"
           sx={{

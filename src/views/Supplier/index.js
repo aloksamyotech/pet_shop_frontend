@@ -13,7 +13,9 @@ import { getApi,deleteApi } from 'views/Api/comman.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ViewCompany from './ViewSupplier';
-
+import EditIcon from '@mui/icons-material/Edit';
+import AddEdit from './Edit';
+import Swal from 'sweetalert2';
 
 
 
@@ -21,6 +23,8 @@ const Supplier = () => {
   const [supplier, setSupplier] = useState([]);
   const [selectedCompany,setSelectedCompany]= useState(null)
   const [openView,setOpenView] = useState(false)
+  const [companyUpdated,setCompanyUpdated] = useState(null)
+  const [openEdit,setOpenEdit] = useState(false)
 
   const fetchSupplier = async () => {
     const response = await getApi(urls.company.get);
@@ -42,11 +46,38 @@ const Supplier = () => {
     setOpenView(true);
   };
 
-  const handleDelete = (id) =>{
-    console.log("id",id)
-    deleteApi(urls.company.delete.replace(":id", id));
-    setSupplier((prevSupplier) => prevSupplier.filter(com => com._id !== id));
-}
+
+  
+  const handleUpdate = (category) => {
+    setCompanyUpdated(category);
+    setOpenEdit(true);
+  };
+
+
+ const handleDelete = (id) => {
+     Swal.fire({
+       title: 'Are you sure?',
+       text: 'Do you want to remove this company?',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#3085d6',
+       cancelButtonColor: '#d33',
+       confirmButtonText: 'Yes, remove it!',
+       cancelButtonText: 'Cancel'
+     }).then(async (result) => {
+       if (result.isConfirmed) {
+         try {
+           await deleteApi(urls.company.delete.replace(':id', id));
+           setSupplier((prevSupplier) => prevSupplier.filter((cat) => cat._id !== id));
+           Swal.fire('Removed!', 'The company has been deleted.', 'success');
+          
+         } catch (error) {
+           Swal.fire('Error!', 'Failed to delete company.', 'error');
+          
+         }
+       }
+     });
+   };
 
   const [openAdd, setOpenAdd] = useState(false);
   const columns = [
@@ -81,44 +112,45 @@ const Supplier = () => {
     {
       field: 'status',
       headerName: 'Status',
-      flex: 1,
+       flex: 0.5,
       renderCell: (params) => (
         <Button
+        size='small'
           variant="contained"
           sx={{
             backgroundColor:
-              params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ? '#FF5733' : '',
-            width: '100px',
+              params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ?  '#FF5733'  : '',
+            width: '50px',
             textAlign: 'center',
+            padding: '2px ',
 
             '&:hover': {
               backgroundColor:
-                params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ? '#FF5733'  : ''
-            },
-
-            '&:focus': {
-              outline: 'none',
-              border: 'none'
+                params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ?'#12aae8': params.value === 'Blocked' ?  '#FF5733'  : ''
             }
           }}
         >
           {params.value}
         </Button>
       )
-    }
-    ,{
+    },
+    {
       field: 'Action',
       headerName: 'Action',
       flex: 1,
       sortable: false,
       renderCell: (params) => (
         <>
-        <IconButton onClick={() => handleView(params.row)}> 
-          <VisibilityIcon sx={{ color: '#1d4587' }} />
-        </IconButton>
-        <IconButton onClick={() => handleDelete(params.row._id)}>
-        <DeleteIcon sx={{ color: '#d32f2f' }} />
-        </IconButton>
+        <IconButton onClick={() => handleView(params.row)}>
+            <VisibilityIcon sx={{ color:'#00bbff'}} />
+          </IconButton>
+        <IconButton onClick={() => handleUpdate(params.row)}>
+            <EditIcon sx={{ color:'#5f0497' }} />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(params.row._id)}>
+            <DeleteIcon sx={{ color: '#d32f2f' }} />
+          </IconButton>
+
         </>
       ),
     },
@@ -127,6 +159,7 @@ const Supplier = () => {
   const handleCloseAdd = () => setOpenAdd(false);
   return (
     <>
+    <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} company={companyUpdated}  fetchSupplier={fetchSupplier}/>
     <ViewCompany open={openView} handleClose={()=> setOpenView(false)} supplier={selectedCompany} />
       <ProductAdd open={openAdd} handleClose={handleCloseAdd} fetchSupplier={fetchSupplier} />
 
@@ -169,8 +202,7 @@ const Supplier = () => {
                 rows={supplier}
                 columns={columns}
                 getRowId={(row) => row._id}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
+               
               />
             </Card>
           </Box>

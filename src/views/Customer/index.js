@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Link as MuiLink } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Link as MuiLink,Grid } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
@@ -10,18 +10,24 @@ import { useNavigate, Link } from 'react-router-dom';
 import Iconify from 'ui-component/iconify';
 import AddDetail from './AddDetail';
 import { urls } from 'views/Api/constant.js';
-import { getApi } from 'views/Api/comman.js';
+import { getApi ,deleteApi} from 'views/Api/comman.js';
 import { color } from '@mui/system';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { toast } from 'react-toastify';
+import AddEdit from './Edit';
+import Swal from 'sweetalert2';
 
 const Customer = () => {
   const navigate = useNavigate();
   const [openAdd, setOpenAdd] = useState(false);
   const [customer, setCustomer] = useState([]);
+  const [openEdit,setOpenEdit] = useState(false)
+  const [customerUpdated,setCustomerUpdated] = useState(null)
 
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
-    console.log(response);
-    setCustomer(response?.data?.data);
+   setCustomer(response?.data?.data);
   };
 
   useEffect(() => {
@@ -32,7 +38,36 @@ const Customer = () => {
     navigate(`/dashboard/customer/user/${id}`);
   };
 
+  const handleDelete = (id) => {
+     Swal.fire({
+       title: 'Are you sure?',
+       text: 'Do you want to remove this customer?',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#3085d6',
+       cancelButtonColor: '#d33',
+       confirmButtonText: 'Yes, remove it!',
+       cancelButtonText: 'Cancel'
+     }).then(async (result) => {
+       if (result.isConfirmed) {
+         try {
+           await deleteApi(urls.customer.delete.replace(':id', id));
+           setCustomer((prevcustomer) => prevcustomer.filter((cat) => cat._id !== id));
+           Swal.fire('Removed!', 'The Customer has been deleted.', 'success');
+         } catch (error) {
+           Swal.fire('Error!', 'Failed to delete customer.', 'error');
+         
+         }
+       }
+     });
+   };
 
+      const handleUpdate = (customer) => {
+        setCustomerUpdated(customer);
+        setOpenEdit(true);
+      };
+
+    
   const home = () =>{
     navigate('/');
   }
@@ -40,74 +75,114 @@ const Customer = () => {
   const columns = [
     {
       field: 'firstName',
-      headerName: 'First Name',
-      flex: 1,
+      headerName: 'Name',
+      flex: 0.5,
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
-    {
-      field: 'lastName',
-      headerName: 'Last Name',
-      flex: 1,
-      cellClassName: 'name-column--cell name-column--cell--capitalize'
-    },
-
+ 
     {
       field: 'email',
       headerName: 'Email',
-      flex: 1,
+       flex: 0.5,
       cellClassName: 'name-column--cell--capitalize'
     },
 
     {
       field: 'address',
       headerName: 'Address',
-      flex: 1
+      flex: 0.5,
     },
     {
       field: 'phoneNumber',
       headerName: 'Phone Number',
-      flex: 1
-    },
-    {
-      field: 'dateOfBirth',
-      headerName: 'DOB',
-      flex: 1
+      flex: 0.5,
     },
     {
       field: 'status',
       headerName: 'Status',
-      flex: 1,
-      renderCell: (params) => (
-        <Button
-        size='small'
-          variant="contained"
-          sx={{
-            backgroundColor:
-              params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ?  '#FF5733'  : '',
-            width: '50px',
-            textAlign: 'center',
-            padding: '2px ',
-
-            '&:hover': {
-              backgroundColor:
-                params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ?'#12aae8': params.value === 'Blocked' ?  '#FF5733'  : ''
-            }
-          }}
-        >
-          {params.value}
-        </Button>
-      )
+       flex: 0.5,
+   
+      renderCell: (params) => {
+        if (params.value === 'Active') {
+          return (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#00bbff',
+                color: '#fff',
+                boxShadow: 'none',
+                padding: '3px 3px',
+                fontSize: '.6rem',
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor: '#00bbff'
+                }
+              }}
+            >
+               {(params.value)}
+            </Button>
+          );
+        } else if (params.value === 'Inactive') {
+          return (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor:'#5f0497',
+                color: '#fff',
+                boxShadow: 'none',
+                padding: '3px 3px',
+                fontSize: '.6rem',
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor:'#5f0497'
+                }
+              }}
+            >
+              {(params.value)}
+            </Button>
+          );
+        } else {
+          return (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#d32f2f',
+                color: '#fff',
+                boxShadow: 'none',
+                padding: '3px 3px',
+                fontSize: '.6rem',
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor:  '#d32f2f'
+                }
+              }}
+            >
+              {(params.value)}
+            </Button>
+          );
+        }
+      }
     },
+    
+
 
     {
       field: 'Action',
       headerName: 'Action ',
-      flex: 1,
+       flex: 0.5,
       sortable: false,
       renderCell: (params) => (
-        <IconButton>
-          <VisibilityIcon  sx={{ color: '#1d4587' }} onClick={() => handleView(params.row?.id)} />
-        </IconButton>
+        <>
+        <IconButton onClick={() => handleView(params.row)}>
+            <VisibilityIcon sx={{ color:'#00bbff'}} />
+          </IconButton>
+        <IconButton onClick={() => handleUpdate(params.row)}>
+            <EditIcon sx={{ color:'#5f0497' }} />
+          </IconButton>
+          <IconButton onClick={() => handleDelete(params.row._id)}>
+            <DeleteIcon sx={{ color: '#d32f2f' }} />
+          </IconButton>
+      </>
       )
     }
   ];
@@ -117,10 +192,11 @@ const Customer = () => {
 
   return (
     <>
+    <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)}  customer={customerUpdated} fetchCustomer={fetchCustomer}/>
       <AddDetail open={openAdd} handleClose={handleCloseAdd} fetchCustomer={fetchCustomer} />
-      <Container>
+      <Grid>
         <Stack direction="row" alignItems="center" mb={5}>
-          <Box
+        <Box
             sx={{
               backgroundColor: 'white',
               height: '50px',
@@ -134,10 +210,10 @@ const Customer = () => {
             }}
           >
             <Breadcrumbs
-              separator={<NavigateNextIcon fontSize="small" />}
+          
               aria-label="breadcrumb"
               sx={{ display: 'flex', alignItems: 'center' }}
-            ><HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
+            ><HomeIcon sx={{ color: '#2067db' }}  onClick={home} />
               
               <Typography variant="h5">Customer</Typography>
             </Breadcrumbs>
@@ -159,13 +235,12 @@ const Customer = () => {
                 rows={customer}
                 columns={columns}
                 getRowId={(row) => row._id}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
+                
               />
             </Card>
           </Box>
         </TableStyle>
-      </Container>
+      </Grid>
     </>
   );
 };
