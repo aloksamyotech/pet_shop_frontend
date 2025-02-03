@@ -1,31 +1,51 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider ,Grid,Box} from '@mui/material';
-import { Girl } from '@mui/icons-material';
-
+import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box, Paper } from '@mui/material';
 
 const ViewPurchase = ({ open, handleClose, purchase }) => {
   if (!purchase) return null; 
-return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle variant='h4'>View Category Details</DialogTitle>
-      <Divider></Divider>
+
+  console.log("data----------",purchase)
+
+  return (
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
     
-      <DialogContent>
-        <Grid container spacing={1} >
-          <Grid item xs={12} sm={4}>
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <Box  className="Box">
-       <Typography variant="h6" >Discount: {purchase.discount}</Typography>
-        <Typography variant="h6" >PaymentStatus: {purchase.paymentStatus}</Typography>
-        <Typography variant="h6" >Quantity: {purchase.quantity}</Typography>
-        <Typography variant="h6" >TotalPrice: {purchase.totalPrice}</Typography>
-        </Box>
-        </Grid>
-        </Grid>
+      <DialogTitle variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+        Purchase Details
+      </DialogTitle>
+      <Divider />
+
+      <DialogContent sx={{ p: 3 }}>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+          <Grid container spacing={2}>
+          
+            <Grid item xs={12}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="body1">
+                  <strong>Product Name:</strong> {purchase?.productName?.[0]?.productName|| 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Company Name:</strong> {purchase?.CompanyName?.[0]?.companyName|| 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Quantity:</strong> {purchase?.quantity || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Payment Status:</strong> {purchase?.paymentStatus || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Discount:</strong> {purchase?.discount || 'N/A'}
+                </Typography>
+               <Typography variant="body1">
+                  <strong>Total Price:</strong> {purchase?.totalPrice || 'N/A'}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
+
+      <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+        <Button onClick={handleClose} variant="contained" color="primary">
           Close
         </Button>
       </DialogActions>

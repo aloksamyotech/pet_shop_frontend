@@ -1,36 +1,54 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider ,Grid,Box} from '@mui/material';
-import { Girl } from '@mui/icons-material';
-import './category.css'
+import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box } from '@mui/material';
+import './category.css';
 
 const ViewCategory = ({ open, handleClose, category }) => {
   if (!category) return null; 
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle variant='h4'>View Category Details</DialogTitle>
-      <Divider></Divider>
-    
-      <DialogContent>
-        <Grid container spacing={1} >
-          <Grid item xs={12} sm={4}>
-          <img
-          src={category.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-          alt={category.name}
-        className="Box"
-        />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <Box  className="Box">
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+     
+      <DialogTitle variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+        Category Details
+      </DialogTitle>
+      <Divider />
+
+     
+      <DialogContent sx={{ p: 3 }}>
+        <Grid container spacing={3} alignItems="center">
        
-        <Typography variant="h4" >{category.name}</Typography>
-        <Typography variant="h6" >Description: {category.description}</Typography>
-        </Box>
-        </Grid>
+          <Grid item xs={12} sm={5} display="flex" justifyContent="center">
+            <Box
+              component="img"
+              src={category.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+              alt={category.name || 'Category Image'}
+              sx={{
+                width: '100%',
+                maxWidth: 200,
+                height: 'auto',
+                borderRadius: 2,
+                boxShadow: 3,
+              }}
+            />
+          </Grid>
+
+        
+          <Grid item xs={12} sm={7}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                {category.name || 'N/A'}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Description:</strong> {category.description || 'No description available.'}
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
+
+   
+      <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+        <Button onClick={handleClose} variant="contained" color="primary">
           Close
         </Button>
       </DialogActions>

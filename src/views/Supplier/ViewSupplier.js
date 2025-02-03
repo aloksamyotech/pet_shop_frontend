@@ -1,40 +1,50 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider ,Grid,Box} from '@mui/material';
-import '../Category/category.css'
-
+import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box, Paper } from '@mui/material';
+import '../Category/category.css';
 
 const ViewCompany = ({ open, handleClose, supplier }) => {
- 
-
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle variant='h4'>View Supplier Details</DialogTitle>
-      <Divider></Divider>
-    
-      <DialogContent>
-        <Grid container spacing={1} >
-          <Grid item xs={12} sm={4}>
-           <Box  className="Margin">
-          <Typography className="Margin"><strong>Name:</strong>{supplier?.companyName}</Typography>
-          <Typography className="Margin"><strong>Email:</strong>{supplier?.email}</Typography>
-          <Typography className="Margin"><strong>Address:</strong>{supplier?.address}</Typography>
-          <Typography className="Margin"><strong>Phone:</strong>{supplier?.phoneNumber}</Typography> <Typography className="Margin"><strong>Status:</strong>{supplier?.status}</Typography>
-          <Typography className="Margin"><strong>Description:</strong>{supplier?.description}</Typography>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+     
+      <DialogTitle variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+        Supplier Details
+      </DialogTitle>
+      <Divider />
 
-          </Box>
-
-
-
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <Box  className="Box">
-       
-        </Box>
-        </Grid>
+     
+      <DialogContent sx={{ p: 3 }}>
+        <Grid container spacing={2}>
+        
+          <Grid item xs={12}>
+            <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body1">
+                  <strong>Name:</strong> {supplier?.companyName || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Email:</strong> {supplier?.email || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Address:</strong> {supplier?.address || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Phone:</strong> {supplier?.phoneNumber || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Status:</strong> {supplier?.status || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Description:</strong> {supplier?.description || 'N/A'}
+                </Typography>
+              </Box>
+            </Paper>
+          </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
+
+      
+      <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+        <Button onClick={handleClose} variant="contained" color="primary">
           Close
         </Button>
       </DialogActions>

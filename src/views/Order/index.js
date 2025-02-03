@@ -110,7 +110,7 @@ const Checkout = () => {
       <Grid container spacing={2} sx={{mt:'-35px'}}>
       
         <Grid item xs={4}>
-          <Box sx={{ width: '100%', height: 'auto', backgroundColor: '#fff', overflowY: 'auto' }}>
+          <Box sx={{ width: '100%', height: 'auto', backgroundColor: '#fff', overflowY: 'auto',padding:'5px' }}>
          
           <Typography variant="h4" sx={{ mt: 2,padding:'5px'}}>
               ADD TO CART
@@ -120,18 +120,28 @@ const Checkout = () => {
             <Grid container spacing={2}>
               {cartItems.map((cartItem) => (
                 <Grid item xs={12} key={cartItem._id}>
-                  <Card sx={{ display: 'flex', mb: 2, p: 2 }}>
-                    <CardMedia
-                      component="img"
-                      image={cartItem.imageUrl}
-                      sx={{ width: 80, height: 80, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
-                    />
+                  <Card  sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                backgroundColor: 'white',
+                                transition: 'box-shadow 1s, transform 1s',
+                               border: '1px solid #d3d3d3',
+                                cursor: 'pointer',
+                                width: 'auto',
+                                height: '70px',
+                                p: '2px'
+                              }}>
+                      <CardMedia
+                                component="img"
+                                image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                                sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
+                              />
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                         {cartItem.productName}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        ₹ {cartItem.price} 
+                      <Typography variant="body2" color="#39b2e9">
+                        Rs.{cartItem.price} 
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -179,11 +189,11 @@ const Checkout = () => {
             </Typography>
             <Divider sx={{ mb: 2 }} />
             <Box sx={{ mb: 2 }}>
-              <Typography variant="h6">Price: ₹{totalPrice.toFixed(2)} * {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
+              <Typography variant="h6">Price: Rs.{totalPrice.toFixed(2)} * {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
               <Typography variant="h6">Quantity: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
             </Box>
             <Divider sx={{ mb: 2 }} />
-            <Typography variant="h5">Total Payable: ₹{totalPrice.toFixed(2)}</Typography>
+            <Typography variant="body2">TotalTotal Payable:<Typography variant="body2" color="#39b2e9"> Rs.{totalPrice.toFixed(2)}</Typography></Typography>
 
             <Box sx={{ display: 'flex', gap: '10px' ,mt:'10px'}}>
               <Button

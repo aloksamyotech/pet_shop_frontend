@@ -31,7 +31,6 @@ const AddModifiers = (props) => {
     note: yup.string().required('Note is required')
   });
 
-  // -----------   initialValues
   const initialValues = {
     subject: '',
     status: '',

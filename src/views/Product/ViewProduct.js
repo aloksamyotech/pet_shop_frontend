@@ -1,34 +1,64 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider ,Grid,Box} from '@mui/material';
-import { Girl } from '@mui/icons-material';
-
+import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box, Paper } from '@mui/material';
 
 const ViewProduct = ({ open, handleClose, product }) => {
   if (!product) return null; 
 
-  console.log("product",product)
+  console.log("Product Data:", product);
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle variant='h4'>View product Details</DialogTitle>
-      <Divider></Divider>
-    
-      <DialogContent>
-        <Grid container spacing={1} >
-         
-        <Grid item xs={12} sm={8}>
-          <Box  className="Box">
-         <Typography variant="h4" >{product.productName}</Typography>
-        <Typography variant="h6" >Discount: {product.discount}</Typography>
-        <Typography variant="h6" >Price: {product.price}</Typography>
-        <Typography variant="h6" >Category: {product?.category?.name}</Typography>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+     
+      <DialogTitle variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+        Product Details
+      </DialogTitle>
+      <Divider />
 
-        </Box>
-        </Grid>
-        </Grid>
+    
+      <DialogContent sx={{ p: 3 }}>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+          <Grid container spacing={3} alignItems="center">
+      
+            <Grid item xs={12} sm={4}>
+              <Box
+                component="img"
+                src={product?.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                alt={product?.productName || 'Product'}
+                sx={{
+                  width: '100%',
+                  height: '150px',
+                  objectFit: 'cover',
+                  borderRadius: 2,
+                  border: '1px solid #ddd',
+                }}
+              />
+            </Grid>
+
+           
+            <Grid item xs={12} sm={8}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="h6">
+                  <strong>Name:</strong> {product?.productName || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Category:</strong> {product?.category?.[0].name || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Discount:</strong> {product?.discount || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Price:</strong> {product?.price ? `$${product.price}` : 'N/A'}
+                </Typography>
+               
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
+
+      
+      <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+        <Button onClick={handleClose} variant="contained" color="primary">
           Close
         </Button>
       </DialogActions>

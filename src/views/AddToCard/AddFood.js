@@ -42,7 +42,7 @@ const AddFood = () => {
   const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState([]);
   const [customerData, setCustomerData] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [value, setValue] = useState('1');
 
   const handleChange = (event, newValue) => {
@@ -160,7 +160,8 @@ const AddFood = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginTop: '-7px',
-                border: '1px solid #d3d3d3'
+                border: '1px solid #d3d3d3',
+
               }}
             >
               <TabList onChange={handleChange}>
@@ -177,7 +178,7 @@ const AddFood = () => {
             </Box>
 
             <TabPanel value="1">
-              <Box sx={{ backgroundColor: '#fff', p: '10px', width: '100%' }}>
+              <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%' }}>
                 <Box
                   sx={{
                     backgroundColor: 'white',
@@ -202,7 +203,7 @@ const AddFood = () => {
                     renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
                     sx={{ width: '30%' }}
                   />
-                  <TextField value={selectedCustomer?.email || ''} fullWidth readOnly size="small" sx={{ width: '30%' }} />
+                  <TextField   value={selectedCustomer ? selectedCustomer.email : ''}  fullWidth readOnly size="small" sx={{ width: '30%' }} />
                 </Box>
 
                 <Grid container spacing={2}>
@@ -214,7 +215,8 @@ const AddFood = () => {
                         height: '70vh',
                         width: '100%',
                         backgroundColor: '#fff',
-                        border: '1px solid #d3d3d3'
+                        border: '1px solid #d3d3d3',
+                          padding:'5px'
                       }}
                     >
                       {categoryData.map((category) => (
@@ -222,14 +224,12 @@ const AddFood = () => {
                           key={category._id}
                           onClick={() => setSelectedCategory(category._id)}
                           sx={{
-                            backgroundColor: 'white',
-                            mt: '4px',
                             transition: 'box-shadow 1.3s, transform 1.3s',
                            border: '1px solid #d3d3d3',
                             cursor: 'pointer',
-                            width: '100%',
-                            height: '15vh'
-                          }}
+                            mt:'5px'
+                          
+                           }}
                         >
                           <CardMedia
                             component="img"
@@ -237,7 +237,7 @@ const AddFood = () => {
                             image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                             sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                           />
-                          <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
+                          <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px',color:"black" }}>
                             {category.name}
                           </Typography>
                         </Card>
@@ -246,7 +246,7 @@ const AddFood = () => {
                   </Grid>
 
                   <Grid item xs={12} md={6}>
-                    <Box sx={{ height: '70vh', flex: 1, overflowY: 'auto', backgroundColor: 'white', border: '1px solid #d3d3d3', }}>
+                    <Box sx={{ height: '70vh', flex: 1, overflowY: 'auto', backgroundColor: 'white', border: '1px solid #d3d3d3',   padding:'5px'}}>
                       <Grid container spacing={2}>
                         {filterProduct.map((product) => (
                           <Grid item xs={12} sm={4} md={4} key={product.id}>
@@ -259,7 +259,7 @@ const AddFood = () => {
                                 width: '100%',
                                 height: '25vh',
                                 border: '1px solid #d3d3d3',
-                                padding:'5px',
+                                
 
                               }}
                             >
@@ -269,11 +269,11 @@ const AddFood = () => {
                                 image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                                 sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                               />
-                              <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px' }}>
+                              <Typography sx={{ display: 'block',p:'4px',color:'black' }}>
                                 {product.productName}
                               </Typography>
-                              <Typography sx={{ display: 'flex', justifyContent: 'space-evenly', alignContent: 'center' }}>
-                                ₹{product.price}
+                              <Typography sx={{ display: 'block',p:'4px',color:'#39b2e9'}}>
+                                Rs.{product.price}
                               </Typography>
                             </Card>
                           </Grid>
@@ -283,7 +283,7 @@ const AddFood = () => {
                   </Grid>
 
                   <Grid item xs={12} md={4}>
-                    <Box sx={{ height: '70vh', flex: 0.5, overflowY: 'auto', backgroundColor: 'white', border: '1px solid #d3d3d3' }}>
+                    <Box sx={{ height: '70vh', flex: 0.5, overflowY: 'auto', backgroundColor: 'white', border: '1px solid #d3d3d3' , padding:'5px'}}>
                       <Grid container spacing={2}>
                         {cartItems.map((cartItem) => (
                           <Grid item xs={12} key={cartItem._id}>
@@ -306,21 +306,23 @@ const AddFood = () => {
                                 sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                               />
                               <Box sx={{ flex: 1 }}>
-                                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                                <Typography variant="body1" sx={{color:'black', mb: 0.5,display:'block' }}>
                                   {cartItem.productName}
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  ₹{cartItem.price}
+                                <Typography variant="body2" color="#39b2e9">
+                                  Rs.{cartItem.price}
                                 </Typography>
                               </Box>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
+                                  <RemoveIcon fontSize="small" />
+                                </IconButton>
+                                {cartItem.quantity}
+                                <Box>
                                 <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
                                   <AddIcon fontSize="small" />
                                 </IconButton>
-                                {cartItem.quantity}
-                                <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
-                                  <RemoveIcon fontSize="small" />
-                                </IconButton>
+                                </Box>
                               </Box>
                               <Button
                                 color="error"
@@ -368,7 +370,8 @@ const AddFood = () => {
                           '&:hover': {
                             backgroundColor: '#2067db',
                             color: '#fff'
-                          }
+                          },
+                         
                         }}
                         onClick={handleBuyNow}
                       >
@@ -381,7 +384,8 @@ const AddFood = () => {
                           '&:hover': {
                             backgroundColor: '#7011bc',
                             color: '#fff'
-                          }
+                          },
+                           
                         }}
                         onClick={deleteAll}
                       >
