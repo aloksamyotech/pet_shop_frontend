@@ -27,7 +27,6 @@ const Purchase = () => {
 
   const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
-console.log(response.data.data)
     setPurchase(response?.data?.data);
   };
 
@@ -81,10 +80,18 @@ console.log(response.data.data)
   const columns = [
     {
       field: 'productName',
-      headerName: 'Product Name',
+      headerName: 'Product',
       flex: 1,
       valueGetter: (params) => {
-        return params.row.productName[0].productName;
+        return params.row.productName?.[0].productName;
+      }
+    },
+    {
+      field: 'companyName',
+      headerName: 'Company',
+      flex: 1,
+      valueGetter: (params) => {
+      return params.row.CompanyName?.[0].companyName;
       }
     },
 

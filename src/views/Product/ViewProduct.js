@@ -4,8 +4,6 @@ import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, 
 const ViewProduct = ({ open, handleClose, product }) => {
   if (!product) return null; 
 
-  console.log("Product Data:", product);
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
      

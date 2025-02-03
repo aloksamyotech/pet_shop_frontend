@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, 
 const ViewPurchase = ({ open, handleClose, purchase }) => {
   if (!purchase) return null; 
 
-  console.log("data----------",purchase)
+
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>

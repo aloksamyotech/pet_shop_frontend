@@ -1,57 +1,70 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography,DialogContentText,Select,FormLabel,MenuItem} from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+  Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button,
+  Typography, DialogContentText, Select, FormLabel, MenuItem
+} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { getApi,updateApi } from 'views/Api/comman.js';
+import { getApi, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
-
 
 const AddEdit = (props) => {
-  const { open, handleClose, purchase,fetchPurchase } = props;
-  const [product,setProduct] = useState([])
-  const [company,setCompany] =useState([])
+  const { open, handleClose, purchase, fetchPurchase } = props;
+  const [product, setProduct] = useState([]);
+  const [company, setCompany] = useState([]);
 
- const fetchProduct = async () => {
-    const response = await getApi(urls.product.get);
-    setProduct(response?.data?.data);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await getApi(urls.product.get);
+      setProduct(response?.data?.data || []);
+    } catch (error) {
+      toast.error("Failed to fetch products.");
+    }
   };
 
-   
-    const fetchCompany = async () => {
+  const fetchCompany = async () => {
+    try {
       const response = await getApi(urls.company.get);
-       setCompany(response?.data?.data);
-    };
+      setCompany(response?.data?.data || []);
+    } catch (error) {
+      toast.error("Failed to fetch companies.");
+    }
+  };
 
-  
+
   const validationSchema = yup.object({
-      productId: yup.string().required('Product Name is required'),
-      quantity: yup
-        .number()
-        .positive('Quantity must be a positive number')
-        .integer('Quantity must be an integer')
-        .required('Quantity is required')
-        .max('1000',"max 1000 quantity"),
-  
-      totalPrice: yup
-        .number()
-        .positive('Total Price must be greater than 0   ')
-        .required('Total Price is required') , 
-      discount: yup.number()
-      .integer('discount must be an integer'),
-  
-      paymentStatus: yup.string().required('Payment Status is required'),
-      productPrice: yup
-        .number()
-        .positive('Product Price must be a positive number')
-        .required('Product Price is required'),
-    });
+    productId: yup.string().required('Product Name is required'),
+    companyId: yup.string().required('Company is required'),
+    quantity: yup
+      .number()
+      .positive('Quantity must be a positive number')
+      .integer('Quantity must be an integer')
+      .required('Quantity is required')
+      .max(1000, "Maximum 1000 quantity allowed"),
+    totalPrice: yup
+      .number()
+      .positive('Total Price must be greater than 0')
+      .required('Total Price is required'),
+    discount: yup
+      .number()
+      .integer('Discount must be an integer')
+      .min(0, 'Discount cannot be negative')
+      .max(yup.ref('totalPrice'), 'Discount cannot exceed total price'),
+    paymentStatus: yup.string().required('Payment Status is required'),
+    productPrice: yup
+      .number()
+      .positive('Product Price must be a positive number')
+      .required('Product Price is required'),
+  });
+
 
   const initialValues = {
     productId: '',
+    companyId: '',
     quantity: '',
     totalPrice: '',
     discount: '0',
@@ -59,65 +72,71 @@ const AddEdit = (props) => {
     productPrice: '',
   };
 
+ 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      const fetchPurchase = {
-        productId: values.productId,
-        quantity: values.quantity,
-        totalPrice:values.totalPrice,
-        discount:values.discount,
-        paymentStatus:values.paymentStatus,
-        productPrice:values.productPrice,
-          };
-     await updateApi(urls.purchase.update.replace(":id", purchase._id), fetchPurchase); 
-     toast.success("purchase updated successfully!")
-       await fetchCategories(); 
-      handleClose(); 
-     
+      try {
+        const updatedPurchase = {
+          productId: values.productId,
+          companyId: values.companyId,
+          quantity: values.quantity,
+          totalPrice: values.totalPrice,
+          discount: values.discount,
+          paymentStatus: values.paymentStatus,
+          productPrice: values.productPrice,
+        };
+
+        await updateApi(urls.purchase.update.replace(':id', purchase?._id), updatedPurchase);
+        toast.success('Purchase updated successfully!');
+        await fetchPurchase();
+        handleClose();
+      } catch (error) {
+        toast.error("Failed to update purchase.");
+      }
     },
   });
-  
 
   useEffect(() => {
     if (purchase) {
       formik.setValues({
-        productId: purchase?.productId || '',
-        quantity: purchase?.quantity || '',
-        totalPrice:purchase?.totalPrice || '',
-        discount:purchase?.discount || '',
-        paymentStatus:purchase?.paymentStatus || '',
-        productPrice:purchase?.productPrice || '',
+        productId: purchase.productId || '',
+        companyId: purchase.companyId || '',
+        quantity: purchase.quantity || '',
+        totalPrice: purchase.totalPrice || '',
+        discount: purchase.discount || '0',
+        paymentStatus: purchase.paymentStatus || 'Pending',
+        productPrice: purchase.productPrice || '',
       });
-      fetchPurchase();
-      fetchCompany();
+    }
+    if (open) {
       fetchProduct();
-      
+      fetchCompany();
     }
   }, [purchase, open]);
-  
 
  
+  useEffect(() => {
+    const selectedProduct = product.find(p => p._id === formik.values.productId);
+    const productPrice = selectedProduct ? selectedProduct.price : 0;
+    const totalPrice = Math.max((formik.values.quantity * productPrice) - formik.values.discount, 0);
+
+    formik.setFieldValue('productPrice', productPrice);
+    formik.setFieldValue('totalPrice', totalPrice);
+  }, [formik.values.productId, formik.values.quantity, formik.values.discount, product]);
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
-      <DialogTitle
-        id="scroll-dialog-title"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
+    <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title">
+      <DialogTitle id="scroll-dialog-title" sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h4">Add Purchase</Typography>
-        <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
+        <ClearIcon onClick={handleClose} sx={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
         <form>
-          <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-           
-            <Grid container rowSpacing={2} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-              <Grid item xs={12} sm={6} md={6}>
+          <DialogContentText>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
                 <FormLabel>Product Name</FormLabel>
                 <Select
                   id="productId"
@@ -128,15 +147,12 @@ const AddEdit = (props) => {
                   onChange={formik.handleChange}
                   error={formik.touched.productId && Boolean(formik.errors.productId)}
                 >
-                  {Array.isArray(product) &&
-                    product.map((products) => (
-                      <MenuItem key={products._id} value={products._id}>
-                        {products.productName}
-                      </MenuItem>
-                    ))}
+                  {product.map(p => (
+                    <MenuItem key={p._id} value={p._id}>{p.productName}</MenuItem>
+                  ))}
                 </Select>
               </Grid>
-              <Grid item xs={12} sm={6} md={6}>
+              <Grid item xs={12} sm={6}>
                 <FormLabel>Company</FormLabel>
                 <Select
                   id="companyId"
@@ -147,16 +163,12 @@ const AddEdit = (props) => {
                   onChange={formik.handleChange}
                   error={formik.touched.companyId && Boolean(formik.errors.companyId)}
                 >
-                  {Array.isArray(company) &&
-                    company.map((companies) => (
-                      <MenuItem key={companies._id} value={companies._id}>
-                        {companies.companyName}
-                      </MenuItem>
-                    ))}
+                  {company.map(c => (
+                    <MenuItem key={c._id} value={c._id}>{c.companyName}</MenuItem>
+                  ))}
                 </Select>
-                 
               </Grid>
-              <Grid item xs={12} sm={6} md={6}>
+              <Grid item xs={12} sm={6}>
                 <FormLabel>Quantity</FormLabel>
                 <TextField
                   id="quantity"
@@ -164,106 +176,31 @@ const AddEdit = (props) => {
                   size="small"
                   fullWidth
                   value={formik.values.quantity}
-                  onChange={(e) => {
-                    const data = parseInt(e.target.value, 10) || 0;
-                    
-                      formik.setFieldValue('quantity', data);
-                    
-                 
-                  }}
+                  onChange={formik.handleChange}
                   error={formik.touched.quantity && Boolean(formik.errors.quantity)}
-                  helperText={formik.touched.quantity && formik.errors.quantity}
-                />
-              </Grid> 
-              <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Product Price</FormLabel>
-                <TextField
-                  id="productPrice"
-                  name="productPrice"
-                  size="small"
-                  fullWidth
-                  value={formik.values.productPrice}
-                  disabled
-                  error={formik.touched.productPrice && Boolean(formik.errors.productPrice)}
-                  helperText={formik.touched.productPrice && formik.errors.productPrice}
+                  helperText={formik.errors.quantity}
                 />
               </Grid>
-
-              <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Discount </FormLabel>
+              <Grid item xs={12} sm={6}>
+                <FormLabel>Discount</FormLabel>
                 <TextField
-                  id="discount" 
+                  id="discount"
                   name="discount"
                   size="small"
                   fullWidth
                   value={formik.values.discount}
-                  onChange={(e) => {
-                    const discount = parseFloat(e.target.value) || 0;
-                    if(discount <=formik.values.totalPrice)
-                    {
-                      formik.setFieldValue('discount', discount);
-                    }
-                    else {
-                      toast("discount less then productPrice")
-                    }
-                 
-                
-                  }}
-                  error={formik.touched.discount && Boolean(formik.errors.discount)}
-                  helperText={formik.touched.discount && formik.errors.discount}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Payment Status</FormLabel>
-                <Select
-                  id="paymentStatus"
-                  name="paymentStatus"
-                  size="small"
-                  fullWidth
-                  value={formik.values.paymentStatus}
                   onChange={formik.handleChange}
-                >
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="Success">Success</MenuItem>
-                  <MenuItem value="Failed">Failed</MenuItem>
-                </Select>
-              </Grid>
-            
-            </Grid>
-
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-            <Grid item xs={12} sm={6} md={6}>
-                <FormLabel>Amount</FormLabel>
-                <TextField
-                id="totalPrice"
-                  name="totalPrice"
-                  size="small"
-                  fullWidth
-                  value={formik.values.totalPrice}
-                  disabled
-                  error={formik.touched.totalPrice && Boolean(formik.errors.totalPrice)}
-                  helperText={formik.touched.totalPrice && formik.errors.totalPrice}
+                  error={formik.touched.discount && Boolean(formik.errors.discount)}
+                  helperText={formik.errors.discount}
                 />
               </Grid>
-              </Grid>
-           
+            </Grid>
           </DialogContentText>
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={formik.handleSubmit} variant="contained" color="primary">
-          Save
-        </Button>
-        <Button
-          onClick={() => {
-            formik.resetForm();
-            handleClose();  
-          }}
-          variant="outlined"
-          color="error"
-        >
-          Cancel
-        </Button>
+        <Button onClick={formik.handleSubmit} variant="contained" color="primary">Save</Button>
+        <Button onClick={() => { formik.resetForm(); handleClose(); }} variant="outlined" color="error">Cancel</Button>
       </DialogActions>
     </Dialog>
   );
