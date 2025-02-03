@@ -34,8 +34,8 @@ customer: {
 purchase: {
         create: base + '/purchase/save',
         get: base + '/purchase/fetch',
-        update: base + '/purchase/update',
-        delete:  base + '/purchase/:purchaseId'
+        update: base + '/purchase//update/:id',
+        delete:  base + '/purchase/:id'
     },
     
      category: {

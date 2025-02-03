@@ -1,33 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Dialog,
-  FormControl,
-  IconButton,
-  FormLabel,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
-} from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
+import * as React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { useEffect } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography,DialogContentText,Select,FormLabel,MenuItem} from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import { getApi,updateApi } from 'views/Api/comman.js';
+import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
-import { getApi, postApi } from 'views/Api/comman.js';
-import { urls } from 'views/Api/constant';
+import { useState } from 'react';
 
-const ProductAdd = (props) => {
-  const { open, handleClose, fetchPurchase } = props;
- const [product, setProduct] = useState([]);
- const [company, setCompany] = useState([]);
- const [Selectproduct,setSelectedProduct] =('')
+
+const AddEdit = (props) => {
+  const { open, handleClose, purchase,fetchPurchase } = props;
+  const [product,setProduct] = useState([])
+  const [company,setCompany] =useState([])
+
+ const fetchProduct = async () => {
+    const response = await getApi(urls.product.get);
+    setProduct(response?.data?.data);
+  };
+
+   
+    const fetchCompany = async () => {
+      const response = await getApi(urls.company.get);
+       setCompany(response?.data?.data);
+    };
+
+  
+  const validationSchema = yup.object({
+      productId: yup.string().required('Product Name is required'),
+      quantity: yup
+        .number()
+        .positive('Quantity must be a positive number')
+        .integer('Quantity must be an integer')
+        .required('Quantity is required')
+        .max('1000',"max 1000 quantity"),
+  
+      totalPrice: yup
+        .number()
+        .positive('Total Price must be greater than 0   ')
+        .required('Total Price is required') , 
+      discount: yup.number()
+      .integer('discount must be an integer'),
+  
+      paymentStatus: yup.string().required('Payment Status is required'),
+      productPrice: yup
+        .number()
+        .positive('Product Price must be a positive number')
+        .required('Product Price is required'),
+    });
 
   const initialValues = {
     productId: '',
@@ -38,83 +59,46 @@ const ProductAdd = (props) => {
     productPrice: '',
   };
 
-  const validationSchema = yup.object({
-    productId: yup.string().required('Product Name is required'),
-    quantity: yup
-      .number()
-      .positive('Quantity must be a positive number')
-      .integer('Quantity must be an integer')
-      .required('Quantity is required')
-      .max('1000',"max 1000 quantity"),
-
-    totalPrice: yup
-      .number()
-      .positive('Total Price must be greater than 0   ')
-      .required('Total Price is required') , 
-    discount: yup.number()
-    .integer('discount must be an integer'),
-
-    paymentStatus: yup.string().required('Payment Status is required'),
-    productPrice: yup
-      .number()
-      .positive('Product Price must be a positive number')
-      .required('Product Price is required'),
-  });
-
- 
-
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      await postApi(urls.purchase.create, values);
-      await fetchPurchase();
-      toast.success('Product added successfully');
-      formik.resetForm();
-      handleClose();
+      const fetchPurchase = {
+        productId: values.productId,
+        quantity: values.quantity,
+        totalPrice:values.totalPrice,
+        discount:values.discount,
+        paymentStatus:values.paymentStatus,
+        productPrice:values.productPrice,
+          };
+     await updateApi(urls.purchase.update.replace(":id", purchase._id), fetchPurchase); 
+     toast.success("purchase updated successfully!")
+       await fetchCategories(); 
+      handleClose(); 
+     
     },
   });
-
-  const calculateAmount = (quantity, discount) => {
-    const selectedProduct = product.find((p) => p._id === formik.values.productId);
-    const price = selectedProduct ? selectedProduct.price : 0;
-
-    formik.setFieldValue('productPrice', price);
-    return price * quantity - (discount);
-    
-  };
-
-
-
-  const fetchProduct = async () => {
-    const response = await getApi(urls.product.get);
-    setProduct(response?.data?.data);
-  };
-
   
-  const fetchCompany = async () => {
-    const response = await getApi(urls.company.get);
-     setCompany(response?.data?.data);
-  };
-
-
-
 
   useEffect(() => {
-    const  quantity = formik.values.quantity || 1;
-    const discount = formik.values.discount ||  0;
-    const dataPrice = calculateAmount(quantity, discount);
+    if (purchase) {
+      formik.setValues({
+        productId: purchase?.productId || '',
+        quantity: purchase?.quantity || '',
+        totalPrice:purchase?.totalPrice || '',
+        discount:purchase?.discount || '',
+        paymentStatus:purchase?.paymentStatus || '',
+        productPrice:purchase?.productPrice || '',
+      });
+      fetchPurchase();
+      fetchCompany();
+      fetchProduct();
+      
+    }
+  }, [purchase, open]);
+  
 
-  formik.setFieldValue('totalPrice', dataPrice);
-  }, [formik.values.quantity, formik.values.discount, formik.values.productId]);
-
-
-  useEffect(() => {
-    fetchProduct();
-    fetchCompany();
-    
-
-  }, []);
+ 
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
@@ -285,4 +269,4 @@ const ProductAdd = (props) => {
   );
 };
 
-export default ProductAdd;
+export default AddEdit;
