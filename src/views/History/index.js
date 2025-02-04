@@ -58,17 +58,7 @@ const History = () => {
         return 'N/A';
       }
     },
-    {
-      field: 'productName',
-      headerName: 'Item',
-      flex: 0.5,
-      valueGetter:(params) =>{
-        if(params.row?.products?.length>0){
-            return params.row.products?.map((product) => `${product?.productName}(${product?.quantity})`).join(',')
-        }
-        return 'N/A'
-      }
-    },
+    
 
 {
         field: 'totalAmount',

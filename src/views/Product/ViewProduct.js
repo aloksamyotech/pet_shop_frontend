@@ -42,6 +42,9 @@ const ViewProduct = ({ open, handleClose, product }) => {
                   <strong>Category:</strong> {product?.category?.[0].name || 'N/A'}
                 </Typography>
                 <Typography variant="body1">
+                  <strong>Quantity:</strong> {product?.quantity|| '0'}
+                </Typography>
+                <Typography variant="body1">
                   <strong>Discount:</strong> {product?.discount || 'N/A'}
                 </Typography>
                 <Typography variant="body1">

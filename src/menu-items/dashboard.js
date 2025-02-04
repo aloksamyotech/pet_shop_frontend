@@ -52,16 +52,8 @@ const dashboard = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
-    {
-      id: '09',
-      title: 'Order',
-      type: 'item',
-      url: '/dashboard/order',
-      icon: icons.IconUsers,
-      breadcrumbs: false
-    }, 
     
-    {
+     {
       id: '02',
       title: 'Product',
       type: 'item',

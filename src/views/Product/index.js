@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, IconButton, Box, Button, Stack, Breadcrumbs } from '@mui/material';
+import { Grid, Card, CardContent, CardMedia, Typography, IconButton, Box, Button, Stack, Chip } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -69,12 +69,13 @@ const Lead = () => {
 
   return (
     <>
-      
+   
       <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchProduct={fetchProducts} product={productUpdated} />
       <ViewProduct open={openView} handleClose={() => setOpenView(false)} product={selectedProduct} />
       <AddBulkUpload open={open} handleClose={() => setOpen(false)} fetchProduct={fetchProducts} />
       <AddLead open={openAdd} handleClose={() => setOpenAdd(false)} fetchProduct={fetchProducts} />
 
+      
       <Stack direction="row" alignItems="center" mb={3}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <HomeIcon sx={{ color: '#2067db', cursor: 'pointer' }} onClick={handleClick} />
@@ -86,12 +87,12 @@ const Lead = () => {
         </Stack>
       </Stack>
 
-      
+     
       <Grid container spacing={3}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
-            <Card sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
-            
+            <Card sx={{ p: 2, borderRadius: 3, boxShadow: 3, '&:hover': { boxShadow: 5 } }}>
+              
               <CardMedia
                 component="img"
                 height="100"
@@ -100,22 +101,42 @@ const Lead = () => {
                 sx={{ objectFit: 'cover', borderRadius: 2 }}
               />
 
-            
+              
               <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{product.productName}</Typography>
-                <Typography variant="body1" color="textSecondary">
-                  Price: <strong>${product.price || 'N/A'}</strong>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  {product.productName}
                 </Typography>
-                <Typography variant="body1" color="textSecondary">
-                  Discount: {product.discount || 'N/A'}
+                
+               
+                <Typography variant="h6" sx={{ color:"#39b2e9", fontWeight: 'bold' }}>
+                  Rs.{product.price || 'N/A'}
                 </Typography>
-                <Typography variant="body1" color="textSecondary">
-                  Category: {product.category?.[0]?.name || 'N/A'}
+
+              
+                <Typography variant="body1" sx={{ color: '#757575', fontSize: '14px' }}>
+                  <strong>Stock:</strong> {product.quantity || '0'}
                 </Typography>
+
+               
+               <Box sx={{ mt: 1 }}>
+                    {product.category.map((cat, index) => (
+                      <Chip
+                        key={index}
+                        label={cat.name}
+                        sx={{
+                          backgroundColor: '#419737',
+                          color: 'white',
+                          fontSize: '12px',
+                          mr: 1
+                        }}
+                      />
+                    ))}
+                  </Box>
+            
               </CardContent>
 
             
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton onClick={() => handleView(product)}>
                   <VisibilityIcon sx={{ color: '#00bbff' }} />
                 </IconButton>

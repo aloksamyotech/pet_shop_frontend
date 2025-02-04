@@ -9,15 +9,11 @@ import { element } from 'prop-types';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const Product = Loadable(lazy(() => import('views/Product')));
 const CustomerDetail = Loadable(lazy(() => import('views/CustomerDetail')));
-const PersonalDetails = Loadable(lazy(() => import('views/CustomerDetail/PersonalDetails')));
-const CP = Loadable(lazy(() => import('views/CustomerDetail/CP')));
-const MYAccount = Loadable(lazy(() => import('views/CustomerDetail/Account')));
 const Customer = Loadable(lazy(() => import('views/Customer')));
 const ProductType = Loadable(lazy(() => import('views/ProductType')));
 const AddToCard = Loadable(lazy(() => import('views/AddToCard/AddFood')));
 const Category = Loadable(lazy(() => import('views/Category')));
 const Profile = Loadable(lazy(() => import('views/Profile')));
-const MyInformation = Loadable(lazy(() => import('views/CustomerDetail/Information')));
 const Supplier = Loadable(lazy(() => import('views/Supplier')));
 const Purchase = Loadable(lazy(() => import('views/Purchase')));
 const Order = Loadable(lazy(() => import('views/Order/index')))
@@ -54,31 +50,14 @@ const MainRoutes = {
               element: <Customer />
             },
             {
-              path: 'user/:id',
+              path: 'user',
               children :[
 
                 {
                   path: '',
                   element: <CustomerDetail />
-                },
-
-                {
-                  path:'MyInformation',
-                  element:<MyInformation/>
-
-                },
-                {
-                  path: 'personal',
-                  element: <PersonalDetails />
-                },
-                {
-                  path :'cp',
-                  element:<CP/>
-                },
-                {
-                  path:'account',
-                  element:<MYAccount/>
                 }
+                
         
               ]
             }

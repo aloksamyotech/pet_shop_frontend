@@ -43,7 +43,7 @@ const ProductAdd = (props) => {
 
    
 
-    description: yup.string().required('Description is required').max(20 , 'Description cannot be more then 20'),
+    description: yup.string().required('Description is required').max(70 , 'Description cannot be more then 70'),
   });
 
   const initialValues = {

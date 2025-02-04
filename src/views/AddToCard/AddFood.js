@@ -22,7 +22,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getApi } from 'views/Api/comman.js';
+import { getApi ,postApi} from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { useFormik } from 'formik';
 import IconButton from '@mui/material/IconButton';
@@ -44,6 +44,9 @@ const AddFood = () => {
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [value, setValue] = useState('1');
+
+
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -68,7 +71,12 @@ const AddFood = () => {
     );
   };
 
-  const handleBuyNow = () => {
+  const handleInvoice = () => {
+    navigate('/dashboard/productType', { state: { cartItems, selectedCustomer } });
+   };
+
+
+   const handleCreateInvoice = async () => {
     if (!selectedCustomer) {
       Swal.fire({
         title: 'Please select a customer',
@@ -78,8 +86,26 @@ const AddFood = () => {
       });
       return;
     }
-    navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
-  };
+      const values = cartItems.map((item) => ({
+        productId: item._id,
+        productName: item.productName,
+        productPrice: item.price,
+        quantity: item.quantity
+      }));
+  
+       const orderData = {
+        products: values,
+        customerId: selectedCustomer._id,
+        customerName : selectedCustomer.firstName,
+        customerPhone : selectedCustomer.phoneNumber,
+        customerEmail : selectedCustomer.email
+  
+  
+      };
+      await postApi(urls.order.create, orderData);
+      setCartItems([]);
+      handleInvoice();
+    };
 
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
@@ -118,13 +144,11 @@ const AddFood = () => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-
-    setCategoryData(response.data?.data);
+setCategoryData(response.data?.data);
   };
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
-
     setProductData(response.data?.data);
   };
 
@@ -199,7 +223,7 @@ const AddFood = () => {
                     options={customerData}
                     value={selectedCustomer}
                     onChange={(event, newValue) => setSelectedCustomer(newValue)}
-                    getOptionLabel={(option) => `${option.firstName} (${option.email})`}
+                    getOptionLabel={(option) => `RS.{option.firstName} (${option.email})`}
                     renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
                     sx={{ width: '30%' }}
                   />
@@ -361,7 +385,7 @@ const AddFood = () => {
                       }}
                     >
                       <Typography variant="h6" color="secondary">
-                        Total: Rs.{totalPrice.toFixed(2)}
+                        Total: $.{totalPrice.toFixed(2)}
                       </Typography>
                       <Button
                         sx={{
@@ -373,7 +397,7 @@ const AddFood = () => {
                           },
                          
                         }}
-                        onClick={handleBuyNow}
+                        onClick={handleCreateInvoice}
                       >
                         BUY NOW
                       </Button>
