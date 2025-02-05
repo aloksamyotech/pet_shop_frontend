@@ -34,9 +34,13 @@ const Customer = () => {
     fetchCustomer();
   }, []);
 
-  const handleView = (id) => {
-    navigate(`/dashboard/customer/user/${id}`);
+  const handleView = (customerData) => {
+    navigate(`/dashboard/customer/user`, { state: { customer: customerData } });
   };
+  
+
+
+
 
   const handleDelete = (id) => {
      Swal.fire({
@@ -108,14 +112,14 @@ const Customer = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: '#00bbff',
+                backgroundColor: '#419737',
                 color: '#fff',
                 boxShadow: 'none',
                 padding: '3px 3px',
                 fontSize: '.6rem',
                 '&:hover': {
                   color: 'white',
-                  backgroundColor: '#00bbff'
+                  backgroundColor: '#419737'
                 }
               }}
             >
@@ -186,6 +190,9 @@ const Customer = () => {
       )
     }
   ];
+
+
+ 
 
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);

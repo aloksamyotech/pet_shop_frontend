@@ -11,7 +11,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {  Tabs, Tab } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import HomeIcon from '@mui/icons-material/Home';
 import { useState } from 'react';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -25,25 +25,19 @@ import { TabContext, TabList } from '@mui/lab';
 
 const CustomerDetail = () => {
   const [value, setValue] = useState('1');
-
-  const handleChange = (event,newValue) => {
+  const location = useLocation();
+  const DataCustomer = location.state?.customer || null;
+const handleChange = (event,newValue) => {
     setValue(newValue);
   };
 
   const { id } = useParams();
 
-    const data = [
-        { id: 1, name: 'Harsh', address: 'indore', PhoneNumber: '12344557' },
-        { id: 2, name: 'Lucky', address: 'city2', PhoneNumber: '12344558' },
-        { id: 3, name: 'Kush', address: 'city3', PhoneNumber: '12344559' },
-        { id: 4, name: 'lucky', address: 'city4', PhoneNumber: '12344560' },
-        { id: 5, name: 'kush', address: 'city5', PhoneNumber: '12344561' },
-        { id: 6, name: 'md', address: 'city6', PhoneNumber: '12344562' }
-      ];
+   
 
 
 
-      const customer = data.find((customer) => customer.id === parseInt(id));
+      // const customer = data.find((customer) => customer.id === parseInt(id));
       
       return (
 <Grid container>
@@ -65,7 +59,7 @@ const CustomerDetail = () => {
 }}>
 
 
-{/* main part */}
+
     
         
   <Box sx={{ borderBottom: 1  , border:'none'  , width:'120%', display:'flex',justifyContent:'space-between'}}>
@@ -87,38 +81,19 @@ const CustomerDetail = () => {
             value="1"
             sx={{ fontWeight:'bold' }}
           />
-          <Tab
-            icon={<InfoIcon />}
-            iconPosition="start"
-            label="Personal Details"
-            value="2"
-          />
+          
           <Tab
             icon={<AccountBoxIcon />}
             iconPosition="start"
-            label="My Account"
+            label="My Order"
            value="3"
           />
-          <Tab
-            icon={<LockIcon />}
-            iconPosition="start"
-            label="Change Password"
-            value="4"
-          />
-          <Tab
-            icon={<SettingsIcon />}
-            iconPosition="start"
-            label="Settings"
-            value="5"
-          />
+        
         </Tabs>
           </TabList>
         </Box>
 
 
-
-
-{/*information */}
 <TabPanel value="1">
 <Grid container spacing={1}>
                  <Grid item md={4}>
@@ -133,7 +108,7 @@ const CustomerDetail = () => {
                     }}>
                        <Stack  direction="row" spacing={2}>
                         
-                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}>JWT User</Typography>
+                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}>User</Typography>
 
                   </Stack>
                 
@@ -153,7 +128,7 @@ const CustomerDetail = () => {
 
 
                     </Box>   
-                    <Typography sx={{fontSize:'15px'}}>demo1234@gmail.com</Typography>
+                    <Typography sx={{fontSize:'15px'}}>{}</Typography>
                     </Box>
                       </Grid>
                  <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>

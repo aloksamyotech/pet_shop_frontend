@@ -16,9 +16,6 @@ import { useState, useEffect } from 'react';
 import { getApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 
-
-
-
 const AddLead = (props) => {
   const { open, handleClose, fetchProduct } = props;
 
@@ -47,13 +44,15 @@ const AddLead = (props) => {
 
     discount: yup.number()
        .integer('discount must be an integer'),
+    quantity : yup.number(),
   });
 
   const initialValues = {
     productName: '',
     categoryId: '',
     price: '',
-    discount: '0'
+    discount: '0',
+    quantity :'0',
   };
 
   const formik = useFormik({
@@ -65,6 +64,7 @@ const AddLead = (props) => {
       formData.append('categoryId', values.categoryId);
       formData.append('price', values.price);
       formData.append('discount', values.discount);
+      formData.append('quantity', values.quantity);
       if (values.image) {
         formData.append('image', values.image);
       }
@@ -90,8 +90,7 @@ const AddLead = (props) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-
-    formik.setFieldValue('image', file);
+  formik.setFieldValue('image', file);
     setSelectedImage(file);
   };
 
@@ -205,6 +204,21 @@ const AddLead = (props) => {
                       }
                       error={formik.touched.discount && Boolean(formik.errors.discount)}
                       helperText={formik.touched.discount && formik.errors.discount}
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormControl fullWidth>
+                    <FormLabel>quantity</FormLabel>
+                    <TextField
+                      id="quantity"
+                      name="quantity"
+                      size="small"
+                      fullWidth
+                      value={formik.values.quantity}
+                      onChange={formik.handleChange}
+                  error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                helperText={formik.touched.quantity && formik.errors.quantity}
                     />
                   </FormControl>
                 </Grid>
