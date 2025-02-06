@@ -22,7 +22,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getApi ,postApi} from 'views/Api/comman.js';
+import { getApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { useFormik } from 'formik';
 import IconButton from '@mui/material/IconButton';
@@ -44,9 +44,12 @@ const AddFood = () => {
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [value, setValue] = useState('1');
+  const [purchaseProduct, setPurchaseProduct] = useState([]);
 
-
-  
+  const fetchPurchase = async () => {
+    const response = await getApi(urls.purchase.get);
+    setPurchaseProduct(response?.data?.data);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -73,10 +76,9 @@ const AddFood = () => {
 
   const handleInvoice = () => {
     navigate('/dashboard/productType', { state: { cartItems, selectedCustomer } });
-   };
+  };
 
-
-   const handleCreateInvoice = async () => {
+  const handleCreateInvoice = async () => {
     if (!selectedCustomer) {
       Swal.fire({
         title: 'Please select a customer',
@@ -86,32 +88,45 @@ const AddFood = () => {
       });
       return;
     }
-      const values = cartItems.map((item) => ({
-        productId: item._id,
-        productName: item.productName,
-        productPrice: item.price,
-        quantity: item.quantity
-      }));
-  
-       const orderData = {
-        products: values,
-        customerId: selectedCustomer._id,
-        customerName : selectedCustomer.firstName,
-        customerPhone : selectedCustomer.phoneNumber,
-        customerEmail : selectedCustomer.email
-  
-  
-      };
-      await postApi(urls.order.create, orderData);
-      setCartItems([]);
-      handleInvoice();
+    const values = cartItems.map((item) => ({
+      productId: item._id,
+      productName: item.productName,
+      productPrice: item.price,
+      quantity: item.quantity
+    }));
+
+    const orderData = {
+      products: values,
+      customerId: selectedCustomer._id,
+      customerName: selectedCustomer.firstName,
+      customerPhone: selectedCustomer.phoneNumber,
+      customerEmail: selectedCustomer.email
     };
+    await postApi(urls.order.create, orderData);
+    setCartItems([]);
+    handleInvoice();
+  };
 
   const handleIncrementQuantity = (_id) => {
     setCartItems((prevCart) =>
-      prevCart.map((cartItem) =>
-        cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity < 20 ? cartItem.quantity + 1 : cartItem.quantity } : cartItem
-      )
+      prevCart.map((cartItem) => {
+        if (cartItem._id === _id) {
+          const product = productData.find((p) => p._id === _id);
+          const availableStock = product ? product.quantity : 0;
+
+          if (cartItem.quantity < availableStock) {
+            return { ...cartItem, quantity: cartItem.quantity + 1 };
+          } else {
+            Swal.fire({
+              title: 'Stock Limit Reached',
+              text: `Only ${availableStock} items available in stock.`,
+              icon: 'warning',
+              confirmButtonText: 'Okay'
+            });
+          }
+        }
+        return cartItem;
+      })
     );
   };
 
@@ -144,7 +159,7 @@ const AddFood = () => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-setCategoryData(response.data?.data);
+    setCategoryData(response.data?.data);
   };
 
   const fetchProduct = async () => {
@@ -162,10 +177,11 @@ setCategoryData(response.data?.data);
     fetchCategory();
     fetchProduct();
     fetchCustomer();
+    fetchPurchase();
   }, []);
 
   const handleClick = () => {
-    navigate('/dashboard/default', { state: { cartItems } });
+    navigate('/dashboard/default');
   };
 
   return (
@@ -184,8 +200,7 @@ setCategoryData(response.data?.data);
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginTop: '-7px',
-                border: '1px solid #d3d3d3',
-
+                border: '1px solid #d3d3d3'
               }}
             >
               <TabList onChange={handleChange}>
@@ -211,7 +226,7 @@ setCategoryData(response.data?.data);
                     display: 'flex',
                     justifyContent: 'space-around',
                     alignItems: 'center',
-                   border: '1px solid #d3d3d3',
+                    border: '1px solid #d3d3d3',
                     mb: '10px',
                     borderRadius: '20px'
                   }}
@@ -223,11 +238,12 @@ setCategoryData(response.data?.data);
                     options={customerData}
                     value={selectedCustomer}
                     onChange={(event, newValue) => setSelectedCustomer(newValue)}
-                    getOptionLabel={(option) => `RS.{option.firstName} (${option.email})`}
+                    getOptionLabel={(option) => `${option.firstName} (${option.email})`}
                     renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
                     sx={{ width: '30%' }}
                   />
-                  <TextField   value={selectedCustomer ? selectedCustomer.email : ''}  fullWidth readOnly size="small" sx={{ width: '30%' }} />
+
+                  <TextField value={selectedCustomer ? selectedCustomer.email : ''} fullWidth readOnly size="small" sx={{ width: '30%' }} />
                 </Box>
 
                 <Grid container spacing={2}>
@@ -240,7 +256,7 @@ setCategoryData(response.data?.data);
                         width: '100%',
                         backgroundColor: '#fff',
                         border: '1px solid #d3d3d3',
-                          padding:'5px'
+                        padding: '5px'
                       }}
                     >
                       {categoryData.map((category) => (
@@ -249,11 +265,10 @@ setCategoryData(response.data?.data);
                           onClick={() => setSelectedCategory(category._id)}
                           sx={{
                             transition: 'box-shadow 1.3s, transform 1.3s',
-                           border: '1px solid #d3d3d3',
+                            border: '1px solid #d3d3d3',
                             cursor: 'pointer',
-                            mt:'5px'
-                          
-                           }}
+                            mt: '5px'
+                          }}
                         >
                           <CardMedia
                             component="img"
@@ -261,7 +276,9 @@ setCategoryData(response.data?.data);
                             image={categoryData.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                             sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                           />
-                          <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px',color:"black" }}>
+                          <Typography
+                            sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px', color: 'black' }}
+                          >
                             {category.name}
                           </Typography>
                         </Card>
@@ -270,7 +287,16 @@ setCategoryData(response.data?.data);
                   </Grid>
 
                   <Grid item xs={12} md={6}>
-                    <Box sx={{ height: '70vh', flex: 1, overflowY: 'auto', backgroundColor: 'white', border: '1px solid #d3d3d3',   padding:'5px'}}>
+                    <Box
+                      sx={{
+                        height: '70vh',
+                        flex: 1,
+                        overflowY: 'auto',
+                        backgroundColor: 'white',
+                        border: '1px solid #d3d3d3',
+                        padding: '5px'
+                      }}
+                    >
                       <Grid container spacing={2}>
                         {filterProduct.map((product) => (
                           <Grid item xs={12} sm={4} md={4} key={product.id}>
@@ -282,9 +308,7 @@ setCategoryData(response.data?.data);
                                 cursor: 'pointer',
                                 width: '100%',
                                 height: '25vh',
-                                border: '1px solid #d3d3d3',
-                                
-
+                                border: '1px solid #d3d3d3'
                               }}
                             >
                               <CardMedia
@@ -293,12 +317,8 @@ setCategoryData(response.data?.data);
                                 image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                                 sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                               />
-                              <Typography sx={{ display: 'block',p:'4px',color:'black' }}>
-                                {product.productName}
-                              </Typography>
-                              <Typography sx={{ display: 'block',p:'4px',color:'#39b2e9'}}>
-                                Rs.{product.price}
-                              </Typography>
+                              <Typography sx={{ display: 'block', p: '4px', color: 'black' }}>{product.productName}</Typography>
+                              <Typography sx={{ display: 'block', p: '4px', color: '#39b2e9' }}>Rs.{product.price}</Typography>
                             </Card>
                           </Grid>
                         ))}
@@ -307,7 +327,16 @@ setCategoryData(response.data?.data);
                   </Grid>
 
                   <Grid item xs={12} md={4}>
-                    <Box sx={{ height: '70vh', flex: 0.5, overflowY: 'auto', backgroundColor: 'white', border: '1px solid #d3d3d3' , padding:'5px'}}>
+                    <Box
+                      sx={{
+                        height: '70vh',
+                        flex: 0.5,
+                        overflowY: 'auto',
+                        backgroundColor: 'white',
+                        border: '1px solid #d3d3d3',
+                        padding: '5px'
+                      }}
+                    >
                       <Grid container spacing={2}>
                         {cartItems.map((cartItem) => (
                           <Grid item xs={12} key={cartItem._id}>
@@ -317,7 +346,7 @@ setCategoryData(response.data?.data);
                                 alignItems: 'center',
                                 backgroundColor: 'white',
                                 transition: 'box-shadow 1s, transform 1s',
-                               border: '1px solid #d3d3d3',
+                                border: '1px solid #d3d3d3',
                                 cursor: 'pointer',
                                 width: 'auto',
                                 height: '70px',
@@ -330,7 +359,7 @@ setCategoryData(response.data?.data);
                                 sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
                               />
                               <Box sx={{ flex: 1 }}>
-                                <Typography variant="body1" sx={{color:'black', mb: 0.5,display:'block' }}>
+                                <Typography variant="body1" sx={{ color: 'black', mb: 0.5, display: 'block' }}>
                                   {cartItem.productName}
                                 </Typography>
                                 <Typography variant="body2" color="#39b2e9">
@@ -338,14 +367,14 @@ setCategoryData(response.data?.data);
                                 </Typography>
                               </Box>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
+                                <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
                                   <RemoveIcon fontSize="small" />
                                 </IconButton>
                                 {cartItem.quantity}
                                 <Box>
-                                <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
-                                  <AddIcon fontSize="small" />
-                                </IconButton>
+                                  <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
+                                    <AddIcon fontSize="small" />
+                                  </IconButton>
                                 </Box>
                               </Box>
                               <Button
@@ -394,8 +423,7 @@ setCategoryData(response.data?.data);
                           '&:hover': {
                             backgroundColor: '#2067db',
                             color: '#fff'
-                          },
-                         
+                          }
                         }}
                         onClick={handleCreateInvoice}
                       >
@@ -408,8 +436,7 @@ setCategoryData(response.data?.data);
                           '&:hover': {
                             backgroundColor: '#7011bc',
                             color: '#fff'
-                          },
-                           
+                          }
                         }}
                         onClick={deleteAll}
                       >
