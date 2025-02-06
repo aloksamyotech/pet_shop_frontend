@@ -19,6 +19,8 @@ const History = () => {
     
   };
 
+  console.log("product",product)
+
 
   useEffect(() => {
     fetchProduct();
