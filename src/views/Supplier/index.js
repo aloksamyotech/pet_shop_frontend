@@ -112,21 +112,24 @@ const Supplier = () => {
     {
       field: 'status',
       headerName: 'Status',
-       flex: 0.5,
+       flex: 1,
       renderCell: (params) => (
         <Button
-        size='small'
+
           variant="contained"
           sx={{
+            boxShadow: 'none',
+            padding: '3px 3px',
+            fontSize: '.6rem',
             backgroundColor:
-              params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ?  '#FF5733'  : '',
-            width: '50px',
+              params.value === 'Active' ? '#419737' : params.value === 'Inactive' ? '#12aae8' : params.value === 'Blocked' ?  '#FF5733'  : '',
+        
             textAlign: 'center',
-            padding: '2px ',
+           
 
             '&:hover': {
               backgroundColor:
-                params.value === 'Active' ? '#7011bc' : params.value === 'Inactive' ?'#12aae8': params.value === 'Blocked' ?  '#FF5733'  : ''
+                params.value === 'Active' ? '#419737' : params.value === 'Inactive' ?'#12aae8': params.value === 'Blocked' ?  '#FF5733'  : ''
             }
           }}
         >

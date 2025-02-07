@@ -19,7 +19,6 @@ const History = () => {
     
   };
 
-  console.log("product",product)
 
 
   useEffect(() => {
@@ -63,7 +62,7 @@ const History = () => {
     
 
 {
-        field: 'totalAmount',
+       field: 'totalAmount',
         headerName: 'totalAmount',
         flex: 1
       },

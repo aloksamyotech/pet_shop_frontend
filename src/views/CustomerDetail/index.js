@@ -27,6 +27,7 @@ import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Tab } from '@mui/material';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 const CustomerDetail = () => {
   const [value, setValue] = useState('1');
@@ -39,7 +40,7 @@ const CustomerDetail = () => {
   const date = new Date(orderDate);
   const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
-  console.log("date",formattedDate)
+  
   
   const DataCustomer = location.state?.customer || null;
 
@@ -58,7 +59,7 @@ setOrderDate(response.data.data[0].createdAt);
     }
   };
 
-  console.log('orderList', orderList);
+
 
   useEffect(() => {
     if (DataCustomer?._id) {
@@ -92,7 +93,7 @@ setOrderDate(response.data.data[0].createdAt);
         </Grid>
 
         <Grid spacing={2} container md={12} direction="column">
-          <Box sx={{ width: 'auto', height: 'auto', p: '4px', backgroundColor: 'white', borderRadius: '10px' }}>
+          <Box sx={{ width: 'auto', height: 'auto', p: '4px', backgroundColor: 'white', borderRadius: '10px' ,ml:'30px'}}>
             <Box sx={{ borderBottom: 1, border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
               <TabList onChange={handleChange} indicatorColor="none">
                 <Tab
@@ -102,7 +103,7 @@ setOrderDate(response.data.data[0].createdAt);
                   value="1"
                   sx={{ fontWeight: 'bold' }}
                 />
-                <Tab icon={<AccountBoxIcon />} iconPosition="start" label="My Order" value="2" />
+                <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="My Order" value="2" />
               </TabList>
             </Box>
 
@@ -165,8 +166,9 @@ setOrderDate(response.data.data[0].createdAt);
                     <TableRow sx={{ fontWeight: 'bold' }}>
                     <TableCell sx={{ color: 'white' }}>Date</TableCell>
                       <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Price</TableCell>
+                      
                       <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
+                      <TableCell sx={{ color: 'white' }}>totalAmount</TableCell>
                      </TableRow>
                   </TableHead>
                   <TableBody>
@@ -174,8 +176,8 @@ setOrderDate(response.data.data[0].createdAt);
                       <TableRow key={index}>
                          <TableCell>{formattedDate}</TableCell>
                         <TableCell>{item?.products?.[0]?.productName}</TableCell>
-                        <TableCell>{item?.products?.[0]?.productPrice}</TableCell>
                         <TableCell>{item?.products?.[0]?.quantity}</TableCell>
+                        <TableCell>{item?.totalAmount}</TableCell>
                           </TableRow>
                     ))}
                   </TableBody>

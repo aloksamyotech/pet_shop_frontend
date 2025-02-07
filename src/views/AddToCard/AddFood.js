@@ -28,7 +28,7 @@ import { useFormik } from 'formik';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import Checkout from 'views/Order/index';
+import Checkout from 'views/Report/index';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
 import History from 'views/History';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -74,11 +74,8 @@ const AddFood = () => {
     );
   };
 
-  const handleInvoice = () => {
-    navigate('/dashboard/productType', { state: { cartItems, selectedCustomer } });
-  };
-
-  const handleCreateInvoice = async () => {
+ 
+ const handleBuyNow = () => {
     if (!selectedCustomer) {
       Swal.fire({
         title: 'Please select a customer',
@@ -88,23 +85,7 @@ const AddFood = () => {
       });
       return;
     }
-    const values = cartItems.map((item) => ({
-      productId: item._id,
-      productName: item.productName,
-      productPrice: item.price,
-      quantity: item.quantity
-    }));
-
-    const orderData = {
-      products: values,
-      customerId: selectedCustomer._id,
-      customerName: selectedCustomer.firstName,
-      customerPhone: selectedCustomer.phoneNumber,
-      customerEmail: selectedCustomer.email
-    };
-    await postApi(urls.order.create, orderData);
-    setCartItems([]);
-    handleInvoice();
+    navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
   };
 
   const handleIncrementQuantity = (_id) => {
@@ -425,7 +406,7 @@ const AddFood = () => {
                             color: '#fff'
                           }
                         }}
-                        onClick={handleCreateInvoice}
+                        onClick={handleBuyNow}
                       >
                         BUY NOW
                       </Button>
