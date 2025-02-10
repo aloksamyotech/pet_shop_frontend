@@ -20,6 +20,7 @@ const History = () => {
   };
 
 
+
   useEffect(() => {
     fetchProduct();
   }, []);
@@ -61,7 +62,7 @@ const History = () => {
     
 
 {
-        field: 'totalAmount',
+       field: 'totalAmount',
         headerName: 'totalAmount',
         flex: 1
       },

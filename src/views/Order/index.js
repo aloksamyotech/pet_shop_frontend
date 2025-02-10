@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Stack,
-  Container,
-  Breadcrumbs,
-  Typography,
-  Box,
-  Card,
-  CardMedia,
-  Grid,
-  Divider,
-  Button,
-  IconButton
+import { useNavigate, useLocation } from 'react-router-dom';
+import { 
+  Container, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, Typography, Box, Divider, Card, CardMedia
 } from '@mui/material';
-import { Remove, Add, Home as HomeIcon } from '@mui/icons-material';
+import { Remove, Add, Delete } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 import { urls } from 'views/Api/constant.js';
 import { postApi } from 'views/Api/comman.js';
-import { useLocation } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 const Checkout = () => {
   const location = useLocation();
@@ -26,40 +14,28 @@ const Checkout = () => {
   const selectedCustomer = location.state?.selectedCustomer || null;
   const navigate = useNavigate();
 
-  
+  const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
-
-  const handleDecrementQuantity = (_id) => {
+  const handleQuantityChange = (_id, change) => {
     setCartItems((prevCart) =>
       prevCart.map((cartItem) =>
-        cartItem._id === _id && cartItem.quantity > 1 ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
+        cartItem._id === _id
+          ? { ...cartItem, quantity: Math.max(1, Math.min(cartItem.quantity + change, 20)) }
+          : cartItem
       )
     );
   };
 
-  const handleIncrementQuantity = (_id) => {
-    setCartItems((prevCart) =>
-   prevCart.map((cartItem) => 
-    
-    cartItem._id === _id ? { ...cartItem, quantity: cartItem.quantity < 20 ? cartItem.quantity +1 :cartItem.quantity } : cartItem)
-    );
-  };
-
   const removeItem = (_id) => {
-    const updatedCart = cartItems.filter((item) => item._id !== _id);
-    setCartItems(updatedCart);
-  };
-
-  const handleClick = () => {
-    navigate('/dashboard/default');
-  };
-
-  const handleInvoice = () => {
-    navigate('/dashboard/productType', { state: { cartItems, selectedCustomer } });
+    setCartItems(cartItems.filter((item) => item._id !== _id));
   };
 
   const handleCreateInvoice = async () => {
+    if (!selectedCustomer) {
+      Swal.fire('Error', 'Please select a customer!', 'error');
+      return;
+    }
+
     const values = cartItems.map((item) => ({
       productId: item._id,
       productName: item.productName,
@@ -67,163 +43,91 @@ const Checkout = () => {
       quantity: item.quantity
     }));
 
-     const orderData = {
+    const orderData = {
       products: values,
       customerId: selectedCustomer._id,
-      customerName : selectedCustomer.firstName,
-      customerPhone : selectedCustomer.phoneNumber,
-      customerEmail : selectedCustomer.email
-
-
+      customerName: selectedCustomer.firstName,
+      customerPhone: selectedCustomer.phoneNumber,
+      customerEmail: selectedCustomer.email
     };
+
     await postApi(urls.order.create, orderData);
     setCartItems([]);
-    handleInvoice();
+    navigate('/dashboard/productType', { state: { cartItems, selectedCustomer } });
   };
 
   return (
-    <Grid maxWidth="xl">
-      <Stack direction="row" alignItems="center" mb={5}>
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '0 25px',
-              marginTop: '-7px'
-            }}
-          >
-            <Breadcrumbs
-          aria-label="breadcrumb"
-              sx={{ display: 'flex', alignItems: 'center' }}
-            ><HomeIcon sx={{ color: '#2067db' }}  onClick={handleClick} />
-               <Typography variant="h5">Order</Typography>
-            </Breadcrumbs>
-
-          </Box>
-        </Stack>
-
-      <Grid container spacing={2} sx={{mt:'-35px'}}>
-      
-        <Grid item xs={4}>
-          <Box sx={{ width: '100%', height: 'auto', backgroundColor: '#fff', overflowY: 'auto',padding:'5px' }}>
-         
-          <Typography variant="h4" sx={{ mt: 2,padding:'5px'}}>
-              ADD TO CART
-            </Typography>
-           
-            <Divider sx={{ mb: 2 }} />
-            <Grid container spacing={2}>
-              {cartItems.map((cartItem) => (
-                <Grid item xs={12} key={cartItem._id}>
-                  <Card  sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                backgroundColor: 'white',
-                                transition: 'box-shadow 1s, transform 1s',
-                               border: '1px solid #d3d3d3',
-                                cursor: 'pointer',
-                                width: 'auto',
-                                height: '70px',
-                                p: '2px'
-                              }}>
-                      <CardMedia
-                                component="img"
-                                image={cartItem.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                                sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: '8px', mr: 2 }}
-                              />
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {cartItem.productName}
-                      </Typography>
-                      <Typography variant="body2" color="#39b2e9">
-                        Rs.{cartItem.price} 
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <IconButton onClick={() => handleIncrementQuantity(cartItem._id)} size="small">
-                        <Add fontSize="small" />
-                      </IconButton>
-                      {cartItem.quantity}
-                      <IconButton onClick={() => handleDecrementQuantity(cartItem._id)} size="small">
-                        <Remove fontSize="small" />
-                      </IconButton>
-                    </Box>
-                    <Button
-                      color="error"
-                      onClick={() => {
-                        Swal.fire({
-                          title: 'Are you sure?',
-                          text: 'Do you want to remove this item?',
-                          icon: 'warning',
-                          showCancelButton: true,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Yes, remove it!',
-                          cancelButtonText: 'Cancel'
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            removeItem(cartItem._id);
-                            Swal.fire('Removed!', 'The item has been removed.', 'success');
-                          }
-                        });
-                      }}
-                    >
-                     <DeleteIcon /> 
-                    </Button>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Grid>
-
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Checkout
+      </Typography>
+      <Grid container spacing={2}>
         <Grid item xs={8}>
-          <Box sx={{ backgroundColor: '#fff', p: 3, borderRadius: 2, boxShadow: 3 }}>
-            <Typography variant="h4" sx={{ mb: 2 }}>
-              Order Summary
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h6">Price: Rs.{totalPrice.toFixed(2)} * {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
-              <Typography variant="h6">Quantity: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }} />
-            <Typography variant="body2">TotalTotal Payable:<Typography variant="body2" color="#39b2e9"> Rs.{totalPrice.toFixed(2)}</Typography></Typography>
-
-            <Box sx={{ display: 'flex', gap: '10px' ,mt:'10px'}}>
-              <Button
-               size="medium" 
-                sx={{
-                  backgroundColor: '#4CAF50',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: '#4CAF50' }
-                }}
-                onClick={handleCreateInvoice}
-              >
-              Confirm
-              </Button>
-              <Button
-               size="medium" 
-                sx={{
-                  backgroundColor: '#da2c11',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: '#da2c11' }
-                }}
-                onClick={() => setCartItems([])}
-              >
-                Cancel
-              </Button>
-            </Box>
+          <TableContainer component={Paper} sx={{ mb: 3 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Image</TableCell>
+                  <TableCell>Product Name</TableCell>
+                  <TableCell align="center">Price</TableCell>
+                  <TableCell align="center">Quantity</TableCell>
+                  <TableCell align="center">Total</TableCell>
+                  <TableCell align="center">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {cartItems.map((item) => (
+                  <TableRow key={item._id}>
+                    <TableCell>
+                      <Card sx={{ maxWidth: 75 }}>
+                        <CardMedia
+                          component="img"
+                          height="75"
+                          image={item.imageUrl ||'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+                          alt={item.productName}
+                        />
+                      </Card>
+                    </TableCell>
+                    <TableCell>{item.productName}</TableCell>
+                    <TableCell align="center">Rs.{item.price}</TableCell>
+                    <TableCell align="center">
+                      <IconButton onClick={() => handleQuantityChange(item._id, -1)}>
+                        <Remove />
+                      </IconButton>
+                      {item.quantity}
+                      <IconButton onClick={() => handleQuantityChange(item._id, 1)}>
+                        <Add />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">Rs.{(item.price * item.quantity).toFixed(2)}</TableCell>
+                    <TableCell align="center">
+                      <IconButton color="error" onClick={() => removeItem(item._id)}>
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Grid item xs={4}>
+          <Box sx={{ p: 3, bgcolor: 'white', borderRadius: 2, boxShadow: 3 }}>
+            <Typography variant="h5">Order Summary</Typography>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body1">Total Items: {cartItems.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
+            <Typography variant="h6" sx={{ mt: 2 }}>Total Price: Rs.{totalPrice.toFixed(2)}</Typography>
+            <Divider sx={{ my: 2 }} />
+            <Button fullWidth variant="contained" color="primary" onClick={handleCreateInvoice}>
+              Confirm Order
+            </Button>
+            <Button fullWidth variant="outlined" color="error" sx={{ mt: 2 }} onClick={() => setCartItems([])}>
+              Cancel Order
+            </Button>
           </Box>
         </Grid>
-      
       </Grid>
-    </Grid>
+    </Container>
   );
 };
 

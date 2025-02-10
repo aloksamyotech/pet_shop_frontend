@@ -16,8 +16,9 @@ const Category = Loadable(lazy(() => import('views/Category')));
 const Profile = Loadable(lazy(() => import('views/Profile')));
 const Supplier = Loadable(lazy(() => import('views/Supplier')));
 const Purchase = Loadable(lazy(() => import('views/Purchase')));
-const Order = Loadable(lazy(() => import('views/Order/index')))
+const Report = Loadable(lazy(() => import('views/Report/index')))
 const History = Loadable(lazy(() => import('views/History/index')))
+const Order =  Loadable(lazy(() => import('views/Order/index')))
 
 
 
@@ -92,12 +93,16 @@ const MainRoutes = {
           element: <Category />
         },
         {
-          path: 'order',
-          element: <Order/>
+          path: 'report',
+          element: <Report/>
         },
          {
           path: 'History',
           element: <History/>
+        },
+        {
+          path: 'Order',
+          element: <Order/>
         }
 
       ]
