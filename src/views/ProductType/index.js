@@ -39,19 +39,27 @@ const PolicyManagement = () => {
   const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
   const selectedCustomer = location.state?.selectedCustomer || null;
   const [orderDate, setOrderDate] = useState();
+  const navigate = useNavigate();
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
+ const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
   const home = () =>{
     navigate('/');
   }
 
-  useEffect(async () => {
+
+  const fetchOrderDate = async () => {
     const response = await getApi(urls.order.get);
     setOrderDate(response.data.data[0].createdAt);
+  };
+  
+  useEffect(() => {
+   fetchOrderDate();
   }, []);
+  
 
   const date = new Date(orderDate);
-  const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  const formattedDate = orderDate ? new Date(orderDate).toLocaleDateString() : 'N/A';
+
 
   const printInvoice = () => {
     const content = document.getElementById('invoice-content');
@@ -69,28 +77,29 @@ const PolicyManagement = () => {
       })
       .join('\n');
 
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Invoice</title>
-          <style>
-            ${styles} 
-            @media print {
-              body {
-                margin: 0;
-                font-family: Arial, sans-serif;
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Invoice</title>
+            <style>
+              ${styles} 
+              @media print {
+                body {
+                  margin: 0;
+                  font-family: Arial, sans-serif;
+                }
+                .no-print {
+                  display: none; 
+                }
               }
-              .no-print {
-                display: none; 
-              }
-            }
-          </style>
-        </head>
-        <body>
-          ${content.innerHTML} 
-        </body>
-      </html>
-    `);
+            </style>
+          </head>
+          <body>
+            ${content.innerHTML} 
+          </body>
+        </html>
+      `);
+      
 
     printWindow.document.close();
     printWindow.focus();
@@ -224,7 +233,7 @@ const PolicyManagement = () => {
                       <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
                       <TableCell sx={{ color: 'white' }}>Price</TableCell>
                       <TableCell sx={{ color: 'white' }}>Discount (%)</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Category Name</TableCell>
+                      {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -233,8 +242,8 @@ const PolicyManagement = () => {
                         <TableCell>{item.productName}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell>{item.price}</TableCell>
-                        <TableCell>{item.discount}</TableCell>
-                        <TableCell>{item.category[0]?.name || 'N/A'}</TableCell>
+                        <TableCell>0</TableCell>
+                        {/* <TableCell>{item.category[0]?.name || 'N/A'}</TableCell> */}
                       </TableRow>
                     ))}
                   </TableBody>

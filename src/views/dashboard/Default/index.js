@@ -17,14 +17,36 @@ import Iconify from '../../../ui-component/iconify';
 import AppTasks from './AppTask';
 import AppConversionRates from './AppConversionCard';
 import AppCurrentVisits from './AppCurrentVisitCard';
+import { getApi } from 'views/Api/comman';
+import { urls } from 'views/Api/constant';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
   const theme = useTheme();
   const [isLoading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+  const [category,setCategory] = useState([])
+
+
+   const fetchCategories = async () => {
+      try {
+        const response = await getApi(urls.category.get);
+        setCategory(response?.data?.data || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+
+
+    useEffect(() => {
+      const fetchData = async () => {
+        await fetchCategories();
+        setLoading(false);
+      };
+      fetchData();
+    }, []);
+    
+
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -57,10 +79,10 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={6} lg={6}>
+          {/* <Grid item xs={12} md={6} lg={6}>
             <AppConversionRates
-              title="Conversion Rates"
-              subheader="(+43%) than last year"
+              title="Category"
+              subheader="than last year"
               chartData={[
                 { label: 'Italy', value: 400 },
                 { label: 'Japan', value: 430 },
@@ -74,10 +96,10 @@ const Dashboard = () => {
                 { label: 'United Kingdom', value: 1380 }
               ]}
             />
-          </Grid>
-          <Grid item xs={12} md={4} lg={6}>
+          </Grid> */}
+          {/* <Grid item xs={12} md={4} lg={6}>
             <AppCurrentVisits
-              title="Current Visits"
+              title="Category"
               chartData={[
                 { label: 'America', value: 4344 },
                 { label: 'Asia', value: 5435 },
@@ -86,47 +108,23 @@ const Dashboard = () => {
               ]}
               chartColors={[theme.palette.primary.main, theme.palette.info.main, theme.palette.warning.main, theme.palette.error.main]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={12} md={6} lg={5}>
-            <AppTrafficBySite
-              title="Traffic by Site"
-              list={[
-                {
-                  name: 'FaceBook',
-                  value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />
-                },
-                {
-                  name: 'Google',
-                  value: 341212,
-                  icon: <Iconify icon={'eva:google-fill'} color="#DF3E30" width={32} />
-                },
-                {
-                  name: 'Linkedin',
-                  value: 411213,
-                  icon: <Iconify icon={'eva:linkedin-fill'} color="#006097" width={32} />
-                },
-                {
-                  name: 'Twitter',
-                  value: 443232,
-                  icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} />
-                }
-              ]}
-            />
+          <AppTrafficBySite title="Category" list={category} />
+
           </Grid>
           <Grid item xs={12} md={7}>
             <AppTasks
-              title="Tasks"
+              title="Benefits"
               list={[
-                { id: '1', label: 'Create FireStone Logo' },
-                { id: '2', label: 'Add SCSS and JS files if required' },
-                { id: '3', label: 'Stakeholder Meeting' },
-                { id: '4', label: 'Scoping & Estimations' },
-                { id: '5', label: 'Sprint Showcase' }
+                { id: '1', label: 'Quality Products & Variety' },
+                { id: '2', label: 'Healthy & Well-Cared-for Pets ' },
+                { id: '3', label: 'Excellent Customer Service' },
+                
               ]}
             />
           </Grid>

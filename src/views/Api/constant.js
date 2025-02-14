@@ -44,6 +44,7 @@ purchase: {
         update: base + '/category/update/:id',
         delete:  base + '/category/:id',
         bulkSave: base + '/category/bulkUpload',
+        getCount : base + '/category/count',
     },
   
     order :{
