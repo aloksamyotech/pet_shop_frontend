@@ -1,35 +1,35 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 
 // assets
-import EarningIcon from 'assets/images/icons/earning.svg';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
-import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
-import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import { getApi } from 'views/Api/comman';
+import { urls } from 'views/Api/constant';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.secondary.dark,
+  backgroundColor: theme.palette.primary.dark,
   color: '#fff',
   overflow: 'hidden',
   position: 'relative',
+  '&>div': {
+    position: 'relative',
+    zIndex: 5
+  },
   '&:after': {
     content: '""',
     position: 'absolute',
     width: 210,
     height: 210,
-    background: theme.palette.secondary[800],
+    background: theme.palette.primary[800],
     borderRadius: '50%',
+    zIndex: 1,
     top: -85,
     right: -95,
     [theme.breakpoints.down('sm')]: {
@@ -40,9 +40,10 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   '&:before': {
     content: '""',
     position: 'absolute',
+    zIndex: 1,
     width: 210,
     height: 210,
-    background: theme.palette.secondary[800],
+    background: theme.palette.primary[800],
     borderRadius: '50%',
     top: -125,
     right: -15,
@@ -58,16 +59,20 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const EarningCard = ({ isLoading }) => {
   const theme = useTheme();
+  const [order, setOrder] = useState(0); 
 
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const fetchOrder = async () => {
+    const response = await getApi(urls.order.getCount);
+  
+  
+      setOrder(response.data.totalOrders);  
+    
   };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  
+  useEffect(() => {
+    fetchOrder();
+  }, []);
+  
 
   return (
     <>
@@ -79,25 +84,38 @@ const EarningCard = ({ isLoading }) => {
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
-                 
-                  
+                  {/* You can add additional UI here if needed */}
                 </Grid>
               </Grid>
               <Grid item>
                 <Grid container alignItems="center">
-                 
-                  
+                  {/* You can add any additional content here */}
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 1.25 }}>
                 <Typography
+                 sx={{
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
+                  color: '#fff',
+                  mt: 1
+                }}
+                >
+                  {order} 
+                 
+                </Typography>
+              </Grid>
+              {/* Display the order count */}
+              <Grid item>
+                <Typography
                   sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.secondary[200]
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    color: '#fff',
+                    mt: 1
                   }}
                 >
-                  Total Customer
+                 Total Orders
                 </Typography>
               </Grid>
             </Grid>

@@ -7,28 +7,32 @@ export const urls = Object.freeze({
         get: base + '/product/fetch',
         update: base + '/product/update/:id',
         delete:  base + '/product/:id',
-        bulkSave: base + '/product/bulkUpload'
+        bulkSave: base + '/product/bulkUpload',
+        getCount : base + '/product/count'
     },
 
     productType: {
         create: base + '/productType/save',
         get: base + '/productType/fetch',
         update: base + '/productType/update',
-        delete:  base + '/productType/:productId'
+        delete:  base + '/productType/:productId',
+       
     },
     
 customer: {
         create: base + '/customer/save',
         get: base + '/customer/fetch',
         update: base + '/customer/update/:id',
-        delete:  base + '/customer/:id'
+        delete:  base + '/customer/:id',
+        getCount : base + '/customer/count'
     },
     
     company: {
         create: base + '/company/save',
         get: base + '/company/fetch',
         update: base + '/company/update/:id',
-        delete:  base + '/company/:id'
+        delete:  base + '/company/:id',
+        getCount : base +'/company/count'
     },
 
 purchase: {
@@ -50,6 +54,8 @@ purchase: {
     order :{
         create : base + '/order/save',
         get: base + '/order/fetch',
+        getCount: base + '/order/count',
+        getTotalAmount : base + '/order/TotalSales'
     },
 
     invoice :{
@@ -57,6 +63,12 @@ purchase: {
         get: base + '/invoice/fetch',
 
     }
+    , 
+    profile :{
+        create : base + '/profile/save',
+        get: base + '/profile/fetch',
+}
+
 
     }
 );

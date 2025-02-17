@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { urls } from 'views/Api/constant';
+import { getApi } from 'views/Api/comman';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -51,6 +53,20 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const secondaryMain = theme.palette.secondary.main;
   const secondaryLight = theme.palette.secondary.light;
 
+  const fetchOrderSales = async () => {
+    try {
+      const response = await getApi(urls.order.getTotalAmount);
+     
+     
+    } catch (error) {
+      console.error('Error fetching data:', error); 
+    }
+  };
+
+  useEffect(() => { 
+    fetchOrderSales(); 
+  }, []); 
+
   useEffect(() => {
     const newChartData = {
       ...chartData.options,
@@ -82,7 +98,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
       }
     };
 
-    // do not load chart when loading
+   
     if (!isLoading) {
       ApexCharts.exec(`bar-chart`, 'updateOptions', newChartData);
     }
@@ -100,15 +116,17 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Total Growth</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h3">$2,324.00</Typography>
+                      <Typography variant="h3">Sales Report</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
+                  <TextField
+                    id="standard-select-currency"
+                    select
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                  >
                     {status.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}

@@ -5,9 +5,12 @@ import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 // project imports
+import TotalProduct from './TotalProduct';
+
 import EarningCard from './EarningCard';
-import PopularCard from './PopularCard';
-import TotalOrderLineChartCard from './TotalOrderLineChartCard';
+import PieAnimation from './PopularCard';
+
+import TotalCustomer from './TotalCustomer';
 // import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 //import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
@@ -19,6 +22,7 @@ import AppConversionRates from './AppConversionCard';
 import AppCurrentVisits from './AppCurrentVisitCard';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import TotalCompany from '../TotalCompany';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
@@ -53,13 +57,13 @@ const Dashboard = () => {
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           <Grid item lg={3} md={6} sm={6} xs={12}>
-            <TotalOrderLineChartCard isLoading={isLoading} />
+            <TotalCustomer isLoading={isLoading} />
           </Grid>
           <Grid item lg={3} md={6} sm={6} xs={12}>
-            <EarningCard isLoading={isLoading} />
+            <TotalProduct isLoading={isLoading} />
           </Grid>
           <Grid item sm={6} xs={12} md={6} lg={3}>
-            <TotalOrderLineChartCard isLoading={isLoading} />
+            <TotalCompany isLoading={isLoading} />
           </Grid>
 
           <Grid item sm={6} xs={12} md={6} lg={3}>
@@ -69,11 +73,15 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={8}>
-            <TotalGrowthBarChart isLoading={isLoading} />
+          <Grid item xs={12} md={6} lg={5}>
+          <AppTrafficBySite title="Category" list={category} />
+
           </Grid>
+          {/* <Grid item xs={12} md={8}>
+            <TotalGrowthBarChart isLoading={isLoading} />
+          </Grid> */}
           <Grid item xs={12} md={4}>
-            <PopularCard isLoading={isLoading} />
+            <PieAnimation isLoading={isLoading} />
           </Grid>
         </Grid>
       </Grid>
@@ -113,11 +121,8 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={6} lg={5}>
-          <AppTrafficBySite title="Category" list={category} />
-
-          </Grid>
-          <Grid item xs={12} md={7}>
+          
+          {/* <Grid item xs={12} md={7}>
             <AppTasks
               title="Benefits"
               list={[
@@ -127,7 +132,7 @@ const Dashboard = () => {
                 
               ]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </Grid>

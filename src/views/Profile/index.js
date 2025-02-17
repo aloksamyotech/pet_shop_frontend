@@ -5,9 +5,26 @@ import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
+import { urls } from 'views/Api/constant';
+import { getApi } from 'views/Api/comman';
+import { useEffect } from 'react';
 
 const User = ({ open, handleClose }) => {
   const navigate = useNavigate();
+
+  const [profile,setProfile] = useState()
+   const fetchProfile = async () => {
+      const response = await getApi(urls.profile.get);
+      setProfile(response);
+    };
+
+    console.log("data;;;;;;;;;;;;;;;;;",profile)
+  
+    useEffect(() => {
+      fetchProfile();
+    }, []);
+  
 
   const handleClick = () => {
     navigate('/dashboard/default');
