@@ -85,9 +85,7 @@ const EarningCard = ({ isLoading }) => {
               <Grid item>
                 <Grid container justifyContent="space-between">
                   {/* You can add additional UI here if needed */}
-                </Grid>
-              </Grid>
-              <Grid item>
+                </Grid>chat           </Grid>              <Grid item>
                 <Grid container alignItems="center">
                   {/* You can add any additional content here */}
                 </Grid>

@@ -34,7 +34,7 @@ const Customer = () => {
 
   const fetchCustomerCount = async () => {
     const response = await getApi(urls.customer.getCount);
-  console.log("priti____________________--",response)
+ 
   };
 
   useEffect(() => {
