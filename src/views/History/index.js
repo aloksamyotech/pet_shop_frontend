@@ -102,7 +102,7 @@ const History = () => {
                 onClick={handleClick} 
               />
               <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black' }}>
-                Product-Management
+                History
               </Typography>
             </Breadcrumbs>
           </Box>

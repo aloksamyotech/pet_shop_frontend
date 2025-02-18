@@ -11,8 +11,7 @@ import EarningCard from './EarningCard';
 import PieAnimation from './PopularCard';
 
 import TotalCustomer from './TotalCustomer';
-// import TotalIncomeDarkCard from './TotalIncomeDarkCard';
-//import TotalIncomeLightCard from './TotalIncomeLightCard';
+
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 import AppTrafficBySite from './TrafficBySiteCard';
@@ -28,29 +27,24 @@ import TotalCompany from '../TotalCompany';
 const Dashboard = () => {
   const theme = useTheme();
   const [isLoading, setLoading] = useState(true);
-  const [category,setCategory] = useState([])
+  const [category, setCategory] = useState([]);
 
+  const fetchCategories = async () => {
+    try {
+      const response = await getApi(urls.category.get);
+      setCategory(response?.data?.data || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
-   const fetchCategories = async () => {
-      try {
-        const response = await getApi(urls.category.get);
-        setCategory(response?.data?.data || []);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchCategories();
+      setLoading(false);
     };
-
-
-
-    useEffect(() => {
-      const fetchData = async () => {
-        await fetchCategories();
-        setLoading(false);
-      };
-      fetchData();
-    }, []);
-    
-
+    fetchData();
+  }, []);
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -73,67 +67,19 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={6} lg={5}>
-          <AppTrafficBySite title="Category" list={category} />
-
-          </Grid>
-          {/* <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8}>
             <TotalGrowthBarChart isLoading={isLoading} />
-          </Grid> */}
+          </Grid>
           <Grid item xs={12} md={4}>
             <PieAnimation isLoading={isLoading} />
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Grid container spacing={gridSpacing}>
-          {/* <Grid item xs={12} md={6} lg={6}>
-            <AppConversionRates
-              title="Category"
-              subheader="than last year"
-              chartData={[
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 }
-              ]}
-            />
-          </Grid> */}
-          {/* <Grid item xs={12} md={4} lg={6}>
-            <AppCurrentVisits
-              title="Category"
-              chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 }
-              ]}
-              chartColors={[theme.palette.primary.main, theme.palette.info.main, theme.palette.warning.main, theme.palette.error.main]}
-            />
-          </Grid> */}
-        </Grid>
+        <Grid container spacing={gridSpacing}></Grid>
       </Grid>
       <Grid item xs={12}>
-        <Grid container spacing={gridSpacing}>
-          
-          {/* <Grid item xs={12} md={7}>
-            <AppTasks
-              title="Benefits"
-              list={[
-                { id: '1', label: 'Quality Products & Variety' },
-                { id: '2', label: 'Healthy & Well-Cared-for Pets ' },
-                { id: '3', label: 'Excellent Customer Service' },
-                
-              ]}
-            />
-          </Grid> */}
-        </Grid>
+        <Grid container spacing={gridSpacing}></Grid>
       </Grid>
     </Grid>
   );

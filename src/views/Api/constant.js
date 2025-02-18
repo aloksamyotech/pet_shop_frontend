@@ -55,7 +55,9 @@ purchase: {
         create : base + '/order/save',
         get: base + '/order/fetch',
         getCount: base + '/order/count',
-        getTotalAmount : base + '/order/TotalSales'
+        getTotalAmount : base + '/order/totalSales',
+        getTotalQuantity: base + '/order/totalQuantity'
+
     },
 
     invoice :{
