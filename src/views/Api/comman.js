@@ -56,10 +56,10 @@ export const getApi = async (url, params = {}, headers = {}) => {
 };
 export const updateApi = async (url, data, headers = {}) => {
   try {
-    // Check if the data is FormData (i.e., for file uploads)
+   
     const isFormData = data instanceof FormData;
     const defaultHeaders = {
-      // Do not set Content-Type header for FormData
+      
       ...headers,
       ...(isFormData ? {} : { 'Content-Type': 'application/json' })
     };
@@ -73,10 +73,10 @@ export const updateApi = async (url, data, headers = {}) => {
 
 export const updateApiFormData= async (url, data, headers = {}) => {
   try {
-    // Check if the data is FormData (i.e., for file uploads)
+   
     const isFormData = data instanceof FormData;
     const defaultHeaders = {
-      // Do not set Content-Type header for FormData
+     
       ...headers,
       ...(isFormData ? {} : {  'Content-Type': 'multipart/form-data' })
     };

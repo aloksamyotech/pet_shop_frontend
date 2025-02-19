@@ -155,11 +155,15 @@ const AddFood = () => {
   });
 
   useEffect(() => {
-    fetchCategory();
-    fetchProduct();
-    fetchCustomer();
-    fetchPurchase();
+    const fetchData = async () => {
+      await fetchCategory();
+      await fetchProduct();
+      await fetchCustomer();
+      await fetchPurchase();
+    };
+    fetchData();
   }, []);
+  
 
   const handleClick = () => {
     navigate('/dashboard/default');

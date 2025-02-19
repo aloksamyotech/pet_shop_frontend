@@ -30,8 +30,16 @@ const Customer = () => {
    setCustomer(response?.data?.data);
   };
 
+
+
+  const fetchCustomerCount = async () => {
+    const response = await getApi(urls.customer.getCount);
+ 
+  };
+
   useEffect(() => {
     fetchCustomer();
+    fetchCustomerCount();
   }, []);
 
   const handleView = (customerData) => {
