@@ -24,10 +24,11 @@ const ProductAdd = (props) => {
   // -----------  validationSchema
   const validationSchema = yup.object({
     companyName: yup
-      .string()
-      .required('Company Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters')
-      .max(20 , 'company Name cannot be more then 10'),
+  .string()
+  .required('Company Name is required')
+  .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters and spaces')
+  .max(20, 'Company Name cannot be more than 20 characters'),
+
 
     address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long')
     .max(50 , 'company Name cannot be more then 50'),
@@ -87,9 +88,7 @@ const ProductAdd = (props) => {
         <DialogContent dividers>
           <form>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            
-
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+             <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Company Name</FormLabel>
                   <TextField

@@ -92,19 +92,35 @@ const Checkout = () => {
 
         <Grid container spacing={2} direction="column">
           <Box sx={{ backgroundColor: 'white', borderRadius: '10px', ml: '30px' }}>
-            <TabList indicatorColor="none" onChange={(event, newValue) => setTabValue(newValue)}>
-              <Tab value="1" sx={{ fontWeight: 'bold' }} label={<Box display="flex" alignItems="center"><ShoppingCartIcon sx={{ fontSize: '20px', marginRight: '5px' }} /> Sales</Box>} />
-              <Tab value="2" label={<Box display="flex" alignItems="center"><InventoryIcon sx={{ fontSize: '20px', marginRight: '5px' }} /> Purchase</Box>} />
-              <Box>
-             <Select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <MenuItem value="daily">Daily</MenuItem>
-              <MenuItem value="weekly">Weekly</MenuItem>
-              <MenuItem value="monthly">Monthly</MenuItem>
-            </Select> 
-         
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+       <TabList indicatorColor="none" onChange={(event, newValue) => setTabValue(newValue)}>
+    <Tab
+      value="1"
+      sx={{ fontWeight: 'bold' }}
+      label={
+        <Box display="flex" alignItems="center">
+          <ShoppingCartIcon sx={{ fontSize: '20px', marginRight: '5px' }} /> Sales
         </Box>
+      }
+    />
+    <Tab
+      value="2"
+      label={
+        <Box display="flex" alignItems="center">
+          <InventoryIcon sx={{ fontSize: '20px', marginRight: '5px' }} /> Purchase
+        </Box>
+      }
+    />
+  </TabList>
 
-            </TabList>
+  
+     <Select value={filter} onChange={(e) => setFilter(e.target.value)} sx={{ marginLeft: 'auto', mt:'10px' , mr:'10px' }}>
+    <MenuItem value="daily">Daily</MenuItem>
+    <MenuItem value="weekly">Weekly</MenuItem>
+    <MenuItem value="monthly">Monthly</MenuItem>
+     </Select>
+      </Box>
+
 
           
             <TabPanel value='1'>
