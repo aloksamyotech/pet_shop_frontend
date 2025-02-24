@@ -76,7 +76,7 @@ const Lead = () => {
       <AddLead open={openAdd} handleClose={() => setOpenAdd(false)} fetchProduct={fetchProducts} />
 
       
-      <Stack direction="row" alignItems="center" mb={3}>
+      <Stack direction="row" alignItems="center" mb={3}  backgroundColor="#fff" padding='10px'>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <HomeIcon sx={{ color: '#2067db', cursor: 'pointer' }} onClick={handleClick} />
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Product Management</Typography>
