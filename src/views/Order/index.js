@@ -102,10 +102,10 @@ const Checkout = () => {
     };
 
     try {
-      await postApi(urls.order.create, orderData);
+      const response = await postApi(urls.order.create, orderData);
+      const Data = response.data.data
       setCartItems([]);
-      console.log("data------------order",cartItems)
-      navigate('/dashboard/ProductType', { state: { cartItems, selectedCustomer } });
+     navigate('/dashboard/ProductType', { state: {Data} });
 
     } catch (error) {
       console.error("Error creating invoice:", error);

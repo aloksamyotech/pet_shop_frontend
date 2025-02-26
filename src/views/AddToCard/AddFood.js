@@ -67,6 +67,8 @@ const AddFood = () => {
     setSelectedCustomer(customerDetails);
   };
 
+
+  const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
   const handleDecrementQuantity = (_id) => {
     setCartItems((prevCart) =>
       prevCart.map((cartItem) =>
@@ -112,7 +114,8 @@ const AddFood = () => {
     );
   };
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
+ 
+
 
   const deleteAll = () => {
     setCartItems([]);
@@ -152,8 +155,10 @@ const AddFood = () => {
   const filterProduct = productData.filter((product) => {
     const matchCategory = selectedCategory ? product.categoryId === selectedCategory : true;
     const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
-    return matchCategory && matchSearch;
+    const isAvailable = product.quantity > 0; 
+    return matchCategory && matchSearch && isAvailable;
   });
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -400,7 +405,7 @@ const AddFood = () => {
                       }}
                     >
                       <Typography variant="h6" color="secondary">
-                        Total: $.{totalPrice.toFixed(2)}
+                        Total: Rs.{totalPrice.toFixed(2)}
                       </Typography>
                       <Button
                         sx={{

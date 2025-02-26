@@ -19,7 +19,7 @@ const User = ({ open, handleClose }) => {
       setProfile(response);
     };
 
-    console.log("data;;;;;;;;;;;;;;;;;",profile)
+    
   
     useEffect(() => {
       fetchProfile();

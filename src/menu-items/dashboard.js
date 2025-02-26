@@ -70,14 +70,7 @@ const dashboard = {
       icon: icons.ShoppingCartIcon,
       breadcrumbs: false
     },
-    {
-      id: '10',
-      title: 'Order',
-      type: 'item',
-      url: '/dashboard/order',
-      icon: icons.SummarizeIcon,
-      breadcrumbs: false
-    },
+    
      {
       id: '02',
       title: 'Product',
@@ -142,7 +135,7 @@ const dashboard = {
 
     {
       id: '03',
-      title: 'History',
+      title: ' Order History',
       type: 'item',
       url: '/dashboard/history',
       icon: icons.HistoryIcon,

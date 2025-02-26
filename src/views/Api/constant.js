@@ -69,7 +69,12 @@ purchase: {
     profile :{
         create : base + '/profile/save',
         get: base + '/profile/fetch',
+},
+login :{
+
+    create : base +'/user/login'
 }
+
 
 
     }

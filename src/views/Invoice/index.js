@@ -21,11 +21,8 @@ import {
 } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
-
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Iconify from '../../ui-component/iconify';
-
-import AddPolicy from './AddProductType';
 import { fontSize } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { Description } from '@mui/icons-material';
@@ -34,26 +31,25 @@ import { urls } from 'views/Api/constant';
 import { getApi } from 'views/Api/comman';
 import { useLocation } from 'react-router-dom';
 
-const PolicyManagement = () => {
+const Invoice = () => {
   const location = useLocation();
-  const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
-  const selectedCustomer = location.state?.selectedCustomer || null;
+  const Data = location.state?.Data || null;
   const [orderDate, setOrderDate] = useState();
   const navigate = useNavigate();
-
- const totalPrice = cartItems.reduce((acc, item) => acc + item?.price * item?.quantity, 0);
+  const AllData = Data;
+  const Product = AllData.products
+ 
   const home = () =>{
     navigate('/');
   }
-
 
   const fetchOrderDate = async () => {
     const response = await getApi(urls.order.get);
     setOrderDate(response.data.data[0].createdAt);
   };
-  
-  useEffect(() => {
+ useEffect(() => {
    fetchOrderDate();
+   
   }, []);
   
 
@@ -168,7 +164,7 @@ const PolicyManagement = () => {
               />
               <Box>
                 <Typography sx={{ color: '#fff' }}>
-                  <strong>Invoice Id:</strong> pet-2765
+                  <strong>Invoice Id:</strong>{AllData.orderId}
                 </Typography>
                 <Typography sx={{ color: '#fff' }}>
                   <strong>Date:</strong> {formattedDate}
@@ -200,16 +196,13 @@ const PolicyManagement = () => {
             <Typography sx={{ fontWeight: 'bold', mb: 1 }}>Customer Information</Typography>
             <Box sx={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Name:</strong> {selectedCustomer?.firstName} {selectedCustomer?.lastName}
+                <strong>Name:</strong>{AllData.customerName}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Email:</strong> {selectedCustomer?.email}
+                <strong>Email:</strong> {AllData.customerEmail}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Phone Number:</strong> {selectedCustomer?.phoneNumber}
-              </Typography>
-              <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Address:</strong> {selectedCustomer?.address}
+                <strong>Phone Number:</strong> {AllData.customerPhone}
               </Typography>
             </Box>
           </Box>
@@ -224,7 +217,7 @@ const PolicyManagement = () => {
               margin: 0
             }}
           >
-            {Array.isArray(cartItems) && (
+            {Array.isArray(Product) && (
               <TableContainer component={Paper}>
                 <Table>
                   <TableHead sx={{ backgroundColor: '#9053bc' }}>
@@ -237,7 +230,7 @@ const PolicyManagement = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {cartItems.map((item, index) => (
+                    {Product.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell>{item.productName}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
@@ -252,7 +245,7 @@ const PolicyManagement = () => {
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'end', padding: '10px' }}>
-              <Typography sx={{ fontWeight: 'bold' }}>Total: Rs.{totalPrice.toFixed(2)}</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>Total: Rs.{AllData.totalAmount}</Typography>
             </Box>
           </Box>
         </Box>
@@ -283,4 +276,4 @@ const PolicyManagement = () => {
   );
 };
 
-export default PolicyManagement;
+export default Invoice;
