@@ -1,262 +1,63 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import {
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField
-} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions } from '@mui/material';
+import { updateApi } from 'views/Api/comman';
 
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import Typography from '@mui/material/Typography';
-import ClearIcon from '@mui/icons-material/Clear';
-import { toast } from 'react-toastify';
-
-const AddTask = ({ open, handleClose }) => {
-  const validationSchema = yup.object({
-    subject: yup.string().required('Subject is required'),
-    status: yup.string().required('Status is required'),
-    startDate: yup.string().required('Start Date is required'),
-    endDate: yup.string().required('End date is required'),
-    priority: yup.string().required('Priority is required'),
-
-    relatedTo: yup.string().required('Related To is required')
+const AddTask = ({ open, handleClose, userData }) => {
+  const [formData, setFormData] = useState({
+    firstname: '',
+    email: '',
+    company: '',
+    phoneNumber: ''
   });
 
-  const initialValues = {
-    subject: '',
-    status: '',
-    startDate: '',
-    endDate: '',
-    relatedTo: '',
-    assignTo: '',
-    backgroundColor: '',
-    textColor: '',
-    priority: '',
-    note: ''
+  useEffect(() => {
+    if (userData) {
+      setFormData(userData);
+    }
+  }, [userData]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log('taskValues', values);
-      handleClose();
-      formik.resetForm();
-      toast.success('Task Add successfully');
-      window.location.reload();
-    }
-  });
+  const handleSave = async () => {
+    try {
+      const response = await updateApi('/user/update', formData); // Call update API
+      if (response.success) {
+        localStorage.setItem('name', formData.firstname);
+        localStorage.setItem('email', formData.email);
+        localStorage.setItem('company', formData.company);
+        localStorage.setItem('phoneNumber', formData.phoneNumber);
 
-  console.log('errror', formik.errors);
+        alert('User updated successfully!');
+        handleClose();
+      } else {
+        alert('Update failed!');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      alert('Something went wrong!');
+    }
+  };
 
   return (
-    <div>
-      <Dialog open={open} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
-        <DialogTitle
-          id="scroll-dialog-title"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
-          <Typography variant="h6">Create Task </Typography>
-          <Typography>
-            <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
-          </Typography>
-        </DialogTitle>
-
-        <DialogContent dividers>
-          <form>
-            <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Subject</FormLabel>
-                  <TextField
-                    id="subject"
-                    name="subject"
-                    label=""
-                    fullWidth
-                    size="small"
-                    value={formik.values.subject}
-                    onChange={formik.handleChange}
-                    error={formik.touched.subject && Boolean(formik.errors.subject)}
-                    helperText={formik.touched.subject && formik.errors.subject}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormControl>
-                    <FormLabel>Related To</FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="relatedTo"
-                      value={formik.values.relatedTo}
-                      error={formik.touched.relatedTo && Boolean(formik.errors.relatedTo)}
-                      onChange={formik.handleChange}
-                    >
-                      <FormControlLabel value="Lead" control={<Radio />} label="Lead" />
-                      <FormControlLabel value="Contact" control={<Radio />} label="Contact" />
-                    </RadioGroup>
-                    <FormHelperText error={formik.touched.relatedTo && Boolean(formik.errors.relatedTo)}>
-                      {formik.touched.relatedTo && formik.errors.relatedTo}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormLabel>Status</FormLabel>
-                  <FormControl fullWidth>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id=""
-                      name="status"
-                      label=""
-                      size="small"
-                      value={formik.values.status || null}
-                      onChange={formik.handleChange}
-                      error={formik.touched.status && Boolean(formik.errors.status)}
-                    >
-                      <MenuItem value="Note Started">Note Started</MenuItem>
-                      <MenuItem value="In Progress">In Progress</MenuItem>
-                      <MenuItem value="Completed">Completed</MenuItem>
-                      <MenuItem value="Pending Input">Pending Input</MenuItem>
-                      <MenuItem value="Deferred">Deferred</MenuItem>
-                    </Select>
-                    <FormHelperText error={formik.touched.status && Boolean(formik.errors.status)}>
-                      {formik.touched.status && formik.errors.status}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <FormLabel>Priority</FormLabel>
-                  <FormControl fullWidth>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id=""
-                      name="priority"
-                      label=""
-                      size="small"
-                      value={formik.values.priority || null}
-                      onChange={formik.handleChange}
-                      error={formik.touched.priority && Boolean(formik.errors.priority)}
-                    >
-                      <MenuItem value="High">High</MenuItem>
-                      <MenuItem value="Medium">Medium</MenuItem>
-                      <MenuItem value="Low">Low</MenuItem>
-                    </Select>
-                    <FormHelperText error={formik.touched.priority && Boolean(formik.errors.priority)}>
-                      {formik.touched.priority && formik.errors.priority}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Start Date</FormLabel>
-                  <TextField
-                    name="startDate"
-                    type={'datetime-local'}
-                    size="small"
-                    fullWidth
-                    value={formik.values.startDate}
-                    onChange={formik.handleChange}
-                    error={formik.touched.startDate && Boolean(formik.errors.startDate)}
-                    helperText={formik.touched.startDate && formik.errors.startDate}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>End Date</FormLabel>
-                  <TextField
-                    name="endDate"
-                    type={'datetime-local'}
-                    size="small"
-                    fullWidth
-                    value={formik.values.endDate}
-                    onChange={formik.handleChange}
-                    error={formik.touched.endDate && Boolean(formik.errors.endDate)}
-                    helperText={formik.touched.endDate && formik.errors.endDate}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Background Color</FormLabel>
-                  <TextField
-                    id=""
-                    name="backgroundColor"
-                    label=""
-                    type="color"
-                    size="small"
-                    fullWidth
-                    value={formik.values.backgroundColor}
-                    onChange={formik.handleChange}
-                    error={formik.touched.backgroundColor && Boolean(formik.errors.backgroundColor)}
-                    helperText={formik.touched.backgroundColor && formik.errors.backgroundColor}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Text Color</FormLabel>
-                  <TextField
-                    id=""
-                    name="textColor"
-                    label=""
-                    type="color"
-                    size="small"
-                    fullWidth
-                    value={formik.values.textColor}
-                    onChange={formik.handleChange}
-                    error={formik.touched.textColor && Boolean(formik.errors.textColor)}
-                    helperText={formik.touched.textColor && formik.errors.textColor}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Note</FormLabel>
-                  <TextField
-                    id="Note"
-                    name="note"
-                    label=""
-                    fullWidth
-                    rows={4}
-                    multiline
-                    value={formik.values.note}
-                    onChange={formik.handleChange}
-                    error={formik.touched.note && Boolean(formik.errors.note)}
-                    helperText={formik.touched.note && formik.errors.note}
-                  />
-                </Grid>
-              </Grid>
-            </DialogContentText>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button type="submit" variant="contained" onClick={formik.handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
-            Save
-          </Button>
-          <Button
-            type="reset"
-            variant="outlined"
-            style={{ textTransform: 'capitalize' }}
-            onClick={() => {
-              formik.resetForm();
-              handleClose();
-            }}
-            color="error"
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog open={open} onClose={handleClose} fullWidth>
+      <DialogTitle>Edit User Details</DialogTitle>
+      <DialogContent>
+        <TextField fullWidth margin="dense" label="First Name" name="firstname" value={formData.firstname} onChange={handleChange} />
+        <TextField fullWidth margin="dense" label="Email" name="email" value={formData.email} onChange={handleChange} />
+        <TextField fullWidth margin="dense" label="Company" name="company" value={formData.company} onChange={handleChange} />
+        <TextField fullWidth margin="dense" label="Phone Number" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary">
+          Cancel
+        </Button>
+        <Button onClick={handleSave} color="primary" variant="contained">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

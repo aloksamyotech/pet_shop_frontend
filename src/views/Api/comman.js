@@ -1,18 +1,41 @@
 import axios from 'axios';
+
+
 export const postApi = async (url, data, headers = {}) => {
-    try {
-        const defaultHeaders = {
-            ...headers,
-            'Content-Type': 'application/json',
-        };
-        const response = await axios.post(url, data, { headers: defaultHeaders });
-        return response.data;
-    } catch (error) {
-        console.error('API Error:', error.response || error.message);
-        throw new Error(error.response ? error.response.data : error.message);
-    }
-  
+  try {
+      const defaultHeaders = {
+          'Content-Type': 'application/json',
+          ...headers
+      };
+      const response = await axios.post(url, data, { headers: defaultHeaders });
+      return response.data;
+  } catch (error) {
+      console.error('API Error:', error.response || error.message);
+      throw new Error(error.response ? error.response.data : error.message);
+  }
 };
+
+
+export const postApiLogin = async (url, data, headers = {}) => {
+  try {
+    const response = await axios.post(url, data, {
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+     });
+
+    return response.data; 
+  } catch (error) {
+    console.error("API Error:", error.response || error.message);
+    throw new Error(error.response ? error.response.data : error.message);
+  }
+};
+
+
+
+
+
 export const postApiImage = async (url, data, headers = {}) => {
   try {
     const defaultHeaders = {

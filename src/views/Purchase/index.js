@@ -76,13 +76,13 @@ const Purchase = () => {
       field: 'productName',
       headerName: 'Product',
       flex: 1,
-      valueGetter: (params) => params.row.productId?.productName || 'N/A'
+      valueGetter: (params) => params.row.productName?.[0].productName || 'N/A'
     },
     {
       field: 'companyName',
       headerName: 'Company',
       flex: 1,
-      valueGetter: (params) => params.row.companyId?.companyName || 'N/A'
+      valueGetter: (params) => params.row.CompanyName?.[0].companyName || 'N/A'
     },
     {
       field: 'totalPrice',
@@ -109,17 +109,13 @@ const Purchase = () => {
           size="small"
           sx={{
             backgroundColor:
-              params.value === 'Success' ? '#7011bc' :
-              params.value === 'Pending' ? '#12aae8' :
-              params.value === 'Failed' ? '#FF5733' : '',
+              params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : '',
             width: '80px',
             textAlign: 'center',
             padding: '2px',
             '&:hover': {
               backgroundColor:
-                params.value === 'Success' ? '#7011bc' :
-                params.value === 'Pending' ? '#12aae8' :
-                params.value === 'Failed' ? '#FF5733' : ''
+                params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : ''
             }
           }}
         >
@@ -190,9 +186,10 @@ const Purchase = () => {
             </Stack>
           </Box>
         </Stack>
+
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-45px' }}>
+            <Card style={{ height: '600px', marginTop: '-25px' }}>
               <DataGrid rows={purchase} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>

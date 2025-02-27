@@ -17,7 +17,7 @@ import { Formik } from "formik";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { urls } from "views/Api/constant";
-import { postApi } from "views/Api/comman";
+import { postApiLogin } from "views/Api/comman";
 
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
@@ -66,17 +66,40 @@ const FirebaseLogin = ({ ...others }) => {
             email: Yup.string().email("Invalid email").required("Email is required"),
             password: Yup.string().min(6, "Password too short").required("Password is required"),
           })}
+
+
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             try {
               console.log("Login values:", values);
-              await postApi(urls.login.create, values);
+              const response = await postApiLogin(urls.login.create, values);
+          
+              console.log("Login Response:", response.data.user.firstname);
+          
+             // ✅ Get access token from response body (not headers)
+              const accessToken = response.data.accessToken;
+          
+              if (accessToken) {
+                console.log("Token found, redirecting to dashboard...");
+                localStorage.setItem("accessToken", accessToken); 
+                 localStorage.setItem("name",  response.data.user.firstname); 
+                 localStorage.setItem("email",  response.data.user.email);
+                 localStorage.setItem("company",  response.data.user.company);  
+                 localStorage.setItem("phoneNumber",  response.data.user.phoneNumber); 
+            
+                window.location.href = "/";
+              } else {
+                throw new Error("Access token not found");
+              }
+          
               setSubmitting(false);
             } catch (error) {
-              console.error("Login error:", error);
               setErrors({ submit: "Login failed. Please try again." });
               setSubmitting(false);
             }
           }}
+          
+          
+          
         >
           {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
             <form noValidate onSubmit={handleSubmit} {...others}>
