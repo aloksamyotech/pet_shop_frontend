@@ -1,34 +1,42 @@
 import { useState, useEffect } from 'react';
-
-import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, Link ,IconButton} from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, IconButton } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Iconify from '../../ui-component/iconify';
-import ProductAdd from './PrurchaseAdd.js';
-import { fontSize } from '@mui/system';
+import PurchaseForm from './PurchaseForm';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { getApi,deleteApi } from 'views/Api/comman.js';
+import { getApi, deleteApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from 'sweetalert2';
 import ViewPurchase from './ViewPurchase';
-import AddEdit from './Edit';
-
 
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
-  const [selectedPurchase,setSelectedPurchase] = useState(null)
-  const [openView,setOpenView] = useState(false)
-  const [openEdit,setOpenEdit] = useState(false)
-  const [purchaseUpdated,setPurchaseUpdated] = useState(null)
+  const [selectedPurchase, setSelectedPurchase] = useState(null);
+  const [openView, setOpenView] = useState(false);
+
+  const [purchaseUpdated, setPurchaseUpdated] = useState(null);
+  const [openAdd, setOpenAdd] = useState(false);
 
   const fetchPurchase = async () => {
-    const response = await getApi(urls.purchase.get);
-    setPurchase(response?.data?.data);
+    try {
+      const response = await getApi(urls.purchase.get);
+      setPurchase(response?.data?.data || []);
+    } catch (error) {
+      console.error('Error fetching purchase data:', error);
+    }
   };
+
+  useEffect(() => {
+    fetchPurchase();
+  }, []);
+
+  const navigate = useNavigate();
+  const home = () => navigate('/dashboard/default');
 
   const handleView = (purchase) => {
     setSelectedPurchase(purchase);
@@ -37,69 +45,49 @@ const Purchase = () => {
 
   const handleUpdate = (purchase) => {
     setPurchaseUpdated(purchase);
-    setOpenEdit(true);
+    setOpenAdd(true);
   };
 
-
-   const handleDelete = (id) => {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to remove this category?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, remove it!',
-        cancelButtonText: 'Cancel'
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await deleteApi(urls.purchase.delete.replace(':id', id));
-            setPurchase((prevPurchase) => prevPurchase.filter((cat) => cat._id !== id));
-            Swal.fire('Removed!', 'The category has been deleted.', 'success');
-           
-          } catch (error) {
-            Swal.fire('Error!', 'Failed to delete category.', 'error');
-            
-          }
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to remove this purchase?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteApi(urls.purchase.delete.replace(':id', id));
+          setPurchase((prevPurchase) => prevPurchase.filter((p) => p._id !== id));
+          Swal.fire('Removed!', 'The purchase has been deleted.', 'success');
+        } catch (error) {
+          Swal.fire('Error!', 'Failed to delete purchase.', 'error');
         }
-      });
-    };
-
-  useEffect(() => {
-    fetchPurchase();
-  }, []);
-
-  const navigate = useNavigate();
-
-  const home = () => {
-    navigate('/dashboard/default');
+      }
+    });
   };
 
-  const [openAdd, setOpenAdd] = useState(false);
   const columns = [
     {
       field: 'productName',
       headerName: 'Product',
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.productName?.[0].productName;
-      }
+      valueGetter: (params) => params.row.productId?.productName || 'N/A'
     },
     {
       field: 'companyName',
       headerName: 'Company',
       flex: 1,
-      valueGetter: (params) => {
-      return params.row.CompanyName?.[0].companyName;
-      }
+      valueGetter: (params) => params.row.companyId?.companyName || 'N/A'
     },
-
     {
       field: 'totalPrice',
       headerName: 'Amount',
-      flex: 1,
-      editable: false
+      flex: 1
     },
     {
       field: 'discount',
@@ -118,17 +106,20 @@ const Purchase = () => {
       renderCell: (params) => (
         <Button
           variant="contained"
-            size='small'
+          size="small"
           sx={{
             backgroundColor:
-              params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : '',
-              width: '50px',
+              params.value === 'Success' ? '#7011bc' :
+              params.value === 'Pending' ? '#12aae8' :
+              params.value === 'Failed' ? '#FF5733' : '',
+            width: '80px',
             textAlign: 'center',
-            padding: '2px ',
-
+            padding: '2px',
             '&:hover': {
               backgroundColor:
-                params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : ''
+                params.value === 'Success' ? '#7011bc' :
+                params.value === 'Pending' ? '#12aae8' :
+                params.value === 'Failed' ? '#FF5733' : ''
             }
           }}
         >
@@ -144,10 +135,10 @@ const Purchase = () => {
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color:'#00bbff'}} />
+            <VisibilityIcon sx={{ color: '#00bbff' }} />
           </IconButton>
-        <IconButton onClick={() => handleUpdate(params.row)}>
-            <EditIcon sx={{ color:'#5f0497' }} />
+          <IconButton onClick={() => handleUpdate(params.row)}>
+            <EditIcon sx={{ color: '#5f0497' }} />
           </IconButton>
           <IconButton onClick={() => handleDelete(params.row._id)}>
             <DeleteIcon sx={{ color: '#d32f2f' }} />
@@ -156,13 +147,19 @@ const Purchase = () => {
       )
     }
   ];
-  const handleOpenAdd = () => setOpenAdd(true);
-  const handleCloseAdd = () => setOpenAdd(false);
+
   return (
     <>
-    <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchPurchase={fetchPurchase} purchase ={purchaseUpdated} />
-      <ProductAdd open={openAdd} handleClose={handleCloseAdd} fetchPurchase={fetchPurchase} />
-      <ViewPurchase  open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} />
+      <PurchaseForm
+        open={openAdd}
+        handleClose={() => {
+          setOpenAdd(false);
+          setPurchaseUpdated(null);
+        }}
+        purchase={purchaseUpdated}
+        fetchPurchase={fetchPurchase}
+      />
+      <ViewPurchase open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} />
       <Grid>
         <Stack direction="row" alignItems="center" mb={5}>
           <Box
@@ -179,31 +176,24 @@ const Purchase = () => {
             }}
           >
             <Breadcrumbs aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#2067db' }}  onClick={home} />
-              <Typography variant="h5" sx={{ fontWeight: '600px', color: 'black' }}>
+              <HomeIcon sx={{ color: '#2067db' }} onClick={home} />
+              <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
                 Purchase-Information
               </Typography>
             </Breadcrumbs>
-
             <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setOpenAdd(true)} size="small">
                   New Purchase
                 </Button>
               </Card>
             </Stack>
           </Box>
         </Stack>
-        |
         <TableStyle>
           <Box width="100%">
             <Card style={{ height: '600px', marginTop: '-45px' }}>
-              <DataGrid
-                rows={purchase}
-                columns={columns}
-                getRowId={(row) => row._id}
-               
-              />
+              <DataGrid rows={purchase} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>
         </TableStyle>

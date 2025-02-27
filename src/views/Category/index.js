@@ -1,30 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton,Grid } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Grid } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import HomeIcon from '@mui/icons-material/Home';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useNavigate } from 'react-router-dom';
 import Iconify from 'ui-component/iconify';
-import AddDetail from './addCategory.js';
 import ViewCategory from './viewCategory.js';
 import { urls } from 'views/Api/constant.js';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import AddEdit from './Edit.js';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import CategoryForm from './CategoryForm';
 
 const Customer = () => {
   const navigate = useNavigate();
-  const [openAdd, setOpenAdd] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
   const [category, setCategory] = useState([]);
   const [openView, setOpenView] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryUpdated, setCategoryUpdated] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
 
   const home = () => navigate('/');
 
@@ -62,19 +59,16 @@ const Customer = () => {
           await deleteApi(urls.category.delete.replace(':id', id));
           setCategory((prevCategories) => prevCategories.filter((cat) => cat._id !== id));
           Swal.fire('Removed!', 'The category has been deleted.', 'success');
-         
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete category.', 'error');
-          
         }
       }
     });
   };
 
-
-  const handleUpdate = (category) => {
+  const handleOpenForm = (category = null) => {
     setCategoryUpdated(category);
-    setOpenEdit(true);
+    setOpenForm(true);
   };
 
   const columns = [
@@ -100,10 +94,10 @@ const Customer = () => {
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color:'#00bbff'}} />
+            <VisibilityIcon sx={{ color: '#00bbff' }} />
           </IconButton>
-        <IconButton onClick={() => handleUpdate(params.row)}>
-            <EditIcon sx={{ color:'#5f0497' }} />
+          <IconButton onClick={() => handleOpenForm(params.row)}>
+            <EditIcon sx={{ color: '#5f0497' }} />
           </IconButton>
           <IconButton onClick={() => handleDelete(params.row._id)}>
             <DeleteIcon sx={{ color: '#d32f2f' }} />
@@ -115,11 +109,10 @@ const Customer = () => {
 
   return (
     <>
-      <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
+      <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
       <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} />
-      <AddDetail open={openAdd} handleClose={() => setOpenAdd(false)} fetchCategories={fetchCategories} />
       <Grid>
-      <Stack direction="row" alignItems="center" mb={5}>
+        <Stack direction="row" alignItems="center" mb={5}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -139,7 +132,7 @@ const Customer = () => {
             </Breadcrumbs>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setOpenAdd(true)} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleOpenForm()} size="small">
                   New Category
                 </Button>
               </Card>
@@ -149,11 +142,7 @@ const Customer = () => {
         <TableStyle>
           <Box width="100%">
             <Card style={{ height: '600px', marginTop: '-25px' }}>
-              <DataGrid
-                rows={category}
-                columns={columns}
-                getRowId={(row) => row._id}
-              />
+              <DataGrid rows={category} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>
         </TableStyle>

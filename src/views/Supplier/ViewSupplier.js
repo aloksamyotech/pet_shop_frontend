@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box, Paper } from '@mui/material';
-import '../Category/category.css';
+
 
 const ViewCompany = ({ open, handleClose, supplier }) => {
   return (

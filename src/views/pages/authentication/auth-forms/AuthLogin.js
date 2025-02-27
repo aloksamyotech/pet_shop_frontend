@@ -1,183 +1,159 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-
-// material-ui
-import { useTheme } from '@mui/material/styles';
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useTheme } from "@mui/material/styles";
 import {
   Box,
   Button,
-  Checkbox,
-  Divider,
   FormControl,
-  FormControlLabel,
   FormHelperText,
-  Grid,
-  IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Stack,
   Typography,
-  useMediaQuery
-} from '@mui/material';
-
-// third party
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-
-// project imports
-import useScriptRef from 'hooks/useScriptRef';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-import Google from 'assets/images/icons/social-google.svg';
-
-// ============================|| FIREBASE - LOGIN ||============================ //
+  IconButton,
+} from "@mui/material";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { urls } from "views/Api/constant";
+import { postApi } from "views/Api/comman";
 
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
-  const scriptedRef = useScriptRef();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
-  const [checked, setChecked] = useState(true);
-
-  const googleHandler = async () => {
-    console.error('Login');
-  };
-
   const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (event) => event.preventDefault();
 
   return (
-    <>
-      <Grid container direction="column" justifyContent="center" spacing={2}>
-
-        <Grid item xs={12}>
-
-        </Grid>
-        <Grid item xs={12} container alignItems="center" justifyContent="center">
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1">Sign in with Email address</Typography>
-          </Box>
-        </Grid>
-      </Grid>
-
-      <Formik
-        initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
-          submit: null
-        }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
-        })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          console.log(values);
-          try {
-            if (scriptedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
-            }
-          } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
-          }
+    <Box
+      sx={{
+        minHeight: "50vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "linear-gradient(to right, #7962bf,#5332b9)",
+        padding: "20px",
+      }}
+    >
+      <Box
+        sx={{
+          width: "400px",
+          background: "rgba(255, 255, 255, 0.15)",
+          backdropFilter: "blur(10px)",
+          padding: "30px",
+          borderRadius: "15px",
+          boxShadow: "0px 4px 30px rgba(0, 0, 0, 0.2)",
+          textAlign: "center",
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit} {...others}>
-            <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-email-login"
-                type="email"
-                value={values.email}
-                name="email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                label="Email Address / Username"
-                inputProps={{}}
-              />
-              {touched.email && errors.email && (
-                <FormHelperText error id="standard-weight-helper-text-email-login">
-                  {errors.email}
-                </FormHelperText>
-              )}
-            </FormControl>
+        <Box sx={{ mb: 2 }}>
+          <img
+            src="https://marketplace.canva.com/EAGCrLxEdO8/1/0/1600w/canva-black-and-white-illustrative-pet-shop-logo-NSim_pyCK9Q.jpg"
+            alt="Login illustration"
+            style={{ width: "100px", height: "auto", borderRadius: "50%" }}
+          />
+        </Box>
+        <Typography variant="h4" sx={{ fontWeight: "bold", color: "#fff", mb: 2 }}>
+          Welcome To Pet Shop
+        </Typography>
 
-            <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password-login"
-                type={showPassword ? 'text' : 'password'}
-                value={values.password}
-                name="password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      size="large"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-                inputProps={{}}
-              />
-              {touched.password && errors.password && (
-                <FormHelperText error id="standard-weight-helper-text-password-login">
-                  {errors.password}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-              <FormControlLabel
-                control={
-                  <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
-                }
-                label="Remember me"
-              />
-              <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                Forgot Password?
-              </Typography>
-            </Stack>
-            {errors.submit && (
-              <Box sx={{ mt: 3 }}>
-                <FormHelperText error>{errors.submit}</FormHelperText>
-              </Box>
-            )}
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={Yup.object({
+            email: Yup.string().email("Invalid email").required("Email is required"),
+            password: Yup.string().min(6, "Password too short").required("Password is required"),
+          })}
+          onSubmit={async (values, { setSubmitting, setErrors }) => {
+            try {
+              console.log("Login values:", values);
+              await postApi(urls.login.create, values);
+              setSubmitting(false);
+            } catch (error) {
+              console.error("Login error:", error);
+              setErrors({ submit: "Login failed. Please try again." });
+              setSubmitting(false);
+            }
+          }}
+        >
+          {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+            <form noValidate onSubmit={handleSubmit} {...others}>
+              <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ mb: 2 }}>
+                <InputLabel>Email Address</InputLabel>
+                <OutlinedInput
+                  type="email"
+                  value={values.email}
+                  name="email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  label="Email Address"
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.2)",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                />
+                {touched.email && errors.email && <FormHelperText>{errors.email}</FormHelperText>}
+              </FormControl>
 
-            <Box sx={{ mt: 2 }}>
-              <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                  Sign in
-                </Button>
-              </AnimateButton>
-            </Box>
-          </form>
-        )}
-      </Formik>
-    </>
+              <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ mb: 2 }}>
+                <InputLabel>Password</InputLabel>
+                <OutlinedInput
+                  type={showPassword ? "text" : "password"}
+                  value={values.password}
+                  name="password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.2)",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }}
+                />
+                {touched.password && errors.password && <FormHelperText>{errors.password}</FormHelperText>}
+              </FormControl>
+
+              <Button
+                disableElevation
+                disabled={isSubmitting}
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                sx={{
+                  background: "#fff",
+                  color: "#ff758c",
+                  fontWeight: "bold",
+                  borderRadius: "25px",
+                  mt: 2,
+                  "&:hover": {
+                    background: "#ffdfdf",
+                  },
+                }}
+              >
+                Sign In
+              </Button>
+
+              {errors.submit && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {errors.submit}
+                </Typography>
+              )}
+            </form>
+          )}
+        </Formik>
+      </Box>
+    </Box>
   );
 };
 

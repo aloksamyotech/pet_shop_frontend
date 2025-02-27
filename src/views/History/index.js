@@ -13,8 +13,6 @@ const History = () => {
   const navigate = useNavigate();
 
 
- 
-
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await getApi(urls.order.get);
@@ -27,20 +25,8 @@ const History = () => {
     navigate('/dashboard/default');
   };
 
-  const handleViewInvoice = (order) => {
-  
-    navigate('/dashboard/ProductType', {
-      state: {
-        cartItems: order.products,
-        selectedCustomer: {
-          firstName: order.customerName,
-         email: order.customerEmail,
-          phoneNumber: order.customerPhone,
-          address: order.customer?.[0]?.address,
-        },
-        orderDate: new Date(order.createdAt).toLocaleDateString(),
-      }
-    });
+  const handleViewInvoice = (Data) => {
+  navigate('/dashboard/ProductType', { state: {Data} });
   };
 
   const columns = [
@@ -109,7 +95,7 @@ const History = () => {
         </Stack>
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-27px' }}>
+          <Card style={{ height: '600px', marginTop: '-25px' }}>
               <DataGrid
                 rows={product}
                 columns={columns}

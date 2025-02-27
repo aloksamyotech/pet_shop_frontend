@@ -10,7 +10,7 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const Product = Loadable(lazy(() => import('views/Product')));
 const CustomerDetail = Loadable(lazy(() => import('views/CustomerDetail')));
 const Customer = Loadable(lazy(() => import('views/Customer')));
-const ProductType = Loadable(lazy(() => import('views/ProductType')));
+const ProductType = Loadable(lazy(() => import('views/Invoice')));
 const AddToCard = Loadable(lazy(() => import('views/AddToCard/AddFood')));
 const Category = Loadable(lazy(() => import('views/Category')));
 const Profile = Loadable(lazy(() => import('views/Profile')));

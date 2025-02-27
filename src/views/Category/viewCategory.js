@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box } from '@mui/material';
-import './category.css';
+
 
 const ViewCategory = ({ open, handleClose, category }) => {
   if (!category) return null; 
