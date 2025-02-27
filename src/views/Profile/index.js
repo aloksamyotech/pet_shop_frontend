@@ -1,189 +1,152 @@
 import HomeIcon from '@mui/icons-material/Home';
-import { Stack, Button, Box, Grid, TextField, Breadcrumbs, Avatar, Typography } from '@mui/material';
-import * as yup from 'yup';
-import { useFormik } from 'formik';
+import { Stack, Button, Box, Grid, Breadcrumbs, Avatar, Typography, Divider, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
-import { urls } from 'views/Api/constant';
-import { getApi } from 'views/Api/comman';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import AddTask from './AddProfile';
 
-const User = ({ open, handleClose }) => {
+const User = () => {
   const navigate = useNavigate();
+  const [openForm, setOpenForm] = useState(false);
 
-  const [profile,setProfile] = useState()
-   const fetchProfile = async () => {
-      const response = await getApi(urls.profile.get);
-      setProfile(response);
-    };
-
-    
-  
-    useEffect(() => {
-      fetchProfile();
-    }, []);
-  
+  const storedName = localStorage.getItem('name') || '';
+  const storedEmail = localStorage.getItem('email') || '';
+  const storedCompany = localStorage.getItem('company') || '';
+  const storedPhoneNumber = localStorage.getItem('phoneNumber') || '';
 
   const handleClick = () => {
     navigate('/dashboard/default');
   };
 
-  const validationSchema = yup.object({
-    firstName: yup
-      .string()
-      .required('Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Name must only contain letters'),
-
-    phoneNumber: yup
-      .string()
-      .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
-      .required('Phone Number is required'),
-
-    email: yup.string().required('Email is required').email('Invalid email address'),
-
-    registerDate: yup
-      .date()
-      .typeError('Register date must be a valid date')
-      .required('Register date is required'),
-  });
-
-  const initialValues = {
-    firstName: '',
-    phoneNumber: '',
-    email: '',
-    registerDate: '',
+  const handleOpenAdd = () => {
+    setOpenForm(true);
   };
 
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: async (values) => {
-      console.log('Profile Values:', values);
-      handleClose();
-      formik.resetForm();
-      toast.success('Profile added successfully');
-    },
-  });
+  const handleCloseForm = () => {
+    setOpenForm(false);
+  };
 
   return (
-    <Grid>
-     
-      <Stack direction="row" mb={5} sx={{ display: 'flex', alignItems: 'center' }}>
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            height: '50px',
-            width: '100%',
-            display: 'flex',
-            borderRadius: '10px',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 25px',
-            marginTop: '-7px',
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
-            Profile
-          </Typography>
-
-          <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={2}>
-            <Breadcrumbs aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#2067db' }} fontSize="medium" onClick={handleClick} />
-              <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
-                Profile Information
-              </Typography>
-            </Breadcrumbs>
-          </Stack>
-        </Box>
-      </Stack>
-
-      <Box
-        sx={{
-          height: '500px',
-          width: '100%',
-          backgroundColor: 'white',
-          padding: '20px',
-          marginTop: '-30px',
+    <>
+      <AddTask
+        open={openForm}
+        handleClose={handleCloseForm}
+        userData={{
+          firstname: storedName,
+          email: storedEmail,
+          company: storedCompany,
+          phoneNumber: storedPhoneNumber
         }}
-      >
-        <Grid container sx={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
-          <Avatar
-            alt="Cindy Baker"
-            src="https://png.pngtree.com/png-clipart/20240702/original/pngtree-indian-office-girl-wearing-formal-black-and-white-dress-with-long-png-image_15465282.png"
-            sx={{
-              width: 150,
-              height: 150,
-              borderRadius: '50%',
-              backgroundColor: '#7760f6',
-              marginBottom: '20px',
-            }}
-          />
+      />
+
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Stack direction="row" mb={2} sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                backgroundColor: 'white',
+                height: '50px',
+                width: '100%',
+                display: 'flex',
+                borderRadius: '10px',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0 25px'
+              }}
+            >
+              <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
+                Profile
+              </Typography>
+
+              <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={2}>
+                <Breadcrumbs aria-label="breadcrumb">
+                  <HomeIcon sx={{ color: '#2067db' }} fontSize="medium" onClick={handleClick} />
+                  <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
+                    Profile Information
+                  </Typography>
+                </Breadcrumbs>
+              </Stack>
+            </Box>
+          </Stack>
         </Grid>
 
-        <form onSubmit={formik.handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                label="First Name"
-                name="firstName"
-                value={formik.values.firstName}
-                onChange={formik.handleChange}
-                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                helperText={formik.touched.firstName && formik.errors.firstName}
-                fullWidth
-              />
-            </Grid>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              width: '100%',
+              backgroundColor: 'white',
+              padding: '30px',
+              borderRadius: '10px'
+            }}
+          >
+            <Grid container spacing={3} alignItems="stretch">
+              <Grid item xs={12} sm={4} display="flex" height="auto">
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    padding: '20px',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                    textAlign: 'center',
+                    width: '100%'
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Profile Picture</Typography>
+                  <Divider />
+                  <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+                    <Avatar
+                      alt="Profile Image"
+                      src={
+                        'https://png.pngtree.com/png-clipart/20240702/original/pngtree-indian-office-girl-wearing-formal-black-and-white-dress-with-long-png-image_15465282.png'
+                      }
+                      sx={{
+                        width: 130,
+                        height: 130,
+                        borderRadius: '50%',
+                        backgroundColor: '#7760f6'
+                      }}
+                    />
+                  </Box>
+                  <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Admin</Typography>
+                </Box>
+              </Grid>
 
-            <Grid item xs={6}>
-              <TextField
-                label="Phone Number"
-                name="phoneNumber"
-                value={formik.values.phoneNumber}
-                onChange={formik.handleChange}
-                error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-                fullWidth
-              />
-            </Grid>
+              <Grid item xs={12} sm={8}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    padding: '20px',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                    width: '100%',
+                    height: '100%'
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Account Details</Typography>
+                  <Divider />
 
-            <Grid item xs={6}>
-              <TextField
-                label="Email Address"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-                fullWidth
-              />
-            </Grid>
+                  <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                    <Grid item xs={12}>
+                      <TextField fullWidth label="First Name" variant="outlined" defaultValue={storedName} />
+                    </Grid>
 
-            <Grid item xs={6}>
-              <TextField
-                label="Register Date"
-                type="date"
-                name="registerDate"
-                value={formik.values.registerDate || ''}
-                onChange={formik.handleChange}
-                error={formik.touched.registerDate && Boolean(formik.errors.registerDate)}
-                helperText={formik.touched.registerDate && formik.errors.registerDate}
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
+                    <Grid item xs={12}>
+                      <TextField fullWidth label="Email Address" variant="outlined" defaultValue={storedEmail} />
+                    </Grid>
 
-         
-          <Grid container sx={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
-            <Button variant="contained" size="large" type="submit">
-              Update
-            </Button>
-          </Grid>
-        </form>
-      </Box>
-    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label="Company" variant="outlined" defaultValue={storedCompany} />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label="Phone Number" variant="outlined" defaultValue={storedPhoneNumber} />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 

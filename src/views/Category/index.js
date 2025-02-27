@@ -79,11 +79,13 @@ const Customer = () => {
       headerName: 'Image',
       flex: 1,
       renderCell: (params) => (
-        <img
-          src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-          alt="product"
-          style={{ width: '25px', height: '25px', objectFit: 'cover' }}
-        />
+
+        console.log("dataa0000000000000",params)
+        // <img
+        //   src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+        //   alt="product"
+        //   style={{ width: '25px', height: '25px', objectFit: 'cover' }}
+        // />
       )
     },
     {

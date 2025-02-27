@@ -48,7 +48,7 @@ const Lead = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel',
+      cancelButtonText: 'Cancel'
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -69,30 +69,32 @@ const Lead = () => {
 
   return (
     <>
-   
       <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchProduct={fetchProducts} product={productUpdated} />
       <ViewProduct open={openView} handleClose={() => setOpenView(false)} product={selectedProduct} />
       <AddBulkUpload open={open} handleClose={() => setOpen(false)} fetchProduct={fetchProducts} />
       <AddLead open={openAdd} handleClose={() => setOpenAdd(false)} fetchProduct={fetchProducts} />
 
-      
-      <Stack direction="row" alignItems="center" mb={3}  backgroundColor="#fff" padding='10px'>
+      <Stack direction="row" alignItems="center" mb={3} backgroundColor="#fff" padding="10px">
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <HomeIcon sx={{ color: '#2067db', cursor: 'pointer' }} onClick={handleClick} />
-          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Product Management</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+            Product Management
+          </Typography>
         </Box>
         <Stack direction="row" alignItems="center" ml="auto" spacing={2}>
-          <Button variant="contained" onClick={() => setOpen(true)}>Bulk Upload</Button>
-          <Button variant="contained" onClick={() => setOpenAdd(true)}>Add Product</Button>
+          <Button variant="contained" onClick={() => setOpen(true)}>
+            Bulk Upload
+          </Button>
+          <Button variant="contained" onClick={() => setOpenAdd(true)}>
+            Add Product
+          </Button>
         </Stack>
       </Stack>
 
-     
       <Grid container spacing={3}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
             <Card sx={{ p: 2, borderRadius: 3, boxShadow: 3, '&:hover': { boxShadow: 5 } }}>
-              
               <CardMedia
                 component="img"
                 height="100"
@@ -101,41 +103,35 @@ const Lead = () => {
                 sx={{ objectFit: 'cover', borderRadius: 2 }}
               />
 
-              
               <CardContent>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                   {product.productName}
                 </Typography>
-                
-               
-                <Typography variant="h6" sx={{ color:"#39b2e9", fontWeight: 'bold' }}>
+
+                <Typography variant="h6" sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
                   Rs.{product.price || 'N/A'}
                 </Typography>
 
-              
                 <Typography variant="body1" sx={{ color: '#757575', fontSize: '14px' }}>
                   <strong>Stock:</strong> {product.quantity || '0'}
                 </Typography>
 
-               
-               <Box sx={{ mt: 1 }}>
-                    {product.category.map((cat, index) => (
-                      <Chip
-                        key={index}
-                        label={cat.name}
-                        sx={{
-                          backgroundColor: '#419737',
-                          color: 'white',
-                          fontSize: '12px',
-                          mr: 1
-                        }}
-                      />
-                    ))}
-                  </Box>
-            
+                <Box sx={{ mt: 1 }}>
+                  {product.category.map((cat, index) => (
+                    <Chip
+                      key={index}
+                      label={cat.name}
+                      sx={{
+                        backgroundColor: '#419737',
+                        color: 'white',
+                        fontSize: '12px',
+                        mr: 1
+                      }}
+                    />
+                  ))}
+                </Box>
               </CardContent>
 
-            
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <IconButton onClick={() => handleView(product)}>
                   <VisibilityIcon sx={{ color: '#00bbff' }} />
