@@ -13,19 +13,39 @@ import { urls } from 'views/Api/constant.js';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from 'sweetalert2';
 import ViewPurchase from './ViewPurchase';
+import SearchBar from 'views/Search';
 
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
   const [selectedPurchase, setSelectedPurchase] = useState(null);
   const [openView, setOpenView] = useState(false);
-
   const [purchaseUpdated, setPurchaseUpdated] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
+  const [purchaseFilter,setFilteredPurchase] = useState([])
+
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPurchase(purchase);
+    } else {  
+      const filtered = purchase.filter((sup) =>
+        sup.productName?.[0].productName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredPurchase(filtered);
+
+    }
+  };
+
+
+  console.log("huhjhjd3333333333",purchase)
+
+
 
   const fetchPurchase = async () => {
     try {
       const response = await getApi(urls.purchase.get);
       setPurchase(response?.data?.data || []);
+      setFilteredPurchase(response?.data?.data || []);
     } catch (error) {
       console.error('Error fetching purchase data:', error);
     }
@@ -71,18 +91,19 @@ const Purchase = () => {
     });
   };
 
+  
   const columns = [
     {
       field: 'productName',
       headerName: 'Product',
       flex: 1,
-      valueGetter: (params) => params.row.productId?.productName || 'N/A'
+      valueGetter: (params) => params.row.productName?.[0].productName|| 'N/A'
     },
     {
       field: 'companyName',
       headerName: 'Company',
       flex: 1,
-      valueGetter: (params) => params.row.companyId?.companyName || 'N/A'
+      valueGetter: (params) => params.row.CompanyName?.[0].companyName || 'N/A'
     },
     {
       field: 'totalPrice',
@@ -109,17 +130,13 @@ const Purchase = () => {
           size="small"
           sx={{
             backgroundColor:
-              params.value === 'Success' ? '#7011bc' :
-              params.value === 'Pending' ? '#12aae8' :
-              params.value === 'Failed' ? '#FF5733' : '',
+              params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : '',
             width: '80px',
             textAlign: 'center',
             padding: '2px',
             '&:hover': {
               backgroundColor:
-                params.value === 'Success' ? '#7011bc' :
-                params.value === 'Pending' ? '#12aae8' :
-                params.value === 'Failed' ? '#FF5733' : ''
+                params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : ''
             }
           }}
         >
@@ -190,10 +207,12 @@ const Purchase = () => {
             </Stack>
           </Box>
         </Stack>
+
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-45px' }}>
-              <DataGrid rows={purchase} columns={columns} getRowId={(row) => row._id} />
+            <Card style={{ height: '600px', marginTop: '-25px' }}>
+            <SearchBar onSearch={handleSearch} />
+              <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>
         </TableStyle>

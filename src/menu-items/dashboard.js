@@ -11,6 +11,8 @@ import {
   IconNotebook,
   IconPhoneCheck,
   IconUsers,
+  IconCategory,
+  IconStackPop
   
 } from '@tabler/icons';
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -44,7 +46,9 @@ const icons = {
   ShoppingBagIcon,
   InventoryIcon,
   StorefrontIcon,
-  ShoppingCartIcon
+  ShoppingCartIcon,
+  IconCategory,
+  IconStackPop
 };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -61,6 +65,22 @@ const dashboard = {
       icon: icons.IconHome,
       breadcrumbs: false
     },
+    {
+      id: '08',
+      title: 'Category',
+      type: 'item',
+      url: '/dashboard/category',
+      icon: icons.IconCategory,
+      breadcrumbs: false
+    },
+    {
+      id: '02',
+      title: 'Product',
+      type: 'item',
+      url: '/dashboard/product',
+      icon: icons.IconStackPop,
+      breadcrumbs: false
+    },
 
     {
       id: '01',
@@ -71,14 +91,7 @@ const dashboard = {
       breadcrumbs: false
     },
     
-     {
-      id: '02',
-      title: 'Product',
-      type: 'item',
-      url: '/dashboard/product',
-      icon: icons.IconAntennaBars5,
-      breadcrumbs: false
-    },
+
     {
       id: '11',
       title: 'Clients',
@@ -104,14 +117,7 @@ const dashboard = {
       ]
     },
 
-  {
-      id: '05',
-      title: 'Profile',
-      type: 'item',
-      url: '/dashboard/profile',
-      icon: icons.IconUsers,
-      breadcrumbs: false
-    },
+  
     
    
     
@@ -124,14 +130,7 @@ const dashboard = {
       breadcrumbs: false
     },
 
-    {
-      id: '08',
-      title: 'Category',
-      type: 'item',
-      url: '/dashboard/category',
-      icon: icons.IconUsers,
-      breadcrumbs: false
-    },
+    
 
     {
       id: '03',
@@ -150,7 +149,14 @@ const dashboard = {
       icon: icons.SummarizeIcon,
       breadcrumbs: false
     },
-   
+    {
+      id: '05',
+      title: 'Profile',
+      type: 'item',
+      url: '/dashboard/profile',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    },
   
   
     

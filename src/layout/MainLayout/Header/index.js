@@ -9,14 +9,35 @@ import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
 import NotificationSection from './NotificationSection';
+import { urls } from 'views/Api/constant';
+import { getApi } from 'views/Api/comman';
+import { useEffect } from 'react';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
+import { useState } from 'react';
+
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
+const [logo,setLogo] = useState(null)
+
+
+
+
+const fetchLogo = async () => {
+      const response = await getApi(urls.logo.get);
+      setLogo(response?.data.data?.[0].imageUrl)
+     };
+
+
+    useEffect(() => {
+      fetchLogo();
+    }, []);
+
+
 
   return (
     <>
@@ -33,12 +54,12 @@ const Header = ({ handleLeftDrawerToggle }) => {
         <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
         <CardMedia
     component="img"
-    image="https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg"
+    image={logo}
     alt="Description of the image"
     sx={{
       width: '50px',
       height: '50px',
-      borderRadius: '10px',
+      borderRadius: '50px',
     }}
   />
         
@@ -71,6 +92,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       <Box sx={{ flexGrow: 1 }} />
 
       {/* notification & profile */}
+      <ProfileSection/>
      
     </>
   );

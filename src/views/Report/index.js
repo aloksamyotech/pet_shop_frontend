@@ -16,7 +16,7 @@ const Checkout = () => {
   const [tabValue, setTabValue] = useState("1");
   const [product, setProduct] = useState([]);
   const [purchase, setPurchase] = useState([]);
-  const [filter, setFilter] = useState("daily"); // Default to daily
+  const [filter, setFilter] = useState("daily"); 
   const [filteredProduct, setFilteredProduct] = useState([]);
   const [filteredPurchase, setFilteredPurchase] = useState([]);
 
@@ -38,6 +38,7 @@ const Checkout = () => {
 
   const filterData = () => {
     const now = new Date();
+  
     const startOfDay = new Date(now.setHours(0, 0, 0, 0));
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(now.getDate() - 7);
@@ -62,21 +63,21 @@ const Checkout = () => {
   };
 
   return (
-    <Grid maxWidth="xl">
+    <Grid >
       <TabContext value={tabValue}>
       <Stack direction="row" alignItems="center" mb={5}>
           <Box
-            sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '0 25px',
-              marginTop: '-7px'
-            }}
+              sx={{
+                backgroundColor: 'white',
+                height: '50px',
+                width: '100%',
+                display: 'flex',
+                borderRadius: '10px',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '0 25px',
+               mb:'40px'
+              }}
           >
             <Breadcrumbs aria-label="breadcrumb">
               <HomeIcon sx={{ color: '#2067db' }}  onClick={handleClick} />
@@ -89,17 +90,17 @@ const Checkout = () => {
         </Stack>
 
        
-
+<Box sx={{marginTop:'-65px' ,backgroundColor: 'white', borderRadius: '10px',}}>
         <Grid container spacing={2} direction="column">
-          <Box sx={{ backgroundColor: 'white', borderRadius: '10px', ml: '30px' }}>
+         
           <Box display="flex" alignItems="center" justifyContent="space-between">
-       <TabList indicatorColor="none" onChange={(event, newValue) => setTabValue(newValue)}>
+          <TabList indicatorColor="none" onChange={(event, newValue) => setTabValue(newValue)}>
     <Tab
-      value="1"
+      value="1" 
       sx={{ fontWeight: 'bold' }}
       label={
         <Box display="flex" alignItems="center">
-          <ShoppingCartIcon sx={{ fontSize: '20px', marginRight: '5px' }} /> Sales
+          <ShoppingCartIcon sx={{ fontSize: '20px',marginLeft:'5px'}} /> Sales
         </Box>
       }
     />
@@ -181,8 +182,8 @@ const Checkout = () => {
                 </Table>
               </TableContainer>
             </TabPanel>
-          </Box>
-        </Grid>
+         
+        </Grid> </Box>
       </TabContext>
     </Grid>
   );
