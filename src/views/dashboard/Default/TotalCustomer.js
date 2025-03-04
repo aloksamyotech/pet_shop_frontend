@@ -63,23 +63,24 @@ const TotalCustomer = ({ isLoading }) => {
   
   const fetchCustomer = async () => {
     try {
-      const response = await getApi(urls.product.getCount);
+      const response = await getApi(urls.customer.getCount);
       
-
-      if (response && response.success && response.data) {
-        setCustomer(response.data.totalProducts|| 0);
+  
+      if (response && response.data && response.data.count) {
+        setCustomer(response.data.count || 0);
       } else {
-        console.error('Invalid API response:', response);
-        setCustomer(0); 
+        console.error("Invalid API response structure:", response);
+        setCustomer(0);
       }
     } catch (error) {
-      console.error('Error fetching customer count:', error);
+      console.error("Error fetching customer count:", error);
       setCustomer(0);
     } finally {
       setLoading(false);
     }
   };
-
+  
+  
   useEffect(() => {
     fetchCustomer();
   }, []);

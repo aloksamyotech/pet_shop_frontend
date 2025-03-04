@@ -71,11 +71,13 @@ const AddEdit = (props) => {
   };
 
   useEffect(() => {
-    if (product) {
+
+ if (product) {
       formik.setValues({
         productName: product?.productName || '',
         description: product?.description || '',
         price: product?.price || '',
+        categoryId :product?.category?.[0].name||'',
         discount: product?.discount || ''
       });
       fetchProduct();

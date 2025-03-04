@@ -70,10 +70,10 @@ const FirebaseLogin = ({ ...others }) => {
 
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             try {
-              console.log("Login values:", values);
+              
               const response = await postApiLogin(urls.login.create, values);
           
-              console.log("Login Response:", response.data.user.firstname);
+              console.log("Login Response:", response.data.user);
           
              // ✅ Get access token from response body (not headers)
               const accessToken = response.data.accessToken;
@@ -85,6 +85,7 @@ const FirebaseLogin = ({ ...others }) => {
                  localStorage.setItem("email",  response.data.user.email);
                  localStorage.setItem("company",  response.data.user.company);  
                  localStorage.setItem("phoneNumber",  response.data.user.phoneNumber); 
+                 localStorage.setItem('user', JSON.stringify(response.data.user));
             
                 window.location.href = "/";
               } else {

@@ -71,6 +71,13 @@ export const urls = Object.freeze({
   },
 
   register: {
-    update: base + '/user/update/:id'
-  }
+    update: base + '/user/update/:id',
+    UpdateNewPassword : base +'/user/updatePassword/:id'
+  },
+
+  logo :{
+    create : base +'/Logo/save',
+    update: base + '/Logo/update/:id',
+    get : base + '/Logo/fetch'
+  }  
 });
