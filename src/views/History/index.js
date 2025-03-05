@@ -7,16 +7,32 @@ import TableStyle from '../../ui-component/TableStyle';
 import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
+import SearchBar from 'views/Search';
 
 const History = () => {
   const [product, setProduct] = useState([]);
+  const [order, setOder] = useState([]);
   const navigate = useNavigate();
+
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setOder(product);
+    } else {  
+      const filtered = product.filter((sup) =>
+        sup.customerName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setOder(filtered);
+
+    }
+  };
 
 
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await getApi(urls.order.get);
       setProduct(response?.data?.data || []);
+      setOder(response?.data?.data || []);
     };
     fetchProduct();
   }, []);
@@ -96,8 +112,9 @@ const History = () => {
         <TableStyle>
           <Box width="100%">
           <Card style={{ height: '600px', marginTop: '-25px' }}>
+          <SearchBar onSearch={handleSearch} />
               <DataGrid
-                rows={product}
+                rows={order}
                 columns={columns}
                 getRowId={(row) => row._id}
               />

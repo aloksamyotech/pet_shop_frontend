@@ -17,8 +17,10 @@ import {
   Grid,
   Breadcrumbs,
   TableCell,
-  Stack
+  Stack,
+  IconButton
 } from '@mui/material';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -37,25 +39,22 @@ const Invoice = () => {
   const [orderDate, setOrderDate] = useState();
   const navigate = useNavigate();
   const AllData = Data;
-  const Product = AllData.products
- 
-  const home = () =>{
+  const Product = AllData.products;
+
+  const home = () => {
     navigate('/');
-  }
+  };
 
   const fetchOrderDate = async () => {
     const response = await getApi(urls.order.get);
     setOrderDate(response.data.data[0].createdAt);
   };
- useEffect(() => {
-   fetchOrderDate();
-   
+  useEffect(() => {
+    fetchOrderDate();
   }, []);
-  
 
   const date = new Date(orderDate);
   const formattedDate = orderDate ? new Date(orderDate).toLocaleDateString() : 'N/A';
-
 
   const printInvoice = () => {
     const content = document.getElementById('invoice-content');
@@ -73,7 +72,7 @@ const Invoice = () => {
       })
       .join('\n');
 
-      printWindow.document.write(`
+    printWindow.document.write(`
         <html>
           <head>
             <title>Invoice</title>
@@ -95,7 +94,6 @@ const Invoice = () => {
           </body>
         </html>
       `);
-      
 
     printWindow.document.close();
     printWindow.focus();
@@ -105,30 +103,46 @@ const Invoice = () => {
 
   return (
     <>
+      <Stack direction="row" alignItems="center" mb={5}>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            height: '50px',
+            width: '100%',
+            display: 'flex',
+            borderRadius: '10px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '10px',
+            marginTop: '-7px'
+          }}
+        >
+          <Stack direction="row" alignItems="center">
+            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+              <HomeIcon />
+            </IconButton>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
 
+            <Typography
+              onClick={() => navigate(-1)}
+              sx={{
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontSize: '15px',
+                mx: 1,
+                '&:hover': { color: '#2067db' }
+              }}
+            >
+              Oder
+            </Typography>
 
-<Stack direction="row" alignItems="center" mb={5} >
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '10px',
-              marginTop: '-7px'
-            }}
-          >
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              sx={{ display: 'flex', alignItems: 'center' }}
-            ><HomeIcon sx={{ color: '#5E35B1' }} onClick={home} />
-             <Typography variant="h5">Invoice </Typography>
-            </Breadcrumbs>
-            </Box>
-        </Stack>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+            <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
+              View Invoice
+            </Typography>
+          </Stack>
+        </Box>
+      </Stack>
       <Box
         sx={{
           backgroundColor: '#fff',
@@ -138,7 +152,6 @@ const Invoice = () => {
           ml: '90px'
         }}
       >
-           
         <Box
           id="invoice-content"
           sx={{
@@ -164,7 +177,8 @@ const Invoice = () => {
               />
               <Box>
                 <Typography sx={{ color: '#fff' }}>
-                  <strong>Invoice Id:</strong>{AllData.orderId}
+                  <strong>Invoice Id:</strong>
+                  {AllData.orderId}
                 </Typography>
                 <Typography sx={{ color: '#fff' }}>
                   <strong>Date:</strong> {formattedDate}
@@ -196,7 +210,8 @@ const Invoice = () => {
             <Typography sx={{ fontWeight: 'bold', mb: 1 }}>Customer Information</Typography>
             <Box sx={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Name:</strong>{AllData.customerName}
+                <strong>Name:</strong>
+                {AllData.customerName}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
                 <strong>Email:</strong> {AllData.customerEmail}

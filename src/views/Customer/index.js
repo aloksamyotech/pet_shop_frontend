@@ -13,12 +13,30 @@ import EditIcon from '@mui/icons-material/Edit';
 import { toast } from 'react-toastify';
 import AddEdit from './CustomerForm';
 import Swal from 'sweetalert2';
+import SearchBar from 'views/Search';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 const Customer = () => {
   const navigate = useNavigate();
   const [openForm, setOpenForm] = useState(false);
   const [customerList, setCustomerList] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [Customer, setFilteredCustomer] = useState([]);
+
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredCustomer(customerList);
+    } else {
+      const filtered = customerList.filter((sup) =>
+        sup.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCustomer(filtered);
+
+    }
+  };
 
   useEffect(() => {
     fetchCustomers();
@@ -27,6 +45,7 @@ const Customer = () => {
   const fetchCustomers = async () => {
     const response = await getApi(urls.customer.get);
     setCustomerList(response?.data?.data || []);
+    setFilteredCustomer(response?.data?.data || [])
   };
 
   const handleView = (customer) => {
@@ -71,7 +90,17 @@ const Customer = () => {
   };
 
   const columns = [
-    { field: 'firstName', headerName: 'Name', flex: 0.5 },
+    { 
+      field: 'firstName', 
+      headerName: 'Name', 
+      flex: 0.5,
+      renderCell: (params) => (
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <CheckCircleIcon sx={{ color: 'green' }} />
+          <Typography>{params.value}</Typography>
+        </Stack>
+      ),
+    },
     { field: 'email', headerName: 'Email', flex: 0.5 },
     { field: 'address', headerName: 'Address', flex: 0.5 },
     { field: 'phoneNumber', headerName: 'Phone Number', flex: 0.5 },
@@ -110,13 +139,32 @@ const Customer = () => {
     <>
       <AddEdit open={openForm} handleClose={handleCloseForm} customer={selectedCustomer} fetchCustomer={fetchCustomers} />
       <Grid>
-        <Stack direction="row" alignItems="center" mb={5}>
-          <Box sx={{ backgroundColor: 'white', height: '50px', width: '100%', display: 'flex', borderRadius: '10px', justifyContent: 'space-between', alignItems: 'center', padding: '0 25px' }}>
-            <Breadcrumbs aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#2067db' }} onClick={() => navigate('/')} />
-              <Typography variant="h5">Customer</Typography>
-            </Breadcrumbs>
-            <Stack direction="row" alignItems="center" spacing={2}>
+    
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+             mb:'40px'
+            }}
+          >
+              <Stack direction="row" alignItems="center" >
+           
+          
+            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                  <HomeIcon />
+                </IconButton>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
+              <Typography variant="h5">Customer</Typography> </Stack>
+              
+          
+           
+              <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
                   New Customer
@@ -124,11 +172,12 @@ const Customer = () => {
               </Card>
             </Stack>
           </Box>
-        </Stack>
+       
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px' }}>
-              <DataGrid rows={customerList} columns={columns} getRowId={(row) => row._id} />
+          <Card style={{ height: '600px', marginTop: '-25px' }}>
+            <SearchBar onSearch={handleSearch} />
+              <DataGrid rows={Customer} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>
         </TableStyle>

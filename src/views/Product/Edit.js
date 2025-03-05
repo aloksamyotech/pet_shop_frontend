@@ -2,32 +2,44 @@ import * as React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography,DialogContentText,MenuItem,FormControl,FormLabel,Select } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+  Button,
+  Box,
+  Typography,
+  DialogContentText,
+  MenuItem,
+  FormControl,
+  FormLabel,
+  Select
+} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { getApi,updateApi } from 'views/Api/comman.js';
+import { getApi, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 const AddEdit = (props) => {
-  const { open, handleClose, product,fetchProduct } = props;
+  const { open, handleClose, product, fetchProduct } = props;
   const [categories, setCategories] = useState([]);
 
-
-  
- const validationSchema = yup.object({
+  const validationSchema = yup.object({
     productName: yup
       .string()
       .required('Product Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
-      .max(20 , "product name cannot be more then 20 letter"),
+      .max(20, 'product name cannot be more then 20 letter'),
 
     categoryId: yup.string().required('product  is required'),
 
-    price: yup.number().required('Price is required').max(10000,"product price less then 10000"),
+    price: yup.number().required('Price is required').max(10000, 'product price less then 10000'),
 
-    discount: yup.number()
-       .integer('discount must be an integer'),
+    discount: yup.number().integer('discount must be an integer')
   });
 
   const initialValues = {
@@ -41,42 +53,39 @@ const AddEdit = (props) => {
     validationSchema,
     onSubmit: async (values) => {
       const updatedProduct = {
-      productName: values.productName,
+        productName: values.productName,
         categoryId: values.categoryId,
         price: values.price,
-        discount : values.discount
+        discount: values.discount
       };
-     await updateApi(urls.product.update.replace(":id", product._id), updatedProduct); 
-     toast.success("product updated successfully!")
-       await fetchProduct(); 
-       await handleClose(); 
-     
-    },
+      await updateApi(urls.product.update.replace(':id', product._id), updatedProduct);
+      toast.success('product updated successfully!');
+      await fetchProduct();
+      await handleClose();
+    }
   });
 
-
-    const fetchCategory = async () => {
-      const response = await getApi(urls.category.get);
-   setCategories(response?.data?.data);
-    };
-  
+  const fetchCategory = async () => {
+    const response = await getApi(urls.category.get);
+    setCategories(response?.data?.data);
+  };
 
   useEffect(() => {
-    if (product) {
+
+ if (product) {
       formik.setValues({
         productName: product?.productName || '',
         description: product?.description || '',
         price: product?.price || '',
-        discount: product?.discount || '',
+        categoryId :product?.category?.[0].name||'',
+        discount: product?.discount || ''
       });
       fetchProduct();
-      fetchCategory()
+      fetchCategory();
     }
   }, [product, open]);
-  
 
- 
-return (
+  return (
     <div>
       <Dialog
         open={open}
@@ -171,23 +180,19 @@ return (
                       size="small"
                       fullWidth
                       value={formik.values.discount}
-                      onChange={(e) =>{ 
-                        const discountPrices = parseFloat(e.target.value) || 0
-                        if(discountPrices < formik.values.price){
-                          formik.setFieldValue('discount',discountPrices)
+                      onChange={(e) => {
+                        const discountPrices = parseFloat(e.target.value) || 0;
+                        if (discountPrices < formik.values.price) {
+                          formik.setFieldValue('discount', discountPrices);
+                        } else {
+                          toast('discount less then Product');
                         }
-                        else{
-                          toast("discount less then Product")
-                        }
-                      }
-
-                      }
+                      }}
                       error={formik.touched.discount && Boolean(formik.errors.discount)}
                       helperText={formik.touched.discount && formik.errors.discount}
                     />
                   </FormControl>
                 </Grid>
-               
               </Grid>
             </DialogContentText>
           </form>

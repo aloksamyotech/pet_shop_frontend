@@ -10,7 +10,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography
+  Typography,
+  Autocomplete
 } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -37,10 +38,12 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
         totalPrice: purchase.totalPrice || '',
         discount: purchase.discount || '0',
         paymentStatus: purchase.paymentStatus || 'Pending',
-        productPrice: purchase.productPrice || '',
+        productPrice: purchase.productPrice || ''
       });
+    } else {
+      formik.resetForm();
     }
-  }, [purchase]);
+  }, [purchase, open]);
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
@@ -60,11 +63,11 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
       .positive('Quantity must be a positive number')
       .integer('Quantity must be an integer')
       .required('Quantity is required')
-      .max(1000, "Max 1000 quantity allowed"),
+      .max(1000, 'Max 1000 quantity allowed'),
     totalPrice: yup.number().positive('Total Price must be greater than 0').required('Total Price is required'),
     discount: yup.number().integer('Discount must be an integer'),
     paymentStatus: yup.string().required('Payment Status is required'),
-    productPrice: yup.number().positive('Product Price must be a positive number').required('Product Price is required'),
+    productPrice: yup.number().positive('Product Price must be a positive number').required('Product Price is required')
   });
 
   const initialValues = {
@@ -74,7 +77,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
     totalPrice: '',
     discount: '0',
     paymentStatus: 'Pending',
-    productPrice: '',
+    productPrice: ''
   };
 
   const formik = useFormik({
@@ -83,26 +86,24 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
     onSubmit: async (values) => {
       try {
         if (purchase) {
-         
           await updateApi(urls.purchase.update.replace(':id', purchase._id), values);
           toast.success('Purchase updated successfully!');
         } else {
-       
           await postApi(urls.purchase.create, values);
           toast.success('Purchase added successfully!');
         }
         await fetchPurchase();
         handleClose();
       } catch (error) {
-        toast.error("Failed to save purchase.");
+        toast.error('Failed to save purchase.');
       }
-    },
+    }
   });
 
   useEffect(() => {
-    const selectedProduct = product.find(p => p._id === formik.values.productId);
+    const selectedProduct = product.find((p) => p._id === formik.values.productId);
     const productPrice = selectedProduct ? selectedProduct.price : 0;
-    const totalPrice = Math.max((formik.values.quantity * productPrice) - formik.values.discount, 0);
+    const totalPrice = Math.max(formik.values.quantity * productPrice - formik.values.discount, 0);
 
     formik.setFieldValue('productPrice', productPrice);
     formik.setFieldValue('totalPrice', totalPrice);
@@ -119,36 +120,46 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <FormLabel>Product Name</FormLabel>
-              <Select
+              <Autocomplete
                 id="productId"
-                name="productId"
-                size="small"
-                fullWidth
-                value={formik.values.productId}
-                onChange={formik.handleChange}
-                error={formik.touched.productId && Boolean(formik.errors.productId)}
-              >
-                {product.map(p => (
-                  <MenuItem key={p._id} value={p._id}>{p.productName}</MenuItem>
-                ))}
-              </Select>
+                options={product}
+                getOptionLabel={(option) => option.productName || ''}
+                value={product.find((p) => p._id === formik.values.productId) || null}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue('productId', newValue ? newValue._id : '');
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    size="small"
+                    fullWidth
+                    error={formik.touched.productId && Boolean(formik.errors.productId)}
+                    helperText={formik.touched.productId && formik.errors.productId}
+                  />
+                )}
+              />
             </Grid>
 
             <Grid item xs={12} sm={6}>
               <FormLabel>Company</FormLabel>
-              <Select
+              <Autocomplete
                 id="companyId"
-                name="companyId"
-                size="small"
-                fullWidth
-                value={formik.values.companyId}
-                onChange={formik.handleChange}
-                error={formik.touched.companyId && Boolean(formik.errors.companyId)}
-              >
-                {company.map(c => (
-                  <MenuItem key={c._id} value={c._id}>{c.companyName}</MenuItem>
-                ))}
-              </Select>
+                options={company}
+                getOptionLabel={(option) => option.companyName || ''}
+                value={company.find((c) => c._id === formik.values.companyId) || null}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue('companyId', newValue ? newValue._id : '');
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    size="small"
+                    fullWidth
+                    error={formik.touched.companyId && Boolean(formik.errors.companyId)}
+                    helperText={formik.touched.companyId && formik.errors.companyId}
+                  />
+                )}
+              />
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -201,7 +212,14 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
         <Button onClick={formik.handleSubmit} variant="contained" color="primary">
           {purchase ? 'Update' : 'Save'}
         </Button>
-        <Button onClick={() => { formik.resetForm(); handleClose(); }} variant="outlined" color="error">
+        <Button
+          onClick={() => {
+            formik.resetForm();
+            handleClose();
+          }}
+          variant="outlined"
+          color="error"
+        >
           Cancel
         </Button>
       </DialogActions>

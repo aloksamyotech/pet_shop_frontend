@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 
-import { getApi, postApi } from 'views/Api/comman.js';
+import { getApi, postApi ,postApiImage} from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 
 const AddLead = (props) => {
@@ -66,12 +66,13 @@ const AddLead = (props) => {
       formData.append('discount', values.discount);
       formData.append('quantity', values.quantity);
       if (values.image) {
+        console.log("image",values)
         formData.append('image', values.image);
       }
     
     
       try {
-      const response = await postApi(urls.product.create, formData, {
+      const response = await postApiImage(urls.product.create, formData, {
                   headers: { 'Content-Type': 'multipart/form-data' }
                 });
         fetchProduct(); 

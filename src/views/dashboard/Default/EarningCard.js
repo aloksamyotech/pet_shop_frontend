@@ -59,20 +59,17 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const EarningCard = ({ isLoading }) => {
   const theme = useTheme();
-  const [order, setOrder] = useState(0); 
+  const [order, setOrder] = useState(0);
 
   const fetchOrder = async () => {
     const response = await getApi(urls.order.getCount);
-  
-  
-      setOrder(response.data.totalOrders);  
-    
+
+    setOrder(response.data.totalOrders);
   };
-  
+
   useEffect(() => {
     fetchOrder();
   }, []);
-  
 
   return (
     <>
@@ -83,24 +80,21 @@ const EarningCard = ({ isLoading }) => {
           <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
-                <Grid container justifyContent="space-between">
-                  {/* You can add additional UI here if needed */}
-                </Grid>  </Grid>              <Grid item>
-                <Grid container alignItems="center">
-                  {/* You can add any additional content here */}
-                </Grid>
+                <Grid container justifyContent="space-between"></Grid>{' '}
+              </Grid>{' '}
+              <Grid item>
+                <Grid container alignItems="center"></Grid>
               </Grid>
               <Grid item sx={{ mb: 1.25 }}>
                 <Typography
-                 sx={{
-                  fontSize: '1.25rem',
-                  fontWeight: 600,
-                  color: '#fff',
-                  mt: 1
-                }}
+                  sx={{
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    color: '#fff',
+                    mt: 1
+                  }}
                 >
-                  {order} 
-                 
+                  {order}
                 </Typography>
               </Grid>
               {/* Display the order count */}
@@ -113,7 +107,7 @@ const EarningCard = ({ isLoading }) => {
                     mt: 1
                   }}
                 >
-                 Total Orders
+                  Total Orders
                 </Typography>
               </Grid>
             </Grid>

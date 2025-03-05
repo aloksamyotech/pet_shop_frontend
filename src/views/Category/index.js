@@ -14,11 +14,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import CategoryForm from './CategoryForm';
+import SearchBar from 'views/Search';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const Customer = () => {
   const navigate = useNavigate();
   const [openForm, setOpenForm] = useState(false);
   const [category, setCategory] = useState([]);
+  const [filteredCategory, setFilteredCategory] = useState([]);
   const [openView, setOpenView] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryUpdated, setCategoryUpdated] = useState(null);
@@ -28,7 +31,9 @@ const Customer = () => {
   const fetchCategories = async () => {
     try {
       const response = await getApi(urls.category.get);
-      setCategory(response?.data?.data || []);
+      const categoryData = response?.data?.data || [];
+      setCategory(categoryData);
+      setFilteredCategory(categoryData); 
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -37,6 +42,17 @@ const Customer = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredCategory(category);
+    } else {
+      const filtered = category.filter((cat) =>
+        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCategory(filtered);
+    }
+  };
 
   const handleView = (category) => {
     setSelectedCategory(category);
@@ -57,7 +73,8 @@ const Customer = () => {
       if (result.isConfirmed) {
         try {
           await deleteApi(urls.category.delete.replace(':id', id));
-          setCategory((prevCategories) => prevCategories.filter((cat) => cat._id !== id));
+          setCategory((prev) => prev.filter((cat) => cat._id !== id));
+          setFilteredCategory((prev) => prev.filter((cat) => cat._id !== id));
           Swal.fire('Removed!', 'The category has been deleted.', 'success');
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete category.', 'error');
@@ -111,8 +128,9 @@ const Customer = () => {
     <>
       <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
       <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} />
+      
       <Grid>
-        <Stack direction="row" alignItems="center" mb={5}>
+      
           <Box
             sx={{
               backgroundColor: 'white',
@@ -123,13 +141,15 @@ const Customer = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '0 25px',
-              marginTop: '-7px'
+             mb:'40px'
             }}
           >
-            <Breadcrumbs aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#2067db' }} onClick={home} />
-              <Typography variant="h5">Category</Typography>
-            </Breadcrumbs>
+              <Stack direction="row" alignItems="center" >
+                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                  <HomeIcon />
+                </IconButton>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
+                <Typography variant='h5'>Category</Typography> </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
                 <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleOpenForm()} size="small">
@@ -138,11 +158,13 @@ const Customer = () => {
               </Card>
             </Stack>
           </Box>
-        </Stack>
-        <TableStyle>
+       
+
+          <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-25px' }}>
-              <DataGrid rows={category} columns={columns} getRowId={(row) => row._id} />
+              <Card style={{ height: '600px', marginTop: '-25px' }}>
+            <SearchBar onSearch={handleSearch} />
+              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>
         </TableStyle>
