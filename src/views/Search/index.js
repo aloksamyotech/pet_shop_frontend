@@ -18,28 +18,26 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <Box sx={{ width: '250px', display: 'flex', alignItems: 'center', padding: '5px', height: '60px' }}>
+    <Box sx={{ width: '250px', display: 'flex', alignItems: 'center', height: '40px',justifyContent:'center', }}>
       <TextField
         fullWidth
-        label="Search......"
-        variant="outlined"
+        variant="standard" 
+        placeholder="Search.............."
         value={searchTerm}
         onChange={handleSearch}
         InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              {searchTerm && (
-                <IconButton onClick={handleClear} edge="end">
-                  <ClearIcon />
-                </IconButton>
-              )}
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          )
+          disableUnderline: false, 
+         }}
+        sx={{
+        fontSize: '16px',
+            padding: '10px', 
+            
+
         }}
       />
+       <IconButton>
+                <SearchIcon />
+              </IconButton>
     </Box>
   );
 };

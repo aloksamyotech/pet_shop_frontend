@@ -19,7 +19,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       .required('Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
       .max(20, 'Max 20 characters'),
-    description: yup.string().max(100, 'Max 100 characters')
+    description: yup.string().max(200, 'Max 200 characters')
   });
 
   const formik = useFormik({
@@ -33,8 +33,14 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description);
-    
      
+
+      if (values.categoryImage) {
+        
+        formData.append('categoryImage', values.categoryImage);
+      }
+    
+     console.log("isedit ",isEditing)
     
      
       for (const pair of formData.entries()) {
@@ -45,9 +51,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
         if (isEditing) {
           await updateApi(urls.category.update.replace(':id', category._id), values);
           toast.success('Category updated successfully!');
+          formik.resetForm();
+
         } else {
-          await postApiImage(urls.category.create, formData);
-          toast.success('Category added successfully!');
+        await postApiImage(urls.category.create, formData);
+       toast.success('Category added successfully!');
         }
     
         await fetchCategories();

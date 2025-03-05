@@ -5,8 +5,10 @@ import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, 
 const ViewCategory = ({ open, handleClose, category }) => {
   if (!category) return null; 
 
+  console.log("category", category)
+
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={handleClose} maxWidth="xs" >
      
       <DialogTitle variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
         Category Details
@@ -24,7 +26,7 @@ const ViewCategory = ({ open, handleClose, category }) => {
               alt={category.name || 'Category Image'}
               sx={{
                 width: '100%',
-                maxWidth: 200,
+                maxWidth: 100,
                 height: 'auto',
                 borderRadius: 2,
                 boxShadow: 3,
@@ -34,9 +36,9 @@ const ViewCategory = ({ open, handleClose, category }) => {
 
         
           <Grid item xs={12} sm={7}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                {category.name || 'N/A'}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="body1">
+              <strong>Name:</strong>  {category.name || 'N/A'}
               </Typography>
               <Typography variant="body1">
                 <strong>Description:</strong> {category.description || 'No description available.'}

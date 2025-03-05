@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Grid, Box, Typography, Breadcrumbs, Tab, TableHead, TableContainer,
+  Grid, Box, Typography, IconButton, Tab, TableHead, TableContainer,
   TableBody, TableRow, Table, TableCell, Paper, MenuItem, Select, FormControl,Stack,Card,Button
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -10,6 +10,7 @@ import { TabContext, TabPanel, TabList } from '@mui/lab';
 import { Home as HomeIcon } from '@mui/icons-material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -65,7 +66,31 @@ const Checkout = () => {
   return (
     <Grid >
       <TabContext value={tabValue}>
-      <Stack direction="row" alignItems="center" mb={5}>
+
+
+        
+      <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+             mb:'35px'
+            }}
+          >
+              <Stack direction="row" alignItems="center" >
+                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                  <HomeIcon />
+                </IconButton>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
+                <Typography variant='h5'>Report</Typography> </Stack>
+           
+          </Box>
+      {/* <Stack direction="row" alignItems="center" mb={5}>
           <Box
               sx={{
                 backgroundColor: 'white',
@@ -87,14 +112,14 @@ const Checkout = () => {
             </Breadcrumbs>
 
        </Box>
-        </Stack>
+        </Stack> */}
 
        
-<Box sx={{marginTop:'-65px' ,backgroundColor: 'white', borderRadius: '10px',}}>
+<Box sx={{marginTop:'25px' ,backgroundColor: 'white', borderRadius: '10px',}}>
         <Grid container spacing={2} direction="column">
          
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-          <TabList indicatorColor="none" onChange={(event, newValue) => setTabValue(newValue)}>
+          <Box display="flex" alignItems="center" justifyContent="space-between"  sx={{paddingLeft:'15px'}}>
+          <TabList indicatorColor="primary" onChange={(event, newValue) => setTabValue(newValue)}>
     <Tab
       value="1" 
       sx={{ fontWeight: 'bold' }}

@@ -252,20 +252,21 @@ const AddFood = () => {
                       }}
                     >
                       {categoryData.map((category) => (
-                        <Card
-                        key={category._id}
-                        onClick={() => setSelectedCategory(category._id)}
-                        sx={{
-                          transition: "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out",
-                          border: "1px solid #d3d3d3",
-                          cursor: "pointer",
-                          mt: "5px",
-                          "&:hover": {
-                            transform: "translateY(-5px) scale(1.08)", 
-                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", 
-                          },
-                        }}
-                      >
+                       <Card
+                       key={category._id}
+                       onClick={() => setSelectedCategory(category._id)}
+                       sx={{
+                         transition: "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, border 0.2s ease-in-out",
+                         border: selectedCategory === category._id ? "2px solid black" : "1px solid #d3d3d3",
+                         cursor: "pointer",
+                         mt: "5px",
+                         "&:hover": {
+                           transform: "translateY(-5px) scale(1.08)",
+                           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+                         },
+                       }}
+                     >
+                     
                       
                           <CardMedia
                             component="img"

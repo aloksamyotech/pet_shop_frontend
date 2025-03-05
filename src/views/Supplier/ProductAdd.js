@@ -117,9 +117,9 @@ const ProductAdd = (props) => {
                     />
                   </FormControl>
                 </Grid>
-              </Grid>
+             
 
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+              
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Phone Number</FormLabel>
                   <TextField

@@ -103,20 +103,20 @@ const Invoice = () => {
 
   return (
     <>
-      <Stack direction="row" alignItems="center" mb={5}>
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            height: '50px',
-            width: '100%',
-            display: 'flex',
-            borderRadius: '10px',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '10px',
-            marginTop: '-7px'
-          }}
-        >
+      
+      <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+             mb:'40px'
+            }}
+          >
           <Stack direction="row" alignItems="center">
             <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
               <HomeIcon />
@@ -142,14 +142,15 @@ const Invoice = () => {
             </Typography>
           </Stack>
         </Box>
-      </Stack>
+     
+
       <Box
         sx={{
           backgroundColor: '#fff',
-          width: '80%',
+          width: '100%',
           minHeight: '100vh',
           padding: '15px',
-          ml: '90px'
+          marginTop: '-25px' 
         }}
       >
         <Box

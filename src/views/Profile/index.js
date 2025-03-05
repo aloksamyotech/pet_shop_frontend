@@ -1,5 +1,5 @@
 import HomeIcon from '@mui/icons-material/Home';
-import { Stack, Button, Box, Grid, Breadcrumbs, Avatar, Typography, Divider, TextField, Tab, TablePagination } from '@mui/material';
+import { Stack, Button, Box, Grid, Breadcrumbs, Avatar, Typography, Divider, TextField, Tab, IconButton } from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -7,6 +7,7 @@ import AddTask from './AddProfile';
 import CompanyLogoUploader from './Logo';
 import { updateApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const User = () => {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const User = () => {
           <Grid item xs={12}>
             <Stack direction="row" mb={2} sx={{ display: 'flex', alignItems: 'center' }}>
               <Box
-                sx={{
+                 sx={{
                   backgroundColor: 'white',
                   height: '50px',
                   width: '100%',
@@ -94,20 +95,21 @@ const User = () => {
                   borderRadius: '10px',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '0 25px'
+                  padding: '0 25px',
+                 mb:'5px'
                 }}
               >
-                <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
-                  Profile
-                </Typography>
-
-                <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={2}>
-                  <Breadcrumbs aria-label="breadcrumb">
-                    <HomeIcon sx={{ color: '#2067db' }} fontSize="medium" onClick={handleClick} />
+               
+      <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={1}>
+                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                <HomeIcon />
+              </IconButton>
+             
+              <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
                     <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
                       Profile Information
                     </Typography>
-                  </Breadcrumbs>
+               
                 </Stack>
               </Box>
             </Stack>
@@ -123,7 +125,17 @@ const User = () => {
                 mt:'-15px'
               }}
             >
-              <TabList indicatorColor="none" onChange={(event, newValue) => setTabValue(newValue)}>
+             <TabList
+  indicatorColor="#4b75eb"
+  onChange={(event, newValue) => setTabValue(newValue)}
+  sx={{
+    borderBottom: '0.9px solid #d3d3d3', 
+    "& .MuiTabs-indicator": {
+      backgroundColor: "#4b75eb", 
+     
+    },
+  }}
+>
                 <Tab
                   value="1"
                   sx={{ fontWeight: 'bold' }}
@@ -149,6 +161,7 @@ const User = () => {
                     </Box>
                   }
                 />
+                <Divider/>
                 
               </TabList>
               <TabPanel value="1">
