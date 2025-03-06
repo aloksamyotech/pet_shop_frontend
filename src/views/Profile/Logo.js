@@ -12,7 +12,7 @@ const CompanyLogoUploader = ({ companyId }) => {
   const [logo,setLogo] = useState(null)
 
 
-
+console.log("logo",logo)
  
   
     const fetchLogo = async () => {
@@ -41,7 +41,7 @@ const CompanyLogoUploader = ({ companyId }) => {
   };
 
   const handleUpload = async (values) => {
-    console.log("datuuuu",values)
+   
     if (!file) {
       alert("Please select an image first!");
       return;
@@ -49,7 +49,7 @@ const CompanyLogoUploader = ({ companyId }) => {
 
     const formData = new FormData();
     formData.append("logoImage", file);
-
+    console.log("datuuuu",formData)
     try {
     const response= await updateApiFormData(urls.logo.update.replace(":id", logo._id), formData);
     await fetchLogo()

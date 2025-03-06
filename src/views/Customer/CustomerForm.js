@@ -16,7 +16,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
       .string()
       .required('First Name is required')
       .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
-      .max(10, 'First Name cannot be more than 10 characters'),
+      .max(50, 'First Name cannot be more than 50 characters'),
     email: yup.string().required('Email is required').email('Invalid email address'),
     phoneNumber: yup
       .string()
@@ -26,8 +26,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
     address: yup
       .string()
       .required('Address is required')
-      .matches(/^[A-Za-z\s]+$/, 'Address must only contain letters')
-      .max(20, 'Address cannot be more than 20 characters'),
+      .max(100, 'Address cannot be more than 100 characters'),
   });
 
   const initialValues = {

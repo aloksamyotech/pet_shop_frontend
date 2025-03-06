@@ -8,6 +8,7 @@ import CompanyLogoUploader from './Logo';
 import { updateApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import { toast } from 'react-toastify'; 
 
 const User = () => {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const User = () => {
       alert('Please fill in all fields.');
       return;
     }
+    
 
     try {
       const response = await updateApi(urls.register.UpdateNewPassword.replace(':id', userObj._id), { currentPassword, newPassword });
@@ -61,6 +63,7 @@ const User = () => {
       if (response.success) {
         setCurrentPassword('');
         setNewPassword('');
+        toast.success("Password updated successfully!");
       } else {
         alert(response.message || 'Failed to update password.');
       }

@@ -27,11 +27,10 @@ const ProductAdd = (props) => {
   .string()
   .required('Company Name is required')
   .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters and spaces')
-  .max(20, 'Company Name cannot be more than 20 characters'),
+  .max(50, 'Company Name cannot be more than 50 characters'),
 
-
-    address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long')
-    .max(50 , 'company Name cannot be more then 50'),
+  address: yup.string().required('Address is required').max(50, 'Company Address cannot be more than 50 characters'),
+   
 
     phoneNumber: yup
       .string()
@@ -44,7 +43,7 @@ const ProductAdd = (props) => {
 
    
 
-    description: yup.string().required('Description is required').max(70 , 'Description cannot be more then 70'),
+    description: yup.string().max(100 , 'Description cannot be more then 100'),
   });
 
   const initialValues = {

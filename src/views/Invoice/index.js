@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 // @mui
 import {
@@ -47,8 +45,10 @@ const Invoice = () => {
 
   const fetchOrderDate = async () => {
     const response = await getApi(urls.order.get);
+
     setOrderDate(response.data.data[0].createdAt);
   };
+
   useEffect(() => {
     fetchOrderDate();
   }, []);
@@ -103,46 +103,44 @@ const Invoice = () => {
 
   return (
     <>
-      
       <Box
+        sx={{
+          backgroundColor: 'white',
+          height: '50px',
+          width: '100%',
+          display: 'flex',
+          borderRadius: '10px',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '0 25px',
+          mb: '40px'
+        }}
+      >
+        <Stack direction="row" alignItems="center">
+          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+            <HomeIcon />
+          </IconButton>
+          <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+
+          <Typography
+            onClick={() => navigate(-1)}
             sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '0 25px',
-             mb:'40px'
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontSize: '15px',
+              mx: 1,
+              '&:hover': { color: '#2067db' }
             }}
           >
-          <Stack direction="row" alignItems="center">
-            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
-              <HomeIcon />
-            </IconButton>
-            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+            Oder
+          </Typography>
 
-            <Typography
-              onClick={() => navigate(-1)}
-              sx={{
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                fontSize: '15px',
-                mx: 1,
-                '&:hover': { color: '#2067db' }
-              }}
-            >
-              Oder
-            </Typography>
-
-            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-            <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
-              View Invoice
-            </Typography>
-          </Stack>
-        </Box>
-     
+          <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+          <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
+            View Invoice
+          </Typography>
+        </Stack>
+      </Box>
 
       <Box
         sx={{
@@ -150,7 +148,7 @@ const Invoice = () => {
           width: '100%',
           minHeight: '100vh',
           padding: '15px',
-          marginTop: '-25px' 
+          marginTop: '-25px'
         }}
       >
         <Box
@@ -184,6 +182,12 @@ const Invoice = () => {
                 <Typography sx={{ color: '#fff' }}>
                   <strong>Date:</strong> {formattedDate}
                 </Typography>
+                <Typography sx={{ color: '#fff' }}>
+                  <strong>Time:</strong>{' '}
+                  {orderDate
+                    ? new Date(orderDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+                    : 'N/A'}
+                </Typography>
               </Box>
             </Box>
 
@@ -211,14 +215,13 @@ const Invoice = () => {
             <Typography sx={{ fontWeight: 'bold', mb: 1 }}>Customer Information</Typography>
             <Box sx={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Name:</strong>
-                {AllData.customerName}
+                <strong>Name :</strong> {AllData.customerName}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Email:</strong> {AllData.customerEmail}
+                <strong>Email :</strong> {AllData.customerEmail}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Phone Number:</strong> {AllData.customerPhone}
+                <strong>Phone Number :</strong> {AllData.customerPhone}
               </Typography>
             </Box>
           </Box>
@@ -241,7 +244,7 @@ const Invoice = () => {
                       <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
                       <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
                       <TableCell sx={{ color: 'white' }}>Price</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Discount (%)</TableCell>
+                      <TableCell sx={{ color: 'white' }}>Discount</TableCell>
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
                   </TableHead>

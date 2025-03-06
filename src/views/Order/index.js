@@ -28,6 +28,7 @@ import { postApi, getApi } from 'views/Api/comman.js';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { toast } from 'react-toastify';
 
 const Checkout = () => {
   const location = useLocation();
@@ -123,6 +124,7 @@ const Checkout = () => {
       const response = await postApi(urls.order.create, orderData);
       const Data = response.data.data;
       setCartItems([]);
+       toast.success('Order successfully!');
       navigate('/dashboard/ProductType', { state: { Data } });
     } catch (error) {
       console.error('Error creating invoice:', error);

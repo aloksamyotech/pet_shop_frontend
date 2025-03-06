@@ -33,11 +33,11 @@ const AddEdit = (props) => {
       .string()
       .required('Product Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
-      .max(20, 'product name cannot be more then 20 letter'),
+      .max(50, 'product name cannot be more then 50 letter'),
 
     categoryId: yup.string().required('product  is required'),
 
-    price: yup.number().required('Price is required').max(10000, 'product price less then 10000'),
+    price: yup.number().required('Price is required').max(1000000, 'product price less then 1000000'),
 
     discount: yup.number().integer('discount must be an integer')
   });
@@ -71,18 +71,16 @@ const AddEdit = (props) => {
   };
 
   useEffect(() => {
-
- if (product) {
+    if (product) {
       formik.setValues({
         productName: product?.productName || '',
         description: product?.description || '',
         price: product?.price || '',
-        categoryId :product?.category?.[0].name||'',
+        categoryId: product?.categoryId || '', 
         discount: product?.discount || ''
       });
-      fetchProduct();
-      fetchCategory();
     }
+    fetchCategory();
   }, [product, open]);
 
   return (
@@ -138,7 +136,7 @@ const AddEdit = (props) => {
                     name="categoryId"
                     size="small"
                     fullWidth
-                    value={formik.values.categoryId}
+                    value={formik.values.categoryId} 
                     onChange={formik.handleChange}
                     error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
                     MenuProps={{

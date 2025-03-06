@@ -128,7 +128,7 @@ const CustomerDetail = () => {
                   value="1"
                   sx={{ fontWeight: 'bold' }}
                 />
-                <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="My Order" value="2" />
+                <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="Order list" value="2" />
               </TabList>
             </Box>
 

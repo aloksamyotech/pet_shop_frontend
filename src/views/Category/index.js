@@ -33,7 +33,7 @@ const Customer = () => {
       const response = await getApi(urls.category.get);
       const categoryData = response?.data?.data || [];
       setCategory(categoryData);
-      setFilteredCategory(categoryData); 
+      setFilteredCategory(categoryData);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -47,9 +47,7 @@ const Customer = () => {
     if (!searchTerm) {
       setFilteredCategory(category);
     } else {
-      const filtered = category.filter((cat) =>
-        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const filtered = category.filter((cat) => cat.name.toLowerCase().includes(searchTerm.toLowerCase()));
       setFilteredCategory(filtered);
     }
   };
@@ -128,42 +126,41 @@ const Customer = () => {
     <>
       <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
       <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} />
-      
-      <Grid>
-      
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              height: '50px',
-              width: '100%',
-              display: 'flex',
-              borderRadius: '10px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '0 25px',
-             mb:'40px'
-            }}
-          >
-              <Stack direction="row" alignItems="center" >
-                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
-                  <HomeIcon />
-                </IconButton>
-                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
-                <Typography variant='h5'>Category</Typography> </Stack>
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleOpenForm()} size="small">
-                  New Category
-                </Button>
-              </Card>
-            </Stack>
-          </Box>
-       
 
-          <TableStyle>
+      <Grid>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            height: '50px',
+            width: '100%',
+            display: 'flex',
+            borderRadius: '10px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 25px',
+            mb: '40px'
+          }}
+        >
+          <Stack direction="row" alignItems="center">
+            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+              <HomeIcon />
+            </IconButton>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
+            <Typography variant="h5">Category</Typography>{' '}
+          </Stack>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Card>
+              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleOpenForm()} size="small">
+                New Category
+              </Button>
+            </Card>
+          </Stack>
+        </Box>
+
+        <TableStyle>
           <Box width="100%">
-              <Card style={{ height: '600px', marginTop: '-25px' }}>
-            <SearchBar onSearch={handleSearch} />
+            <Card style={{ height: '600px', marginTop: '-25px' }}>
+              <SearchBar onSearch={handleSearch} />
               <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id} />
             </Card>
           </Box>

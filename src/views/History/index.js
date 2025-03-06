@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Stack, Button, Container, Typography, Box, Card, Grid, Breadcrumbs,IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import HomeIcon from '@mui/icons-material/Home';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import TableStyle from '../../ui-component/TableStyle';
 import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
@@ -47,19 +47,9 @@ const History = () => {
   };
 
   const columns = [
-    { field: 'customerName', headerName: 'Name', flex: 1 },
+    { field: 'customerName', headerName: 'Customer Name', flex: 1 },
     { field: 'customerEmail', headerName: 'Email', flex: 1 },
     { field: 'customerPhone', headerName: 'Phone', flex: 1 },
-    {
-      field: 'products',
-      headerName: 'Item',
-      flex: 1,
-      valueGetter: (params) => {
-        return params.row?.products?.length > 0
-          ? params.row.products.map((p) => `${p.productName}(${p.quantity})`).join(', ')
-          : 'N/A';
-      }
-    },
     { field: 'totalAmount', headerName: 'Total Amount', flex: 1 },
     {
       field: 'orderDate',
@@ -75,7 +65,8 @@ const History = () => {
       flex: 1,
       renderCell: (params) => (
         <Button onClick={() => handleViewInvoice(params.row)}>
-          <VisibilityIcon sx={{ color: '#2067db' }} />
+          <ReceiptIcon style={{  color: '#2067db' }} />
+          {/* <VisibilityIcon sx={{ color: '#2067db' }} /> */}
         </Button>
       )
     }
