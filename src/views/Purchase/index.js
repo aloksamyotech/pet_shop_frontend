@@ -37,11 +37,6 @@ const Purchase = () => {
     }
   };
 
-
-  console.log("huhjhjd3333333333",purchase)
-
-
-
   const fetchPurchase = async () => {
     try {
       const response = await getApi(urls.purchase.get);
@@ -98,13 +93,13 @@ const Purchase = () => {
       field: 'productName',
       headerName: 'Product',
       flex: 1,
-      valueGetter: (params) => params.row.productName?.[0].productName|| 'N/A'
+      valueGetter: (params) => params.row.productName?.[0]?.productName || 'N/A'
     },
     {
       field: 'companyName',
       headerName: 'Company',
       flex: 1,
-      valueGetter: (params) => params.row.CompanyName?.[0].companyName || 'N/A'
+      valueGetter: (params) => params.row.CompanyName?.[0]?.companyName || 'N/A'
     },
     {
       field: 'totalPrice',

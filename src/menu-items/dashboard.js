@@ -22,12 +22,6 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-
-
-
-
-
-
 // constant
 const icons = {
   IconHome,
@@ -116,12 +110,7 @@ const dashboard = {
         },
       ]
     },
-
-  
-    
-   
-    
-    {
+{
       id: '07',
       title: 'Purchase',
       type: 'item',
@@ -130,9 +119,7 @@ const dashboard = {
       breadcrumbs: false
     },
 
-    
-
-    {
+      {
       id: '03',
       title: ' Order History',
       type: 'item',
@@ -159,9 +146,7 @@ const dashboard = {
     },
   
   
-    
-      
-  ]
+   ]
 };
 
 export default dashboard;

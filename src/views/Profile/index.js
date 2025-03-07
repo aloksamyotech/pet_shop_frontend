@@ -1,5 +1,5 @@
 import HomeIcon from '@mui/icons-material/Home';
-import { Stack, Button, Box, Grid, Breadcrumbs, Avatar, Typography, Divider, TextField, Tab, IconButton } from '@mui/material';
+import { Stack, Button, Box, Grid, Breadcrumbs, Avatar, Typography, Divider, TextField, Tab, IconButton ,InputAdornment} from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -9,6 +9,8 @@ import { updateApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { toast } from 'react-toastify'; 
+import Switch from '@mui/material/Switch';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const User = () => {
   const navigate = useNavigate();
@@ -25,6 +27,20 @@ const User = () => {
   const storedPhoneNumber = localStorage.getItem('phoneNumber') || '';
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
+  const [login, setLogin] = useState(true);
+  const [order, setOrder] = useState(true);
+  const [customer, setCustomer] = useState(true);
+  const [purchase, setPurchase] = useState(true);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+
+
   const handleClick = () => {
     navigate('/dashboard/default');
   };
@@ -164,6 +180,14 @@ const User = () => {
                     </Box>
                   }
                 />
+                 <Tab
+                  value="4"
+                  label={
+                    <Box display="flex" alignItems="center">
+                      Email Manage 
+                    </Box>
+                  }
+                />
                 <Divider/>
                 
               </TabList>
@@ -263,51 +287,96 @@ const User = () => {
                 <CompanyLogoUploader />
               </TabPanel>
               <TabPanel value="3">
-                <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">
-                  <Box
-                    sx={{
-                      backgroundColor: 'white',
-                      borderRadius: '10px',
-                      padding: '20px',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                      width: '50%'
-                    }}
-                  >
-                    <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Update Password</Typography>
-                    <Divider />
+      <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">
+        <Box
+          sx={{
+            backgroundColor: "white",
+            borderRadius: "10px",
+            padding: "20px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+            width: "50%",
+          }}
+        >
+          <Typography sx={{ fontWeight: "bold", marginBottom: 1 }}>Update Password</Typography>
+          <Divider />
 
-                    <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Enter Current Password"
-                          variant="outlined"
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          type="password"
-                        />
-                      </Grid>
+          <Grid container spacing={2} sx={{ marginTop: 2 }}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Enter Current Password"
+                variant="outlined"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                type={showCurrentPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowCurrentPassword(!showCurrentPassword)} edge="end">
+                        {showCurrentPassword ? <Visibility /> :   <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
 
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Enter New Password"
-                          variant="outlined"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          type="password"
-                        />
-                      </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Enter New Password"
+                variant="outlined"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                type={showNewPassword ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
+                        {showNewPassword ?<Visibility /> : <VisibilityOff /> }
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
 
-                      <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} onClick={handlePasswordChange}>
-                          <Button variant="contained">Update</Button>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
-              </TabPanel>
+            <Grid item xs={12}>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button variant="contained" onClick={handlePasswordChange}>
+                  Update
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      </Grid>
+    </TabPanel>
+              <TabPanel value="4">
+              <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center" alignItems='center' textAlign="center">
+        <Box display="flex" alignItems="center" gap={1}>
+        <Typography>Login</Typography>
+        <Switch checked={login} onChange={() => setLogin(!login)} />
+      </Box>
+              <Box display="flex" alignItems="center" gap={1}>
+        <Typography>Order</Typography>
+        <Switch checked={order} onChange={() => setOrder(!order)}  />
+      </Box>
+
+     
+      <Box display="flex" alignItems="center" gap={1}>
+        <Typography>Customer Add</Typography>
+        <Switch checked={customer} onChange={() => setCustomer(!customer)} />
+      </Box>
+
+     
+      <Box display="flex" alignItems="center" gap={1}>
+        <Typography>Purchase</Typography>
+        <Switch checked={purchase} onChange={() => setPurchase(!purchase)}  />
+      </Box>
+    
+</Grid>
+ </TabPanel>
             </Box>
           </Grid>
         </Grid>
