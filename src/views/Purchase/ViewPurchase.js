@@ -5,9 +5,7 @@ const ViewPurchase = ({ open, handleClose, purchase }) => {
   if (!purchase) return null;
   const Values =purchase?.productName
 
-  console.log("prihjjnj",purchase)
-
-  return (
+ return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
 
 <DialogTitle id="category-dialog-title" style={{ display: 'flex', justifyContent: 'space-between' }}>

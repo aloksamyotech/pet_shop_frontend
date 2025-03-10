@@ -26,7 +26,7 @@ const FirebaseLogin = ({ ...others }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
 
-  const email = "riya@samyotech.com";
+  const email = "priti.sahu@samyotech.com";
   const password = "12345678"; 
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);

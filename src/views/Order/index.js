@@ -124,8 +124,8 @@ const Checkout = () => {
       const response = await postApi(urls.order.create, orderData);
       const Data = response.data.data;
       setCartItems([]);
-       toast.success('Order successfully!');
       navigate('/dashboard/ProductType', { state: { Data } });
+      toast.success('Order successfully!');
     } catch (error) {
       console.error('Error creating invoice:', error);
       Swal.fire('Error', 'There was an issue creating the invoice.', 'error');

@@ -66,7 +66,7 @@ const TotalCustomer = ({ isLoading }) => {
       const response = await getApi(urls.customer.getCount);
       
   
-      if (response && response.data && response.data.count) {
+      if (response &&  response?.data?.count) {
         setCustomer(response.data.count || 0);
       } else {
         console.error("Invalid API response structure:", response);

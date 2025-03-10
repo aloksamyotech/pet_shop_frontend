@@ -64,9 +64,9 @@ const TotalProduct = ({ isLoading }) => {
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.company.getCount);
-      console.log("dataproduct",response)
+    console.log("data",response)
 
-      if (response && response.data?.count) {
+      if (response && response?.data?.count) {
         setCustomer(response.data.count|| 0);
       } else {
         console.error('Invalid API response:', response);

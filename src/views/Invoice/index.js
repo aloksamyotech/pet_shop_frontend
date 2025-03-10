@@ -45,8 +45,7 @@ const Invoice = () => {
 
   const fetchOrderDate = async () => {
     const response = await getApi(urls.order.get);
-
-    setOrderDate(response.data.data[0].createdAt);
+   setOrderDate(response.data.data[0].createdAt);
   };
 
   useEffect(() => {
