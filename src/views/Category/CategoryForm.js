@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { postApiImage, updateApi ,updateApiFormData} from 'views/Api/comman.js';
+import { postApiImage, updateApi, updateApiFormData } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 
@@ -11,14 +11,12 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const isEditing = Boolean(category);
 
-
-
   const validationSchema = yup.object({
     name: yup
       .string()
       .required('Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
-      .max(20, 'Max 20 characters'),
+      .max(50, 'Max 50 characters'),
     description: yup.string().max(100, 'Max 100 characters')
   });
 
@@ -33,23 +31,22 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description);
-    
-     
-    
-     
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
+
+      if (values.categoryImage) {
+        formData.append('categoryImage', values.categoryImage);
       }
-    
+
       try {
         if (isEditing) {
           await updateApi(urls.category.update.replace(':id', category._id), values);
           toast.success('Category updated successfully!');
+          formik.resetForm();
         } else {
           await postApiImage(urls.category.create, formData);
           toast.success('Category added successfully!');
+          formik.resetForm();
         }
-    
+
         await fetchCategories();
         handleClose();
       } catch (error) {
@@ -57,7 +54,6 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
         toast.error(isEditing ? 'Error updating category' : 'Category already exists');
       }
     }
-    
   });
 
   useEffect(() => {
@@ -109,18 +105,21 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 label="Description"
                 fullWidth
                 size="small"
+                multiline
+                rows={3}
                 value={formik.values.description}
                 onChange={formik.handleChange}
                 error={formik.touched.description && Boolean(formik.errors.description)}
                 helperText={formik.touched.description && formik.errors.description}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Box
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                minHeight="200px"
+                minHeight="100px"
                 border={1}
                 borderColor="grey.300"
                 borderRadius={1}

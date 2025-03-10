@@ -14,6 +14,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from 'sweetalert2';
 import ViewPurchase from './ViewPurchase';
 import SearchBar from 'views/Search';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
@@ -35,11 +36,6 @@ const Purchase = () => {
 
     }
   };
-
-
-  console.log("huhjhjd3333333333",purchase)
-
-
 
   const fetchPurchase = async () => {
     try {
@@ -97,13 +93,13 @@ const Purchase = () => {
       field: 'productName',
       headerName: 'Product',
       flex: 1,
-      valueGetter: (params) => params.row.productName?.[0].productName|| 'N/A'
+      valueGetter: (params) => params.row.productName?.[0]?.productName || 'N/A'
     },
     {
       field: 'companyName',
       headerName: 'Company',
       flex: 1,
-      valueGetter: (params) => params.row.CompanyName?.[0].companyName || 'N/A'
+      valueGetter: (params) => params.row.CompanyName?.[0]?.companyName || 'N/A'
     },
     {
       field: 'totalPrice',
@@ -124,25 +120,27 @@ const Purchase = () => {
       field: 'paymentStatus',
       headerName: 'Payment Status',
       flex: 1,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          size="small"
-          sx={{
-            backgroundColor:
-              params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : '',
-            width: '80px',
-            textAlign: 'center',
-            padding: '2px',
-            '&:hover': {
-              backgroundColor:
-                params.value === 'Success' ? '#7011bc' : params.value === 'Pending' ? '#12aae8' : params.value === 'Failed' ? '#FF5733' : ''
-            }
-          }}
-        >
-          {params.value}
-        </Button>
-      )
+      renderCell: (params) => {
+        return(
+         <Box
+         sx={{
+           backgroundColor:
+            params.value  === 'Success' ? '#D5FADF' :params.value  === 'Pending' ? '#F8E1A1' :params.value  === 'Failed' ? '#FBE9E7' : '',
+           color:params.value  === 'Success' ? '#19AB53' :params.value  === 'Pending' ? '#FF9800' :params.value  === 'Failed' ? '#F44336' : '',
+           borderRadius: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+             width: '60px',
+            height: '20px',
+           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            gap: '0.5rem',
+            fontSize: '10x'
+         }}
+       >
+         {params.value}
+       </Box>
+       )}
     },
     {
       field: 'Action',
@@ -178,8 +176,8 @@ const Purchase = () => {
       />
       <ViewPurchase open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} />
       <Grid>
-        <Stack direction="row" alignItems="center" mb={5}>
-          <Box
+      <Stack direction="row" alignItems="center" mb={3}>
+      <Box
             sx={{
               backgroundColor: 'white',
               height: '50px',
@@ -189,28 +187,35 @@ const Purchase = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '0 25px',
-              marginTop: '-7px'
+             mb:'40px'
             }}
           >
-            <Breadcrumbs aria-label="breadcrumb">
-              <HomeIcon sx={{ color: '#2067db' }} onClick={home} />
-              <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
-                Purchase-Information
-              </Typography>
-            </Breadcrumbs>
-            <Stack direction="row" alignItems="center" justifyContent={'flex-end'} spacing={2}>
+          
+            <Stack direction="row" alignItems="center">
+              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                <HomeIcon />
+              </IconButton>
+             
+              <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>  Purchase-Information</Typography>
+            </Stack>
+
+            <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setOpenAdd(true)} size="small">
-                  New Purchase
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small">
+                New Purchase
                 </Button>
               </Card>
             </Stack>
           </Box>
         </Stack>
 
+
+       
+
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-25px' }}>
+          <Card style={{ height: '600px', marginTop: '-45px' }}>
             <SearchBar onSearch={handleSearch} />
               <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} />
             </Card>

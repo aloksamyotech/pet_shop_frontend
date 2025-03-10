@@ -36,11 +36,11 @@ const AddLead = (props) => {
       .string()
       .required('Product Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
-      .max(20 , "product name cannot be more then 20 letter"),
+      .max(50 , "product name cannot be more then 50 letter"),
 
     categoryId: yup.string().required('category  is required'),
 
-    price: yup.number().required('Price is required').max(10000,"product price less then 10000"),
+    price: yup.number().required('Price is required').max(1000000,"product price less then 1000000"),
 
     discount: yup.number()
        .integer('discount must be an integer'),
@@ -185,7 +185,7 @@ const AddLead = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount(%)</FormLabel>
+                    <FormLabel>Discount</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"

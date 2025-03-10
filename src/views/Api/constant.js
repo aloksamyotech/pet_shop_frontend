@@ -79,5 +79,17 @@ export const urls = Object.freeze({
     create : base +'/Logo/save',
     update: base + '/Logo/update/:id',
     get : base + '/Logo/fetch'
-  }  
+  }  ,
+
+email :{
+
+  get : base +'/Email/fetch',
+  update : base +'/Email/update'
+
+}
+
+
+
+
+
 });

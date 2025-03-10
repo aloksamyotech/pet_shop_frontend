@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import SearchBar from 'views/Search';
 import ProductAdd from './ProductAdd';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const Supplier = () => {
   const navigate = useNavigate();
@@ -88,7 +89,13 @@ const Supplier = () => {
   };
 
   const columns = [
-    { field: 'companyName', headerName: 'Company Name', flex: 1 },
+    { field: 'companyName', headerName: 'Company Name', flex: 1 , renderCell: (params) => (
+      <Stack direction="row" alignItems="center" spacing={1}>
+       <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
+
+        <Typography>{params.value}</Typography>
+      </Stack>
+    ),},
     { field: 'email', headerName: 'Email', flex: 1 },
     { field: 'phoneNumber', headerName: 'Phone Number', flex: 1 },
     { field: 'address', headerName: 'Address', flex: 1 },
@@ -97,24 +104,29 @@ const Supplier = () => {
       field: 'status',
       headerName: 'Status',
       flex: 1,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
+      renderCell: (params) => {
+         return(
+          <Box
           sx={{
-            boxShadow: 'none',
-            padding: '3px 3px',
-            fontSize: '.6rem',
-            backgroundColor: params.value === 'Active' ? '#419737' :
-                            params.value === 'Inactive' ? '#12aae8' :
-                            params.value === 'Blocked' ? '#FF5733' : '',
-            '&:hover': { backgroundColor: params.value === 'Active' ? '#419737' :
-                                         params.value === 'Inactive' ? '#12aae8' :
-                                         params.value === 'Blocked' ? '#FF5733' : '' }
+            backgroundColor:
+             params.value  === 'Active' ? '#D5FADF' :params.value  === 'Inactive' ? '#F8E1A1' :params.value  === 'Blocked' ? '#FBE9E7' : '',
+            color:params.value  === 'Active' ? '#19AB53' :params.value  === 'Inactive' ? '#FF9800' :params.value  === 'Blocked' ? '#F44336' : '',
+           borderRadius: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+             width: '60px',
+            height: '20px',
+           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            gap: '0.5rem',
+            fontSize: '10x'
           }}
         >
           {params.value}
-        </Button>
-      )
+        </Box>
+        )
+        
+    }
     },
     {
       field: 'Action',
@@ -177,7 +189,7 @@ const Supplier = () => {
 
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"   onClick={handleOpenAdd} />} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={handleOpenAdd} size="small">
                   New Supplier
                 </Button>
               </Card>

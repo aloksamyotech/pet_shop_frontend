@@ -96,7 +96,8 @@ const Customer = () => {
       flex: 0.5,
       renderCell: (params) => (
         <Stack direction="row" alignItems="center" spacing={1}>
-          <CheckCircleIcon sx={{ color: 'green' }} />
+       <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
+
           <Typography>{params.value}</Typography>
         </Stack>
       ),
@@ -108,11 +109,27 @@ const Customer = () => {
       field: 'status',
       headerName: 'Status',
       flex: 0.5,
-      renderCell: (params) => (
-        <Button variant="contained" sx={{ backgroundColor: params.value === 'Active' ? '#419737' : '#d32f2f', color: '#fff', fontSize: '.6rem' }}>
-          {params.value}
-        </Button>
-      ),
+      renderCell: (params) => {
+        return(
+         <Box
+         sx={{
+           backgroundColor:
+            params.value  === 'Active' ? '#D5FADF' :params.value  === 'Inactive' ? '#F8E1A1' :params.value  === 'Blocked' ? '#FBE9E7' : '',
+           color:params.value  === 'Active' ? '#19AB53' :params.value  === 'Inactive' ? '#FF9800' :params.value  === 'Blocked' ? '#F44336' : '',
+           borderRadius: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+             width: '60px',
+            height: '20px',
+           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            gap: '0.5rem',
+            fontSize: '10x'
+         }}
+       >
+         {params.value}
+       </Box>
+       )}
     },
     {
       field: 'actions',

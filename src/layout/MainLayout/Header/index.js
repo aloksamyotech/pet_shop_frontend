@@ -54,7 +54,7 @@ const fetchLogo = async () => {
         <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
         <CardMedia
     component="img"
-    image={logo}
+    image={logo  || "https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg"}
     alt="Description of the image"
     sx={{
       width: '50px',

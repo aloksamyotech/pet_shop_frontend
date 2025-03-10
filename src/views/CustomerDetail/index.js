@@ -15,7 +15,9 @@ import {
   Breadcrumbs,
   TableCell,
   Stack,
-  IconButton
+  IconButton,
+  TextField,
+  Avatar
 } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import TableStyle from '../../ui-component/TableStyle';
@@ -32,6 +34,7 @@ import { Tab } from '@mui/material';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
+
 
 const CustomerDetail = () => {
   const [value, setValue] = useState('1');
@@ -117,7 +120,7 @@ const CustomerDetail = () => {
         <Grid spacing={2} container md={12} direction="column">
           <Box sx={{ width: 'auto', height: 'auto', p: '4px', backgroundColor: 'white', borderRadius: '10px', ml: '20px', marginTop: '-50px',mr:'-15px' }}>
             <Box sx={{ borderBottom: 1, border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <TabList onChange={handleChange} indicatorColor="none">
+              <TabList onChange={handleChange} indicatorColor="primary">
                 <Tab
                   icon={<AccountCircleIcon sx={{ fontWeight: 'bold' }} />}
                   iconPosition="start"
@@ -125,12 +128,106 @@ const CustomerDetail = () => {
                   value="1"
                   sx={{ fontWeight: 'bold' }}
                 />
-                <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="My Order" value="2" />
+                <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="Order list" value="2" />
               </TabList>
             </Box>
 
             <TabPanel value="1">
-              <Grid container justifyContent="center">
+
+            <Grid container spacing={3} alignItems="stretch">
+                  <Grid item xs={12} sm={4} display="flex" height="auto">
+                    <Box
+                      sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                        textAlign: 'center',
+                        width: '100%'
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Customer Picture</Typography>
+                      <Divider />
+                      <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+                        <Avatar
+                          alt="Profile Image"
+                          src={
+                            'https://png.pngtree.com/png-clipart/20240702/original/pngtree-indian-office-girl-wearing-formal-black-and-white-dress-with-long-png-image_15465282.png'
+                          }
+                          sx={{
+                            width: 130,
+                            height: 130,
+                            borderRadius: '50%',
+                            backgroundColor: '#7760f6'
+                          }}
+                        />
+                      </Box>
+                      <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Admin</Typography>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12} sm={8}>
+                    <Box
+                      sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                        width: '100%',
+                        height: '100%'
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Account Details</Typography>
+                      <Divider />
+
+                      <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                        <Grid item xs={12}>
+                          <TextField
+                            fullWidth
+                            label="First Name"
+                            variant="outlined"
+                            defaultValue= {DataCustomer?.firstName} 
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            fullWidth
+                            label="Email Address"
+                            variant="outlined"
+                            defaultValue= {DataCustomer?.email}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            fullWidth
+                            label="Address"
+                            variant="outlined"
+                            defaultValue={DataCustomer?.address || 'No Address Provided'}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            fullWidth
+                            label="Phone Number"
+                            variant="outlined"
+                            defaultValue={DataCustomer?.phoneNumber || 'N/A'}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+
+
+
+              {/* <Grid container justifyContent="center">
                 <Grid item xs={12} md={6}>
                   <Box
                     sx={{
@@ -167,7 +264,7 @@ const CustomerDetail = () => {
                     </Box>
                   </Box>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </TabPanel>
 
             <TabPanel value="2">

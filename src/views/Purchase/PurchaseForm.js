@@ -63,7 +63,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
       .positive('Quantity must be a positive number')
       .integer('Quantity must be an integer')
       .required('Quantity is required')
-      .max(1000, 'Max 1000 quantity allowed'),
+      .max(10000, 'Max 10000 quantity allowed'),
     totalPrice: yup.number().positive('Total Price must be greater than 0').required('Total Price is required'),
     discount: yup.number().integer('Discount must be an integer'),
     paymentStatus: yup.string().required('Payment Status is required'),

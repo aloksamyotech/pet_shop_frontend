@@ -13,7 +13,9 @@ import { getApi, deleteApi } from "views/Api/comman.js";
 import { urls } from "views/Api/constant";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import Iconify from 'ui-component/iconify';
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import AddIcon from "@mui/icons-material/Add"; // Import Plus icon
 
 const Lead = () => {
   const [products, setProducts] = useState([]);
@@ -25,6 +27,8 @@ const Lead = () => {
   const [productUpdated, setProductUpdated] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeProduct, setActiveProduct] = useState(null);
+  
+
 
   const fetchProducts = async () => {
     const response = await getApi(urls.product.get);
@@ -88,23 +92,40 @@ const Lead = () => {
       <AddBulkUpload open={open} handleClose={() => setOpen(false)} fetchProduct={fetchProducts} />
       <AddLead open={openAdd} handleClose={() => setOpenAdd(false)} fetchProduct={fetchProducts} />
 
-      <Stack direction="row" alignItems="center" mb={3} backgroundColor="#fff" padding="10px">
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <HomeIcon sx={{ color: "#2067db", cursor: "pointer" }} onClick={handleClick} />
-          <ArrowBackIosNewRoundedIcon sx={{ transform: "rotate(180deg)", fontSize: "18px", color: "black", mr: 1 }} />
-          <Typography variant="h5">Product Management</Typography>
-        </Box>
-        <Stack direction="row" alignItems="center" ml="auto" spacing={2}>
-          <Button variant="contained" onClick={() => setOpen(true)}>
-            Bulk Upload
-          </Button>
-          <Button variant="contained" onClick={() => setOpenAdd(true)}>
-            Add Product
-          </Button>
-        </Stack>
-      </Stack>
+     
 
-      <Grid container spacing={1}>
+      <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+             mb:'40px'
+            }}
+          >
+              <Stack direction="row" alignItems="center" >
+                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                  <HomeIcon />
+                </IconButton>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
+                <Typography variant='h5'>Product Information</Typography> </Stack>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Card>
+              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}  onClick={() => setOpen(true)} size="small">
+                Bulk Upload
+                </Button>
+            </Card>
+            <Card>  <Button variant="contained" onClick={() => setOpenAdd(true)} startIcon={<Iconify icon="eva:plus-fill" />}  size="small">
+            Add Product
+          </Button></Card>
+            </Stack>
+          </Box>
+
+      <Grid container spacing={1} sx={{marginTop: '-30px'}}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
             <Card
@@ -128,57 +149,140 @@ const Lead = () => {
                 sx={{ objectFit: "cover", borderRadius: 2 }}
               />
 
-              <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "16px" }}>
-                  {product.productName}
-                </Typography>
+<CardContent sx={{mt:"-15px"}}>
+  <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "16px" }}>
+    {product.productName}
+  </Typography>
 
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Rating value={product.rating || 4} precision={0.5} readOnly size="small" />
-                  <Typography variant="body2" sx={{ ml: 1, color: "#757575" }}>
-                    {product.reviews || Math.floor(Math.random() * 500) + 1}
-                  </Typography>
-                </Box>
-                <Typography variant="body2" sx={{ color: "#757575", fontSize: "14px" }}>
-                  <strong>Stock:</strong> {product.quantity || "0"}
-                </Typography>
+  <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Rating value={product.rating || 4} precision={0.5} readOnly size="small" />
+    <Typography variant="body2" sx={{ ml: 1, color: "#757575" }}>
+      {product.reviews || Math.floor(Math.random() * 500) + 1}
+    </Typography>
+  </Box>
 
-                <Typography variant="h6" sx={{ color: "#39b2e9", fontWeight: "bold" }}>
-                  Rs.{product.price || "N/A"}
-                </Typography>
+  <Box>
+    {product.category.map((cat, index) => (
+      <Box key={index}>
+        <Typography sx={{ color: "#757575", fontSize: "14px" }}>
+          <strong>Category:</strong> {cat.name}
+        </Typography>
+      </Box>
+    ))}
+  </Box>
 
-                <Box sx={{ mt: 1 }}>
-                  {product.category.map((cat, index) => (
-                    <Chip key={index} label={cat.name} sx={{ backgroundColor: "#419737", color: "white", fontSize: "12px", mr: 1 }} />
-                  ))}
-                </Box>
-              </CardContent>
+  <Typography variant="body2" sx={{ color: "#757575", fontSize: "14px" }}>
+    <strong>Stock:</strong> {product.quantity || "0"}
+  </Typography>
 
-              <Box sx={{ position: "absolute", top: 10, right: 10 }}>
-                <IconButton onClick={(e) => handlePopoverOpen(e, product)}>
-                  <MoreVertIcon />
-                </IconButton>
-              </Box>
 
-              <Popover
-                open={Boolean(anchorEl) && activeProduct?._id === product._id}
-                anchorEl={anchorEl}
-                onClose={handlePopoverClose}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-              >
-                <Box sx={{ display: "flex", flexDirection: "column", p: 1 }}>
-                  <IconButton onClick={() => handleView(product)}>
-                    <VisibilityIcon sx={{ color: "#00bbff" }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleUpdate(product)}>
-                    <EditIcon sx={{ color: "#5f0497" }} />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(product._id)}>
-                    <DeleteIcon sx={{ color: "#d32f2f" }} />
-                  </IconButton>
-                </Box>
-              </Popover>
+  <Typography variant="h6" sx={{ color: "#39b2e9", fontWeight: "bold"}}>
+    Rs.{product.price || "N/A"}
+  </Typography>
+
+ 
+  <Box sx={{ display: "flex", flexDirection: "row" ,justifyContent:'space-between' , gap:'2px',mt:'2px'}}>
+
+
+  <Box
+  sx={{
+    backgroundColor: "#D5FADF",
+    color: "#19AB53",
+    padding: "1px",
+    borderRadius: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40px",
+    height: "20px",
+    textTransform: "uppercase",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    gap: "0.5rem",
+    fontSize: "10px",
+    cursor: "pointer", 
+    transition: "background-color 0.3s ease, transform 0.2s ease", 
+    "&:hover": {
+      backgroundColor: "#B2F0C6", 
+      transform: "scale(1.05)", 
+    },
+    "&:active": {
+      transform: "scale(0.95)", 
+    }
+  }}
+  onClick={() => handleView(product)}
+>
+  View
+</Box>
+
+<Box
+  sx={{
+    backgroundColor: "#F8E1A1",
+    color: "#FF9800",
+    padding: "1px",
+    borderRadius: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40px",
+    height: "20px",
+    textTransform: "uppercase",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    gap: "0.5rem",
+    fontSize: "10px",
+    cursor: "pointer", 
+    transition: "background-color 0.3s ease, transform 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#F6C768", 
+      transform: "scale(1.05)", 
+    },
+    "&:active": {
+      transform: "scale(0.95)", 
+    }
+  }}
+  onClick={() => handleUpdate(product)}
+>
+  Edit
+</Box>
+
+<Box
+  sx={{
+    backgroundColor: "#FBE9E7",
+    color: "#F44336",
+    padding: "1px",
+    borderRadius: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40px",
+    height: "20px",
+    textTransform: "uppercase",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    gap: "0.5rem",
+    fontSize: "10px",
+    cursor: "pointer", 
+    transition: "background-color 0.3s ease, transform 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#F8C1BE", 
+      transform: "scale(1.05)", 
+    },
+    "&:active": {
+      transform: "scale(0.95)", 
+    }
+  }}
+  onClick={() => handleDelete(product._id)}
+>
+  Delete
+</Box>
+
+
+  
+  </Box>
+</CardContent>
+
+
+
+             
+             
             </Card>
           </Grid>
         ))}
