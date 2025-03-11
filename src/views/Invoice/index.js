@@ -242,7 +242,7 @@ const Invoice = () => {
                     <TableRow sx={{ fontWeight: 'bold' }}>
                       <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
                       <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Price</TableCell>
+                      <TableCell sx={{ color: 'white' }}>Rate</TableCell>
                       <TableCell sx={{ color: 'white' }}>Discount</TableCell>
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>

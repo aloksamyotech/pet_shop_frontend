@@ -50,39 +50,44 @@ const CompanyLogoUploader = ({ companyId }) => {
 
   return (
     <>
-      <Grid item xs={12} sm={12} display="flex" justifyContent="center">
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            padding: '20px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-            textAlign: 'center',
-            width: '50%'
-          }}
-        >
-          <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Company Logo</Typography>
-          <Divider />
-          <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-            <Avatar
-              alt="Logo Image"
-              src={logo?.imageUrl || 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'}
-              sx={{
-                width: 130,
-                height: 130,
-                borderRadius: '50%',
-                backgroundColor: '#7760f6'
-              }}
-            />
-          </Box>
-          <Grid item xs={12}>
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          </Grid>
-          <Button variant="contained" sx={{ mt: '10px' }} onClick={handleUpload}>
-            Upload Logo
-          </Button>
+   <Grid item xs={4} display="flex" height="auto">
+      <Box
+        sx={{
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          padding: '20px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+          textAlign: 'center',
+          width: '100%',
+        }}
+      >
+        <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>
+          Company Logo
+        </Typography>
+        <Divider />
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+          <Avatar
+            alt="Logo Image"
+            src={
+              logo?.imageUrl ||
+              'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'
+            }
+            sx={{
+              width: 130,
+              height: 130,
+              borderRadius: '50%',
+              backgroundColor: '#7760f6',
+            }}
+          />
         </Box>
-      </Grid>
+        <Grid item xs={12}>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+        </Grid>
+        <Button variant="contained" sx={{ mt: '10px' }} onClick={handleUpload}>
+          Upload Logo
+        </Button>
+      </Box>
+    </Grid>
     </>
   );
 };

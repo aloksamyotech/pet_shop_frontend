@@ -48,7 +48,7 @@ const icons = {
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
-  title: 'Dashboard-Menu',
+  title: 'Admin Dashboard-Menu',
   type: 'group',
   children: [
     {

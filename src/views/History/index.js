@@ -9,6 +9,7 @@ import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import PersonIcon from '@mui/icons-material/Person';
 
 const History = () => {
   const [product, setProduct] = useState([]);
@@ -47,18 +48,41 @@ const History = () => {
   };
 
   const columns = [
-    { field: 'customerName', headerName: 'Customer Name', flex: 1 },
+    {
+    field: 'customerName',
+    headerName: 'Customer Name',
+    flex: 1,
+    renderCell: (params) => (
+      <span>
+        <PersonIcon fontSize="small" style={{ verticalAlign: 'middle', marginRight: 5 }} />
+        {params.value}
+      </span>
+    ),
+  },
     { field: 'customerEmail', headerName: 'Email', flex: 1 },
     { field: 'customerPhone', headerName: 'Phone', flex: 1 },
-    { field: 'totalAmount', headerName: 'Total Amount', flex: 1 },
+    { field: 'totalAmount', headerName: 'Paid Amount', flex: 1 },
     {
       field: 'orderDate',
       headerName: 'Order Date',
       flex: 1,
-      valueGetter: (params) => params.row?.createdAt 
-        ? new Date(params.row.createdAt).toLocaleDateString() 
-        : ''
-    },
+      renderCell: (params) => {
+        if (!params.row?.createdAt) return '';
+        
+        const date = new Date(params.row.createdAt);
+        const formattedDate = date.toLocaleDateString();
+        const formattedTime = date.toLocaleTimeString(); 
+    
+        return (
+          <span>
+            {formattedDate}
+            <br />
+            <small style={{ color: 'gray' }}>{formattedTime}</small>
+          </span>
+        );
+      }
+    }
+    ,
     {
       field: 'invoice',
       headerName: 'Invoice',

@@ -38,6 +38,7 @@ const User = () => {
   const storedEmail = localStorage.getItem('email') || '';
   const storedCompany = localStorage.getItem('company') || '';
   const storedPhoneNumber = localStorage.getItem('phoneNumber') || '';
+  const storedCountry = localStorage.getItem('country') || '';
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -105,7 +106,8 @@ const User = () => {
       }
     } catch (error) {
       console.error('Error updating password:', error);
-      alert('Error updating password. Please try again.');
+      toast.error('Current password is incorrect!');
+
     }
   };
 
@@ -181,14 +183,14 @@ const User = () => {
                     </Box>
                   }
                 />
-                <Tab
+                {/* <Tab
                   value="2"
                   label={
                     <Box display="flex" alignItems="center">
                       Update Logo
                     </Box>
                   }
-                />
+                /> */}
                 <Tab
                   value="3"
                   label={
@@ -208,9 +210,9 @@ const User = () => {
                 <Divider />
               </TabList>
               <TabPanel value="1">
-                <Grid container spacing={3} alignItems="stretch">
-                  <Grid item xs={12} sm={4} display="flex" height="auto">
-                    <Box
+                <Grid container spacing={2}>
+                  
+                    {/* <Box
                       sx={{
                         backgroundColor: 'white',
                         borderRadius: '10px',
@@ -237,10 +239,11 @@ const User = () => {
                         />
                       </Box>
                       <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Admin</Typography>
-                    </Box>
-                  </Grid>
+                    </Box> */}
+                    <CompanyLogoUploader />
+                 
 
-                  <Grid item xs={12} sm={8}>
+                  <Grid item xs={8}>
                     <Box
                       sx={{
                         backgroundColor: 'white',
@@ -258,9 +261,9 @@ const User = () => {
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
-                            label="First Name"
+                            label="Company"
                             variant="outlined"
-                            defaultValue={storedName}
+                            defaultValue={storedCompany}
                             InputProps={{ readOnly: true }}
                           />
                         </Grid>
@@ -278,9 +281,9 @@ const User = () => {
                         <Grid item xs={12} sm={6}>
                           <TextField
                             fullWidth
-                            label="Company"
+                            label="Country"
                             variant="outlined"
-                            defaultValue={storedCompany}
+                            defaultValue={storedCountry}
                             InputProps={{ readOnly: true }}
                           />
                         </Grid>
@@ -299,9 +302,9 @@ const User = () => {
                 </Grid>
               </TabPanel>
 
-              <TabPanel value="2">
+              {/* <TabPanel value="2">
                 <CompanyLogoUploader />
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel value="3">
                 <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">
                   <Box
@@ -313,9 +316,7 @@ const User = () => {
                       width: '50%'
                     }}
                   >
-                    <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Update Password</Typography>
-                    <Divider />
-
+                  
                     <Grid container spacing={2} sx={{ marginTop: 2 }}>
                       <Grid item xs={12}>
                         <TextField

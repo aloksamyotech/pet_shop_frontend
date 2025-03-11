@@ -44,7 +44,7 @@ const AddLead = (props) => {
 
     discount: yup.number()
        .integer('discount must be an integer'),
-    quantity : yup.number(),
+   
   });
 
   const initialValues = {
@@ -52,7 +52,7 @@ const AddLead = (props) => {
     categoryId: '',
     price: '',
     discount: '0',
-    quantity :'0',
+  
   };
 
   const formik = useFormik({
@@ -64,7 +64,7 @@ const AddLead = (props) => {
       formData.append('categoryId', values.categoryId);
       formData.append('price', values.price);
       formData.append('discount', values.discount);
-      formData.append('quantity', values.quantity);
+      
       if (values.image) {
         console.log("image",values)
         formData.append('image', values.image);
@@ -208,21 +208,7 @@ const AddLead = (props) => {
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormControl fullWidth>
-                    <FormLabel>quantity</FormLabel>
-                    <TextField
-                      id="quantity"
-                      name="quantity"
-                      size="small"
-                      fullWidth
-                      value={formik.values.quantity}
-                      onChange={formik.handleChange}
-                  error={formik.touched.quantity && Boolean(formik.errors.quantity)}
-                helperText={formik.touched.quantity && formik.errors.quantity}
-                    />
-                  </FormControl>
-                </Grid>
+               
                 <Grid item xs={12} sm={6} sx={{ marginTop: '15px' }}>
                   <Box
                     display="flex"
