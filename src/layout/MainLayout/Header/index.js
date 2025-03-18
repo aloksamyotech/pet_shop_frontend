@@ -2,59 +2,47 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Box, ButtonBase, CardMedia } from '@mui/material';
+import { Avatar, Box, ButtonBase, CardMedia, Typography } from '@mui/material';
 
 // project imports
 import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
 import NotificationSection from './NotificationSection';
-import { urls } from 'views/Api/constant';
-import { getApi } from 'views/Api/comman';
-import { useEffect } from 'react';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
   const [logo, setLogo] = useState(null);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
 
-  const fetchLogo = async () => {
-    const response = await getApi(urls.logo.get);
-    setLogo(response?.data.data?.[0].imageUrl);
-  };
-
-  useEffect(() => {
-    fetchLogo();
-  }, []);
+  console.log(userObj.imageUrl);
 
   return (
     <>
       <Box
         sx={{
-          width: 200,
+          width: 208,
           display: 'flex',
           [theme.breakpoints.down('md')]: {
             width: 'auto'
           }
         }}
       >
-        <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-          <CardMedia
-            component="img"
-            image={logo || 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'}
-            alt="Description of the image"
-            sx={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '50px'
-            }}
-          />
+         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <LogoSection />
         </Box>
+        {/* 
+        <Box sx={{ display: 'flex', flexDirection: 'column', ml: '-20px' }}>
+          <Typography sx={{ color: '#6A9C89', fontWeight: 'bold', fontSize: '20px' }}>Pet Shop</Typography>
+          <Typography sx={{ fontSize: '12px', color: '#6A9C89' }}>Happy Tails Hub</Typography>
+        </Box> */}
         <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
           <Avatar
             variant="rounded"
@@ -62,11 +50,11 @@ const Header = ({ handleLeftDrawerToggle }) => {
               ...theme.typography.commonAvatar,
               ...theme.typography.mediumAvatar,
               transition: 'all .2s ease-in-out',
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
+              background: '#ffff !important',
+              color: '#6A9C89 !important',
               '&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
+                background: '#ffff !important',
+                color: '#6A9C89 !important'
               }
             }}
             onClick={handleLeftDrawerToggle}
@@ -76,12 +64,20 @@ const Header = ({ handleLeftDrawerToggle }) => {
           </Avatar>
         </ButtonBase>
       </Box>
-
-      {/* header search */}
-
-      <Box sx={{ flexGrow: 1 }} />
-      <Box sx={{ flexGrow: 1 }} />
-
+      &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+      {/* heading */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          textAlign: 'left',
+          paddingTop: '7px'
+        }}
+      >
+        <Typography sx={{ fontSize: '18px', fontWeight: 800, fontFamily: 'Playfair Display, serif' }}>Welcome back !</Typography>
+        <Typography variant="body2" sx={{ fontStyle: 'italic', color: theme.palette.text.secondary }}>
+          {userObj.email}
+        </Typography>
+      </Box>
       {/* notification & profile */}
       <ProfileSection />
     </>

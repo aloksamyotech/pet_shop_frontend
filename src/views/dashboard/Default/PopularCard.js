@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Divider,
@@ -23,6 +24,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SkeletonPopularCard from 'ui-component/cards/Skeleton/PopularCard';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import { useNavigate } from 'react-router-dom';
 
 // ==============================|| NEW POPULAR STOCKS CARD ||============================== //
 
@@ -30,6 +32,7 @@ const PopularCard = ({ isLoading }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -59,7 +62,6 @@ const PopularCard = ({ isLoading }) => {
       ) : (
         <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
           <CardContent>
-          
             <Grid container justifyContent="space-between" alignItems="center">
               <Typography variant="h5" fontWeight="bold">
                 Product Stocks
@@ -82,11 +84,10 @@ const PopularCard = ({ isLoading }) => {
 
             <Divider sx={{ my: 2 }} />
 
-        
             <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
               Available Stock
             </Typography>
-            {products.map((product) => (
+            {products.slice(0, 7).map((product) => (
               <Box key={product._id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Avatar
                   sx={{
@@ -106,6 +107,20 @@ const PopularCard = ({ isLoading }) => {
                 </Box>
               </Box>
             ))}
+
+            {products.length > 5 && (
+              <Box sx={{ textAlign: 'center', mt: 2 }}>
+                <Button variant="contained" color="primary" onClick={() => navigate('/dashboard/product')}    sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
+                  View All Products
+                </Button>
+              </Box>
+            )}
           </CardContent>
         </Card>
       )}

@@ -21,6 +21,9 @@ const AddLead = (props) => {
 
   const [categories, setCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
@@ -129,20 +132,28 @@ const AddLead = (props) => {
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}></Grid>
 
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Product Name</FormLabel>
-                  <TextField
-                    id="productName"
-                    name="productName"
-                    type="text"
-                    size="small"
-                    fullWidth
-                    value={formik.values.productName}
-                    onChange={formik.handleChange}
-                    error={formik.touched.productName && Boolean(formik.errors.productName)}
-                    helperText={formik.touched.productName && formik.errors.productName}
-                  />
-                </Grid>
+              <Grid item xs={12} sm={6} md={6}>
+  <FormLabel>Product Name</FormLabel>
+  <TextField
+    id="productName"
+    name="productName"
+    type="text"
+    size="small"
+    fullWidth
+    value={formik.values.productName}
+    onChange={formik.handleChange}
+    onInput={(e) => {
+      const regex = /^[A-Za-z\s]*$/; 
+      if (!regex.test(e.target.value)) {
+        e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, ""); 
+      }
+      formik.setFieldValue("productName", e.target.value);
+    }}
+    error={formik.touched.productName && Boolean(formik.errors.productName)}
+    helperText={formik.touched.productName && formik.errors.productName}
+  />
+</Grid>
+
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Category</FormLabel>
                   <Select
@@ -171,21 +182,25 @@ const AddLead = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Product Price</FormLabel>
-                  <TextField
-                    id="price"
-                    name="price"
-                    size="small"
-                    fullWidth
-                    value={formik.values.price}
-                    onChange={formik.handleChange}
-                    error={formik.touched.price && Boolean(formik.errors.price)}
-                    helperText={formik.touched.price && formik.errors.price}
-                  />
-                </Grid>
+  <FormLabel>Product Price ({currencySymbol})</FormLabel>
+  <TextField
+    id="price"
+    name="price"
+    size="small"
+    fullWidth
+    value={formik.values.price}
+    onChange={(e) => {
+      const onlyNumbers = e.target.value.replace(/[^0-9]/g, ""); // Keep numbers, strip everything else
+      formik.setFieldValue("price", onlyNumbers);
+    }}
+    error={formik.touched.price && Boolean(formik.errors.price)}
+    helperText={formik.touched.price && formik.errors.price}
+  />
+</Grid>
+
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount</FormLabel>
+                    <FormLabel>Discount ({currencySymbol})</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"
@@ -244,7 +259,13 @@ const AddLead = (props) => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={formik.handleSubmit} variant="contained" color="primary" type="submit">
+          <Button onClick={formik.handleSubmit} variant="contained" color="primary" type="submit"  sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
             Save
           </Button>
           <Button
@@ -255,6 +276,14 @@ const AddLead = (props) => {
             }}
             variant="outlined"
             color="error"
+            sx={{
+              border: '1px solid #6A9C89',
+              color: '#6A9C89',
+              '&:hover': {
+                border: '1px solid #6A9C89',
+                color: '#6A9C89'
+              }
+            }}
           >
             Cancel
           </Button>

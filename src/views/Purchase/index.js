@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, IconButton } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, IconButton,MenuItem,Popover } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid } from '@mui/x-data-grid';
@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import ViewPurchase from './ViewPurchase';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
@@ -23,6 +24,24 @@ const Purchase = () => {
   const [purchaseUpdated, setPurchaseUpdated] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [purchaseFilter,setFilteredPurchase] = useState([])
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+  const [activeRow, setActiveRow] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  
+ 
+  const handleOpenActions = (event, row) => {
+    setAnchorEl(event.currentTarget);
+    setActiveRow(row);
+  };
+  
+
+  const handleCloseActions = () => {
+    setAnchorEl(null);
+    setActiveRow(null);
+  };
+
 
 
   const handleSearch = (searchTerm) => {
@@ -104,7 +123,13 @@ const Purchase = () => {
     {
       field: 'totalPrice',
       headerName: 'Amount',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => (
+        <>
+        {currencySymbol} {params.value.toFixed(2)}
+         
+        </>
+      ),
     },
     {
       field: 'discount',
@@ -135,7 +160,8 @@ const Purchase = () => {
             height: '20px',
            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
             gap: '0.5rem',
-            fontSize: '10x'
+            fontSize: '8x',
+            padding:'5px'
          }}
        >
          {params.value}
@@ -149,18 +175,55 @@ const Purchase = () => {
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color: '#00bbff' }} />
+          {/* Open button */}
+          <IconButton onClick={(e) => handleOpenActions(e, params.row)}>
+            <MoreVertIcon />
           </IconButton>
-          <IconButton onClick={() => handleUpdate(params.row)}>
-            <EditIcon sx={{ color: '#5f0497' }} />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row._id)}>
-            <DeleteIcon sx={{ color: '#d32f2f' }} />
-          </IconButton>
+    
+          {/* Popover that only opens for the active row */}
+          <Popover
+            open={Boolean(anchorEl) && activeRow?._id === params.row._id}
+            anchorEl={anchorEl}
+            onClose={handleCloseActions}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            PaperProps={{
+              sx: { boxShadow: 3, borderRadius: '20px' },
+            }}
+          >
+          
+            {/* <MenuItem
+              onClick={() => {
+                handleView(activeRow);
+                handleCloseActions();
+              }}
+            >
+              <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
+            </MenuItem> */}
+    
+          
+            <MenuItem
+              onClick={() => {
+                handleUpdate(params.row);
+                handleCloseActions();
+              }}
+            >
+              <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
+            </MenuItem>
+    
+        
+            <MenuItem
+              onClick={() => {
+                handleDelete(params.row._id);
+                handleCloseActions();
+              }}
+            >
+              <DeleteIcon sx={{ color: '#d32f2f', fontSize: '18px' }} />
+            </MenuItem>
+          </Popover>
         </>
-      )
+      ),
     }
+    
   ];
 
   return (
@@ -173,8 +236,9 @@ const Purchase = () => {
         }}
         purchase={purchaseUpdated}
         fetchPurchase={fetchPurchase}
+        currencySymbol={currencySymbol}
       />
-      <ViewPurchase open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} />
+      <ViewPurchase open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} currencySymbol={currencySymbol} />
       <Grid>
       <Stack direction="row" alignItems="center" mb={3}>
       <Box
@@ -192,7 +256,7 @@ const Purchase = () => {
           >
           
             <Stack direction="row" alignItems="center">
-              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
                 <HomeIcon />
               </IconButton>
              
@@ -202,7 +266,13 @@ const Purchase = () => {
 
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small"  sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}>
                 New Purchase
                 </Button>
               </Card>

@@ -2,36 +2,49 @@ import * as React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useEffect } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Typography, FormControl, FormLabel, Select, MenuItem } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  FormControl,
+  FormLabel,
+  Select,
+  MenuItem
+} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { getApi, updateApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 
-const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
+const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
   const isEdit = Boolean(customer);
 
   const validationSchema = yup.object({
-    firstName: yup
+    name: yup
       .string()
       .required('First Name is required')
       .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
       .max(50, 'First Name cannot be more than 50 characters'),
     email: yup.string().required('Email is required').email('Invalid email address'),
     phoneNumber: yup
-      .string(),
-    status: yup.string().required('Status is required'),
-    address: yup
       .string()
-      .max(100, 'Address cannot be more than 100 characters'),
+      .required('Phone Number is required')
+      .matches(/^\d{10}$/, 'Phone Number must be exactly 10 digits'),
+    address: yup.string().required('Address is required').max(100, 'Address cannot be more than 100 characters'),
+    salary: yup.string().required('Salary is required')
   });
 
   const initialValues = {
-    firstName: '',
+    name: '',
     email: '',
     address: '',
     phoneNumber: '',
-    status: 'Active',
+    salary: ''
   };
 
   const formik = useFormik({
@@ -39,25 +52,25 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
     validationSchema,
     onSubmit: async (values) => {
       if (isEdit) {
-        await updateApi(urls.customer.update.replace(":id", customer._id), values);
-        toast.success("Customer updated successfully!");
+        await updateApi(urls.employee.update.replace(':id', customer._id), values);
+        toast.success('employee updated successfully!');
       } else {
-        await postApi(urls.customer.create, values);
-        toast.success("Customer added successfully!");
+        await postApi(urls.employee.create, values);
+        toast.success('employee added successfully!');
       }
       await fetchCustomer();
       handleClose();
-    },
+    }
   });
 
   useEffect(() => {
     if (isEdit) {
       formik.setValues({
-        firstName: customer?.firstName || 'N/A',
-        email: customer?.email || 'N/A',
-        address: customer?.address || 'N/A',
-        phoneNumber: customer?.phoneNumber || 'N/A',
-        status: customer?.status || 'Active',
+        name: customer?.name || '',
+        email: customer?.email || '',
+        address: customer?.address || '',
+        phoneNumber: customer?.phoneNumber || '',
+        salary: customer?.salary || ''
       });
     } else {
       formik.resetForm();
@@ -67,7 +80,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
   return (
     <Dialog open={open} aria-labelledby="customer-dialog-title">
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{isEdit ? 'Update Customer' : 'Create Customer'}</Typography>
+        <Typography variant="h4">{isEdit ? 'Update Customer' : 'Create Employee'}</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
@@ -77,21 +90,14 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
               <FormControl fullWidth>
                 <FormLabel>Name</FormLabel>
                 <TextField
-                  id="firstName"
-                  name="firstName"
+                  id="name"
+                  name="name"
                   size="small"
                   fullWidth
-                  value={formik.values.firstName}
+                  value={formik.values.name}
                   onChange={formik.handleChange}
-                  onInput={(e) => {
-                    const regex = /^[A-Za-z\s]*$/; 
-                    if (!regex.test(e.target.value)) {
-                      e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, "");
-                    }
-                    formik.setFieldValue("firstName", e.target.value);
-                  }}
-                  error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                  helperText={formik.touched.firstName && formik.errors.firstName}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
                 />
               </FormControl>
             </Grid>
@@ -136,9 +142,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
                   value={formik.values.phoneNumber}
                   onChange={(e) => {
                     const sanitizedValue = e.target.value.replace(/[^0-9]/g, '');
-                    if(sanitizedValue.length <= 10){
-                    formik.setFieldValue("phoneNumber", sanitizedValue);
-                    }
+                    formik.setFieldValue('phoneNumber', sanitizedValue);
                   }}
                   error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                   helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
@@ -147,20 +151,27 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Status</FormLabel>
-                <Select id="status" name="status" size="small" fullWidth value={formik.values.status} onChange={formik.handleChange}>
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Inactive">Inactive</MenuItem>
-                  <MenuItem value="Blocked">Blocked</MenuItem>
-                </Select>
+                <FormLabel>Salary</FormLabel>
+                <TextField
+                  id="salary"
+                  name="salary"
+                  size="small"
+                  fullWidth
+                  value={formik.values.salary}
+                  onChange={(e) => {
+                    const sanitizedValue = e.target.value.replace(/[^0-9]/g, '');
+                    formik.setFieldValue('salary', sanitizedValue);
+                  }}
+                  error={formik.touched.salary && Boolean(formik.errors.salary)}
+                  helperText={formik.touched.salary && formik.errors.salary}
+                />
               </FormControl>
             </Grid>
           </Grid>
         </form>
       </DialogContent>
       <DialogActions>
-        <Button type="submit" variant="contained" onClick={formik.handleSubmit} 
-            sx={{
+        <Button type="submit" variant="contained" onClick={formik.handleSubmit}   sx={{
               backgroundColor: '#6A9C89',
               color: '#ffff',
               '&:hover': {
@@ -169,7 +180,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
             }}>
           {isEdit ? 'Update' : 'Save'}
         </Button>
-        <Button variant="outlined" onClick={handleClose} color="error"  sx={{
+        <Button variant="outlined" onClick={handleClose}  sx={{
             border: '1px solid #6A9C89',
             color: '#6A9C89',
             '&:hover': {
@@ -184,4 +195,4 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
   );
 };
 
-export default CustomerForm;
+export default Employee;

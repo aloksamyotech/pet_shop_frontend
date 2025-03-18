@@ -38,6 +38,10 @@ const Invoice = () => {
   const navigate = useNavigate();
   const AllData = Data;
   const Product = AllData.products;
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+
 
   const home = () => {
     navigate('/');
@@ -116,7 +120,7 @@ const Invoice = () => {
         }}
       >
         <Stack direction="row" alignItems="center">
-          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
             <HomeIcon />
           </IconButton>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -131,7 +135,7 @@ const Invoice = () => {
               '&:hover': { color: '#2067db' }
             }}
           >
-            Oder
+            Order
           </Typography>
 
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -242,8 +246,8 @@ const Invoice = () => {
                     <TableRow sx={{ fontWeight: 'bold' }}>
                       <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
                       <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Rate</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Discount</TableCell>
+                      <TableCell sx={{ color: 'white' }}>Rate ({currencySymbol} )</TableCell>
+                      <TableCell sx={{ color: 'white' }}>Discount ({currencySymbol} )</TableCell>
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
                   </TableHead>
@@ -263,7 +267,7 @@ const Invoice = () => {
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'end', padding: '10px' }}>
-              <Typography sx={{ fontWeight: 'bold' }}>Total: Rs.{AllData.totalAmount}</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>Total: {currencySymbol} {AllData.totalAmount}</Typography>
             </Box>
           </Box>
         </Box>

@@ -89,27 +89,50 @@ const TotalGrowthBarChart = ({ isLoading }) => {
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h4">Sales Report</Typography>
+                  <Typography variant="h4" sx={{color:' #6A9C89'}}>Sales Report</Typography>
                 </Grid>
                 <Grid item>
                   <Grid container spacing={2} justifyContent="flex-end">
                     <Grid item>
-                      <TextField id="select-year" select value={year} onChange={(e) => setYear(e.target.value)}>
-                        {years.map((yearOption) => (
-                          <MenuItem key={yearOption} value={yearOption}>
-                            {yearOption}
-                          </MenuItem>
-                        ))}
+                      <TextField id="select-year" select value={year} onChange={(e) => setYear(e.target.value)}   sx={{
+    '& .MuiSelect-select': { color: '#6A9C89' }, 
+    '& .MuiInputBase-input': { color: '#6A9C89' } 
+  }}
+>
+                      {years.map((yearOption) => (
+  <MenuItem 
+    key={yearOption} 
+    value={yearOption} 
+    sx={{ color: '#6A9C89' }}
+  >
+    {yearOption}
+  </MenuItem>
+))}
+
                       </TextField>
                     </Grid>
                     <Grid item>
-                      <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
-                        {status.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
+                    <TextField
+  id="standard-select-currency"
+  select
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+  sx={{
+    '& .MuiSelect-select': { color: '#6A9C89' }, 
+    '& .MuiInputBase-input': { color: '#6A9C89' } 
+  }}
+>
+  {status.map((option) => (
+    <MenuItem
+      key={option.value}
+      value={option.value}
+      sx={{ color: '#6A9C89' }} 
+    >
+      {option.label}
+    </MenuItem>
+  ))}
+</TextField>
+
                     </Grid>
                   </Grid>
                 </Grid>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box, Paper, Avatar } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-const ViewPurchase = ({ open, handleClose, purchase }) => {
+const ViewPurchase = ({ open, handleClose, purchase ,currencySymbol}) => {
   if (!purchase) return null;
   const Values =purchase?.productName
 
@@ -45,7 +45,7 @@ const ViewPurchase = ({ open, handleClose, purchase }) => {
                 <strong>Discount:</strong> {purchase?.discount || 'N/A'}
               </Typography>
               <Typography variant="body2" sx={{ mt: 1, fontWeight: 'bold' }}>
-                <strong>Total Price:</strong>  <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold' }}> Rs. {purchase?.totalPrice || 'N/A'}</Typography> 
+                <strong>Total Price:</strong>  <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold' }}> {currencySymbol} {purchase?.totalPrice || 'N/A'}</Typography> 
               </Typography>
             </Grid>
           </Grid>

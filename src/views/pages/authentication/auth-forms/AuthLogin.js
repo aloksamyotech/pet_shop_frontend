@@ -72,6 +72,8 @@ const AuthLogin = ({ ...others }) => {
                  localStorage.setItem("phoneNumber", response.data.user.phoneNumber);
                  localStorage.setItem("country", response.data.user.country);
                  localStorage.setItem("user", JSON.stringify(response.data.user));
+                 localStorage.setItem("Id", JSON.stringify(response.data.user._id));
+                 
 
                  window.location.href = "/";
                } else {
@@ -184,10 +186,10 @@ const AuthLogin = ({ ...others }) => {
                   variant="contained"
                   color="secondary"
                   sx={{
-                    background: 'linear-gradient(45deg, #441572, #7C4BAD)',
+                    background: '#6A9C89',
                     borderRadius: '50px',
                     '&:hover': {
-                      background: 'linear-gradient(to right, #4B6CB7, #182848)',
+                      background: '#6A9C89',
                       boxShadow: '2'
                     }
                   }}

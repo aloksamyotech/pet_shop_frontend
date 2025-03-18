@@ -198,7 +198,12 @@ const AddEdit = ({ open, handleClose, company, fetchSupplier }) => {
           </DialogContentText>
 
           <DialogActions>
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant="contained" sx={{ backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
               Update
             </Button>
             <Button
@@ -208,6 +213,14 @@ const AddEdit = ({ open, handleClose, company, fetchSupplier }) => {
               }}
               variant="outlined"
               color="error"
+              sx={{
+                border: '1px solid #6A9C89',
+                color: '#6A9C89',
+                '&:hover': {
+                  border: '1px solid #6A9C89',
+                  color: '#6A9C89'
+                }
+              }}
             >
               Cancel
             </Button>

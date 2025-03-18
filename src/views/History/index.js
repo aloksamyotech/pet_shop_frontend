@@ -15,6 +15,9 @@ const History = () => {
   const [product, setProduct] = useState([]);
   const [order, setOder] = useState([]);
   const navigate = useNavigate();
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
 
 
   const handleSearch = (searchTerm) => {
@@ -61,7 +64,13 @@ const History = () => {
   },
     { field: 'customerEmail', headerName: 'Email', flex: 1 },
     { field: 'customerPhone', headerName: 'Phone', flex: 1 },
-    { field: 'totalAmount', headerName: 'Paid Amount', flex: 1 },
+    { field: 'totalAmount', headerName: 'Paid Amount', flex: 1 ,
+       renderCell: (params) => (
+      <>
+      {currencySymbol} {params.value.toFixed(2)}
+       
+      </>
+    ),},
     {
       field: 'orderDate',
       headerName: 'Order Date',
@@ -118,7 +127,7 @@ const History = () => {
           >
           
             <Stack direction="row" alignItems="center">
-              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
                 <HomeIcon />
               </IconButton>
              

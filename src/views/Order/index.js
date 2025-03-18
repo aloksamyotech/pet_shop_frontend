@@ -36,6 +36,9 @@ const Checkout = () => {
   const selectedCustomer = location.state?.selectedCustomer || null;
   const [productData, setProductData] = useState([]);
   const navigate = useNavigate();
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -125,7 +128,7 @@ const Checkout = () => {
       const Data = response.data.data;
       setCartItems([]);
       navigate('/dashboard/ProductType', { state: { Data } });
-      toast.success('Order successfully!');
+      toast.success('Order completed  successfully!');
     } catch (error) {
       console.error('Error creating invoice:', error);
       Swal.fire('Error', 'There was an issue creating the invoice.', 'error');
@@ -154,7 +157,7 @@ const Checkout = () => {
               }}
             >
               <Stack direction="row" alignItems="center">
-                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
                   <HomeIcon />
                 </IconButton>
                 <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -213,7 +216,7 @@ const Checkout = () => {
 
                     <TableCell align="center">
                       <Typography variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold' }}>
-                        Rs.{item.price}
+                        {currencySymbol} {item.price}
                       </Typography>
                     </TableCell>
 
@@ -257,7 +260,7 @@ const Checkout = () => {
 
                     <TableCell align="center">
                       <Typography variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold' }}>
-                        Rs.{(item.price * item.quantity).toFixed(2)}
+                        {currencySymbol} {(item.price * item.quantity).toFixed(2)}
                       </Typography>
                     </TableCell>
 
@@ -288,26 +291,31 @@ const Checkout = () => {
             <Typography variant="h6" sx={{ mt: 2 }}>
               Total Price:
               <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold', ml: 1 }}>
-                Rs.{totalPrice.toFixed(2)}
+                {currencySymbol} {totalPrice.toFixed(2)}
               </Typography>
             </Typography>
 
             <Divider sx={{ my: 2 }} />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '4px' }}>
-              <Button fullWidth variant="contained" color="primary" onClick={handleCreateInvoice}>
+              <Button fullWidth variant="contained"  sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }} onClick={handleCreateInvoice}>
                 Confirm
               </Button>
               <Button
                 fullWidth
                 variant="outlined"
                 sx={{
-                  backgroundColor: '#FF4C4C',
-                  color: '#fff',
-                  borderColor: '#FF4C4C',
+                  border: '1px solid #6A9C89',
+                  color: '#6A9C89',
                   '&:hover': {
-                    backgroundColor: '#D43F3F',
-                    borderColor: '#D43F3F'
+                    border: '1px solid #6A9C89',
+                    color: '#6A9C89'
                   }
                 }}
                 onClick={() => setCartItems([])}

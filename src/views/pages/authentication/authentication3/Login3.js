@@ -18,20 +18,20 @@ const Login = () => {
   const [logo,setLogo] = useState(null)
   
   const fetchLogo = async () => {
-        const response = await getApi(urls.logo.get);
-        setLogo(response?.data.data?.[0])
-       };
-  
-  
-      useEffect(() => {
-        fetchLogo();
-      }, []);
+    const response = await getApi(urls.register.get);
+    setLogo(response?.data.data?.[0]);
+  };
+
+  useEffect(() => {
+    fetchLogo();
+  }, []);
+
 
 
 
   return (
     <AuthWrapper1>
-      <Grid container sx={{ minHeight: '100vh', backgroundColor: '#441572' }}>
+      <Grid container sx={{ minHeight: '100vh', backgroundColor: '#A6CDC6',}}>
         <Grid
           item
           xs={12}
@@ -65,7 +65,7 @@ const Login = () => {
     >
       <Avatar
         alt="Logo Image"
-        src={ logo?.imageUrl ||"https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg"}
+        src={  logo?.imageUrl || 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'}
         sx={{
           width: 80,
           height: 80,
@@ -78,7 +78,7 @@ const Login = () => {
 
   <Grid item xs={12}>
     <Stack alignItems="center">
-      <Typography variant="h3" sx={{ fontWeight: 700, textAlign: 'center', color: '#240046' }}>
+      <Typography variant="h3" sx={{ fontWeight: 700, textAlign: 'center', color:'#6A9C89' }}>
         Welcome to Pet Shop
       </Typography>
       <Typography textAlign="center" variant="body2" sx={{ color: 'black' }}>
@@ -112,7 +112,7 @@ const Login = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: '#2F124C',
+              backgroundColor:'#6A9C89',
               padding: '4px',
               flexDirection: 'column'
             }}

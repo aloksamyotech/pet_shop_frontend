@@ -20,7 +20,7 @@ import { getApi, postApi, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
+const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymbol}) => {
   const [product, setProduct] = useState([]);
   const [company, setCompany] = useState([]);
 
@@ -62,13 +62,24 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
       .number()
       .positive('Quantity must be a positive number')
       .integer('Quantity must be an integer')
-      .required('Quantity is required')
+      .required('Quantity is required') 
       .max(10000, 'Max 10000 quantity allowed'),
     totalPrice: yup.number().positive('Total Price must be greater than 0').required('Total Price is required'),
-    discount: yup.number().integer('Discount must be an integer'),
+    discount: yup
+      .number()
+      .integer('Discount must be an integer')
+      .min(0, 'Discount cannot be negative')
+      .test('discount-check', 'Discount cannot be more than the total amount', function (value) {
+        const { quantity, productId } = this.parent;
+        const selectedProduct = product.find((p) => p._id === productId);
+        const productPrice = selectedProduct ? selectedProduct.price : 0;
+        const totalAmount = quantity * productPrice;
+        return value <= totalAmount;
+      }),
     paymentStatus: yup.string().required('Payment Status is required'),
     productPrice: yup.number().positive('Product Price must be a positive number').required('Product Price is required')
   });
+  
 
   const initialValues = {
     productId: '',
@@ -99,6 +110,11 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
       }
     }
   });
+
+  const selectedProduct = product.find((p) => p._id === formik.values.productId);
+    const productPrice = selectedProduct ? selectedProduct.price : 0;
+    const Amount = Math.max(formik.values.quantity * productPrice - formik.values.discount, 0);
+
 
   useEffect(() => {
     const selectedProduct = product.find((p) => p._id === formik.values.productId);
@@ -162,22 +178,33 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <FormLabel>Quantity</FormLabel>
-              <TextField
-                id="quantity"
-                name="quantity"
-                size="small"
-                fullWidth
-                value={formik.values.quantity}
-                onChange={formik.handleChange}
-                error={formik.touched.quantity && Boolean(formik.errors.quantity)}
-                helperText={formik.errors.quantity}
-              />
-            </Grid>
+       <Grid item xs={12} sm={6}>
+  <FormLabel>Quantity</FormLabel>
+  <TextField
+    id="quantity"
+    name="quantity"
+    size="small"
+    fullWidth
+    value={formik.values.quantity}
+    onChange={(e) => {
+     
+      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+      formik.setFieldValue('quantity', onlyNumbers);
+    }}
+    error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+    helperText={formik.touched.quantity && formik.errors.quantity}
+    InputProps={{
+      style: {
+        color: formik.touched.quantity && formik.errors.quantity ? 'red' : 'inherit',
+      },
+    }}
+  />
+</Grid>
+
+
 
             <Grid item xs={12} sm={6}>
-              <FormLabel>Discount</FormLabel>
+              <FormLabel>Discount  ({currencySymbol})</FormLabel>
               <TextField
                 id="discount"
                 name="discount"
@@ -205,11 +232,31 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
                 <MenuItem value="Failed">Failed</MenuItem>
               </Select>
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormLabel>Total Amount ({currencySymbol})</FormLabel>
+              <TextField
+                id="totalPrice"
+                name="totalPrice"
+                size="small"
+                fullWidth
+                value={formik.values.totalPrice}
+                onChange={formik.handleChange}
+                error={formik.touched.totalPrice && Boolean(formik.errors.totalPrice)}
+                helperText={formik.errors.totalPrice}
+              />
+            </Grid>
+            
           </Grid>
         </form>
       </DialogContent>
       <DialogActions>
-        <Button onClick={formik.handleSubmit} variant="contained" color="primary">
+        <Button onClick={formik.handleSubmit} variant="contained"   sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
           {purchase ? 'Update' : 'Save'}
         </Button>
         <Button
@@ -218,7 +265,14 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase }) => {
             handleClose();
           }}
           variant="outlined"
-          color="error"
+          sx={{
+            border: '1px solid #6A9C89',
+            color: '#6A9C89',
+            '&:hover': {
+              border: '1px solid #6A9C89',
+              color: '#6A9C89'
+            }
+          }}
         >
           Cancel
         </Button>

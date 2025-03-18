@@ -42,6 +42,10 @@ const CustomerDetail = () => {
   const [orderDate, setOrderDate] = useState();
   const location = useLocation();
 
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+
   const navigate = useNavigate();
   const date = new Date(orderDate);
   const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
@@ -90,7 +94,7 @@ const CustomerDetail = () => {
           >
             
               <Stack direction="row" alignItems="center">
-                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                <IconButton onClick={() => navigate('/dashboard/default')}sx={{ color: '#6A9C89' }}>
                   <HomeIcon />
                 </IconButton>
                 <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -120,15 +124,41 @@ const CustomerDetail = () => {
         <Grid spacing={2} container md={12} direction="column">
           <Box sx={{ width: 'auto', height: 'auto', p: '4px', backgroundColor: 'white', borderRadius: '10px', ml: '20px', marginTop: '-50px',mr:'-15px' }}>
             <Box sx={{ borderBottom: 1, border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-              <TabList onChange={handleChange} indicatorColor="primary">
+             
+    <TabList
+  sx={{
+    '& .MuiTabs-indicator': {
+      backgroundColor: '#6A9C89', 
+    },
+    '& .MuiTab-root': {
+      color: '#B0B0B0', 
+    },
+    '& .Mui-selected': {
+      color: '#6A9C89', 
+      fontWeight: 'bold', 
+    },
+  }}
+  onChange={handleChange}
+>
+
                 <Tab
-                  icon={<AccountCircleIcon sx={{ fontWeight: 'bold' }} />}
-                  iconPosition="start"
-                  label="Profile"
-                  value="1"
-                  sx={{ fontWeight: 'bold' }}
-                />
-                <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="Order list" value="2" />
+                    value="1"
+                    label={
+                      <Box display="flex" alignItems="center " sx={{color:'#6A9C89'}}>
+                        <AccountCircleIcon sx={{ fontSize: '20px', mr: 1 }} /> Profile
+                      </Box>
+                    }
+                  />
+                    <Tab
+                    value="2"
+                    label={
+                      <Box display="flex" alignItems="center " sx={{color:'#6A9C89'}}>
+                        <ReceiptLongIcon sx={{ fontSize: '20px', mr: 1 }} /> Order list
+                      </Box>
+                    }
+                  />
+                 
+          
               </TabList>
             </Box>
 
@@ -162,7 +192,7 @@ const CustomerDetail = () => {
                           }}
                         />
                       </Box>
-                      <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Admin</Typography>
+                      <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Customer</Typography>
                     </Box>
                   </Grid>
 
@@ -294,7 +324,7 @@ const CustomerDetail = () => {
                             <TableCell>{formattedDate}</TableCell>
                             <TableCell>{item?.products?.[0]?.productName}</TableCell>
                             <TableCell>{item?.products?.[0]?.quantity}</TableCell>
-                            <TableCell>{item?.totalAmount}</TableCell>
+                            <TableCell>{currencySymbol} {item?.totalAmount}</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>

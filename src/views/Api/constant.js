@@ -25,6 +25,12 @@ export const urls = Object.freeze({
     delete: base + '/customer/:id',
     getCount: base + '/customer/count'
   },
+  employee: {
+    create: base + '/employee/save',
+    get: base + '/employee/fetch',
+    update: base + '/employee/update/:id',
+    delete: base + '/employee/:id',
+    },
 
   company: {
     create: base + '/company/save',
@@ -72,7 +78,10 @@ export const urls = Object.freeze({
 
   register: {
     update: base + '/user/update/:id',
-    UpdateNewPassword : base +'/user/updatePassword/:id'
+    UpdateNewPassword : base +'/user/updatePassword/:id',
+    updateLogo : base +'/user/updatelogo/:id',
+    get : base +'/user/fetch',
+    updateCurrency : base + '/user/updateCurrency/:id'
   },
 
   logo :{

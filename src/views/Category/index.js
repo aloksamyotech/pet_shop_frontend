@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Grid } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Grid,MenuItem,Popover } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from '@mui/x-data-grid';
@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import CategoryForm from './CategoryForm';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Customer = () => {
   const navigate = useNavigate();
@@ -25,6 +26,20 @@ const Customer = () => {
   const [openView, setOpenView] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryUpdated, setCategoryUpdated] = useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+const [currentRow, setCurrentRow] = useState(null);
+
+const handleOpenActions = (event, row) => {
+  setAnchorEl(event.currentTarget);
+  setCurrentRow(row);
+};
+
+const handleCloseActions = () => {
+  setAnchorEl(null);
+  setCurrentRow(null);
+};
+
 
   const home = () => navigate('/');
 
@@ -97,7 +112,8 @@ const Customer = () => {
         <img
           src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
           alt="product"
-          style={{ width: '25px', height: '25px', objectFit: 'cover' }}
+          style={{ width: '45px', height: '45px', objectFit: 'cover' ,  borderRadius: '50%',
+            padding: '4px' }}
         />
       )
     },
@@ -108,18 +124,31 @@ const Customer = () => {
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color: '#00bbff' }} />
+          <IconButton onClick={(e) => handleOpenActions(e, params.row)} size="small" sx={{ padding: 0 }}>
+            <MoreVertIcon />
           </IconButton>
-          <IconButton onClick={() => handleOpenForm(params.row)}>
-            <EditIcon sx={{ color: '#5f0497' }} />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row._id)}>
-            <DeleteIcon sx={{ color: '#d32f2f' }} />
-          </IconButton>
+          <Popover
+            open={Boolean(anchorEl) && currentRow?._id === params.row._id}
+            anchorEl={anchorEl}
+            onClose={handleCloseActions}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            PaperProps={{
+              sx: { boxShadow: 3, borderRadius: '20px' },
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                handleOpenForm(currentRow);
+                handleCloseActions();
+              }}
+            >
+              <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
+            </MenuItem>
+           </Popover>
         </>
-      )
+      ),
     }
+    
   ];
 
   return (
@@ -142,7 +171,7 @@ const Customer = () => {
           }}
         >
           <Stack direction="row" alignItems="center">
-            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
               <HomeIcon />
             </IconButton>
             <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
@@ -150,7 +179,19 @@ const Customer = () => {
           </Stack>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Card>
-              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleOpenForm()} size="small">
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={() => handleOpenForm()}
+                size="small"
+                sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}
+              >
                 New Category
               </Button>
             </Card>

@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { postApiImage, updateApi, updateApiFormData } from 'views/Api/comman.js';
+import { postApiImage, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 
@@ -32,7 +32,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       formData.append('name', values.name);
       formData.append('description', values.description);
 
-      if (values.categoryImage) {
+      if (!isEditing && values.categoryImage) {
         formData.append('categoryImage', values.categoryImage);
       }
 
@@ -40,13 +40,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
         if (isEditing) {
           await updateApi(urls.category.update.replace(':id', category._id), values);
           toast.success('Category updated successfully!');
-          formik.resetForm();
         } else {
           await postApiImage(urls.category.create, formData);
           toast.success('Category added successfully!');
-          formik.resetForm();
         }
-
+        formik.resetForm();
         await fetchCategories();
         handleClose();
       } catch (error) {
@@ -93,11 +91,15 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 fullWidth
                 size="small"
                 value={formik.values.name}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, '');
+                  formik.setFieldValue('name', onlyLetters);
+                }}
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
               />
             </Grid>
+
             <Grid item xs={12}>
               <TextField
                 id="description"
@@ -114,35 +116,48 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                minHeight="100px"
-                border={1}
-                borderColor="grey.300"
-                borderRadius={1}
-                position="relative"
-              >
-                {selectedImage ? (
-                  <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                ) : (
-                  <Typography variant="body2" color="textSecondary">
-                    Preview Image
-                  </Typography>
-                )}
-                <Box position="absolute" left={0} bottom={0} p={2}>
-                  <input type="file" accept="image/*" onChange={handleFileChange} />
+            {!isEditing && (
+              <Grid item xs={12} sm={6}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  minHeight="100px"
+                  border={1}
+                  borderColor="grey.300"
+                  borderRadius={1}
+                  position="relative"
+                >
+                  {selectedImage ? (
+                    <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                  ) : (
+                    <Typography variant="body2" color="textSecondary">
+                      Preview Image
+                    </Typography>
+                  )}
+                  <Box position="absolute" left={0} bottom={0} p={2}>
+                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                  </Box>
                 </Box>
-              </Box>
-            </Grid>
+              </Grid>
+            )}
           </Grid>
         </form>
       </DialogContent>
 
       <DialogActions>
-        <Button type="submit" variant="contained" color="secondary" onClick={formik.handleSubmit}>
+        <Button
+          type="submit"
+          variant="contained"
+          onClick={formik.handleSubmit}
+          sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}
+        >
           {isEditing ? 'Update' : 'Save'}
         </Button>
         <Button
@@ -151,7 +166,14 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
             formik.resetForm();
             handleClose();
           }}
-          color="error"
+          sx={{
+            border: '1px solid #6A9C89',
+            color: '#6A9C89',
+            '&:hover': {
+              border: '1px solid #6A9C89',
+              color: '#6A9C89'
+            }
+          }}
         >
           Cancel
         </Button>

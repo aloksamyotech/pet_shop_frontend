@@ -48,7 +48,6 @@ const icons = {
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
-  title: 'Admin Dashboard-Menu',
   type: 'group',
   children: [
     {
@@ -105,6 +104,14 @@ const dashboard = {
           title: 'Customer',
           type: 'item',
           url: '/dashboard/customer',
+          icon: icons.IconUsers,
+          breadcrumbs: false
+        },
+        {
+          id: '10',
+          title: 'Employee',
+          type: 'item',
+          url: '/dashboard/employee',
           icon: icons.IconUsers,
           breadcrumbs: false
         },
