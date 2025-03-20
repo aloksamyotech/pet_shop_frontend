@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Person } from '@mui/icons-material';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 // material-ui
 import { Box, Grid, Typography, Card, CardActionArea } from '@mui/material';
 import { getApi } from 'views/Api/comman';
@@ -53,7 +53,7 @@ const ShowOrder = ({ isLoading }) => {
   }, []);
 
   // Navigate to customer section
-  const handleNavigate = () => navigate('/dashboard/history');
+  const handleNavigate = () => navigate('/dashboard/addToCard');
 
   return (
     <>
@@ -74,7 +74,7 @@ const ShowOrder = ({ isLoading }) => {
                 mr: 2
               }}
             >
-              <ShoppingBagIcon sx={{ color: 'white', fontSize: '2rem' }} />
+              <ShoppingCartIcon sx={{ color: 'white', fontSize: '2rem' }} />
             </Box>
 
             {/* Right Text Section */}
@@ -87,7 +87,7 @@ const ShowOrder = ({ isLoading }) => {
                   fontWeight: 600
                 }}
               >
-           Order History
+              POS
               </Typography>
             </Grid>
           </Box>

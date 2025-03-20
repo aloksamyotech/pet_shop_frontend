@@ -78,7 +78,7 @@ const handleCloseActions = () => {
         try {
           await deleteApi(urls.customer.delete.replace(':id', id));
           setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
-          Swal.fire('Removed!', 'The customer has been deleted.', 'success');
+        
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete customer.', 'error');
         }
@@ -135,15 +135,15 @@ const handleCloseActions = () => {
            backgroundColor:
             params.value  === 'Active' ? '#D5FADF' :params.value  === 'Inactive' ? '#F8E1A1' :params.value  === 'Blocked' ? '#FBE9E7' : '',
            color:params.value  === 'Active' ? '#19AB53' :params.value  === 'Inactive' ? '#FF9800' :params.value  === 'Blocked' ? '#F44336' : '',
-           borderRadius: '30px',
+           borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-             width: '60px',
-            height: '20px',
+           paddingRight:'8px',
+           paddingLeft:'8px',
            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            gap: '1rem',
-            fontSize: '10x'
+           maxWidth: '100%',
+          fontSize: '0.8125rem',
          }}
        >
          {params.value}

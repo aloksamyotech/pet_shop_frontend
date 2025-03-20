@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import CustomerForm from './Compontent/NewCustomer';
 import * as yup from 'yup';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import {
   Stack,
   Autocomplete,
@@ -97,6 +100,15 @@ const fetchPurchase = async () => {
   };
 
   const handleBuyNow = () => {
+    if (cartItems.length === 0) {
+      Swal.fire({
+        title: 'Your cart is empty!',
+        text: 'Please add items to the cart before proceeding to checkout.',
+        icon: 'warning',
+        confirmButtonText: 'Okay',
+      });
+      return;
+    }
     if (!selectedCustomer) {
       Swal.fire({
         title: 'Please select a customer',
@@ -197,6 +209,7 @@ const fetchPurchase = async () => {
     setProductData(response.data?.data);
   };
 
+ 
   const filterProduct = productData.filter((product) => {
     const matchCategory = selectedCategory ? product.categoryId === selectedCategory : true;
     const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
@@ -306,47 +319,47 @@ const fetchPurchase = async () => {
        
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={2}>
-            <Box
+        <Grid item xs={12} md={2}>
+  <Box
+    sx={{
+      flex: 1,
+      overflowY: "auto",
+      height: "70vh",
+      width: "100%",
+      backgroundColor: "#fff",
+      border: "1px solid #d3d3d3",
+      padding: "5px",
+      borderRadius: "10px",
+    }}
+  >
+    <FormGroup>
+      {categoryData.map((category) => (
+        <FormControlLabel
+          key={category._id}
+          control={
+            <Checkbox
+              checked={selectedCategory === category._id}
+              onChange={() => setSelectedCategory(category._id)}
               sx={{
-                flex: 1,
-                overflowY: 'auto',
-                height: '70vh',
-                width: '100%',
-                backgroundColor: '#fff',
-                border: '1px solid #d3d3d3',
-                padding: '5px',
-                borderRadius: '10px'
+                color: "#6A9C89",
+                "&.Mui-checked": {
+                  color: "#6A9C89",
+                },
               }}
-            >
-              {categoryData.map((category) => (
-                <Card
-                  key={category._id}
-                  onClick={() => setSelectedCategory(category._id)}
-                  sx={{
-                    transition: 'box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, border 0.2s ease-in-out',
-                    border: selectedCategory === category._id ? '3px solid  #6A9C89' : '1px solid #d3d3d3',
-                    cursor: 'pointer',
-                    mt: '5px',
-                    '&:hover': {
-                      transform: 'translateY(-5px) scale(1.08)',
-                      boxShadow: '0px 4px 10px  #6A9C89'
-                    }
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="50vh"
-                    image={category.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                    sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
-                  />
-                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px', color: 'black' }}>
-                    {category.name}
-                  </Typography>
-                </Card>
-              ))}
-            </Box>
-          </Grid>
+            />
+          }
+          label={category.name}
+          sx={{
+           cursor: "pointer",
+              borderRadius: "5px",
+           
+          }}
+        />
+      ))}
+    </FormGroup>
+  </Box>
+</Grid>
+
 
           <Grid item xs={12} md={6}>
             <Box
@@ -379,26 +392,37 @@ const fetchPurchase = async () => {
                     >
                       <CardMedia
                         component="img"
-                        height="70vh"
+                        height="90vh"
                         image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                         sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                       />
 
                       <Box sx={{ p: '4px' }}>
-                        <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>{product.productName}</Typography>
+                        <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold'}}>{product.productName}</Typography>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                          <Rating value={product.rating || 4} precision={0.5} readOnly size="small" />
-                          {/* <Typography sx={{ ml: 1, fontSize: "12px", color: "#757575" }}>
-                  ({product.reviews || Math.floor(Math.random() * 500) + 1})
-                </Typography> */}
-                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 1 }}>
+                <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
+                  {currencySymbol} {product.price}
+                </Typography>
 
-                        {/* <Typography sx={{ fontSize: "12px", color: "black" }}>
-                {product?.category?.[0]?.name || "No Category"}
-              </Typography> */}
+                {product.originalPrice && product.discount > 0 && (
+                  <>
+                    <Typography sx={{ color: '#757575', textDecoration: 'line-through', fontSize: '12px' }}>
+                      {currencySymbol} {product.originalPrice}
+                    </Typography>
+                    <Typography sx={{ color: '#388e3c', fontSize: '12px', fontWeight: 'bold' }}>
+                      {product.discount}{currencySymbol} off
+                    </Typography>
+                  </>
+                )}
+              </Box>
 
-                        <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#39b2e9' }}>{currencySymbol} {product.price}</Typography>
+                      
+   {/* <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
+                  {currencySymbol} {product.price}
+                </Typography>   
+                
+                        <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#39b2e9' }}>{currencySymbol} {product.price}</Typography> */}
                       </Box>
                     </Card>
                   </Grid>
@@ -463,7 +487,7 @@ const fetchPurchase = async () => {
                               }).then((result) => {
                                 if (result.isConfirmed) {
                                   removeItem(cartItem._id);
-                                  Swal.fire('Removed!', 'The item has been removed.', 'success');
+                                 
                                 }
                               });
                             }}
@@ -566,9 +590,7 @@ const fetchPurchase = async () => {
         </Grid>
       </Box>
 
-      {/* <TabPanel value="2">
-              <History />
-            </TabPanel> */}
+       
     </>
   );
 };

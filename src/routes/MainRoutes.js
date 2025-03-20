@@ -20,6 +20,7 @@ const Report = Loadable(lazy(() => import('views/Report/index')))
 const History = Loadable(lazy(() => import('views/History/index')))
 const Order =  Loadable(lazy(() => import('views/Order/index')))
 const Employee = Loadable(lazy(()=> import('views/Employee')))
+const SunCategory = Loadable(lazy(()=> import('views/SubCategory')))
 
 
 
@@ -79,6 +80,11 @@ const MainRoutes = {
         {
           path: 'addToCard',
           element: <AddToCard />
+        },
+        {
+          path : 'SubCategory',
+          element:<SunCategory/>
+
         },
 
         {

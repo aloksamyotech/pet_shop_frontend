@@ -107,44 +107,76 @@ const Checkout = () => {
         </Box>
 
    
-        <Box sx={{ backgroundColor: 'white', borderRadius: '10px', padding: '15px', mb: '15px' }}>
-        <TextField
-          label="Start Date"
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-          sx={{ mr: 2 }}
-        />
-        <TextField
-          label="End Date"
-          type="date"
-          value={endDate}
-          onChange={(e) => {
-            const selectedEndDate = new Date(e.target.value);
-            const selectedStartDate = new Date(startDate);
-            if (selectedEndDate >= selectedStartDate) {
-              setEndDate(e.target.value);
-            }
-          }}
-          InputLabelProps={{ shrink: true }}
-          sx={{ mr: 2 }}
-        />
-        <Button
-          variant="contained"
-          disabled={isFilterDisabled}
-          sx={{
-            backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
-            '&:hover': {
-              backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89'
-            },
-            mt: '4px'
-          }}
-          onClick={filterData}
-        >
-          Apply Filter
-        </Button>
-      </Box>
+        <Box
+  sx={{
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    padding: '15px',
+    mb: '15px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 2,
+  }}
+>
+  <TextField
+    label="Start Date"
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    InputLabelProps={{ shrink: true }}
+  />
+
+  <TextField
+    label="End Date"
+    type="date"
+    value={endDate}
+    onChange={(e) => {
+      const selectedEndDate = new Date(e.target.value);
+      const selectedStartDate = new Date(startDate);
+      if (selectedEndDate >= selectedStartDate) {
+        setEndDate(e.target.value);
+      }
+    }}
+    InputLabelProps={{ shrink: true }}
+  />
+
+  <Button
+    variant="contained"
+    disabled={isFilterDisabled}
+    sx={{
+      backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: isFilterDisabled ? '#ddd' : '#8DB3A8',
+      },
+    }}
+    onClick={filterData}
+  >
+    Apply Filter
+  </Button>
+
+  <Button
+    variant="outlined"
+    sx={{
+      color: '#6A9C89',
+      borderColor: '#6A9C89',
+      '&:hover': {
+        borderColor: '#8DB3A8',
+        color: '#8DB3A8',
+      },
+    }}
+    onClick={() => {
+      setStartDate('');
+      setEndDate('');
+      setFilteredPurchase(purchase);
+      setFilteredProduct(orders);
+    }}
+  >
+    Clear Filter
+  </Button>
+</Box>
+
 
       
         <Box sx={{ backgroundColor: '#fff' }}>
@@ -187,14 +219,14 @@ const Checkout = () => {
           <TabPanel value="1">
             <TableContainer component={Paper}>
               <Table>
-                <TableHead sx={{ backgroundColor: '#9053bc'}}>
+                <TableHead >
                   <TableRow>
-                    <TableCell sx={{ color: 'white' }}>Date</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Customer</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Phone</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Total Amount</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Customer</TableCell>
+                    <TableCell>Phone</TableCell>
+                    <TableCell>Product Name</TableCell>
+                    <TableCell>Quantity</TableCell>
+                    <TableCell>Total Amount</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -216,14 +248,14 @@ const Checkout = () => {
           <TabPanel value="2">
             <TableContainer component={Paper}>
               <Table>
-                <TableHead sx={{ backgroundColor: '#9053bc'}}>
+                <TableHead >
                   <TableRow>
-                    <TableCell sx={{ color: 'white' }}>Date</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Supplier</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Phone</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
-                    <TableCell sx={{ color: 'white' }}>Total Price</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Supplier</TableCell>
+                    <TableCell>Phone</TableCell>
+                    <TableCell>Product Name</TableCell>
+                    <TableCell>Quantity</TableCell>
+                    <TableCell>Total Price</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

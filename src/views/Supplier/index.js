@@ -97,7 +97,7 @@ const handleCloseActions = () => {
           await deleteApi(urls.company.delete.replace(':id', id));
           setSupplier((prev) => prev.filter((sup) => sup._id !== id));
           setFilteredCompany((prev) => prev.filter((sup) => sup._id !== id));
-          Swal.fire('Removed!', 'The company has been deleted.', 'success');
+        
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete company.', 'error');
         }
@@ -108,7 +108,7 @@ const handleCloseActions = () => {
 
 
   const columns = [
-    { field: 'companyName', headerName: 'Company Name', flex: 1 , renderCell: (params) => (
+    { field: 'companyName', headerName: 'Supplier', flex: 1 , renderCell: (params) => (
       <Stack direction="row" alignItems="center" spacing={1}>
        <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
         <Typography>{params.value}</Typography>

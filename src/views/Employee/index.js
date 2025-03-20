@@ -81,7 +81,7 @@ const Customer = () => {
       if (result.isConfirmed) {
         try {
           await deleteApi(urls.employee.delete.replace(':id', id));
-          Swal.fire('Removed!', 'The customer has been deleted.', 'success');
+         
           setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete customer.', 'error');
@@ -112,6 +112,12 @@ const Customer = () => {
   };
 
   const columns = [
+{
+  field:'EId',
+  headerName:'ID',
+  flex:0.5
+}
+    ,
     {
       field: 'name',
       headerName: 'Name',
@@ -199,7 +205,7 @@ const Customer = () => {
   return (
     <>
     <ViewEmployee open={openView}   handleClose={handleCloseView} customer={selectedCustomer}/>
-      <Employee open={openForm} handleClose={handleCloseForm} customer={selectedCustomer} fetchCustomer={fetchCustomers} />
+      <Employee open={openForm} handleClose={handleCloseForm} customer={selectedCustomer} fetchCustomer={fetchCustomers} currencySymbol={currencySymbol} />
 
       <Grid>
         <Box

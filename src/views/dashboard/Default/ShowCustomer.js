@@ -19,7 +19,6 @@ const StyledCard = ({ children, onClick }) => (
       overflow: 'hidden',
       position: 'relative',
       border: '1px solid #6A9C89',
-      borderRadius: '12px',
       cursor: 'pointer',
       '&:hover': { boxShadow: '0 4px 15px rgba(106, 156, 137, 0.5)' }
     }}
@@ -29,7 +28,7 @@ const StyledCard = ({ children, onClick }) => (
 );
 
 // Total Customer Component
-const ShowCustomer = ({ isLoading }) => {
+const   ShowCustomer = ({ isLoading }) => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

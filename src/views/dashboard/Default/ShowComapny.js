@@ -87,7 +87,7 @@ const ShowCompany = ({ isLoading }) => {
                   fontWeight: 600
                 }}
               >
-           Add Company
+           Order History
               </Typography>
             </Grid>
           </Box>

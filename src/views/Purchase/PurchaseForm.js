@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
+  Button,Box,
   Dialog,
   FormLabel,
   Grid,
@@ -16,13 +16,23 @@ import {
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-import { getApi, postApi, updateApi } from 'views/Api/comman.js';
+import { getApi, postApi, updateApi,postApiImage } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 import ClearIcon from '@mui/icons-material/Clear';
 
 const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymbol}) => {
   const [product, setProduct] = useState([]);
   const [company, setCompany] = useState([]);
+ const [selectedImage, setSelectedImage] = useState(null);
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      formik.setFieldValue('PurchaseImage', file);
+      setSelectedImage(URL.createObjectURL(file));
+    }
+  };
 
   useEffect(() => {
     fetchProduct();
@@ -38,7 +48,8 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
         totalPrice: purchase.totalPrice || '',
         discount: purchase.discount || '0',
         paymentStatus: purchase.paymentStatus || 'Pending',
-        productPrice: purchase.productPrice || ''
+
+        price:purchase.price || '',
       });
     } else {
       formik.resetForm();
@@ -77,7 +88,8 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
         return value <= totalAmount;
       }),
     paymentStatus: yup.string().required('Payment Status is required'),
-    productPrice: yup.number().positive('Product Price must be a positive number').required('Product Price is required')
+    price: yup.number().positive('Product Price must be a positive number').required('Product Price is required')
+
   });
   
 
@@ -88,19 +100,32 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
     totalPrice: '',
     discount: '0',
     paymentStatus: 'Pending',
-    productPrice: ''
+ 
+    price:''
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema,
+  
+
+    
     onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append('productId', values.productId);
+      formData.append('companyId', values.companyId);
+      formData.append('discount', values.discount);
+      formData.append('paymentStatus', values.paymentStatus);
+      formData.append('price', values.price);
+      formData.append('quantity', values.quantity);
+      formData.append('totalPrice', values.totalPrice);
+      formData.append('PurchaseImage', values.PurchaseImage);
       try {
         if (purchase) {
           await updateApi(urls.purchase.update.replace(':id', purchase._id), values);
           toast.success('Purchase updated successfully!');
         } else {
-          await postApi(urls.purchase.create, values);
+          await postApiImage(urls.purchase.create, formData);
           toast.success('Purchase added successfully!');
         }
         await fetchPurchase();
@@ -118,12 +143,14 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
 
   useEffect(() => {
     const selectedProduct = product.find((p) => p._id === formik.values.productId);
-    const productPrice = selectedProduct ? selectedProduct.price : 0;
-    const totalPrice = Math.max(formik.values.quantity * productPrice - formik.values.discount, 0);
-
-    formik.setFieldValue('productPrice', productPrice);
+   
+    const totalPrice = Math.max(formik.values.price * formik.values.quantity - formik.values.discount, 0);
     formik.setFieldValue('totalPrice', totalPrice);
-  }, [formik.values.productId, formik.values.quantity, formik.values.discount, product]);
+  
+
+    // formik.setFieldValue('productPrice', productPrice);
+    // formik.setFieldValue('totalPrice', totalPrice);
+  }, [formik.values.price, formik.values.quantity, formik.values.discount]);
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="purchase-dialog-title">
@@ -157,7 +184,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <FormLabel>Company</FormLabel>
+              <FormLabel>Supplier</FormLabel>
               <Autocomplete
                 id="companyId"
                 options={company}
@@ -175,6 +202,19 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
                     helperText={formik.touched.companyId && formik.errors.companyId}
                   />
                 )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormLabel>Product Price ({currencySymbol})</FormLabel>
+              <TextField
+                id="price"
+                name="price"
+                size="small"
+                fullWidth
+                value={formik.values.price}
+                onChange={formik.handleChange}
+                error={formik.touched.price && Boolean(formik.errors.price)}
+                helperText={formik.errors.price}
               />
             </Grid>
 
@@ -245,6 +285,31 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
                 helperText={formik.errors.totalPrice}
               />
             </Grid>
+             
+                          <Grid item xs={12} sm={6}>
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              minHeight="100px"
+                              border={1}
+                              borderColor="grey.300"
+                              borderRadius={1}
+                              position="relative"
+                            >
+                              {selectedImage ? (
+                                <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                              ) : (
+                                <Typography variant="body2" color="textSecondary">
+                                  Preview Image
+                                </Typography>
+                              )}
+                              <Box position="absolute" left={0} bottom={0} p={2}>
+                                <input type="file" accept="image/*" onChange={handleFileChange} />
+                              </Box>
+                            </Box>
+                          </Grid>
+                        
             
           </Grid>
         </form>

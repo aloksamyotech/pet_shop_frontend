@@ -21,7 +21,7 @@ import { getApi, updateApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 
-const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
+const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol }) => {
   const isEdit = Boolean(customer);
 
   const validationSchema = yup.object({
@@ -31,10 +31,10 @@ const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
       .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
       .max(50, 'First Name cannot be more than 50 characters'),
     email: yup.string().required('Email is required').email('Invalid email address'),
-    phoneNumber: yup
-      .string()
-      .required('Phone Number is required')
-      .matches(/^\d{10}$/, 'Phone Number must be exactly 10 digits'),
+   
+    EId: yup
+    .string()
+    .required('Id is required'),
     address: yup.string().required('Address is required').max(100, 'Address cannot be more than 100 characters'),
     salary: yup.string().required('Salary is required')
   });
@@ -44,7 +44,8 @@ const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
     email: '',
     address: '',
     phoneNumber: '',
-    salary: ''
+    salary: '',
+    EId:''
   };
 
   const formik = useFormik({
@@ -70,7 +71,8 @@ const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
         email: customer?.email || '',
         address: customer?.address || '',
         phoneNumber: customer?.phoneNumber || '',
-        salary: customer?.salary || ''
+        salary: customer?.salary || '',
+        EId: customer?.EId || '',
       });
     } else {
       formik.resetForm();
@@ -86,6 +88,21 @@ const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
       <DialogContent dividers>
         <form>
           <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <FormLabel>Employee Id</FormLabel>
+                <TextField
+                  id="EId"
+                  EId="EId"
+                  size="small"
+                  fullWidth
+                  value={formik.values.EId}
+                  onChange={formik.handleChange}
+                  error={formik.touched.EId && Boolean(formik.errors.EId)}
+                  helperText={formik.touched.EId && formik.errors.EId}
+                />
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <FormLabel>Name</FormLabel>
@@ -151,7 +168,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Salary</FormLabel>
+                <FormLabel>Salary ({currencySymbol})</FormLabel>
                 <TextField
                   id="salary"
                   name="salary"

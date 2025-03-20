@@ -55,6 +55,14 @@ export const urls = Object.freeze({
     bulkSave: base + '/category/bulkUpload',
     getCount: base + '/category/count'
   },
+  Subcategory: {
+    create: base + '/Subcategory/save',
+    get: base + '/Subcategory/fetch',
+    update: base + '/Subcategory/update/:id',
+    delete: base + '/Subcategory/:id',
+    bulkSave: base + '/Subcategory/bulkUpload',
+    getCount: base + '/Subcategory/count'
+  },
 
   order: {
     create: base + '/order/save',

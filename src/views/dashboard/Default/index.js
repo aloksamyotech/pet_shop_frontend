@@ -68,7 +68,10 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item lg={3} md={6} sm={6} xs={12}>
+        <Grid item sm={6} xs={12} md={6} lg={3}>
+            <ShowOrder isLoading={isLoading} />
+          </Grid>
+          <Grid item lg={3} md={3} sm={3} xs={12}>
             <ShowCustomer isLoading={isLoading} />
           </Grid>
           <Grid item lg={3} md={6} sm={6} xs={12}>
@@ -78,9 +81,7 @@ const Dashboard = () => {
             <ShowCompany isLoading={isLoading} />
           </Grid>
 
-          <Grid item sm={6} xs={12} md={6} lg={3}>
-            <ShowOrder isLoading={isLoading} />
-          </Grid>
+         
         </Grid>
       </Grid>
       

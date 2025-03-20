@@ -163,7 +163,7 @@ const Invoice = () => {
         >
           <Box
             sx={{
-              backgroundColor: '#9053bc',
+           
               height: '20vh',
               padding: '10px',
               display: 'flex',
@@ -178,14 +178,14 @@ const Invoice = () => {
                 style={{ width: '20%', height: 'auto' }}
               />
               <Box>
-                <Typography sx={{ color: '#fff' }}>
+                <Typography >
                   <strong>Invoice Id:</strong>
                   {AllData.orderId}
                 </Typography>
-                <Typography sx={{ color: '#fff' }}>
+                <Typography>
                   <strong>Date:</strong> {formattedDate}
                 </Typography>
-                <Typography sx={{ color: '#fff' }}>
+                <Typography>
                   <strong>Time:</strong>{' '}
                   {orderDate
                     ? new Date(orderDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
@@ -198,11 +198,11 @@ const Invoice = () => {
               sx={{
                 width: '30%',
                 display: 'flex',
-                justifyContent: 'flex-start',
+                justifyContent: 'flex-end',
                 textAlign: 'right'
               }}
             >
-              <Typography sx={{ color: '#fff' }}>
+              <Typography>
                 The Pet Stop
                 <br />
                 1234 Happy Paws Street 87876
@@ -242,12 +242,12 @@ const Invoice = () => {
             {Array.isArray(Product) && (
               <TableContainer component={Paper}>
                 <Table>
-                  <TableHead sx={{ backgroundColor: '#9053bc' }}>
+                  <TableHead>
                     <TableRow sx={{ fontWeight: 'bold' }}>
-                      <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Rate ({currencySymbol} )</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Discount ({currencySymbol} )</TableCell>
+                      <TableCell >Product Name</TableCell>
+                      <TableCell >Quantity</TableCell>
+                      <TableCell >Rate ({currencySymbol} )</TableCell>
+                      <TableCell >Discount ({currencySymbol} )</TableCell>
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
                   </TableHead>
@@ -276,10 +276,10 @@ const Invoice = () => {
           <Button
             sx={{
               border: '2px solid',
-              backgroundColor: '#6d42b9',
+              backgroundColor:'#6A9C89',
               padding: '5px',
               color: '#fff',
-              '&:hover': { backgroundColor: '#6d42b9' }
+              '&:hover': { backgroundColor: '#6A9C89' }
             }}
             onClick={printInvoice}
           >

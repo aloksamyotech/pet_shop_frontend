@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, IconButton,MenuItem,Popover } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs,TextField, IconButton,MenuItem,Popover } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid } from '@mui/x-data-grid';
@@ -29,6 +29,30 @@ const Purchase = () => {
   const currencySymbol = userObj.currencySymbol;
   const [activeRow, setActiveRow] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+   const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+
+console.log("purchase",purchase)
+
+  const filterData = () => {
+    if (!startDate || !endDate) return;
+
+    const start = new Date(startDate).setHours(0, 0, 0, 0);
+    const end = new Date(endDate).setHours(23, 59, 59, 999);
+
+    
+
+    const filteredPurchases = purchase.filter((item) => {
+      const itemDate = new Date(item.createdAt).getTime();
+      return itemDate >= start && itemDate <= end;
+    });
+
+    
+    setFilteredPurchase(filteredPurchases);
+  };
+  const isFilterDisabled = !startDate || !endDate;
+
   
  
   const handleOpenActions = (event, row) => {
@@ -98,7 +122,7 @@ const Purchase = () => {
         try {
           await deleteApi(urls.purchase.delete.replace(':id', id));
           setPurchase((prevPurchase) => prevPurchase.filter((p) => p._id !== id));
-          Swal.fire('Removed!', 'The purchase has been deleted.', 'success');
+        
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete purchase.', 'error');
         }
@@ -116,9 +140,20 @@ const Purchase = () => {
     },
     {
       field: 'companyName',
-      headerName: 'Company',
+      headerName: 'Supplier',
       flex: 1,
       valueGetter: (params) => params.row.CompanyName?.[0]?.companyName || 'N/A'
+    },
+    {
+      field:'price',
+      headerName:'Price',
+      flex:1,
+      renderCell: (params) => (
+        <>
+        {currencySymbol} {params.value}
+         
+        </>
+      ),
     },
     {
       field: 'totalPrice',
@@ -152,16 +187,16 @@ const Purchase = () => {
            backgroundColor:
             params.value  === 'Success' ? '#D5FADF' :params.value  === 'Pending' ? '#F8E1A1' :params.value  === 'Failed' ? '#FBE9E7' : '',
            color:params.value  === 'Success' ? '#19AB53' :params.value  === 'Pending' ? '#FF9800' :params.value  === 'Failed' ? '#F44336' : '',
-           borderRadius: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-             width: '60px',
-            height: '20px',
-           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            gap: '0.5rem',
-            fontSize: '8x',
-            padding:'5px'
+           borderRadius: '8px',
+           display: 'flex',
+           alignItems: 'center',
+           justifyContent: 'center',
+          paddingRight:'8px',
+          paddingLeft:'8px',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+          maxWidth: '100%',
+         fontSize: '0.8125rem',
+            
          }}
        >
          {params.value}
@@ -191,14 +226,14 @@ const Purchase = () => {
             }}
           >
           
-            {/* <MenuItem
+            <MenuItem
               onClick={() => {
                 handleView(activeRow);
                 handleCloseActions();
               }}
             >
               <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
-            </MenuItem> */}
+            </MenuItem>
     
           
             <MenuItem
@@ -251,7 +286,7 @@ const Purchase = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '0 25px',
-             mb:'40px'
+            
             }}
           >
           
@@ -279,6 +314,65 @@ const Purchase = () => {
             </Stack>
           </Box>
         </Stack>
+        <Box
+  sx={{
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    padding: '15px',
+     display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 2,
+  }}
+>
+  <TextField
+    label="Start Date"
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    InputLabelProps={{ shrink: true }}
+  />
+  <TextField
+    label="End Date"
+    type="date"
+    value={endDate}
+    onChange={(e) => {
+      const selectedEndDate = new Date(e.target.value);
+      const selectedStartDate = new Date(startDate);
+      if (selectedEndDate >= selectedStartDate) {
+        setEndDate(e.target.value);
+      }
+    }}
+    InputLabelProps={{ shrink: true }}
+  />
+  <Button
+    variant="contained"
+    disabled={isFilterDisabled}
+    sx={{
+      backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
+      '&:hover': {
+        backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
+      },
+    }}
+    onClick={filterData}
+  >
+    Apply Filter
+  </Button>
+
+  {/* Clear Filter Button */}
+  <Button
+    variant="outlined"
+    sx={{ color: '#6A9C89', borderColor: '#6A9C89' }}
+    onClick={() => {
+      setStartDate('');
+      setEndDate('');
+      setFilteredPurchase(purchase); // Reset to original data
+    }}
+  >
+    Clear Filter
+  </Button>
+</Box>
+
 
 
        

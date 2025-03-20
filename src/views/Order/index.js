@@ -40,6 +40,12 @@ const Checkout = () => {
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj.currencySymbol;
 
+
+
+
+
+  
+
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const fetchProduct = async () => {
@@ -97,14 +103,23 @@ const Checkout = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         removeItem(cartItem._id);
-        Swal.fire('Removed!', 'The item has been removed.', 'success');
-      }
+      
+      } 
     });
   };
 
   const handleCreateInvoice = async () => {
-    if (!selectedCustomer) {
+    if (!selectedCustomer ) {
       Swal.fire('Error', 'Please select a customer!', 'error');
+      return;
+    }
+    if (cartItems.length === 0) {
+      Swal.fire({
+        title: 'Your cart is empty!',
+        text: 'Please add items to the cart before proceeding to invoice.',
+        icon: 'warning',
+        confirmButtonText: 'Okay',
+      });
       return;
     }
 

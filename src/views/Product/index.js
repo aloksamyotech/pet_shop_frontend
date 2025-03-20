@@ -82,7 +82,7 @@ const Lead = () => {
         try {
           await deleteApi(urls.product.delete.replace(":id", id));
           setProducts((prev) => prev.filter((product) => product._id !== id));
-          Swal.fire("Removed!", "The Product has been deleted.", "success");
+        
         } catch (error) {
           Swal.fire("Error!", "Failed to delete Product.", "error");
         }
@@ -198,12 +198,12 @@ const Lead = () => {
     {product.productName}
   </Typography>
 
-  <Box sx={{ display: "flex", alignItems: "center" }}>
+  {/* <Box sx={{ display: "flex", alignItems: "center" }}>
     <Rating value={product.rating || 4} precision={0.5} readOnly size="small" />
     <Typography variant="body2" sx={{ ml: 1, color: "#757575" }}>
       {product.reviews || Math.floor(Math.random() * 500) + 1}
     </Typography>
-  </Box>
+  </Box> */}
 
   <Box>
     {product.category.map((cat, index) => (
@@ -215,54 +215,39 @@ const Lead = () => {
     ))}
   </Box>
 
-  <Typography variant="body2" sx={{ color: "#757575", fontSize: "14px" }}>
-    <strong>Stock:</strong> {product.quantity || "0"}
+  <Typography
+  variant="body2"
+  sx={{
+    color: product.quantity > 5 ? "#757575" : "#f44336", 
+    fontSize: "14px",
+    fontWeight: product.quantity <= 5 ? "bold" : "normal", 
+  }}
+>
+  <strong>Stock:</strong> {product.quantity > 0 ? product.quantity : "Out of Stock"}
+</Typography>
+
+
+
+  <Typography variant="h6" sx={{ color:'#6A9C89' , fontWeight: "bold"}}>
+  <strong>Price:</strong> {currencySymbol} {product.price || "N/A"}
   </Typography>
-
-
-  <Typography variant="h6" sx={{ color: "#39b2e9", fontWeight: "bold"}}>
-    {currencySymbol} {product.price || "N/A"}
+  
+  <Typography variant="h6" sx={{ color:'#6A9C89'  , fontWeight: "bold"}}>
+  <strong>Discount:</strong> {currencySymbol} {product.discount || "N/A"}
   </Typography>
 
  
-  <Box sx={{ display: "flex", flexDirection: "row" ,justifyContent:'space-between' , gap:'2px',mt:'2px'}}>
+  <Box sx={{ display: "flex", flexDirection: "row" , gap:'2px',mt:'2px'}}>
 
 
-  <Box
-  sx={{
-    backgroundColor: "#D5FADF",
-    color: "#19AB53",
-    padding: "1px",
-    borderRadius: "30px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "40px",
-    height: "20px",
-    textTransform: "uppercase",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    gap: "0.5rem",
-    fontSize: "10px",
-    cursor: "pointer", 
-    transition: "background-color 0.3s ease, transform 0.2s ease", 
-    "&:hover": {
-      backgroundColor: "#B2F0C6", 
-      transform: "scale(1.05)", 
-    },
-    "&:active": {
-      transform: "scale(0.95)", 
-    }
-  }}
-  onClick={() => handleView(product)}
->
-  View
-</Box>
 
 <Box
   sx={{
+    mr:'3px',
     backgroundColor: "#F8E1A1",
     color: "#FF9800",
-    padding: "1px",
+    paddingRight: "8px",
+    paddingLeft:'8px',
     borderRadius: "30px",
     display: "flex",
     alignItems: "center",
@@ -292,7 +277,8 @@ const Lead = () => {
   sx={{
     backgroundColor: "#FBE9E7",
     color: "#F44336",
-    padding: "1px",
+    paddingRight: "8px",
+    paddingLeft:'8px',
     borderRadius: "30px",
     display: "flex",
     alignItems: "center",
