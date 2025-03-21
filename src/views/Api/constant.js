@@ -1,6 +1,6 @@
 import { register } from 'numeral';
 
-const base = 'http://localhost:7200';
+const base = 'http://localhost:7200/api';
 export const urls = Object.freeze({
   product: {
     create: base + '/product/save',

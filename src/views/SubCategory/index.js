@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
-
+import CategoryForm from './SubCategoryFrom';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -45,7 +45,7 @@ const handleCloseActions = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await getApi(urls.category.get);
+      const response = await getApi(urls.Subcategory.get);
       const categoryData = response?.data?.data || [];
       setCategory(categoryData);
       setFilteredCategory(categoryData);
@@ -103,8 +103,10 @@ const handleCloseActions = () => {
 
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
+    { field: 'categoryId', headerName: 'Category', flex: 1,
+    valueGetter: (params) =>params.row.category?.[0].name|| 'N/A'
+    },
     { field: 'description', headerName: 'Description', flex: 1 },
-    { field: 'categoryName', headerName: 'Category', flex: 1 },
     {
       field: 'Action',
       headerName: 'Action',
@@ -141,8 +143,8 @@ const handleCloseActions = () => {
 
   return (
     <>
-      {/* <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
-      <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} /> */}
+      <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
+      {/* <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} />  */}
 
       <Grid>
         <Box

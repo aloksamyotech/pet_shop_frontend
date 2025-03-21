@@ -54,6 +54,7 @@ const Lead = () => {
     const response = await getApi(urls.product.get);
     setProducts(response?.data?.data || []);
   };
+  console.log("product",products)
 
   useEffect(() => {
     fetchProducts();
@@ -210,6 +211,15 @@ const Lead = () => {
       <Box key={index}>
         <Typography sx={{ color: "#757575", fontSize: "14px" }}>
           <strong>Category:</strong> {cat.name}
+        </Typography>
+      </Box>
+    ))}
+  </Box>
+  <Box>
+    {product.SubCategory.map((cat, index) => (
+      <Box key={index}>
+        <Typography sx={{ color: "#757575", fontSize: "14px" }}>
+          <strong>SubCategory:</strong> {cat.name}
         </Typography>
       </Box>
     ))}

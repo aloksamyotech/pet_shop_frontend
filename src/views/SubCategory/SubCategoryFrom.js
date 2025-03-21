@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography,Select,MenuItem,FormLabel } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { postApiImage, updateApi } from 'views/Api/comman.js';
+import { postApi, updateApi ,getApi} from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 
@@ -11,6 +11,20 @@ import { toast } from 'react-toastify';
 const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const isEditing = Boolean(category);
+  const [categories, setCategories] = useState([]);
+
+
+  const fetchCategory = async () => {
+    const response = await getApi(urls.category.get);
+ setCategories(response?.data?.data);
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
+
+
+
 
   const validationSchema = yup.object({
     name: yup
@@ -30,20 +44,22 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
     },
     validationSchema,
     onSubmit: async (values) => {
+      console.log("data-----------",values)
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description);
+      formData.append('categoryId',values.categoryId)
 
-      if (!isEditing && values.categoryImage) {
-        formData.append('categoryImage', values.categoryImage);
-      }
+      // if (!isEditing && values.categoryImage) {
+      //   formData.append('categoryImage', values.categoryImage);
+      // }
 
       try {
         if (isEditing) {
-          await updateApi(urls.category.update.replace(':id', category._id), values);
+          await updateApi(urls.Subcategory.update.replace(':id', category._id), values);
           toast.success('Category updated successfully!');
         } else {
-          await postApiImage(urls.category.create, formData);
+          await postApi(urls.Subcategory.create, formData);
           toast.success('Category added successfully!');
         }
         formik.resetForm();
@@ -61,7 +77,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       formik.setValues({
         name: category?.name || '',
         description: category?.description || '',
-        categoryImage: null
+        categoryId : category?.categoryId || '',
       });
       setSelectedImage(category?.categoryImage || null);
     }
@@ -86,10 +102,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
+              <Grid sx={6}>
               <TextField
                 id="name"
                 name="name"
-                label="Category Name"
+                label="Sub Category Name"
                 fullWidth
                 size="small"
                 value={formik.values.name}
@@ -100,6 +117,34 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
               />
+              </Grid>
+              <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    id="categoryId"
+                    name="categoryId"
+                    size="small"
+                    fullWidth
+                    value={formik.values.categoryId}
+                    onChange={formik.handleChange}
+                    error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 200
+                        }
+                      }
+                    }}
+                  >
+                    {Array.isArray(categories) &&
+                      categories.map((category) => (
+                        <MenuItem key={category._id} value={category._id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </Grid>
+            
             </Grid>
 
             <Grid item xs={12}>
@@ -118,7 +163,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
               />
             </Grid>
 
-            {!isEditing && (
+            {/* {!isEditing && (
               <Grid item xs={12} sm={6}>
                 <Box
                   display="flex"
@@ -142,7 +187,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                   </Box>
                 </Box>
               </Grid>
-            )}
+            )} */}
           </Grid>
         </form>
       </DialogContent>
