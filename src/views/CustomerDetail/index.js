@@ -1,771 +1,343 @@
-import react from 'react';
-import { Stack, Button, Container, Typography, Card, Box ,Grid, TextField,Breadcrumbs,Divider, CardMedia,Switch,Avatar} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+  Paper,
+  Button,
+  TableHead,
+  TableContainer,
+  TableBody,
+  TableRow,
+  Divider,
+  Table,
+  Typography,
+  Card,
+  Box,
+  Grid,
+  Breadcrumbs,
+  TableCell,
+  Stack,
+  IconButton,
+  TextField,
+  Avatar
+} from '@mui/material';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import TableStyle from '../../ui-component/TableStyle';
 import { Email } from '@mui/icons-material';
-import PhoneIcon from '@mui/icons-material/Phone';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import InfoIcon from '@mui/icons-material/Info';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import LockIcon from '@mui/icons-material/Lock';
-import SettingsIcon from '@mui/icons-material/Settings';
-import {  Tabs, Tab } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router';
+import AccountBoxIcon from '@mui/icons-material/AccountCircle';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import { useLocation, useParams } from 'react-router';
+import { getApi } from 'views/Api/comman';
+import { urls } from 'views/Api/constant';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Tab } from '@mui/material';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import HomeIcon from '@mui/icons-material/Home';
-import { useState } from 'react';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { Warning } from '@mui/icons-material';
-import TabPanel from '@mui/lab/TabPanel';
-import { TabContext, TabList } from '@mui/lab';
-
+import { useNavigate } from 'react-router-dom';
 
 
 const CustomerDetail = () => {
   const [value, setValue] = useState('1');
+  const [orderList, setOrderList] = useState([]);
+  const [orderDate, setOrderDate] = useState();
+  const location = useLocation();
 
-  const handleChange = (event,newValue) => {
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+
+  const navigate = useNavigate();
+  const date = new Date(orderDate);
+  const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+
+  const DataCustomer = location.state?.customer || null;
+
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const { id } = useParams();
+  const fetchOrder = async () => {
+    try {
+      const response = await getApi(urls.order.get);
+      const DataOrder = response?.data?.data;
+      const filteredOrders = DataOrder.filter((order) => order.customerId === DataCustomer?._id);
+      setOrderList(filteredOrders);
+      setOrderDate(response.data.data[0].createdAt);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
 
-    const data = [
-        { id: 1, name: 'Harsh', address: 'indore', PhoneNumber: '12344557' },
-        { id: 2, name: 'Lucky', address: 'city2', PhoneNumber: '12344558' },
-        { id: 3, name: 'Kush', address: 'city3', PhoneNumber: '12344559' },
-        { id: 4, name: 'lucky', address: 'city4', PhoneNumber: '12344560' },
-        { id: 5, name: 'kush', address: 'city5', PhoneNumber: '12344561' },
-        { id: 6, name: 'md', address: 'city6', PhoneNumber: '12344562' }
-      ];
+  useEffect(() => {
+    if (DataCustomer?._id) {
+      fetchOrder();
+    }
+  }, [DataCustomer]);
 
+  return (
+    <Grid container>
+      <TabContext value={value}>
+        <Grid sx={{ width: '100%' }}>
+          <Stack direction="row" alignItems="center" mb={5}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+             mb:'40px'
+            }}
+          >
+            
+              <Stack direction="row" alignItems="center">
+                <IconButton onClick={() => navigate('/dashboard/default')}sx={{ color: '#6A9C89' }}>
+                  <HomeIcon />
+                </IconButton>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
 
+                <Typography
+                  onClick={() => navigate(-1)}
+                  sx={{
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    fontSize: '15px',
+                    mx: 1,
+                    '&:hover': { color: '#2067db' }
+                  }}
+                >
+                  Customer
+                </Typography>
 
-      const customer = data.find((customer) => customer.id === parseInt(id));
-      
-      return (
-<Grid container>
-<TabContext value={value}>
-
-    <Grid sx={{width:'100%'}}>
-<Stack direction="row" alignItems="center" mb={5} >
-          <Box sx={{backgroundColor:'white', height:'50px' ,width:'100%' ,display:'flex',borderRadius :'10px',justifyContent:'space-between',alignItems:'center',padding:'0 25px',marginTop:'-7px'}}>
-            <Breadcrumbs aria-label="breadcrumb">
-            <HomeIcon sx={{color:'#2067db'}} fontSize="medium" />
-          <Typography variant="h5" sx={{fontWeight:'600px',color:'black'}}>Profile</Typography>
-          </Breadcrumbs>
-        </Box>
-        </Stack>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+                <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
+                  View Customer
+                </Typography>
+              </Stack>
+            </Box>
+          </Stack>
         </Grid>
 
-  <Grid spacing={2} container md={12} direction="column">  
-       <Box sx={{width:'100%', height:'200vh',  p:'4px' , backgroundColor:'white', borderRadius:'10px',
-}}>
-
-
-{/* main part */}
-    
-        
-  <Box sx={{ borderBottom: 1  , border:'none'  , width:'120%', display:'flex',justifyContent:'space-between'}}>
-          <TabList onChange={handleChange} indicatorColor="none" >
-          <Tabs
-          value={value}
-          variant="scrollable"
-          scrollButtons="auto"
-         
-          sx={{
-            borderBottom: '1px solid #e0e0e0',
-            
-          }}
-        >
-          <Tab
-            icon={<AccountCircleIcon    sx={{ fontWeight: 'bold' }}/>}
-            iconPosition="start"
-            label="Profile"
-            value="1"
-            sx={{ fontWeight:'bold' }}
-          />
-          <Tab
-            icon={<InfoIcon />}
-            iconPosition="start"
-            label="Personal Details"
-            value="2"
-          />
-          <Tab
-            icon={<AccountBoxIcon />}
-            iconPosition="start"
-            label="My Account"
-           value="3"
-          />
-          <Tab
-            icon={<LockIcon />}
-            iconPosition="start"
-            label="Change Password"
-            value="4"
-          />
-          <Tab
-            icon={<SettingsIcon />}
-            iconPosition="start"
-            label="Settings"
-            value="5"
-          />
-        </Tabs>
-          </TabList>
-        </Box>
-
-
-
-
-{/*information */}
-<TabPanel value="1">
-<Grid container spacing={1}>
-                 <Grid item md={4}>
-                <Box sx={{ width:'100%',
-                    height:'45vh',border: '1px solid #d3d3d3', borderRadius:'8px'
-                }}>
-
-                    
-
-                    <Grid>
-                    <Box sx={{display:'flex',justifyContent:'space-between', alignItems:'center', width:'100%',height:'15vh',p:'5px'
-                    }}>
-                       <Stack  direction="row" spacing={2}>
-                        
-                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}>JWT User</Typography>
-
-                  </Stack>
-                
-                    </Box>
-                    </Grid>
-                    <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-
-
-
-                    <Grid direction="column" spacing={1}>
-                        <Box sx={{width:'100%', height:'10vh', display:'flex',p:'10px', justifyContent:'space-between' , alignItems:'center'}}>
-
-                    <Box style={{display:'flex', alignItems:'center', gap:'8px'}}>     
-                   <Email style={{fontSize:'18px'}}/>
-                    <Typography sx={{fontFamily:'-moz-initial',fontWeight:"400px",fontSize:'18px'}}> Email</Typography>
-
-
-                    </Box>   
-                    <Typography sx={{fontSize:'15px'}}>demo1234@gmail.com</Typography>
-                    </Box>
-                      </Grid>
-                 <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-
-
-                 <Grid direction="column" spacing={1}>
-                        <Box sx={{width:'100%', height:'10vh', display:'flex',p:'10px', justifyContent:'space-between' , alignItems:'center'}}>
-
-                    <Box style={{display:'flex', alignItems:'center', gap:'8px'}}>     
-                    <PhoneIcon style={{fontSize:'18px'}}/>
-                    <Typography sx={{fontFamily:'-moz-initial',fontWeight:"400px",fontSize:'18px'}}>PhoneNumber</Typography>
-
-
-                    </Box>   
-                    <Typography sx={{fontSize:'15px'}}>9876342516</Typography>
-                    </Box>
-                      </Grid>
-                 <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-
-
-
-                 <Grid direction="column" spacing={1}>
-                        <Box sx={{width:'100%', height:'10vh', display:'flex',p:'10px', justifyContent:'space-between' , alignItems:'center'}}>
-
-                    <Box style={{display:'flex', alignItems:'center', gap:'8px'}}>     
-                   <LocationOnIcon style={{fontSize:'18px'}}/>
-                    <Typography sx={{fontFamily:'-moz-initial',fontWeight:"400px",fontSize:'18px'}}> Location</Typography>
-
-
-                    </Box>   
-                    <Typography sx={{fontSize:'15px'}}>Indore</Typography>
-                    </Box>
-                      </Grid> </Box>
-
-            </Grid>
-
-
-               <Grid item md={8}>
-                <Box sx={{ width:'100%',
-                    height:'80vh', border: '1px solid #d3d3d3', borderRadius:'8px'
-                }}>
-
-                <Box sx={{width:'100%', height:'10vh', display:'flex', justifyContent:'space-between',p:'15px', alignItems:'center'}}><Typography sx={{fontWeight:'bold'}}>About me</Typography>
-                <EditIcon style={{ color: "blue", fontSize: "24px" }} />
-                </Box>
-                <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-
-                <Box sx={{p:'25px' , display:'flex', justifyContent:'center', alignItems:'center'}}>
-                <Typography>Hello,I’m Anshan Handgun Creative Graphic Designer & User Experience Designer based in Website, I create digital Products a more Beautiful and usable place. Morbid accusant ipsum. Nam nec tellus at.</Typography>
-                </Box>
-
-                <Box sx={{p:'15px' , display:'flex',fontWeight:'bold'}}>Personal Details</Box>
-
-
-
-
-
-
-<Box sx={{ width: '70%', p: '20px' }}>
-  <Grid container direction="column" spacing={2}>
-    {[
-      { label: 'Full Name', value: 'Lucky Demo' },
-      { label: 'Father Name', value: 'Mr. Deepen Handgun' },
-      { label: 'Address', value: 'Street 110-B Kalians Bag, Dewan, M.P. INDIA' },
-      { label: 'Zip Code', value: '12345' },
-      { label: 'Phone', value: '+0 123456789, +0 123456789' },
-      { label: 'Email', value: 'demo1234@gmail.com' },
-    ].map((item, index) => (
-      <Box
-        key={index}
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          height: '7vh',
-          p:'15px'
-        }}
-      >
-        <Typography
-          sx={{
-            
-            fontWeight: 'bold',
-            fontSize: '15px',
-            width: '30%', 
-          }}
-        >
-          {item.label}
-        </Typography>
-        <Typography sx={{ width: '5%' }}>:</Typography>
-        <Typography
-          sx={{
-            fontSize: '15px',
-            width: '65%', 
-          }}
-        >
-          {item.value}
-        </Typography>
-      </Box>
-    ))}
-  </Grid>
-</Box>
-
-               </Box>
-
-<Box  sx={{ width:'100%',
-                    height:'50vh', border: '1px solid #d3d3d3', borderRadius:'8px', mt:'10px'
-                }}>
-                   <Box sx={{p:'15px' , display:'flex'}}>Education</Box>
-                   <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-               <Box sx={{ width: '70%', p: '20px' }}>
-  <Grid container direction="column" spacing={2}>
-    {[
-      { label: 'Master Degree', value: 'Master Degree in Computer Application' },
-      { label: 'Bachelor', value: 'Bachelor Degree in Computer Engineering' },
-      { label: 'School', value: 'Higher Secondary Education' },
-     
-    ].map((item, index) => (
-      <Box
-        key={index}
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          height: '7vh',
-          p:'25px'
-        }}
-      >
-        <Typography
-          sx={{
-            
-            fontWeight: 'bold',
-            fontSize: '15px',
-            width: '50%', 
-          }}
-        >
-          {item.label}
-        </Typography>
-       
-        <Typography
-          sx={{
-            fontSize: '15px',
-            width: '100%', 
-          }}
-        >
-          {item.value}
-        </Typography>
-      </Box>
-    ))}
-  </Grid>
-</Box>
-</Box> 
-
-
-
-<Box  sx={{ width:'100%',
-                    height:'30vh', border: '1px solid #d3d3d3', borderRadius:'8px', mt:'10px'
-                }}>
-                   <Box sx={{p:'15px' , display:'flex'}}>Employment</Box>
-                   <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-               <Box sx={{ width: '70%', p: '20px' }}>
-  <Grid container direction="column" spacing={2}>
-    {[
-      { label: 'Current', value: 'Senior UI/UX designer' },
-      { label: 'Junior', value: 'Trainee cum Project Manager' },
-     
-    ].map((item, index) => (
-      <Box
-        key={index}
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          height: '7vh',
-          p:'25px'
-        }}
-      >
-        <Typography
-          sx={{
-           
-            fontWeight: 'bold',
-            fontSize: '15px',
-            width: '50%', 
-          }}
-        >
-          {item.label}
-        </Typography>
-       
-        <Typography
-          sx={{
-            fontSize: '15px',
-            width: '100%', 
-          }}
-        >
-          {item.value}
-        </Typography>
-      </Box>
-    ))}
-  </Grid>
-</Box>
-</Box> 
-
-
-            </Grid> 
-        </Grid>
-        </TabPanel>
-
-{/*Persona Details */}
-<TabPanel value="2">
-<Grid container spacing={2}>
-
-
-<Grid item md={6}>
-  <Box sx={{border: '1px solid #d3d3d3', borderRadius:'8px',height:'60vh'}}>
-
-  <Box sx={{width:'100%', height:'10vh', display:'flex', p:'15px '}}>  
-                    
-                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}> Personal Information</Typography>
-                   
-                   </Box>
-                     <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-
-
-<Box sx={{p:'15px', display:'flex', flexDirection:'row', gap:'6px'}} >
-
-<TextField 
-  label="Name" 
-  variant="outlined" 
-  sx={{ width: '50%' }} 
-/>
-    
-<TextField
-label="Location"
-variant='outlined'
-sx={{width:'50%' }}
-/> 
-</Box>
-
-
-
-
-
-<Box sx={{display:'flex', flexDirection:'row', p:'15px'}} >
-
-<TextField 
-  label="Bio" 
-  variant="outlined" 
-  sx={{ width: '100%'}} 
-/>
-    </Box>
-
-
-<Box sx={{p:'15px'}}>
-    <TextField
-label="Experience"
-variant='outlined'
-sx={{width:'50%' }}
-/> 
-</Box>
- </Box>
-
-
-
-
-
- <Box sx={{border: '1px solid #d3d3d3', borderRadius:'8px',height:'60vh',mt:'15px'}}>
- <Box sx={{width:'100%', height:'10vh', display:'flex', p:'15px '}}> 
-
-
-                    
-                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}> Social Information</Typography>
-                   
-                   </Box>
-                     <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-                     <Box sx={{ p: '15px' }}>
-
-<Box
+        <Grid spacing={2} container md={12} direction="column">
+          <Box sx={{ width: 'auto', height: 'auto', p: '4px', backgroundColor: 'white', borderRadius: '10px', ml: '20px', marginTop: '-50px',mr:'-15px' }}>
+            <Box sx={{ borderBottom: 1, border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+             
+    <TabList
   sx={{
-    display: 'flex',
-    alignItems: 'center',
-    mb: 3, 
+    '& .MuiTabs-indicator': {
+      backgroundColor: '#6A9C89', 
+    },
+    '& .MuiTab-root': {
+      color: '#B0B0B0', 
+    },
+    '& .Mui-selected': {
+      color: '#6A9C89', 
+      fontWeight: 'bold', 
+    },
   }}
+  onChange={handleChange}
 >
-  <FacebookIcon sx={{ color: '#4267B2', fontSize: '40px', mr: 2 }} />
-  <TextField
-    label="Facebook Profile URL"
-    variant="outlined"
-    sx={{ width: '50%', mr: 2 }}
-  />
-  <Button
-    variant="contained"
-    sx={{
-      backgroundColor: '#4267B2',
-      color: 'white',
-      ':hover': { backgroundColor: '#365899' },
-    }}
-  >
-    Connect
-  </Button>
-</Box>
 
-
-<Box
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-    mb: 3,
-  }}
->
-  <TwitterIcon sx={{ color: '#1DA1F2', fontSize: '40px', mr: 2 }} />
-  <TextField
-    label="Twitter Profile URL"
-    variant="outlined"
-    sx={{ width: '50%', mr: 2 }}
-  />
-  <Button
-    variant="contained"
-    sx={{
-      backgroundColor: '#1DA1F2',
-      color: 'white',
-      ':hover': { backgroundColor: '#1A91DA' },
-    }}
-  >
-    Connect
-  </Button>
-</Box>
-
-
-<Box
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-  }}
->
-  <LinkedInIcon sx={{ color: '#0077B5', fontSize: '40px', mr: 2 }} />
-  <TextField
-    label="LinkedIn Profile URL"
-    variant="outlined"
-    sx={{ width: '50%', mr: 2 }}
-  />
-  <Button
-    variant="contained"
-    sx={{
-      backgroundColor: '#0077B5',
-      color: 'white',
-      ':hover': { backgroundColor: '#005983' },
-    }}
-  >
-    Connect
-  </Button>
-</Box>
-</Box>
-
-
-
- </Box>
-</Grid>
-
-
-
-
-
-<Grid item md={6}>
-  <Box sx={{border: '1px solid #d3d3d3', borderRadius:'8px', width:'100%' ,height:'60vh'}}>
-
-  <Box sx={{width:'100%', height:'10vh', display:'flex', p:'15px '}}>  
-                    
-                    <Typography sx={{fontWeight:"bold",fontSize:'15px'}}> Contact Information</Typography>
-                   
-                   </Box>
-                     <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-
-
-
-<Box sx={{p:'15px', display:'flex', flexDirection:'row', gap:'6px'}} >
-
-<TextField 
-  label="Contact Phone" 
-  variant="outlined" 
-  sx={{ width: '50%' }} 
-/>
-    
-<TextField
-label="Email"
-variant='outlined'
-sx={{width:'50%' }}
-/> 
-</Box>
-
-
-
-
-
-<Box sx={{display:'flex', flexDirection:'row', p:'15px'}} >
-
-<TextField 
-  label="Portfolio Url" 
-  variant="outlined" 
-  sx={{ width: '100%'}} 
-/>
-    </Box>
-
-
-<Box sx={{p:'15px'}}>
-
-    <TextField
-label="Address"
-variant='outlined'
-sx={{width:'50%' }}
-/> 
-</Box>
- </Box>
-</Grid>
-
-</Grid>     
-</TabPanel>
-
- {/*My account */}
-   <TabPanel value="3">
-   <Grid container>
-     <Box sx={{width:'100%' , height:'400vh', backgroundColor:'white', p:'35px'}}>
-       <Grid item md={12}>
-         <Box sx={{border: '1px solid #d3d3d3', borderRadius:'8px', width:'100%' ,height:'50vh', p:'20px'}}>
-   
-         <Box sx={{width:'100%', height:'10vh', display:'flex', p:'15px'}}>  
-                         
-                         <Typography sx={{fontFamily:'-moz-initial',fontWeight:"400px",fontSize:'18px'}}> General Setting</Typography>
-                        
-                        </Box>
-                          <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-   
-   
-   
-     <Box sx={{p:'15px', display:'flex', flexDirection:'row', gap:'6px'}} >
-   
-   <TextField 
-       label="Name" 
-       variant="outlined" 
-       sx={{ width: '50%' }} 
-     />
-         
-   <TextField
-   label="Location"
-   variant='outlined'
-   sx={{width:'50%' }}
-   /> 
-   </Box> 
-   <Box sx={{p:'15px', display:'flex', flexDirection:'row', gap:'6px'}} >
-   
-   <TextField 
-       label="language" 
-       variant="outlined" 
-       sx={{ width: '50%' }} 
-     />
-         
-   <TextField
-   label="Signing Using"
-   variant='outlined'
-   sx={{width:'50%' }}
-   /> 
-   </Box>
-   
-   
-   
-   
+                <Tab
+                    value="1"
+                    label={
+                      <Box display="flex" alignItems="center " sx={{color:'#6A9C89'}}>
+                        <AccountCircleIcon sx={{ fontSize: '20px', mr: 1 }} /> Profile
+                      </Box>
+                    }
+                  />
+                    <Tab
+                    value="2"
+                    label={
+                      <Box display="flex" alignItems="center " sx={{color:'#6A9C89'}}>
+                        <ReceiptLongIcon sx={{ fontSize: '20px', mr: 1 }} /> Order list
+                      </Box>
+                    }
+                  />
+                 
           
-           
-           
-           
-           </Box> 
-   
-   
-   <Box  sx={{border: '1px solid #d3d3d3', borderRadius:'8px', width:'100%' ,height:'60vh', p:'20px' , mt:'10px'}}>
-   <Box sx={{width:'100%', height:'10vh', display:'flex', p:'15px'}}>  
-                         
-                         <Typography sx={{fontFamily:'-moz-initial',fontWeight:"400px",fontSize:'18px'}}> Advance Setting</Typography>
-                        
-                        </Box>
-                          <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-   
-   
-   <Box sx={{mt:'10px'}}>
-   
-   <Box sx={{p:"10px"}}>
-   
-   
-     <Typography sx={{fontFamily:'-moz-initial',fontWeight:"bold",fontSize:'18px'}}>Secure Browsing</Typography>
-     
-     <Typography> <Switch  />  Browsing Securely when necessary
-     </Typography>
-   </Box>
-   
-   
-   <Box sx={{p:"10px"}}>
-   
-   
-     <Typography sx={{fontFamily:'-moz-initial',fontWeight:"bold",fontSize:'18px'}}>Login Notifications</Typography>
-     
-     <Typography> <Switch  />  Notify when login attempted from other place
-     </Typography>
-   </Box>
-   
-   <Box sx={{p:"10px"}}>
-   
-   
-     <Typography sx={{fontFamily:'-moz-initial',fontWeight:"bold",fontSize:'18px'}}>Login Approval</Typography>
-     
-     <Typography> <Switch  />  Approvals is not required when login from unrecognized devices.
-     </Typography>
-   </Box>
-   
-   </Box>
-   <Divider sx={{backgroundColor:'black',borderWidth:'1px'}}/>
-   
-   
-   
-   
-   </Box>
-   
-       </Grid>
-   
-     </Box>
-     
-   </Grid>
-   </TabPanel>
-       
-    {/*Change password */}   
-    <TabPanel value="4">
-    <Grid  container>
-      <Box  sx={{width:'100%' , height:'100vh', backgroundColor:'white', p:'10px'}}>
-    
-    
-      <Box sx={{width:'100%' , height:'10vh', border: '2px dotted #bfab59', borderRadius:'8px', display:'flex', justifyContent:'center', alignItems:'center', p:'30px'}} > 
-    <Box>
-    
-    <Typography> <Warning sx={{ color: '#ffc107', marginRight: '8px' }} /></Typography></Box>
-    
-    <Box>
-    <Typography>Your Password will expire in every 3 months. So change it periodically. Do not share your password</Typography></Box>
-      </Box>
-     
-    
-      <Box sx={{border: '1px solid #d3d3d3', borderRadius:'8px', width:'100%', height:'50vh' , mt:'20px', p:'10px'}}> 
-    
-    
-    
-    
-      <Box sx={{width:'100%', height:'10vh', display:'flex' , p:'10px'}}>  
-                          
-         <Typography sx={{fontFamily:'-moz-initial',fontWeight:"bold",fontSize:'15px'}}> Change Password</Typography>
-        
-        </Box>
-          <Divider sx={{backgroundColor:'black',borderWidth:'1px', width:'100%'}}/>
-    
-    <Box sx={{p:'15px', display:'flex', flexDirection:'row', gap:'6px'}} >
-    
-    <TextField 
-        label="Current Password" 
-        variant="outlined" 
-        sx={{ width: '50%' }} 
-      />
-          
-    <TextField
-    label="New Password"
-    variant='outlined'
-    sx={{width:'50%' }}
-    />
-    </Box>
-    
-    
-    <Box sx={{ display:'flex', flexDirection:'row', gap:'6px'}} >
-    <TextField
-    label="Confirm Password"
-    variant='outlined'
-    sx={{width:'50%'}}
-    />
-    </Box>
-    
-    
-    
-    <Box sx={{display:'flex', justifyContent:'flex-end'}}>
-      <Button sx={{ border:'1px' , backgroundColor:'#698dff', color:'white'}}>Change Password</Button>
-      <Button sx={{color:'red'}}>Clear</Button>
-    </Box>
-    
-    
-    
-    </Box>
-    
-      
-    
-    
-      </Box>
-    
-    </Grid>
-    </TabPanel>
-    
-        </Box> 
+              </TabList>
+            </Box>
+
+            <TabPanel value="1">
+
+            <Grid container spacing={3} alignItems="stretch">
+                  <Grid item xs={12} sm={4} display="flex" height="auto">
+                    <Box
+                      sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                        textAlign: 'center',
+                        width: '100%'
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Customer Picture</Typography>
+                      <Divider />
+                      <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+                        <Avatar
+                          alt="Profile Image"
+                          src={
+                            'https://png.pngtree.com/png-clipart/20240702/original/pngtree-indian-office-girl-wearing-formal-black-and-white-dress-with-long-png-image_15465282.png'
+                          }
+                          sx={{
+                            width: 130,
+                            height: 130,
+                            borderRadius: '50%',
+                            backgroundColor: '#7760f6'
+                          }}
+                        />
+                      </Box>
+                      <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Customer</Typography>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12} sm={8}>
+                    <Box
+                      sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                        width: '100%',
+                        height: '100%'
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Account Details</Typography>
+                      <Divider />
+
+                      <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                        <Grid item xs={12}>
+                          <TextField
+                            fullWidth
+                            label="First Name"
+                            variant="outlined"
+                            defaultValue= {DataCustomer?.firstName} 
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            fullWidth
+                            label="Email Address"
+                            variant="outlined"
+                            defaultValue= {DataCustomer?.email}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            fullWidth
+                            label="Address"
+                            variant="outlined"
+                            defaultValue={DataCustomer?.address || 'No Address Provided'}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            fullWidth
+                            label="Phone Number"
+                            variant="outlined"
+                            defaultValue={DataCustomer?.phoneNumber || 'N/A'}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                </Grid>
+
+
+
+
+              {/* <Grid container justifyContent="center">
+                <Grid item xs={12} md={6}>
+                  <Box
+                    sx={{
+                      backgroundColor: 'white',
+                      borderRadius: '10px',
+                      padding: '20px',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                      textAlign: 'center'
+                    }}
+                  >
+                    <AccountCircleIcon sx={{ fontSize: 80, color: 'gray' }} />
+
+                    <Typography variant="h5" fontWeight="bold" mt={2}>
+                      {DataCustomer?.firstName} {DataCustomer?.lastName}
+                    </Typography>
+
+                    <Box display="flex" alignItems="center" gap={1} justifyContent="center" mt={1}>
+                      <Email sx={{ fontSize: 20, color: 'gray' }} />
+                      <Typography variant="body1" color="gray">
+                        {DataCustomer?.email}
+                      </Typography>
+                    </Box>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Box display="flex" alignItems="center" gap={1} justifyContent="center">
+                      <PhoneIcon sx={{ fontSize: 20, color: 'gray' }} />
+                      <Typography variant="body1">{DataCustomer?.phoneNumber || 'N/A'}</Typography>
+                    </Box>
+
+                    <Box display="flex" alignItems="center" gap={1} justifyContent="center" mt={1}>
+                      <LocationOnIcon sx={{ fontSize: 20, color: 'gray' }} />
+                      <Typography variant="body1">{DataCustomer?.address || 'No Address Provided'}</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid> */}
+            </TabPanel>
+
+            <TabPanel value="2">
+              <Box
+                sx={{
+                  overflowY: 'auto',
+                  maxHeight: '60vh',
+                  padding: 0,
+                  margin: 0
+                }}
+              >
+                {Array.isArray(orderList) && (
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead sx={{ backgroundColor: '#9053bc' }}>
+                        <TableRow sx={{ fontWeight: 'bold' }}>
+                          <TableCell sx={{ color: 'white' }}>Date</TableCell>
+                          <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
+
+                          <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
+                          <TableCell sx={{ color: 'white' }}>totalAmount</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {orderList.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{formattedDate}</TableCell>
+                            <TableCell>{item?.products?.[0]?.productName}</TableCell>
+                            <TableCell>{item?.products?.[0]?.quantity}</TableCell>
+                            <TableCell>{currencySymbol} {item?.totalAmount}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Box>
+            </TabPanel>
+          </Box>
         </Grid>
-        </TabContext>
+      </TabContext>
     </Grid>
-    );
+  );
 };
 
 export default CustomerDetail;
-

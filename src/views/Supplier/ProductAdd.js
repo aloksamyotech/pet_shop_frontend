@@ -24,11 +24,13 @@ const ProductAdd = (props) => {
   // -----------  validationSchema
   const validationSchema = yup.object({
     companyName: yup
-      .string()
-      .required('Company Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters'),
+  .string()
+  .required('Company Name is required')
+  .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters and spaces')
+  .max(50, 'Company Name cannot be more than 50 characters'),
 
-    address: yup.string().required('Address is required').max(10, 'Address must be at least 10 characters long'),
+  address: yup.string().required('Address is required').max(50, 'Company Address cannot be more than 50 characters'),
+   
 
     phoneNumber: yup
       .string()
@@ -39,9 +41,9 @@ const ProductAdd = (props) => {
 
     status: yup.string().required('Status is required'),
 
-    companyType: yup.string().required('Company Type is required'),
+   
 
-    description: yup.string().required('Description is required')
+    description: yup.string().max(100 , 'Description cannot be more then 100'),
   });
 
   const initialValues = {
@@ -49,8 +51,8 @@ const ProductAdd = (props) => {
     phoneNumber: '',
     email: '',
     address: '',
-    status: '',
-    companyType: '',
+    status: 'Active',
+    
     description: ''
   };
 
@@ -77,7 +79,7 @@ const ProductAdd = (props) => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h6">Add Supplier</Typography>
+          <Typography variant="h4">Add Supplier</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -85,11 +87,7 @@ const ProductAdd = (props) => {
         <DialogContent dividers>
           <form>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-              <Typography style={{ marginBottom: '15px' }} variant="h6">
-                Supplier Details
-              </Typography>
-
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+             <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Company Name</FormLabel>
                   <TextField
@@ -99,6 +97,13 @@ const ProductAdd = (props) => {
                     fullWidth
                     value={formik.values.companyName}
                     onChange={formik.handleChange}
+                    onInput={(e) => {
+                      const regex = /^[A-Za-z\s]*$/; 
+                      if (!regex.test(e.target.value)) {
+                        e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, "");
+                      }
+                      formik.setFieldValue("companyName", e.target.value);
+                    }}
                     error={formik.touched.companyName && Boolean(formik.errors.companyName)}
                     helperText={formik.touched.companyName && formik.errors.companyName}
                   />
@@ -118,9 +123,9 @@ const ProductAdd = (props) => {
                     />
                   </FormControl>
                 </Grid>
-              </Grid>
+             
 
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+              
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Phone Number</FormLabel>
                   <TextField
@@ -129,7 +134,12 @@ const ProductAdd = (props) => {
                     size="small"
                     fullWidth
                     value={formik.values.phoneNumber}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, "");
+                      if (onlyNumbers.length <= 10) {
+                      formik.setFieldValue("phoneNumber", onlyNumbers);}
+                    }}
+                    
                     error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                     helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                   />
@@ -161,21 +171,7 @@ const ProductAdd = (props) => {
                     helperText={formik.touched.description && formik.errors.description}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Company Type</FormLabel>
-                  <Select
-                    id="companyType"
-                    name="companyType"
-                    size="small"
-                    fullWidth
-                    value={formik.values.companyType}
-                    onChange={formik.handleChange}
-                  >
-                    <MenuItem value="Regular">Regular</MenuItem>
-                    <MenuItem value="Premium">Premium</MenuItem>
-                    <MenuItem value="Business">Business</MenuItem>
-                  </Select>
-                </Grid>
+               
                 <Grid item xs={12} sm={6} md={6}>
                   <FormLabel>Status</FormLabel>
                   <Select id="status" name="status" size="small" fullWidth value={formik.values.status} onChange={formik.handleChange}>
@@ -189,7 +185,13 @@ const ProductAdd = (props) => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={formik.handleSubmit} variant="contained" color="primary">
+          <Button onClick={formik.handleSubmit} variant="contained" color="primary"  sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
             Save
           </Button>
           <Button
@@ -199,6 +201,14 @@ const ProductAdd = (props) => {
             }}
             variant="outlined"
             color="error"
+            sx={{
+              border: '1px solid #6A9C89',
+              color: '#6A9C89',
+              '&:hover': {
+                border: '1px solid #6A9C89',
+                color: '#6A9C89'
+              }
+            }}
           >
             Cancel
           </Button>

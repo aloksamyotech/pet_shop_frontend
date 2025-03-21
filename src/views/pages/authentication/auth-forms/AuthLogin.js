@@ -1,107 +1,110 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-
-// material-ui
+import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
+ import { urls } from "views/Api/constant";
+ import { postApiLogin } from "views/Api/comman";
 import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
-  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
   Stack,
-  Typography,
-  useMediaQuery
+  Divider,
+  Typography
 } from '@mui/material';
-
-// third party
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 import { Formik } from 'formik';
-
-// project imports
-import useScriptRef from 'hooks/useScriptRef';
+import useScriptRef from 'hooks/useScriptRef.js';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-import Google from 'assets/images/icons/social-google.svg';
-
-// ============================|| FIREBASE - LOGIN ||============================ //
-
-const FirebaseLogin = ({ ...others }) => {
+import { useNavigate } from 'react-router';
+import { filterMenuItems, dashboard } from '../../../../menu-items/dashboard.js';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+const AuthLogin = ({ ...others }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const scriptedRef = useScriptRef();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-  const customization = useSelector((state) => state.customization);
-  const [checked, setChecked] = useState(true);
-
-  const googleHandler = async () => {
-    console.error('Login');
-  };
-
+  const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+  const [expanded, setExpanded] = useState(false);
   const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((prev) => !prev);
   };
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
+  const handleCredentialClick = async (email, password, setFieldValue, handleSubmit) => {
+    setFieldValue('email', email);
+    setFieldValue('password', password);
+    setTimeout(() => {
+      handleSubmit();
+    }, 500);
+  };
   return (
     <>
-      <Grid container direction="column" justifyContent="center" spacing={2}>
+         <Formik
+           initialValues={{ email: "", password: "" }}
+           validationSchema={Yup.object({
+             email: Yup.string().email("Invalid email").required("Email is required"),
+             password: Yup.string().min(6, "Password too short").required("Password is required"),
+           })}
+           onSubmit={async (values, { setSubmitting, setErrors }) => {
+             try {
+               const response = await postApiLogin(urls.login.create, values);
+               const accessToken = response.data.accessToken;
 
-        <Grid item xs={12}>
+               if (accessToken) {
+                 console.log("Token found, redirecting to dashboard...");
+                 localStorage.setItem("accessToken", accessToken);
+                 localStorage.setItem("name", response.data.user.firstname);
+                 localStorage.setItem("email", response.data.user.email);
+                 localStorage.setItem("company", response.data.user.company);
+                 localStorage.setItem("phoneNumber", response.data.user.phoneNumber);
+                 localStorage.setItem("country", response.data.user.country);
+                 localStorage.setItem("user", JSON.stringify(response.data.user));
+                 localStorage.setItem("Id", JSON.stringify(response.data.user._id));
+                 
 
-        </Grid>
-        <Grid item xs={12} container alignItems="center" justifyContent="center">
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1">Sign in with Email address</Typography>
-          </Box>
-        </Grid>
-      </Grid>
+                 window.location.href = "/";
+               } else {
+                 throw new Error("Access token not found");
+               }
 
-      <Formik
-        initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
-          submit: null
-        }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
-        })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          console.log(values);
-          try {
-            if (scriptedRef.current) {
-              setStatus({ success: true });
-              setSubmitting(false);
-            }
-          } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
-          }
-        }}
-      >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+               setSubmitting(false);
+             } catch (error) {
+               setErrors({ submit: "Login failed. Please try again." });
+               setSubmitting(false);
+             }
+           }}
+         >
+        {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setFieldValue }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
-            <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
+            <FormControl
+              fullWidth
+              error={Boolean(touched.email && errors.email)}
+              sx={{
+                '& .MuiFormLabel-root': {
+                  color: '#000066'
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: errors.email ? '#000066' : ''
+                  }
+                },
+                mb: 2
+              }}
+            >
+              <InputLabel htmlFor="outlined-adornment-email-login">Email Address</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-email-login"
                 type="email"
@@ -109,17 +112,24 @@ const FirebaseLogin = ({ ...others }) => {
                 name="email"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="Email Address / Username"
-                inputProps={{}}
+                label="Email Address"
               />
-              {touched.email && errors.email && (
-                <FormHelperText error id="standard-weight-helper-text-email-login">
-                  {errors.email}
-                </FormHelperText>
-              )}
+              {touched.email && errors.email && <FormHelperText error>{errors.email}</FormHelperText>}
             </FormControl>
-
-            <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
+            <FormControl
+              fullWidth
+              error={Boolean(touched.password && errors.password)}
+              sx={{
+                '& .MuiFormLabel-root': {
+                  color: '#000066'
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: errors.email ? '#000066' : ''
+                  }
+                }
+              }}
+            >
               <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password-login"
@@ -135,42 +145,56 @@ const FirebaseLogin = ({ ...others }) => {
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
-                      size="large"
+                      size="small"
                     >
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }
                 label="Password"
-                inputProps={{}}
               />
-              {touched.password && errors.password && (
-                <FormHelperText error id="standard-weight-helper-text-password-login">
-                  {errors.password}
-                </FormHelperText>
-              )}
+              {touched.password && errors.password && <FormHelperText error>{errors.password}</FormHelperText>}
             </FormControl>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-              <FormControlLabel
-                control={
-                  <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
-                }
-                label="Remember me"
-              />
-              <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                Forgot Password?
-              </Typography>
-            </Stack>
-            {errors.submit && (
-              <Box sx={{ mt: 3 }}>
-                <FormHelperText error>{errors.submit}</FormHelperText>
+            <Box sx={{ width: '100%' }}>
+              <Box
+                sx={{
+                  cursor: 'pointer',
+                  p: 2
+                }}
+                onClick={() => handleCredentialClick('priti.sahu@samyotech.com', '12345678', setFieldValue, handleSubmit)}
+              >
+                <Typography variant="h5">Admin Credentials</Typography>
               </Box>
-            )}
-
-            <Box sx={{ mt: 2 }}>
+              <Divider />
+              {/* <Box
+                sx={{
+                  cursor: 'pointer',
+                  p: 2
+                }}
+                onClick={() => handleCredentialClick('samyotech@gmail.com', '123456', setFieldValue, handleSubmit)}
+              >
+                <Typography variant="h5">User Credentials</Typography>
+              </Box> */}
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                  Sign in
+                <Button
+                  disableElevation
+                  disabled={isSubmitting}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    background: '#6A9C89',
+                    borderRadius: '50px',
+                    '&:hover': {
+                      background: '#6A9C89',
+                      boxShadow: '2'
+                    }
+                  }}
+                >
+                  {isSubmitting ? 'Logging in...' : 'Sign in'}
                 </Button>
               </AnimateButton>
             </Box>
@@ -180,5 +204,4 @@ const FirebaseLogin = ({ ...others }) => {
     </>
   );
 };
-
-export default FirebaseLogin;
+export default AuthLogin;
