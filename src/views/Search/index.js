@@ -31,9 +31,7 @@ const SearchBar = ({ onSearch }) => {
         sx={{
         fontSize: '16px',
             padding: '10px', 
-            
-
-        }}
+              }}
       />
        <IconButton>
                 <SearchIcon />

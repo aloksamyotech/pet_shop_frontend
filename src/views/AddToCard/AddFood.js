@@ -1,4 +1,9 @@
 import { useState, useEffect } from 'react';
+import CustomerForm from './Compontent/NewCustomer';
+import * as yup from 'yup';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import {
   Stack,
   Autocomplete,
@@ -15,10 +20,10 @@ import {
   CustomTabPanel,
   TextField,
   FormLabel,
-  Tab,
+  Tab,Dialog,DialogTitle,DialogActions,DialogContent,
   Rating
 } from '@mui/material';
-
+import Iconify from 'ui-component/iconify';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
@@ -38,18 +43,35 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import { toast } from 'react-toastify';
 
 const AddFood = () => {
+
+   const validationSchema = yup.object({
+      firstName: yup
+        .string()
+        .required('First Name is required')
+        .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
+        .max(50, 'First Name cannot be more than 50 characters'),
+      email: yup.string().required('Email is required').email('Invalid email address'),
+     
+    });
   const navigate = useNavigate();
   const [categoryData, setCategoryData] = useState([]);
   const [productData, setProductData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [search, setSearch] = useState('');
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [value, setValue] = useState('1');
   const [purchaseProduct, setPurchaseProduct] = useState([]);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+   const [openForm, setOpenForm] = useState(false);
 
-  const fetchPurchase = async () => {
+const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
     setPurchaseProduct(response?.data?.data);
   };
@@ -78,6 +100,15 @@ const AddFood = () => {
   };
 
   const handleBuyNow = () => {
+    if (cartItems.length === 0) {
+      Swal.fire({
+        title: 'Your cart is empty!',
+        text: 'Please add items to the cart before proceeding to checkout.',
+        icon: 'warning',
+        confirmButtonText: 'Okay',
+      });
+      return;
+    }
     if (!selectedCustomer) {
       Swal.fire({
         title: 'Please select a customer',
@@ -87,7 +118,7 @@ const AddFood = () => {
       });
       return;
     }
-    toast.success('🙏 Welcome to checkout page!');
+   
 
     navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
   };
@@ -117,8 +148,16 @@ const AddFood = () => {
 
   const deleteAll = () => {
     setCartItems([]);
+    localStorage.removeItem('cartItems');
   };
+  
 
+
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+  
   const removeItem = (_id) => {
     const updatedCart = cartItems.filter((item) => item._id !== _id);
     setCartItems(updatedCart);
@@ -127,11 +166,31 @@ const AddFood = () => {
   const handleAddToCart = (product) => {
     setCartItems((prevCart) => {
       const existingItem = prevCart.find((item) => item._id === product._id);
-
+      const availableStock = product.quantity;
       if (existingItem) {
-        return prevCart.map((item) => (item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item));
+        if (existingItem.quantity < availableStock) {
+          return prevCart.map((item) => (item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item));
+        } else {
+          Swal.fire({
+            title: 'Stock Limit Reached',
+            text: `Only ${availableStock} items available in stock.`,
+            icon: 'warning',
+            confirmButtonText: 'Okay'
+          });
+          return prevCart;
+        }
       } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        if (availableStock > 0) {
+          return [...prevCart, { ...product, quantity: 1 }];
+        } else {
+          Swal.fire({
+            title: 'Out of Stock',
+            text: 'This product is currently out of stock.',
+            icon: 'error',
+            confirmButtonText: 'Okay'
+          });
+          return prevCart;
+        }
       }
     });
   };
@@ -150,6 +209,7 @@ const AddFood = () => {
     setProductData(response.data?.data);
   };
 
+ 
   const filterProduct = productData.filter((product) => {
     const matchCategory = selectedCategory ? product.categoryId === selectedCategory : true;
     const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
@@ -170,9 +230,17 @@ const AddFood = () => {
   const handleClick = () => {
     navigate('/dashboard/default');
   };
+  const handleCloseForm = () => {
+    setOpenForm(false);
+  };
+  const handleOpenAdd = () => {
+   
+    setOpenForm(true);
+  };
 
   return (
     <>
+     <CustomerForm open={openForm} handleClose={handleCloseForm}  fetchCustomer={fetchCustomer}/>
       <Box
         sx={{
           backgroundColor: 'white',
@@ -186,12 +254,8 @@ const AddFood = () => {
           mb: '40px'
         }}
       >
-        {/* <TabList onChange={handleChange}>
-                <Tab label="POS" value="1" />
-                <Tab label="History" value="2" />
-              </TabList> */}
         <Stack direction="row" alignItems="center">
-          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
             <HomeIcon />
           </IconButton>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
@@ -199,76 +263,103 @@ const AddFood = () => {
         </Stack>
       </Box>
 
-      <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px' }}>
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            height: '50px',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            border: '1px solid #d3d3d3',
-            mb: '10px',
-            borderRadius: '20px'
-          }}
-        >
-          <SearchIcon />
-          <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
+      <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px', borderRadius: '10px' }}>
+      <Box
+  sx={{
+    backgroundColor: 'white',
+    height: '50px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    border: '1px solid #d3d3d3',
+    mb: '10px',
+    borderRadius: '20px',
+    px: 2,
+  }}
+>
 
-          <Autocomplete
-            options={customerData}
-            value={selectedCustomer}
-            onChange={(event, newValue) => setSelectedCustomer(newValue)}
-            getOptionLabel={(option) => `${option.firstName} (${option.email})`}
-            renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
-            sx={{ width: '30%' }}
-          />
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <SearchIcon />
+    <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
+  </Box>
 
-          <TextField value={selectedCustomer ? selectedCustomer.email : ''} fullWidth readOnly size="small" sx={{ width: '30%' }} />
-        </Box>
+  
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+    <Autocomplete
+      options={customerData}
+      value={selectedCustomer}
+      onChange={(event, newValue) => setSelectedCustomer(newValue)}
+      getOptionLabel={(option) => `${option.firstName} (${option.email})`}
+      renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
+      sx={{ width: '300px' }}
+    />
+    <Card>
+      <Button
+        variant="contained"
+        startIcon={<Iconify icon="eva:plus-fill" />}
+        onClick={handleOpenAdd}
+        size="small"
+        sx={{
+          backgroundColor: '#6A9C89',
+          color: '#ffff',
+          '&:hover': {
+            backgroundColor: '#8DB3A8',
+          },
+        }}
+      >
+        New Customer
+      </Button>
+    </Card>
+  </Box>
+</Box>
+
+
+
+       
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={2}>
-            <Box
+        <Grid item xs={12} md={2}>
+  <Box
+    sx={{
+      flex: 1,
+      overflowY: "auto",
+      height: "70vh",
+      width: "100%",
+      backgroundColor: "#fff",
+      border: "1px solid #d3d3d3",
+      padding: "5px",
+      borderRadius: "10px",
+    }}
+  >
+    <FormGroup>
+      {categoryData.map((category) => (
+        <FormControlLabel
+          key={category._id}
+          control={
+            <Checkbox
+              checked={selectedCategory === category._id}
+              onChange={() => setSelectedCategory(category._id)}
               sx={{
-                flex: 1,
-                overflowY: 'auto',
-                height: '70vh',
-                width: '100%',
-                backgroundColor: '#fff',
-                border: '1px solid #d3d3d3',
-                padding: '5px'
+                color: "#6A9C89",
+                "&.Mui-checked": {
+                  color: "#6A9C89",
+                },
               }}
-            >
-              {categoryData.map((category) => (
-                <Card
-                  key={category._id}
-                  onClick={() => setSelectedCategory(category._id)}
-                  sx={{
-                    transition: 'box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, border 0.2s ease-in-out',
-                    border: selectedCategory === category._id ? '2px solid black' : '1px solid #d3d3d3',
-                    cursor: 'pointer',
-                    mt: '5px',
-                    '&:hover': {
-                      transform: 'translateY(-5px) scale(1.08)',
-                      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)'
-                    }
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="50vh"
-                    image={category.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                    sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
-                  />
-                  <Typography sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', padding: '5px', color: 'black' }}>
-                    {category.name}
-                  </Typography>
-                </Card>
-              ))}
-            </Box>
-          </Grid>
+            />
+          }
+          label={category.name}
+          sx={{
+           cursor: "pointer",
+              borderRadius: "5px",
+           
+          }}
+        />
+      ))}
+    </FormGroup>
+  </Box>
+</Grid>
+
 
           <Grid item xs={12} md={6}>
             <Box
@@ -278,7 +369,8 @@ const AddFood = () => {
                 overflowY: 'auto',
                 backgroundColor: 'white',
                 border: '1px solid #d3d3d3',
-                padding: '5px'
+                padding: '5px',
+                borderRadius: '10px'
               }}
             >
               <Grid container spacing={2}>
@@ -300,26 +392,37 @@ const AddFood = () => {
                     >
                       <CardMedia
                         component="img"
-                        height="70vh"
+                        height="90vh"
                         image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
                         sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
                       />
 
                       <Box sx={{ p: '4px' }}>
-                        <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>{product.productName}</Typography>
+                        <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold'}}>{product.productName}</Typography>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                          <Rating value={product.rating || 4} precision={0.5} readOnly size="small" />
-                          {/* <Typography sx={{ ml: 1, fontSize: "12px", color: "#757575" }}>
-                  ({product.reviews || Math.floor(Math.random() * 500) + 1})
-                </Typography> */}
-                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 1 }}>
+                <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
+                  {currencySymbol} {product.price}
+                </Typography>
 
-                        {/* <Typography sx={{ fontSize: "12px", color: "black" }}>
-                {product?.category?.[0]?.name || "No Category"}
-              </Typography> */}
+                {product.originalPrice && product.discount > 0 && (
+                  <>
+                    <Typography sx={{ color: '#757575', textDecoration: 'line-through', fontSize: '12px' }}>
+                      {currencySymbol} {product.originalPrice}
+                    </Typography>
+                    <Typography sx={{ color: '#388e3c', fontSize: '12px', fontWeight: 'bold' }}>
+                      {product.discount}{currencySymbol} off
+                    </Typography>
+                  </>
+                )}
+              </Box>
 
-                        <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#39b2e9' }}>Rs.{product.price}</Typography>
+                      
+   {/* <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
+                  {currencySymbol} {product.price}
+                </Typography>   
+                
+                        <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#39b2e9' }}>{currencySymbol} {product.price}</Typography> */}
                       </Box>
                     </Card>
                   </Grid>
@@ -336,7 +439,8 @@ const AddFood = () => {
                 overflowY: 'auto',
                 backgroundColor: 'white',
                 border: '1px solid #d3d3d3',
-                padding: '5px'
+                padding: '5px',
+                borderRadius: '10px'
               }}
             >
               <Grid container spacing={2}>
@@ -383,7 +487,7 @@ const AddFood = () => {
                               }).then((result) => {
                                 if (result.isConfirmed) {
                                   removeItem(cartItem._id);
-                                  Swal.fire('Removed!', 'The item has been removed.', 'success');
+                                 
                                 }
                               });
                             }}
@@ -430,7 +534,7 @@ const AddFood = () => {
                           </IconButton>
 
                           <Typography variant="body1" color="#39b2e9" sx={{ ml: 'auto', fontWeight: 'bold' }}>
-                            Rs.{cartItem.price}
+                            {currencySymbol} {cartItem.price}
                           </Typography>
                         </Box>
                       </Box>
@@ -442,25 +546,23 @@ const AddFood = () => {
 
             <Box
               sx={{
-                borderTop: '1px solid #ccc',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: '#f9f9f9',
-                p: 1
+                p: 1,
+                borderRadius: '10px'
               }}
             >
               <Typography variant="h6" color="secondary">
-                Total: Rs.{totalPrice.toFixed(2)}
+                Total: {currencySymbol} {totalPrice.toFixed(2)}
               </Typography>
               <Box sx={{ marginRight: '-40px' }}>
                 <Button
                   sx={{
-                    fontSize: '10px',
-                    backgroundColor: '#2067db',
-                    color: '#fff',
+                    backgroundColor: '#6A9C89',
+                    color: '#ffff',
                     '&:hover': {
-                      backgroundColor: '#174ea6'
+                      backgroundColor: '#8DB3A8'
                     }
                   }}
                   onClick={handleBuyNow}
@@ -471,12 +573,11 @@ const AddFood = () => {
               <Box>
                 <Button
                   sx={{
-                    fontSize: '10px',
-
-                    backgroundColor: '#7011bc',
-                    color: '#fff',
+                    border: '1px solid #6A9C89',
+                    color: '#6A9C89',
                     '&:hover': {
-                      backgroundColor: '#5a0e98'
+                      border: '1px solid #6A9C89',
+                      color: '#6A9C89'
                     }
                   }}
                   onClick={deleteAll}
@@ -489,9 +590,7 @@ const AddFood = () => {
         </Grid>
       </Box>
 
-      {/* <TabPanel value="2">
-              <History />
-            </TabPanel> */}
+       
     </>
   );
 };

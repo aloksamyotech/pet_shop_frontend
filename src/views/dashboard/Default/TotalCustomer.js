@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-
+import { Person } from '@mui/icons-material';
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Grid, Typography } from '@mui/material';
@@ -12,44 +12,25 @@ import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.dark,
-  color: '#fff',
+  color: '#6A9C89', // Green color for text
   overflow: 'hidden',
   position: 'relative',
-  '&>div': {
-    position: 'relative',
-    zIndex: 5
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    width: 210,
-    height: 210,
-    background: theme.palette.primary[800],
-    borderRadius: '50%',
-    zIndex: 1,
-    top: -85,
-    right: -95,
-    [theme.breakpoints.down('sm')]: {
-      top: -105,
-      right: -140
-    }
-  },
-  '&:before': {
-    content: '""',
-    position: 'absolute',
-    zIndex: 1,
-    width: 210,
-    height: 210,
-    background: theme.palette.primary[800],
-    borderRadius: '50%',
-    top: -125,
-    right: -15,
-    opacity: 0.5,
-    [theme.breakpoints.down('sm')]: {
-      top: -155,
-      right: -70
-    }
+  border: '1px solid #6A9C89' // Green border
+}));
+
+const TopRightIcon = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  backgroundColor: '#6A9C89',
+  borderRadius: '50%',
+  padding: '4px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  '& svg': {
+    color: 'white',
+    fontSize: '2rem'
   }
 }));
 
@@ -60,27 +41,24 @@ const TotalCustomer = ({ isLoading }) => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.customer.getCount);
-      
-  
-      if (response &&  response?.data?.count) {
+
+      if (response && response?.data?.count) {
         setCustomer(response.data.count || 0);
       } else {
-        console.error("Invalid API response structure:", response);
+        console.error('Invalid API response structure:', response);
         setCustomer(0);
       }
     } catch (error) {
-      console.error("Error fetching customer count:", error);
+      console.error('Error fetching customer count:', error);
       setCustomer(0);
     } finally {
       setLoading(false);
     }
   };
-  
-  
+
   useEffect(() => {
     fetchCustomer();
   }, []);
@@ -96,11 +74,13 @@ const TotalCustomer = ({ isLoading }) => {
               <Grid item sx={{ mb: 0.75 }}>
                 <Grid container alignItems="center">
                   <Grid item xs={12}>
+                    <TopRightIcon>
+                      <Person />
+                    </TopRightIcon>
                     <Typography
                       sx={{
                         fontSize: '1.25rem',
                         fontWeight: 600,
-                        color: '#fff',
                         mt: 1
                       }}
                     >
@@ -109,12 +89,11 @@ const TotalCustomer = ({ isLoading }) => {
                   </Grid>
                   <Grid item xs={12}>
                     <Typography
-                     sx={{
-                      fontSize: '1.25rem',
-                      fontWeight: 600,
-                      color: '#fff',
-                      mt: 1
-                    }}
+                      sx={{
+                        fontSize: '1.25rem',
+                        fontWeight: 600,
+                        mt: 1
+                      }}
                     >
                       Total Customer
                     </Typography>

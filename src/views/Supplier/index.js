@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Typography, Card, Box, Grid, IconButton } from '@mui/material';
+import { Stack, Button, Typography, Card, Box, Grid, IconButton, Popover, MenuItem } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid } from '@mui/x-data-grid';
@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ViewCompany from './ViewSupplier';
 import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddEdit from './Edit';
 import Swal from 'sweetalert2';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -27,6 +28,22 @@ const Supplier = () => {
   const [companyUpdated, setCompanyUpdated] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [open, setOpen] = useState(false);
+  
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+const [currentRowId, setCurrentRowId] = useState(null);
+
+
+const handleOpenActions = (event, rowId) => {
+  setAnchorEl(event.currentTarget);
+  setCurrentRowId(rowId);
+};
+
+const handleCloseActions = () => {
+  setAnchorEl(null);
+  setCurrentRowId(null);
+};
 
   const fetchSupplier = async () => {
     try {
@@ -80,7 +97,7 @@ const Supplier = () => {
           await deleteApi(urls.company.delete.replace(':id', id));
           setSupplier((prev) => prev.filter((sup) => sup._id !== id));
           setFilteredCompany((prev) => prev.filter((sup) => sup._id !== id));
-          Swal.fire('Removed!', 'The company has been deleted.', 'success');
+        
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete company.', 'error');
         }
@@ -88,11 +105,12 @@ const Supplier = () => {
     });
   };
 
+
+
   const columns = [
-    { field: 'companyName', headerName: 'Company Name', flex: 1 , renderCell: (params) => (
+    { field: 'companyName', headerName: 'Supplier', flex: 1 , renderCell: (params) => (
       <Stack direction="row" alignItems="center" spacing={1}>
        <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
-
         <Typography>{params.value}</Typography>
       </Stack>
     ),},
@@ -101,53 +119,55 @@ const Supplier = () => {
     { field: 'address', headerName: 'Address', flex: 1 },
     { field: 'description', headerName: 'Description', flex: 1 },
     {
-      field: 'status',
-      headerName: 'Status',
-      flex: 1,
-      renderCell: (params) => {
-         return(
-          <Box
-          sx={{
-            backgroundColor:
-             params.value  === 'Active' ? '#D5FADF' :params.value  === 'Inactive' ? '#F8E1A1' :params.value  === 'Blocked' ? '#FBE9E7' : '',
-            color:params.value  === 'Active' ? '#19AB53' :params.value  === 'Inactive' ? '#FF9800' :params.value  === 'Blocked' ? '#F44336' : '',
-           borderRadius: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-             width: '60px',
-            height: '20px',
-           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            gap: '0.5rem',
-            fontSize: '10x'
-          }}
-        >
-          {params.value}
-        </Box>
-        )
-        
-    }
-    },
-    {
       field: 'Action',
       headerName: 'Action',
       flex: 1,
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color: '#00bbff' }} />
+          <IconButton onClick={(e) => handleOpenActions(e, params.row._id)} size="small" sx={{ padding: 0 }}>
+            <MoreVertIcon />
           </IconButton>
-          <IconButton onClick={() => handleUpdate(params.row)}>
-            <EditIcon sx={{ color: '#5f0497' }} />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row._id)}>
-            <DeleteIcon sx={{ color: '#d32f2f' }} />
-          </IconButton>
+          <Popover
+            open={Boolean(anchorEl) && currentRowId === params.row._id} 
+            anchorEl={anchorEl}
+            onClose={handleCloseActions}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            PaperProps={{
+              sx: { boxShadow: 3, borderRadius: '20px' },
+            }}
+          >
+            {/* <MenuItem
+              onClick={() => {
+                handleView(params.row);
+                handleCloseActions();
+              }}
+            >
+              <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
+            </MenuItem> */}
+            <MenuItem
+              onClick={() => {
+                handleUpdate(params.row);
+                handleCloseActions();
+              }}
+            >
+              <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleDelete(params.row._id);
+                handleCloseActions();
+              }}
+            >
+              <DeleteIcon sx={{ color: '#d32f2f', fontSize: '18px' }} />
+            </MenuItem>
+          </Popover>
         </>
       ),
-    },
+    }
+    
   ];
+
 
 
 
@@ -178,7 +198,7 @@ const Supplier = () => {
           >
           
             <Stack direction="row" alignItems="center">
-              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
                 <HomeIcon />
               </IconButton>
               <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -189,7 +209,13 @@ const Supplier = () => {
 
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={handleOpenAdd} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={handleOpenAdd} size="small"  sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}>
                   New Supplier
                 </Button>
               </Card>

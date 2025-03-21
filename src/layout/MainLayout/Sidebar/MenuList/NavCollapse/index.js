@@ -99,15 +99,56 @@ const NavCollapse = ({ menu, level }) => {
           alignItems: 'flex-start',
           backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
           py: level > 1 ? 1 : 1.25,
-          pl: `${level * 24}px`
+          pl: `${level * 24}px`,
+          '&:hover': {
+            backgroundColor: '#d4edda'
+          },
+          '&.Mui-selected': {
+            backgroundColor: '#d4edda !important',
+            color: '#155724'
+          }
         }}
         selected={selected === menu.id}
         onClick={handleClick}
       >
-        <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 }}>{menuIcon}</ListItemIcon>
+        <ListItemIcon
+            sx={{
+              my: 'auto',
+              minWidth: !menu.icon ? 18 : 36,
+              color: '#155724', // Ensure icon is green
+              '&.MuiListItemIcon-root': {
+                color: '#155724 !important' // Overrides default MUI styles
+              },
+              '&.Mui-selected &': {
+                color: '#155724 !important' // Fixes selected state
+              },
+              '&.Mui-selected:hover &': {
+                color: '#155724 !important'
+              }
+            }}
+          
+        >
+          {menuIcon}
+        </ListItemIcon>
         <ListItemText
           primary={
-            <Typography variant={selected === menu.id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto' }}>
+            <Typography
+              variant={selected === menu.id ? 'h5' : 'body1'}
+              sx={{
+                my: 'auto',
+                // minWidth: !item?.icon ? 18 : 36,
+                color: '#155724', // Ensure icon is green
+                '&.MuiListItemIcon-root': {
+                  color: '#155724 !important' // Overrides default MUI styles
+                },
+                '&.Mui-selected &': {
+                  color: '#155724 !important' // Fixes selected state
+                },
+                '&.Mui-selected:hover &': {
+                  color: '#155724 !important'
+                }
+              }}
+            >
               {menu.title}
             </Typography>
           }
@@ -120,9 +161,17 @@ const NavCollapse = ({ menu, level }) => {
           }
         />
         {open ? (
-          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+          <IconChevronUp
+            stroke={1.5}
+            size="1rem"
+            style={{ marginTop: 'auto', marginBottom: 'auto', color: selected === menu.id ? '#6A9C89' : '#ffff' }}
+          />
         ) : (
-          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+          <IconChevronDown
+            stroke={1.5}
+            size="1rem"
+            style={{ marginTop: 'auto', marginBottom: 'auto', color: selected === menu.id ? '#6A9C89' : '#ffff' }}
+          />
         )}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>

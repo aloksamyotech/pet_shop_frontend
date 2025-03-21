@@ -171,7 +171,7 @@ const AddEdit = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount(%)</FormLabel>
+                    <FormLabel>Discount</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"
@@ -196,7 +196,12 @@ const AddEdit = (props) => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={formik.handleSubmit} variant="contained" color="primary" type="submit">
+          <Button onClick={formik.handleSubmit} variant="contained" color="primary" type="submit"    sx={{ backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
             Update
           </Button>
           <Button
@@ -206,6 +211,14 @@ const AddEdit = (props) => {
             }}
             variant="outlined"
             color="error"
+            sx={{
+              border: '1px solid #6A9C89',
+              color: '#6A9C89',
+              '&:hover': {
+                border: '1px solid #6A9C89',
+                color: '#6A9C89'
+              }
+            }}
           >
             Cancel
           </Button>

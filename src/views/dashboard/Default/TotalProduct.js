@@ -6,53 +6,35 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Box, Grid, Typography } from '@mui/material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import StoreIcon from '@mui/icons-material/Store';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.dark,
-  color: '#fff',
+  color: '#6A9C89', // Green color for text
   overflow: 'hidden',
   position: 'relative',
-  '&>div': {
-    position: 'relative',
-    zIndex: 5
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    width: 210,
-    height: 210,
-    background: theme.palette.primary[800],
-    borderRadius: '50%',
-    zIndex: 1,
-    top: -85,
-    right: -95,
-    [theme.breakpoints.down('sm')]: {
-      top: -105,
-      right: -140
-    }
-  },
-  '&:before': {
-    content: '""',
-    position: 'absolute',
-    zIndex: 1,
-    width: 210,
-    height: 210,
-    background: theme.palette.primary[800],
-    borderRadius: '50%',
-    top: -125,
-    right: -15,
-    opacity: 0.5,
-    [theme.breakpoints.down('sm')]: {
-      top: -155,
-      right: -70
-    }
-  }
+  border: '1px solid #6A9C89' // Green border
 }));
 
+const TopRightIcon = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  backgroundColor: '#6A9C89',
+  borderRadius: '50%',
+  padding: '4px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  '& svg': {
+    color: 'white',
+    fontSize: '2rem'
+  }
+}));
 // ==============================|| DASHBOARD - TOTAL COMPANY CARD ||============================== //
 
 const TotalProduct = ({ isLoading }) => {
@@ -94,11 +76,13 @@ const TotalProduct = ({ isLoading }) => {
               <Grid item sx={{ mb: 0.75 }}>
                 <Grid container alignItems="center">
                   <Grid item xs={12}>
+                     <TopRightIcon>
+                     <StoreIcon />
+                                        </TopRightIcon>
                     <Typography
                       sx={{
                         fontSize: '1.25rem',
                         fontWeight: 600,
-                        color: '#fff',
                         mt: 1
                       }}
                     >
@@ -110,7 +94,6 @@ const TotalProduct = ({ isLoading }) => {
                      sx={{
                       fontSize: '1.25rem',
                       fontWeight: 600,
-                      color: '#fff',
                       mt: 1
                     }}
                     >

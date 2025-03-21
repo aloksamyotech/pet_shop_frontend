@@ -7,6 +7,7 @@ import { postApiImage, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 
+
 const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const isEditing = Boolean(category);
@@ -17,14 +18,15 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       .required('Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
       .max(50, 'Max 50 characters'),
-    description: yup.string().max(100, 'Max 100 characters')
+    description: yup.string().max(100, 'Max 100 characters'),
+     categoryId: yup.string().required('category  is required'),
   });
 
   const formik = useFormik({
     initialValues: {
       name: '',
       description: '',
-      categoryImage: null
+      categoryId: '',
     },
     validationSchema,
     onSubmit: async (values) => {

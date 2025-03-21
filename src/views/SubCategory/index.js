@@ -6,14 +6,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import Iconify from 'ui-component/iconify';
-import ViewCategory from './viewCategory.js';
+
 import { urls } from 'views/Api/constant.js';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
-import CategoryForm from './CategoryForm';
+
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -104,19 +104,7 @@ const handleCloseActions = () => {
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
     { field: 'description', headerName: 'Description', flex: 1 },
-    {
-      field: 'categoryImage',
-      headerName: 'Image',
-      flex: 1,
-      renderCell: (params) => (
-        <img
-          src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-          alt="product"
-          style={{ width: '45px', height: '45px', objectFit: 'cover' ,  borderRadius: '50%',
-            padding: '4px' }}
-        />
-      )
-    },
+    { field: 'categoryName', headerName: 'Category', flex: 1 },
     {
       field: 'Action',
       headerName: 'Action',
@@ -153,8 +141,8 @@ const handleCloseActions = () => {
 
   return (
     <>
-      <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
-      <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} />
+      {/* <CategoryForm open={openForm} handleClose={() => setOpenForm(false)} fetchCategories={fetchCategories} category={categoryUpdated} />
+      <ViewCategory open={openView} handleClose={() => setOpenView(false)} category={selectedCategory} /> */}
 
       <Grid>
         <Box
@@ -175,7 +163,7 @@ const handleCloseActions = () => {
               <HomeIcon />
             </IconButton>
             <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
-            <Typography variant="h5">Category</Typography>{' '}
+            <Typography variant="h5">SubCategory</Typography>{' '}
           </Stack>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Card>
@@ -192,7 +180,7 @@ const handleCloseActions = () => {
                   }
                 }}
               >
-                New Category
+                New SubCategory
               </Button>
             </Card>
           </Stack>

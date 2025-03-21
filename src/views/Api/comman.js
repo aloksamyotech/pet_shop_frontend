@@ -1,40 +1,36 @@
 import axios from 'axios';
-
+import { toast } from 'react-toastify';
 
 export const postApi = async (url, data, headers = {}) => {
   try {
-      const defaultHeaders = {
-          'Content-Type': 'application/json',
-          ...headers
-      };
-      const response = await axios.post(url, data, { headers: defaultHeaders });
-      return response.data;
+    const defaultHeaders = {
+      'Content-Type': 'application/json',
+      ...headers
+    };
+    const response = await axios.post(url, data, { headers: defaultHeaders });
+    return response.data;
   } catch (error) {
-      console.error('API Error:', error.response || error.message);
-      throw new Error(error.response ? error.response.data : error.message);
+    console.error('API Error:', error.response || error.message);
+    toast.error(error?.response?.data?.message);
+    throw new Error(error.response ? error.response.data : error.message);
   }
 };
-
 
 export const postApiLogin = async (url, data, headers = {}) => {
   try {
     const response = await axios.post(url, data, {
       headers: {
         ...headers,
-        "Content-Type": "application/json",
-      },
-     });
+        'Content-Type': 'application/json'
+      }
+    });
 
-    return response.data; 
+    return response.data;
   } catch (error) {
-    console.error("API Error:", error.response || error.message);
+    console.error('API Error:', error.response || error.message);
     throw new Error(error.response ? error.response.data : error.message);
   }
 };
-
-
-
-
 
 export const postApiImage = async (url, data, headers = {}) => {
   try {
@@ -79,10 +75,8 @@ export const getApi = async (url, params = {}, headers = {}) => {
 };
 export const updateApi = async (url, data, headers = {}) => {
   try {
-   
     const isFormData = data instanceof FormData;
     const defaultHeaders = {
-
       ...headers,
       ...(isFormData ? {} : { 'Content-Type': 'application/json' })
     };
@@ -93,39 +87,36 @@ export const updateApi = async (url, data, headers = {}) => {
   }
 };
 
-
 export const updateApiFormData = async (url, data, headers = {}) => {
   try {
-    console.log("Sending FormData to API:", data);
+    console.log('Sending FormData to API:', data);
 
     const response = await axios.put(url, data, {
       headers: {
         ...headers,
-        'Content-Type': 'multipart/form-data' 
+        'Content-Type': 'multipart/form-data'
       }
     });
 
-    console.log("Update response:", response.data);
+    console.log('Update response:', response.data);
     return response.data;
   } catch (error) {
-    console.error("API Update Error:", error);
+    console.error('API Update Error:', error);
 
     if (error.response) {
-      console.error("Error Response Data:", error.response.data);
-      console.error("Error Response Status:", error.response.status);
-      console.error("Error Response Headers:", error.response.headers);
+      console.error('Error Response Data:', error.response.data);
+      console.error('Error Response Status:', error.response.status);
+      console.error('Error Response Headers:', error.response.headers);
       throw new Error(JSON.stringify(error.response.data)); // Convert to string
     } else if (error.request) {
-      console.error("No response received:", error.request);
-      throw new Error("No response from server");
+      console.error('No response received:', error.request);
+      throw new Error('No response from server');
     } else {
-      console.error("Request Error:", error.message);
+      console.error('Request Error:', error.message);
       throw new Error(error.message);
     }
   }
 };
-
-
 
 export const deleteApi = async (url, headers = {}) => {
   try {

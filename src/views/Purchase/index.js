@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs, IconButton } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Grid, Breadcrumbs,TextField, IconButton,MenuItem,Popover } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import HomeIcon from '@mui/icons-material/Home';
 import { DataGrid } from '@mui/x-data-grid';
@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 import ViewPurchase from './ViewPurchase';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
@@ -23,6 +24,48 @@ const Purchase = () => {
   const [purchaseUpdated, setPurchaseUpdated] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [purchaseFilter,setFilteredPurchase] = useState([])
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+  const [activeRow, setActiveRow] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+   const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+
+console.log("purchase",purchase)
+
+  const filterData = () => {
+    if (!startDate || !endDate) return;
+
+    const start = new Date(startDate).setHours(0, 0, 0, 0);
+    const end = new Date(endDate).setHours(23, 59, 59, 999);
+
+    
+
+    const filteredPurchases = purchase.filter((item) => {
+      const itemDate = new Date(item.createdAt).getTime();
+      return itemDate >= start && itemDate <= end;
+    });
+
+    
+    setFilteredPurchase(filteredPurchases);
+  };
+  const isFilterDisabled = !startDate || !endDate;
+
+  
+ 
+  const handleOpenActions = (event, row) => {
+    setAnchorEl(event.currentTarget);
+    setActiveRow(row);
+  };
+  
+
+  const handleCloseActions = () => {
+    setAnchorEl(null);
+    setActiveRow(null);
+  };
+
 
 
   const handleSearch = (searchTerm) => {
@@ -79,7 +122,7 @@ const Purchase = () => {
         try {
           await deleteApi(urls.purchase.delete.replace(':id', id));
           setPurchase((prevPurchase) => prevPurchase.filter((p) => p._id !== id));
-          Swal.fire('Removed!', 'The purchase has been deleted.', 'success');
+        
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete purchase.', 'error');
         }
@@ -97,14 +140,31 @@ const Purchase = () => {
     },
     {
       field: 'companyName',
-      headerName: 'Company',
+      headerName: 'Supplier',
       flex: 1,
       valueGetter: (params) => params.row.CompanyName?.[0]?.companyName || 'N/A'
     },
     {
+      field:'price',
+      headerName:'Price',
+      flex:1,
+      renderCell: (params) => (
+        <>
+        {currencySymbol} {params.value}
+         
+        </>
+      ),
+    },
+    {
       field: 'totalPrice',
       headerName: 'Amount',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => (
+        <>
+        {currencySymbol} {params.value.toFixed(2)}
+         
+        </>
+      ),
     },
     {
       field: 'discount',
@@ -127,15 +187,16 @@ const Purchase = () => {
            backgroundColor:
             params.value  === 'Success' ? '#D5FADF' :params.value  === 'Pending' ? '#F8E1A1' :params.value  === 'Failed' ? '#FBE9E7' : '',
            color:params.value  === 'Success' ? '#19AB53' :params.value  === 'Pending' ? '#FF9800' :params.value  === 'Failed' ? '#F44336' : '',
-           borderRadius: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-             width: '60px',
-            height: '20px',
-           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            gap: '0.5rem',
-            fontSize: '10x'
+           borderRadius: '8px',
+           display: 'flex',
+           alignItems: 'center',
+           justifyContent: 'center',
+          paddingRight:'8px',
+          paddingLeft:'8px',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+          maxWidth: '100%',
+         fontSize: '0.8125rem',
+            
          }}
        >
          {params.value}
@@ -149,18 +210,55 @@ const Purchase = () => {
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color: '#00bbff' }} />
+          {/* Open button */}
+          <IconButton onClick={(e) => handleOpenActions(e, params.row)}>
+            <MoreVertIcon />
           </IconButton>
-          <IconButton onClick={() => handleUpdate(params.row)}>
-            <EditIcon sx={{ color: '#5f0497' }} />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row._id)}>
-            <DeleteIcon sx={{ color: '#d32f2f' }} />
-          </IconButton>
+    
+          {/* Popover that only opens for the active row */}
+          <Popover
+            open={Boolean(anchorEl) && activeRow?._id === params.row._id}
+            anchorEl={anchorEl}
+            onClose={handleCloseActions}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            PaperProps={{
+              sx: { boxShadow: 3, borderRadius: '20px' },
+            }}
+          >
+          
+            <MenuItem
+              onClick={() => {
+                handleView(activeRow);
+                handleCloseActions();
+              }}
+            >
+              <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
+            </MenuItem>
+    
+          
+            <MenuItem
+              onClick={() => {
+                handleUpdate(params.row);
+                handleCloseActions();
+              }}
+            >
+              <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
+            </MenuItem>
+    
+        
+            <MenuItem
+              onClick={() => {
+                handleDelete(params.row._id);
+                handleCloseActions();
+              }}
+            >
+              <DeleteIcon sx={{ color: '#d32f2f', fontSize: '18px' }} />
+            </MenuItem>
+          </Popover>
         </>
-      )
+      ),
     }
+    
   ];
 
   return (
@@ -173,8 +271,9 @@ const Purchase = () => {
         }}
         purchase={purchaseUpdated}
         fetchPurchase={fetchPurchase}
+        currencySymbol={currencySymbol}
       />
-      <ViewPurchase open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} />
+      <ViewPurchase open={openView} handleClose={() => setOpenView(false)} purchase={selectedPurchase} currencySymbol={currencySymbol} />
       <Grid>
       <Stack direction="row" alignItems="center" mb={3}>
       <Box
@@ -187,12 +286,12 @@ const Purchase = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '0 25px',
-             mb:'40px'
+            
             }}
           >
           
             <Stack direction="row" alignItems="center">
-              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+              <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
                 <HomeIcon />
               </IconButton>
              
@@ -202,13 +301,78 @@ const Purchase = () => {
 
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small"  sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}>
                 New Purchase
                 </Button>
               </Card>
             </Stack>
           </Box>
         </Stack>
+        <Box
+  sx={{
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    padding: '15px',
+     display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 2,
+  }}
+>
+  <TextField
+    label="Start Date"
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    InputLabelProps={{ shrink: true }}
+  />
+  <TextField
+    label="End Date"
+    type="date"
+    value={endDate}
+    onChange={(e) => {
+      const selectedEndDate = new Date(e.target.value);
+      const selectedStartDate = new Date(startDate);
+      if (selectedEndDate >= selectedStartDate) {
+        setEndDate(e.target.value);
+      }
+    }}
+    InputLabelProps={{ shrink: true }}
+  />
+  <Button
+    variant="contained"
+    disabled={isFilterDisabled}
+    sx={{
+      backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
+      '&:hover': {
+        backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
+      },
+    }}
+    onClick={filterData}
+  >
+    Apply Filter
+  </Button>
+
+  {/* Clear Filter Button */}
+  <Button
+    variant="outlined"
+    sx={{ color: '#6A9C89', borderColor: '#6A9C89' }}
+    onClick={() => {
+      setStartDate('');
+      setEndDate('');
+      setFilteredPurchase(purchase); // Reset to original data
+    }}
+  >
+    Clear Filter
+  </Button>
+</Box>
+
 
 
        

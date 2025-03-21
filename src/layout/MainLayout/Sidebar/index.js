@@ -64,8 +64,8 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         sx={{
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            background: theme.palette.background.default,
-            color: theme.palette.text.primary,
+            // background: theme.palette.background.default,
+            // color: theme.palette.text.primary,
             borderRight: 'none',
             [theme.breakpoints.up('md')]: {
               top: '88px'

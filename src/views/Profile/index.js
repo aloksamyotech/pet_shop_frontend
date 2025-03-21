@@ -14,6 +14,7 @@ import {
   InputAdornment
 } from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AddTask from './AddProfile';
@@ -24,6 +25,10 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import { toast } from 'react-toastify';
 import Switch from '@mui/material/Switch';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import LockIcon from '@mui/icons-material/Lock';
+import EmailIcon from '@mui/icons-material/Email';
+import CurrencyTabPanel from './Currency';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
 const User = () => {
   const navigate = useNavigate();
@@ -34,10 +39,13 @@ const User = () => {
   );
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [currencyCode, setCurrencyCode] = useState('');
+  const [currencySymbol, setCurrencySymbol] = useState('');
   const storedName = localStorage.getItem('name') || '';
   const storedEmail = localStorage.getItem('email') || '';
   const storedCompany = localStorage.getItem('company') || '';
   const storedPhoneNumber = localStorage.getItem('phoneNumber') || '';
+  const storedCountry = localStorage.getItem('country') || '';
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -54,12 +62,10 @@ const User = () => {
     fetchSettings();
   }, []);
 
- 
-
   const handleSwitchChange = async (field) => {
     const updatedSettings = { ...settings, [field]: !settings[field] };
-    setSettings(updatedSettings); 
-  await updateApi(urls.email.update, updatedSettings);
+    setSettings(updatedSettings);
+    await updateApi(urls.email.update, updatedSettings);
   };
 
   const handleClick = () => {
@@ -87,6 +93,7 @@ const User = () => {
     setLogo(response?.data.data?.[0]);
   };
 
+
   const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword) {
       alert('Please fill in all fields.');
@@ -105,7 +112,7 @@ const User = () => {
       }
     } catch (error) {
       console.error('Error updating password:', error);
-      alert('Error updating password. Please try again.');
+      toast.error('Current password is incorrect!');
     }
   };
 
@@ -139,7 +146,7 @@ const User = () => {
                 }}
               >
                 <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={1}>
-                  <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+                  <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
                     <HomeIcon />
                   </IconButton>
 
@@ -166,9 +173,15 @@ const User = () => {
                 indicatorColor="#4b75eb"
                 onChange={(event, newValue) => setTabValue(newValue)}
                 sx={{
-                  borderBottom: '0.9px solid #d3d3d3',
                   '& .MuiTabs-indicator': {
-                    backgroundColor: '#4b75eb'
+                    backgroundColor: '#6A9C89'
+                  },
+                  '& .MuiTab-root': {
+                    color: '#B0B0B0'
+                  },
+                  '& .Mui-selected': {
+                    color: '#6A9C89',
+                    fontWeight: 'bold'
                   }
                 }}
               >
@@ -176,23 +189,59 @@ const User = () => {
                   value="1"
                   sx={{ fontWeight: 'bold' }}
                   label={
-                    <Box display="flex" alignItems="center">
+                    <Box display="flex" alignItems="center" sx={{ color: '#6A9C89' }}>
+                      <Avatar
+                        sx={{
+                          width: 25,
+                          height: 25,
+                          fontSize: '14px',
+                          mr: 1,
+                          color: 'white',
+                          backgroundColor: '#6A9C89',
+                           borderRadius: '50%',
+                            padding: '4px'
+                        }}
+                      />
                       Profile
                     </Box>
                   }
                 />
-                <Tab
+
+<Tab
                   value="2"
                   label={
-                    <Box display="flex" alignItems="center">
-                      Update Logo
-                    </Box>
+                    <Box display="flex" alignItems="center" sx={{ color: '#6A9C89' }}>
+                      <CurrencyExchangeIcon 
+                        sx={{
+                          width: 25,
+                          height: 25,
+                          fontSize: '14px',
+                          mr: 1,
+                          color: 'white',
+                          backgroundColor: '#6A9C89',
+                           borderRadius: '50%',
+                            padding: '4px'
+                        }}
+                      />
+                    Currency                   </Box>
                   }
                 />
                 <Tab
                   value="3"
                   label={
-                    <Box display="flex" alignItems="center">
+                    <Box display="flex" alignItems="center" sx={{ color: '#6A9C89' }}>
+                      <LockIcon
+                        sx={{
+                          width: 25,
+                          height: 25,
+                          fontSize: '14px',
+                          mr: 1,
+                          color: 'white',
+                          backgroundColor: '#6A9C89',
+                           borderRadius: '50%',
+                            padding: '4px'
+                        }}
+                      />
                       Update Password
                     </Box>
                   }
@@ -200,17 +249,28 @@ const User = () => {
                 <Tab
                   value="4"
                   label={
-                    <Box display="flex" alignItems="center">
-                      Email Manage
+                    <Box display="flex" alignItems="center" sx={{ color: '#6A9C89' }}>
+                      <EmailIcon
+                        sx={{
+                          width: 25,
+                          height: 25,
+                          fontSize: '14px',
+                          mr: 1,
+                          color: 'white',
+                          backgroundColor: '#6A9C89',
+                          borderRadius: '50%',
+                            padding: '4px'
+                        }}
+                      />
+                     Manage Email
                     </Box>
                   }
                 />
                 <Divider />
               </TabList>
               <TabPanel value="1">
-                <Grid container spacing={3} alignItems="stretch">
-                  <Grid item xs={12} sm={4} display="flex" height="auto">
-                    <Box
+                <Grid container spacing={2}>
+                  {/* <Box
                       sx={{
                         backgroundColor: 'white',
                         borderRadius: '10px',
@@ -237,10 +297,10 @@ const User = () => {
                         />
                       </Box>
                       <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Admin</Typography>
-                    </Box>
-                  </Grid>
+                    </Box> */}
+                  <CompanyLogoUploader />
 
-                  <Grid item xs={12} sm={8}>
+                  <Grid item xs={8}>
                     <Box
                       sx={{
                         backgroundColor: 'white',
@@ -258,9 +318,9 @@ const User = () => {
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
-                            label="First Name"
+                            label="Company"
                             variant="outlined"
-                            defaultValue={storedName}
+                            defaultValue={storedCompany}
                             InputProps={{ readOnly: true }}
                           />
                         </Grid>
@@ -278,9 +338,9 @@ const User = () => {
                         <Grid item xs={12} sm={6}>
                           <TextField
                             fullWidth
-                            label="Company"
+                            label="Country"
                             variant="outlined"
-                            defaultValue={storedCompany}
+                            defaultValue={storedCountry}
                             InputProps={{ readOnly: true }}
                           />
                         </Grid>
@@ -300,7 +360,61 @@ const User = () => {
               </TabPanel>
 
               <TabPanel value="2">
-                <CompanyLogoUploader />
+                <CurrencyTabPanel/>
+                {/* <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">
+                  <Box
+                    sx={{
+                      backgroundColor: 'white',
+                      borderRadius: '10px',
+                      padding: '20px',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                      width: '50%'
+                    }}
+                  >
+                    <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          label="Currency Code"
+                          variant="outlined"
+                          value={currencyCode}
+                          onChange={(e) => setCurrencyCode(e.target.value)}
+                         
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          label="Currency Symbol"
+                          variant="outlined"
+                          value={currencySymbol}
+                          onChange={(e) => setCurrencySymbol(e.target.value)}
+                          
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <Button
+                            variant="contained"
+                            onClick={handleCurrency}
+                            sx={{
+                              backgroundColor: '#6A9C89',
+                              color: '#ffff',
+                              mt: '10px',
+                              '&:hover': {
+                                backgroundColor: '#8DB3A8'
+                              }
+                            }}
+                          >
+                            Edit Currency
+                          </Button>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grid> */}
               </TabPanel>
               <TabPanel value="3">
                 <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">
@@ -313,9 +427,6 @@ const User = () => {
                       width: '50%'
                     }}
                   >
-                    <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Update Password</Typography>
-                    <Divider />
-
                     <Grid container spacing={2} sx={{ marginTop: 2 }}>
                       <Grid item xs={12}>
                         <TextField
@@ -359,7 +470,18 @@ const User = () => {
 
                       <Grid item xs={12}>
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                          <Button variant="contained" onClick={handlePasswordChange}>
+                          <Button
+                            variant="contained"
+                            onClick={handlePasswordChange}
+                            sx={{
+                              backgroundColor: '#6A9C89',
+                              color: '#ffff',
+                              mt: '10px',
+                              '&:hover': {
+                                backgroundColor: '#8DB3A8'
+                              }
+                            }}
+                          >
                             Update
                           </Button>
                         </Box>
@@ -370,24 +492,61 @@ const User = () => {
               </TabPanel>
               <TabPanel value="4">
                 <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center" alignItems="center" textAlign="center">
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>login</Typography>
-                    <Switch checked={settings.login} onChange={() => handleSwitchChange('login')} />
+                  <Box display="flex" alignItems="center" gap={1} sx={{ padding: '8px', borderRadius: '8px' }}>
+                    <Typography>Login</Typography>
+
+                    <Switch
+                      checked={settings.login}
+                      onChange={() => handleSwitchChange('login')}
+                      sx={{
+                        '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
+                      }}
+                    />
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>purchase</Typography>
-                    <Switch checked={settings.purchase} onChange={() => handleSwitchChange('purchase')} />
+                    <Typography>Supplier</Typography>
+                    <Switch
+                      checked={settings.purchase}
+                      onChange={() => handleSwitchChange('purchase')}
+                      sx={{
+                        '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
+                      }}
+                    />
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
                     <Typography>Customer Add</Typography>
-                    <Switch checked={settings.customerAdd} onChange={() => handleSwitchChange('customerAdd')} />
+                    <Switch
+                      checked={settings.customerAdd}
+                      onChange={() => handleSwitchChange('customerAdd')}
+                      sx={{
+                        '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
+                      }}
+                    />
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>order</Typography>
-                    <Switch checked={settings.order} onChange={() => handleSwitchChange('order')} />
+                    <Typography>Order</Typography>
+                    <Switch
+                      checked={settings.order}
+                      onChange={() => handleSwitchChange('order')}
+                      sx={{
+                        '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
+                      }}
+                    />
                   </Box>
                 </Grid>
               </TabPanel>

@@ -48,7 +48,6 @@ const icons = {
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
-  title: 'Dashboard-Menu',
   type: 'group',
   children: [
     {
@@ -65,6 +64,25 @@ const dashboard = {
       type: 'item',
       url: '/dashboard/category',
       icon: icons.IconCategory,
+      breadcrumbs: false,
+    
+    },
+    {
+      id: '16',
+      title: 'Subcategory',
+      type: 'item',
+      url: '/dashboard/subcategory',
+      icon: icons.StorefrontIcon,
+      breadcrumbs: false
+    },
+    
+
+    {
+      id: '01',
+      title: 'POS',
+      type: 'item',
+      url: '/dashboard/addToCard',
+      icon: icons.ShoppingCartIcon,
       breadcrumbs: false
     },
     {
@@ -75,16 +93,6 @@ const dashboard = {
       icon: icons.IconStackPop,
       breadcrumbs: false
     },
-
-    {
-      id: '01',
-      title: 'POS',
-      type: 'item',
-      url: '/dashboard/addToCard',
-      icon: icons.ShoppingCartIcon,
-      breadcrumbs: false
-    },
-    
 
     {
       id: '11',
@@ -105,6 +113,14 @@ const dashboard = {
           title: 'Customer',
           type: 'item',
           url: '/dashboard/customer',
+          icon: icons.IconUsers,
+          breadcrumbs: false
+        },
+        {
+          id: '10',
+          title: 'Employee',
+          type: 'item',
+          url: '/dashboard/employee',
           icon: icons.IconUsers,
           breadcrumbs: false
         },

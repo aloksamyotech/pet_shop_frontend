@@ -32,6 +32,7 @@ const ProfileSection = () => {
     localStorage.removeItem('company');
     localStorage.removeItem('email');
     localStorage.removeItem('phoneNumber');
+    localStorage.removeItem('user');
     // localStorage.removeItem('permissions');
       toast.success('Logged out successfully');
     // Step 3: Navigate to the login page
@@ -88,9 +89,9 @@ const ProfileSection = () => {
             variant="contained"
             onClick={handleLogout}
             sx={{
-              background: 'linear-gradient(to right, #4B6CB7, #1A78C5)',
+              background: '#6A9C89',
               '&:hover': {
-                background: 'linear-gradient(45deg, #441572, #7C4BAD)',
+                background: '#6A9C89',
                 boxShadow: '2'
               },
               borderRadius: '10px',

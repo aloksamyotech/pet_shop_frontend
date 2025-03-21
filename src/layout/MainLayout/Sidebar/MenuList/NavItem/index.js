@@ -72,17 +72,54 @@ const NavItem = ({ item, level }) => {
         borderRadius: `${customization.borderRadius}px`,
         mb: 0.5,
         alignItems: 'flex-start',
-        backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
+        backgroundColor:
+          customization.isOpen.findIndex((id) => id === item.id) > -1 ? '#d4edda' : level > 1 ? 'transparent !important' : 'inherit',
         py: level > 1 ? 1 : 1.25,
-        pl: `${level * 24}px`
+        pl: `${level * 24}px`,
+        '&:hover': {
+          backgroundColor: '#d4edda'
+        },
+        '&.Mui-selected': {
+          backgroundColor: '#d4edda !important',
+          color: '#155724'
+        }
       }}
       selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
       onClick={() => itemHandler(item.id)}
     >
-      <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
+      <ListItemIcon sx={{
+          my: 'auto',
+          minWidth: !item?.icon ? 18 : 36,
+          color: '#155724', // Ensure icon is green
+          '&.MuiListItemIcon-root': {
+            color: '#155724 !important' // Overrides default MUI styles
+          },
+          '&.Mui-selected &': {
+            color: '#155724 !important' // Fixes selected state
+          },
+          '&.Mui-selected:hover &': {
+            color: '#155724 !important'
+          }
+        }}>{itemIcon}</ListItemIcon>
       <ListItemText
         primary={
-          <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color="inherit">
+          <Typography
+            variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'}
+            sx={{
+              my: 'auto',
+              minWidth: !item?.icon ? 18 : 36,
+              color: '#155724', // Ensure icon is green
+              '&.MuiListItemIcon-root': {
+                color: '#155724 !important' // Overrides default MUI styles
+              },
+              '&.Mui-selected &': {
+                color: '#155724 !important' // Fixes selected state
+              },
+              '&.Mui-selected:hover &': {
+                color: '#155724 !important'
+              }
+            }}
+          >
             {item.title}
           </Typography>
         }

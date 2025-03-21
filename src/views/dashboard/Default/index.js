@@ -6,12 +6,13 @@ import { useTheme } from '@mui/material/styles';
 
 // project imports
 import TotalProduct from './TotalProduct';
-
+import ShowCompany from './ShowComapny';
 import EarningCard from './EarningCard';
 import PieAnimation from './PopularCard';
-
+import ShowCustomer from './ShowCustomer';
+import ShowProduct from './showProduct';
 import TotalCustomer from './TotalCustomer';
-
+import ShowOrder from './ShowOrder';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 import AppTrafficBySite from './TrafficBySiteCard';
@@ -67,12 +68,31 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
+        <Grid item sm={6} xs={12} md={6} lg={3}>
+            <ShowOrder isLoading={isLoading} />
+          </Grid>
+          <Grid item lg={3} md={3} sm={3} xs={12}>
+            <ShowCustomer isLoading={isLoading} />
+          </Grid>
+          <Grid item lg={3} md={6} sm={6} xs={12}>
+            <ShowProduct isLoading={isLoading} />
+          </Grid>
+          <Grid item sm={6} xs={12} md={6} lg={3}>
+            <ShowCompany isLoading={isLoading} />
+          </Grid>
+
+         
+        </Grid>
+      </Grid>
+      
+      <Grid item xs={12}>
+        <Grid container spacing={gridSpacing}>
           <Grid item xs={12} md={8}>
             <TotalGrowthBarChart isLoading={isLoading} />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <PieAnimation isLoading={isLoading} />
-          </Grid>
+            <Grid item xs={12} md={4}>
+              <PieAnimation isLoading={isLoading} />
+            </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>

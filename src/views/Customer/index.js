@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Grid } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, Breadcrumbs, IconButton, Grid,Popover,MenuItem } from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from '@mui/x-data-grid';
@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const Customer = () => {
   const navigate = useNavigate();
@@ -24,7 +24,18 @@ const Customer = () => {
   const [customerList, setCustomerList] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [Customer, setFilteredCustomer] = useState([]);
+   const [anchorEl, setAnchorEl] = useState(null);
+   const [actionAnchor, setActionAnchor] = useState({ anchorEl: null, rowId: null });
 
+
+const handleOpenActions = (event, rowId) => {
+  setActionAnchor({ anchorEl: event.currentTarget, rowId });
+};
+
+
+const handleCloseActions = () => {
+  setActionAnchor({ anchorEl: null, rowId: null });
+};
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
@@ -67,7 +78,7 @@ const Customer = () => {
         try {
           await deleteApi(urls.customer.delete.replace(':id', id));
           setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
-          Swal.fire('Removed!', 'The customer has been deleted.', 'success');
+        
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete customer.', 'error');
         }
@@ -93,7 +104,7 @@ const Customer = () => {
     { 
       field: 'firstName', 
       headerName: 'Name', 
-      flex: 0.5,
+      flex: 1,
       renderCell: (params) => (
         <Stack direction="row" alignItems="center" spacing={1}>
        <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
@@ -102,13 +113,21 @@ const Customer = () => {
         </Stack>
       ),
     },
-    { field: 'email', headerName: 'Email', flex: 0.5 },
-    { field: 'address', headerName: 'Address', flex: 0.5 },
-    { field: 'phoneNumber', headerName: 'Phone Number', flex: 0.5 },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 1,
+      valueGetter: (params) => params.row.address || 'N/A',
+    }
+    ,
+    { field: 'phoneNumber', headerName: 'Phone Number', flex: 1 ,
+      valueGetter: (params) => params.row.phoneNumber || 'N/A',
+    },
     {
       field: 'status',
       headerName: 'Status',
-      flex: 0.5,
+      flex: 1,
       renderCell: (params) => {
         return(
          <Box
@@ -116,15 +135,15 @@ const Customer = () => {
            backgroundColor:
             params.value  === 'Active' ? '#D5FADF' :params.value  === 'Inactive' ? '#F8E1A1' :params.value  === 'Blocked' ? '#FBE9E7' : '',
            color:params.value  === 'Active' ? '#19AB53' :params.value  === 'Inactive' ? '#FF9800' :params.value  === 'Blocked' ? '#F44336' : '',
-           borderRadius: '30px',
+           borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-             width: '60px',
-            height: '20px',
+           paddingRight:'8px',
+           paddingLeft:'8px',
            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-            gap: '0.5rem',
-            fontSize: '10x'
+           maxWidth: '100%',
+          fontSize: '0.8125rem',
          }}
        >
          {params.value}
@@ -132,24 +151,51 @@ const Customer = () => {
        )}
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 0.5,
+      field: 'Action',
+      headerName: 'Action',
+      flex: 1,
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleView(params.row)}>
-            <VisibilityIcon sx={{ color: '#00bbff' }} />
+        
+          <IconButton onClick={(e) => handleOpenActions(e, params.row._id)} size="small" sx={{ padding: 0 }}>
+            <MoreVertIcon />
           </IconButton>
-          <IconButton onClick={() => handleEdit(params.row)}>
-            <EditIcon sx={{ color: '#5f0497' }} />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row._id)}>
-            <DeleteIcon sx={{ color: '#d32f2f' }} />
-          </IconButton>
+   
+          <Popover
+            open={Boolean(actionAnchor.anchorEl) && actionAnchor.rowId === params.row._id}
+            anchorEl={actionAnchor.anchorEl}
+            onClose={handleCloseActions}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            PaperProps={{
+              sx: { boxShadow: 3, borderRadius: '20px' },
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                handleEdit(params.row);
+                handleCloseActions();
+              }}
+            >
+              <EditIcon sx={{ color: '#5f0497', fontSize: '18px'}} />
+           
+            </MenuItem>
+    
+       
+            <MenuItem
+              onClick={() => {
+                handleDelete(params.row._id);
+                handleCloseActions();
+              }}
+            >
+              <DeleteIcon sx={{ color: '#d32f2f', fontSize: '18px'}} />
+             
+            </MenuItem>
+          </Popover>
         </>
       ),
-    },
+    }
+    
   ];
 
   return (
@@ -173,7 +219,7 @@ const Customer = () => {
               <Stack direction="row" alignItems="center" >
            
           
-            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+            <IconButton onClick={() => navigate('/dashboard/default')}  sx={{ color: '#6A9C89' }}>
                   <HomeIcon />
                 </IconButton>
                 <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
@@ -183,7 +229,13 @@ const Customer = () => {
            
               <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
-                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small">
+                <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenAdd} size="small"  sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}>
                   New Customer
                 </Button>
               </Card>

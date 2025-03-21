@@ -97,6 +97,13 @@ const ProductAdd = (props) => {
                     fullWidth
                     value={formik.values.companyName}
                     onChange={formik.handleChange}
+                    onInput={(e) => {
+                      const regex = /^[A-Za-z\s]*$/; 
+                      if (!regex.test(e.target.value)) {
+                        e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, "");
+                      }
+                      formik.setFieldValue("companyName", e.target.value);
+                    }}
                     error={formik.touched.companyName && Boolean(formik.errors.companyName)}
                     helperText={formik.touched.companyName && formik.errors.companyName}
                   />
@@ -128,10 +135,11 @@ const ProductAdd = (props) => {
                     fullWidth
                     value={formik.values.phoneNumber}
                     onChange={(e) => {
-                      const sanitizedValue = e.target.value.replace(/[^0-9]/g,'');
-                      formik.setFieldValue("phoneNumber",sanitizedValue);
-
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, "");
+                      if (onlyNumbers.length <= 10) {
+                      formik.setFieldValue("phoneNumber", onlyNumbers);}
                     }}
+                    
                     error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
                     helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
                   />
@@ -177,7 +185,13 @@ const ProductAdd = (props) => {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={formik.handleSubmit} variant="contained" color="primary">
+          <Button onClick={formik.handleSubmit} variant="contained" color="primary"  sx={{
+            backgroundColor: '#6A9C89',
+            color: '#ffff',
+            '&:hover': {
+              backgroundColor: '#8DB3A8'
+            }
+          }}>
             Save
           </Button>
           <Button
@@ -187,6 +201,14 @@ const ProductAdd = (props) => {
             }}
             variant="outlined"
             color="error"
+            sx={{
+              border: '1px solid #6A9C89',
+              color: '#6A9C89',
+              '&:hover': {
+                border: '1px solid #6A9C89',
+                color: '#6A9C89'
+              }
+            }}
           >
             Cancel
           </Button>

@@ -1,58 +1,77 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography, Button, DialogActions, Divider, Grid, Box, Paper, Avatar } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  DialogActions,
+  Typography,
+  Divider,
+  Box
+} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import DownloadIcon from '@mui/icons-material/Download';
+
 const ViewPurchase = ({ open, handleClose, purchase }) => {
-  if (!purchase) return null;
-  const Values =purchase?.productName
+  if (!purchase || !purchase.imageUrl) return null;
 
- return (
-    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
 
-<DialogTitle id="category-dialog-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-     <Typography variant="h5">Purchase Details</Typography> 
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = purchase.imageUrl;
+    link.setAttribute('download', `Purchase_${purchase._id}`);
+    link.click();
+  };
+
+  return (
+    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+     
+      <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h5">Purchase Invoice</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <Divider />
 
      
-
-      <DialogContent sx={{ p: 3 }}>
-        <Paper  sx={{ p: 3, borderRadius: 2, bgcolor: '#f9f9f9' }}>
-          <Grid container spacing={2}>
-          
-            <Grid item xs={6} textAlign="center">
-              <Avatar sx={{ bgColor: 'primary.main', color: 'white', width: 50, height: 50, mx: 'auto' }}>
-              {/* {supplier?.companyName ? supplier.companyName.charAt(0).toUpperCase() : '?'} */}
-              {/* {Values?.chatAt(0).toUpperCase()} */}
-              </Avatar>
-              <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
-              {purchase?.productName?.[0]?.productName || 'N/A'}
-              </Typography>
-              <Typography variant="body2" sx={{mt: 1 }}  color={purchase?.paymentStatus === 'Success' ? 'green' : 'red'}>
-                <strong>Status:</strong> {purchase?.paymentStatus || 'N/A'}
-              </Typography>
-            </Grid>
-            
-          
-            <Grid item xs={6}>
-              <Typography variant="body1" sx={{}}>
-                <strong>Company:</strong>  {purchase?.CompanyName?.[0]?.companyName || 'N/A'}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                <strong>Quantity:</strong>{purchase?.quantity || 'N/A'}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                <strong>Discount:</strong> {purchase?.discount || 'N/A'}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1, fontWeight: 'bold' }}>
-                <strong>Total Price:</strong>  <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold' }}> Rs. {purchase?.totalPrice || 'N/A'}</Typography> 
-              </Typography>
-            </Grid>
-          </Grid>
-        </Paper>
+      <DialogContent sx={{ p: 2 }}>
+        {purchase.imageUrl.endsWith('.pdf') ? (
+          <iframe
+            src={purchase.imageUrl}
+            width="100%"
+            height="500px"
+            title="Invoice PDF"
+            style={{ border: '1px solid #ddd', borderRadius: '8px' }}
+          ></iframe>
+        ) : (
+          <img
+            src={purchase.imageUrl}
+            alt="Purchase Invoice"
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+            }}
+          />
+        )}
       </DialogContent>
 
-      
+     
+      <DialogActions sx={{ justifyContent: 'space-between', px: 3 }}>
+        <Button onClick={handleClose} color="primary" variant="outlined">
+          Close
+        </Button>
+        <Box>
+          <Button
+            onClick={handleDownload}
+            color="secondary"
+            variant="contained"
+            startIcon={<DownloadIcon />}
+          >
+            Download
+          </Button>
+        </Box>
+      </DialogActions>
     </Dialog>
   );
 };

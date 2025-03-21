@@ -38,6 +38,10 @@ const Invoice = () => {
   const navigate = useNavigate();
   const AllData = Data;
   const Product = AllData.products;
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+
 
   const home = () => {
     navigate('/');
@@ -116,7 +120,7 @@ const Invoice = () => {
         }}
       >
         <Stack direction="row" alignItems="center">
-          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#2067db' }}>
+          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
             <HomeIcon />
           </IconButton>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -131,7 +135,7 @@ const Invoice = () => {
               '&:hover': { color: '#2067db' }
             }}
           >
-            Oder
+            Order
           </Typography>
 
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
@@ -159,7 +163,7 @@ const Invoice = () => {
         >
           <Box
             sx={{
-              backgroundColor: '#9053bc',
+           
               height: '20vh',
               padding: '10px',
               display: 'flex',
@@ -174,14 +178,14 @@ const Invoice = () => {
                 style={{ width: '20%', height: 'auto' }}
               />
               <Box>
-                <Typography sx={{ color: '#fff' }}>
+                <Typography >
                   <strong>Invoice Id:</strong>
                   {AllData.orderId}
                 </Typography>
-                <Typography sx={{ color: '#fff' }}>
+                <Typography>
                   <strong>Date:</strong> {formattedDate}
                 </Typography>
-                <Typography sx={{ color: '#fff' }}>
+                <Typography>
                   <strong>Time:</strong>{' '}
                   {orderDate
                     ? new Date(orderDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
@@ -194,11 +198,11 @@ const Invoice = () => {
               sx={{
                 width: '30%',
                 display: 'flex',
-                justifyContent: 'flex-start',
+                justifyContent: 'flex-end',
                 textAlign: 'right'
               }}
             >
-              <Typography sx={{ color: '#fff' }}>
+              <Typography>
                 The Pet Stop
                 <br />
                 1234 Happy Paws Street 87876
@@ -238,12 +242,12 @@ const Invoice = () => {
             {Array.isArray(Product) && (
               <TableContainer component={Paper}>
                 <Table>
-                  <TableHead sx={{ backgroundColor: '#9053bc' }}>
+                  <TableHead>
                     <TableRow sx={{ fontWeight: 'bold' }}>
-                      <TableCell sx={{ color: 'white' }}>Product Name</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Quantity</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Price</TableCell>
-                      <TableCell sx={{ color: 'white' }}>Discount</TableCell>
+                      <TableCell >Product Name</TableCell>
+                      <TableCell >Quantity</TableCell>
+                      <TableCell >Rate ({currencySymbol} )</TableCell>
+                      <TableCell >Discount ({currencySymbol} )</TableCell>
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
                   </TableHead>
@@ -263,7 +267,7 @@ const Invoice = () => {
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'end', padding: '10px' }}>
-              <Typography sx={{ fontWeight: 'bold' }}>Total: Rs.{AllData.totalAmount}</Typography>
+              <Typography sx={{ fontWeight: 'bold' }}>Total: {currencySymbol} {AllData.totalAmount}</Typography>
             </Box>
           </Box>
         </Box>
@@ -272,10 +276,10 @@ const Invoice = () => {
           <Button
             sx={{
               border: '2px solid',
-              backgroundColor: '#6d42b9',
+              backgroundColor:'#6A9C89',
               padding: '5px',
               color: '#fff',
-              '&:hover': { backgroundColor: '#6d42b9' }
+              '&:hover': { backgroundColor: '#6A9C89' }
             }}
             onClick={printInvoice}
           >

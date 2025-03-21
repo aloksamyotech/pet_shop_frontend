@@ -25,6 +25,12 @@ export const urls = Object.freeze({
     delete: base + '/customer/:id',
     getCount: base + '/customer/count'
   },
+  employee: {
+    create: base + '/employee/save',
+    get: base + '/employee/fetch',
+    update: base + '/employee/update/:id',
+    delete: base + '/employee/:id',
+    },
 
   company: {
     create: base + '/company/save',
@@ -49,6 +55,14 @@ export const urls = Object.freeze({
     bulkSave: base + '/category/bulkUpload',
     getCount: base + '/category/count'
   },
+  Subcategory: {
+    create: base + '/Subcategory/save',
+    get: base + '/Subcategory/fetch',
+    update: base + '/Subcategory/update/:id',
+    delete: base + '/Subcategory/:id',
+    bulkSave: base + '/Subcategory/bulkUpload',
+    getCount: base + '/Subcategory/count'
+  },
 
   order: {
     create: base + '/order/save',
@@ -72,7 +86,10 @@ export const urls = Object.freeze({
 
   register: {
     update: base + '/user/update/:id',
-    UpdateNewPassword : base +'/user/updatePassword/:id'
+    UpdateNewPassword : base +'/user/updatePassword/:id',
+    updateLogo : base +'/user/updatelogo/:id',
+    get : base +'/user/fetch',
+    updateCurrency : base + '/user/updateCurrency/:id'
   },
 
   logo :{
