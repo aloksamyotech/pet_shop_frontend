@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import CategoryCheckboxFilter from './SubCategory';
 import {
   Stack,
   Autocomplete,
@@ -20,7 +21,11 @@ import {
   CustomTabPanel,
   TextField,
   FormLabel,
-  Tab,Dialog,DialogTitle,DialogActions,DialogContent,
+  Tab,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
   Rating
 } from '@mui/material';
 import Iconify from 'ui-component/iconify';
@@ -43,20 +48,20 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import { toast } from 'react-toastify';
 
 const AddFood = () => {
-
-   const validationSchema = yup.object({
-      firstName: yup
-        .string()
-        .required('First Name is required')
-        .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
-        .max(50, 'First Name cannot be more than 50 characters'),
-      email: yup.string().required('Email is required').email('Invalid email address'),
-     
-    });
+  const validationSchema = yup.object({
+    firstName: yup
+      .string()
+      .required('First Name is required')
+      .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
+      .max(50, 'First Name cannot be more than 50 characters'),
+    email: yup.string().required('Email is required').email('Invalid email address')
+  });
   const navigate = useNavigate();
   const [categoryData, setCategoryData] = useState([]);
+  const [subcategoryData, setSubCategoryData] = useState([]);
+  const [visibleSubcategories, setVisibleSubcategories] = useState([]);
   const [productData, setProductData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('cartItems');
@@ -69,9 +74,10 @@ const AddFood = () => {
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj.currencySymbol;
-   const [openForm, setOpenForm] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
 
-const fetchPurchase = async () => {
+  const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
     setPurchaseProduct(response?.data?.data);
   };
@@ -82,6 +88,20 @@ const fetchPurchase = async () => {
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
     setCustomerData(response?.data?.data);
+  };
+
+  const handleSubcategoryClick = (subId) => {
+    setSelectedSubcategories((prev) => (prev.includes(subId) ? prev.filter((id) => id !== subId) : [...prev, subId]));
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategories((prev) => {
+      const newSelected = prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId) 
+        : [...prev, categoryId]; 
+const updatedSubcategories = subcategoryData.filter((sub) => newSelected.includes(sub.categoryId));      setVisibleSubcategories(updatedSubcategories);
+return newSelected;
+    });
   };
 
   const handleCustomerChange = (event) => {
@@ -99,13 +119,14 @@ const fetchPurchase = async () => {
     );
   };
 
+
   const handleBuyNow = () => {
     if (cartItems.length === 0) {
       Swal.fire({
         title: 'Your cart is empty!',
         text: 'Please add items to the cart before proceeding to checkout.',
         icon: 'warning',
-        confirmButtonText: 'Okay',
+        confirmButtonText: 'Okay'
       });
       return;
     }
@@ -118,7 +139,6 @@ const fetchPurchase = async () => {
       });
       return;
     }
-   
 
     navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
   };
@@ -150,14 +170,11 @@ const fetchPurchase = async () => {
     setCartItems([]);
     localStorage.removeItem('cartItems');
   };
-  
-
-
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
-  
+
   const removeItem = (_id) => {
     const updatedCart = cartItems.filter((item) => item._id !== _id);
     setCartItems(updatedCart);
@@ -203,6 +220,10 @@ const fetchPurchase = async () => {
     const response = await getApi(urls.category.get);
     setCategoryData(response.data?.data);
   };
+  const fetchSubCategory = async () => {
+    const response = await getApi(urls.Subcategory.get);
+    setSubCategoryData(response.data?.data);
+  };
 
   const fetchProduct = async () => {
     const response = await getApi(urls.product.get);
@@ -211,15 +232,22 @@ const fetchPurchase = async () => {
 
  
   const filterProduct = productData.filter((product) => {
-    const matchCategory = selectedCategory ? product.categoryId === selectedCategory : true;
+    const matchCategory = selectedCategories.length > 0 ? selectedCategories.includes(product.categoryId) : true;
+
     const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
+
     const isAvailable = product.quantity > 0;
-    return matchCategory && matchSearch && isAvailable;
+
+    const matchSubcategory = selectedSubcategories.length > 0 ? selectedSubcategories.includes(product.SubCategoryId) : true; 
+
+    return matchCategory && matchSearch && isAvailable && matchSubcategory;
   });
+
 
   useEffect(() => {
     const fetchData = async () => {
       await fetchCategory();
+      await fetchSubCategory();
       await fetchProduct();
       await fetchCustomer();
       await fetchPurchase();
@@ -234,13 +262,12 @@ const fetchPurchase = async () => {
     setOpenForm(false);
   };
   const handleOpenAdd = () => {
-   
     setOpenForm(true);
   };
 
   return (
     <>
-     <CustomerForm open={openForm} handleClose={handleCloseForm}  fetchCustomer={fetchCustomer}/>
+      <CustomerForm open={openForm} handleClose={handleCloseForm} fetchCustomer={fetchCustomer} />
       <Box
         sx={{
           backgroundColor: 'white',
@@ -264,102 +291,121 @@ const fetchPurchase = async () => {
       </Box>
 
       <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px', borderRadius: '10px' }}>
-      <Box
-  sx={{
-    backgroundColor: 'white',
-    height: '50px',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    border: '1px solid #d3d3d3',
-    mb: '10px',
-    borderRadius: '20px',
-    px: 2,
-  }}
->
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            height: '50px',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            border: '1px solid #d3d3d3',
+            mb: '10px',
+            borderRadius: '20px',
+            px: 2
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <SearchIcon />
+            <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
+          </Box>
 
-  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-    <SearchIcon />
-    <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
-  </Box>
-
-  
-  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-    <Autocomplete
-      options={customerData}
-      value={selectedCustomer}
-      onChange={(event, newValue) => setSelectedCustomer(newValue)}
-      getOptionLabel={(option) => `${option.firstName} (${option.email})`}
-      renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
-      sx={{ width: '300px' }}
-    />
-    <Card>
-      <Button
-        variant="contained"
-        startIcon={<Iconify icon="eva:plus-fill" />}
-        onClick={handleOpenAdd}
-        size="small"
-        sx={{
-          backgroundColor: '#6A9C89',
-          color: '#ffff',
-          '&:hover': {
-            backgroundColor: '#8DB3A8',
-          },
-        }}
-      >
-        New Customer
-      </Button>
-    </Card>
-  </Box>
-</Box>
-
-
-
-       
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Autocomplete
+              options={customerData}
+              value={selectedCustomer}
+              onChange={(event, newValue) => setSelectedCustomer(newValue)}
+              getOptionLabel={(option) => `${option.firstName} (${option.email})`}
+              renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
+              sx={{ width: '300px' }}
+            />
+            <Card>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenAdd}
+                size="small"
+                sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8'
+                  }
+                }}
+              >
+                New Customer
+              </Button>
+            </Card>
+          </Box>
+        </Box>
 
         <Grid container spacing={2}>
-        <Grid item xs={12} md={2}>
-  <Box
-    sx={{
-      flex: 1,
-      overflowY: "auto",
-      height: "70vh",
-      width: "100%",
-      backgroundColor: "#fff",
-      border: "1px solid #d3d3d3",
-      padding: "5px",
-      borderRadius: "10px",
-    }}
-  >
-    <FormGroup>
-      {categoryData.map((category) => (
-        <FormControlLabel
-          key={category._id}
-          control={
-            <Checkbox
-              checked={selectedCategory === category._id}
-              onChange={() => setSelectedCategory(category._id)}
+          <Grid item xs={12} md={2}>
+            <Box
               sx={{
-                color: "#6A9C89",
-                "&.Mui-checked": {
-                  color: "#6A9C89",
-                },
+                flex: 1,
+                overflowY: 'auto',
+                height: '70vh',
+                width: '100%',
+                backgroundColor: '#fff',
+                border: '1px solid #d3d3d3',
+                padding: '5px',
+                borderRadius: '10px'
               }}
-            />
-          }
-          label={category.name}
-          sx={{
-           cursor: "pointer",
-              borderRadius: "5px",
-           
-          }}
-        />
-      ))}
-    </FormGroup>
-  </Box>
-</Grid>
+            >
+              <FormGroup>
+                {categoryData.map((category) => (
+                  <div key={category._id}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedCategories.includes(category._id)}
+                          onChange={() => handleCategoryClick(category._id)}
+                          sx={{
+                            color: '#6A9C89',
+                            '&.Mui-checked': { color: '#6A9C89' }
+                          }}
+                        />
+                      }
+                      label={category.name}
+                      sx={{ cursor: 'pointer', borderRadius: '5px' }}
+                    />
 
+                  
+                    {selectedCategories.includes(category._id) && (
+                      <Box sx={{ pl: 2, mt: 1 }}>
+                        {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
+                          visibleSubcategories
+                            .filter((sub) => sub.categoryId === category._id)
+                            .map((sub) => (
+                              <FormControlLabel
+                                key={sub._id}
+                                control={
+                                  <Checkbox
+                                    checked={selectedSubcategories.includes(sub._id)}
+                                    onChange={() => handleSubcategoryClick(sub._id)}
+                                    sx={{
+                                      color: '#4A7C59',
+                                      '&.Mui-checked': { color: '#4A7C59' }
+                                    }}
+                                  />
+                                }
+                                label={sub.name}
+                                sx={{ ml: 1, color: '#555' }}
+                              />
+                            ))
+                        ) : (
+                          <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
+                            No subcategories available
+                          </Typography>
+                        )}
+                      </Box>
+                    )}
+                  </div>
+                ))}
+              </FormGroup>
+            </Box>
+          </Grid>
 
           <Grid item xs={12} md={6}>
             <Box
@@ -398,31 +444,25 @@ const fetchPurchase = async () => {
                       />
 
                       <Box sx={{ p: '4px' }}>
-                        <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold'}}>{product.productName}</Typography>
+                        <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>{product.productName}</Typography>
 
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 1 }}>
-                <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
-                  {currencySymbol} {product.price}
-                </Typography>
+                          <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
+                            {currencySymbol} {product.price}
+                          </Typography>
 
-                {product.originalPrice && product.discount > 0 && (
-                  <>
-                    <Typography sx={{ color: '#757575', textDecoration: 'line-through', fontSize: '12px' }}>
-                      {currencySymbol} {product.originalPrice}
-                    </Typography>
-                    <Typography sx={{ color: '#388e3c', fontSize: '12px', fontWeight: 'bold' }}>
-                      {product.discount}{currencySymbol} off
-                    </Typography>
-                  </>
-                )}
-              </Box>
-
-                      
-   {/* <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
-                  {currencySymbol} {product.price}
-                </Typography>   
-                
-                        <Typography sx={{ fontSize: '14px', fontWeight: 'bold', color: '#39b2e9' }}>{currencySymbol} {product.price}</Typography> */}
+                          {product.originalPrice && product.discount > 0 && (
+                            <>
+                              <Typography sx={{ color: '#757575', textDecoration: 'line-through', fontSize: '12px' }}>
+                                {currencySymbol} {product.originalPrice}
+                              </Typography>
+                              <Typography sx={{ color: '#388e3c', fontSize: '12px', fontWeight: 'bold' }}>
+                                {product.discount}
+                                {currencySymbol} off
+                              </Typography>
+                            </>
+                          )}
+                        </Box>
                       </Box>
                     </Card>
                   </Grid>
@@ -487,7 +527,6 @@ const fetchPurchase = async () => {
                               }).then((result) => {
                                 if (result.isConfirmed) {
                                   removeItem(cartItem._id);
-                                 
                                 }
                               });
                             }}
@@ -589,8 +628,6 @@ const fetchPurchase = async () => {
           </Grid>
         </Grid>
       </Box>
-
-       
     </>
   );
 };

@@ -72,6 +72,8 @@ const handleCloseActions = () => {
     setOpenView(true);
   };
 
+
+  console.log('category',category)
   const handleDelete = (id) => {
     Swal.fire({
       title: 'Are you sure?',

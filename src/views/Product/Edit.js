@@ -27,6 +27,13 @@ import { useState } from 'react';
 const AddEdit = (props) => {
   const { open, handleClose, product, fetchProduct } = props;
   const [categories, setCategories] = useState([]);
+const [subcategories, setSubCategories] = useState([]);
+
+
+
+
+
+
 
   const validationSchema = yup.object({
     productName: yup
@@ -35,18 +42,20 @@ const AddEdit = (props) => {
       .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
       .max(50, 'product name cannot be more then 50 letter'),
 
-    categoryId: yup.string().required('product  is required'),
+    categoryId: yup.string().required('category  is required'),
 
     price: yup.number().required('Price is required').max(1000000, 'product price less then 1000000'),
 
-    discount: yup.number().integer('discount must be an integer')
+    discount: yup.number().integer('discount must be an integer'),
+    SubCategoryId:yup.string().required('subcategory   is required'),
   });
 
   const initialValues = {
     productName: '',
     categoryId: '',
     price: '',
-    discount: '0'
+    discount: '0',
+    SubCategoryId:''
   };
   const formik = useFormik({
     initialValues,
@@ -56,7 +65,9 @@ const AddEdit = (props) => {
         productName: values.productName,
         categoryId: values.categoryId,
         price: values.price,
-        discount: values.discount
+        discount: values.discount,
+        SubCategoryId: values.SubCategoryId
+
       };
       await updateApi(urls.product.update.replace(':id', product._id), updatedProduct);
       toast.success('product updated successfully!');
@@ -69,6 +80,10 @@ const AddEdit = (props) => {
     const response = await getApi(urls.category.get);
     setCategories(response?.data?.data);
   };
+  const fetchSubCategory = async () => {
+    const response = await getApi(urls.Subcategory.get);
+    setSubCategories(response?.data?.data);
+  };
 
   useEffect(() => {
     if (product) {
@@ -77,10 +92,12 @@ const AddEdit = (props) => {
         description: product?.description || '',
         price: product?.price || '',
         categoryId: product?.categoryId || '', 
-        discount: product?.discount || ''
+        discount: product?.discount || '',
+        SubCategoryId:product?.SubCategoryId || ''
       });
     }
     fetchCategory();
+    fetchSubCategory();
   }, [product, open]);
 
   return (
@@ -149,6 +166,32 @@ const AddEdit = (props) => {
                   >
                     {Array.isArray(categories) &&
                       categories.map((category) => (
+                        <MenuItem key={category._id} value={category._id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel> Sub Category</FormLabel>
+                  <Select
+                    id="SubCategoryId"
+                    name="SubCategoryId"
+                    size="small"
+                    fullWidth
+                    value={formik.values.SubCategoryId} 
+                    onChange={formik.handleChange}
+                    error={formik.touched.SubCategoryId && Boolean(formik.errors.SubCategoryId)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 200
+                        }
+                      }
+                    }}
+                  >
+                    {Array.isArray(subcategories) &&
+                      subcategories.map((category) => (
                         <MenuItem key={category._id} value={category._id}>
                           {category.name}
                         </MenuItem>

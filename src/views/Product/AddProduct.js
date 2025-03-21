@@ -20,6 +20,7 @@ const AddLead = (props) => {
   const { open, handleClose, fetchProduct } = props;
 
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
@@ -30,8 +31,15 @@ const AddLead = (props) => {
  setCategories(response?.data?.data);
   };
 
+  const fetchSubCategory = async () => {
+    const response = await getApi(urls.Subcategory.get);
+    setSubCategories(response?.data?.data);
+  };
+
   useEffect(() => {
     fetchCategory();
+    fetchSubCategory();
+    
   }, []);
 
   const validationSchema = yup.object({
@@ -47,6 +55,7 @@ const AddLead = (props) => {
 
     discount: yup.number()
        .integer('discount must be an integer'),
+       SubCategoryId: yup.string().required('subcategory  is required'),
    
   });
 
@@ -55,6 +64,7 @@ const AddLead = (props) => {
     categoryId: '',
     price: '',
     discount: '0',
+    SubCategoryId:'',
   
   };
 
@@ -67,6 +77,7 @@ const AddLead = (props) => {
       formData.append('categoryId', values.categoryId);
       formData.append('price', values.price);
       formData.append('discount', values.discount);
+      formData.append('SubCategoryId',values.SubCategoryId);
       
       if (values.image) {
         console.log("image",values)
@@ -174,6 +185,32 @@ const AddLead = (props) => {
                   >
                     {Array.isArray(categories) &&
                       categories.map((category) => (
+                        <MenuItem key={category._id} value={category._id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Sub Category</FormLabel>
+                  <Select
+                    id="SubCategoryId"
+                    name="SubCategoryId"
+                    size="small"
+                    fullWidth
+                    value={formik.values.SubCategoryId}
+                    onChange={formik.handleChange}
+                    error={formik.touched.SubCategoryId && Boolean(formik.errors.SubCategoryId)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 200
+                        }
+                      }
+                    }}
+                  >
+                    {Array.isArray(subcategories) &&
+                      subcategories.map((category) => (
                         <MenuItem key={category._id} value={category._id}>
                           {category.name}
                         </MenuItem>
