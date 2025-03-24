@@ -78,7 +78,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
       formData.append('SubCategoryId',values.SubCategoryId);
       
       if (values.image) {
-        console.log("image",values)
+      
         formData.append('image', values.image);
       }
     

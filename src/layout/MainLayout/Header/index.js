@@ -22,7 +22,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
 
-  console.log(userObj.imageUrl);
+  
 
   return (
     <>
@@ -32,7 +32,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
           display: 'flex',
           [theme.breakpoints.down('md')]: {
             width: 'auto'
-          }
+          },
+        
         }}
       >
          <Box sx={{ display: 'flex', alignItems: 'center' }}>

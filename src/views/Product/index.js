@@ -31,30 +31,29 @@ const Lead = () => {
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj.currencySymbol;
    const [filteredProduct, setFilteredProduct] = useState([]);
-    const [search, setSearch] = useState('');
+  const [search, setSearch] = useState([]);
   
-   const handleSearch = (event) => {
-    setSearch(event.target.value);
+  const handleSearch = (searchItem) => {
+    if (!searchItem) {
+      setSearch(products);
+    } else {
+      const filter = products.filter((pro) =>
+        pro.productName.toLowerCase().includes(searchItem.toLowerCase())
+      );
+      setSearch(filter);
+    }
   };
   
 
-  //  const handleSearch = (searchTerm) => {
-  //   if (!searchTerm.trim()) {
-  //     setFilteredProduct(products);
-  //   } else {
-  //     const filtered = products.filter((product) =>
-  //       product.productName.toLowerCase().includes(searchTerm.toLowerCase())
-  //     );
-  //     setFilteredProduct(filtered);
-  //   }
-  // };
+
   
 
   const fetchProducts = async () => {
     const response = await getApi(urls.product.get);
     setProducts(response?.data?.data || []);
+    setSearch(response?.data?.data || [])
   };
-  console.log("product",products)
+  
 
   useEffect(() => {
     fetchProducts();
@@ -158,7 +157,7 @@ const Lead = () => {
             </Stack>
           </Box>
           <Box  sx={{
-              backgroundColor: 'white',
+           
               height: '30px',
               width: '20%',
               display: 'flex',
@@ -168,10 +167,10 @@ const Lead = () => {
            mb:'40px',
            ml: 'auto',
             }}>
-          <SearchBar onChange={handleSearch} value={search}/>
+          <SearchBar onSearch={handleSearch} />
           </Box>
       <Grid container spacing={1} sx={{marginTop: '-30px'}}>
-        {products.map((product) => (
+        {search.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
             <Card
               sx={{

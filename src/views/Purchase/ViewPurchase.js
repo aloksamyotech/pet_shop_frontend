@@ -58,9 +58,7 @@ const ViewPurchase = ({ open, handleClose, purchase }) => {
 
      
       <DialogActions sx={{ justifyContent: 'space-between', px: 3 }}>
-        <Button onClick={handleClose} color="primary" variant="outlined">
-          Close
-        </Button>
+       
         <Box>
           <Button
             onClick={handleDownload}
