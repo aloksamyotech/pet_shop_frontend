@@ -253,49 +253,7 @@ const CustomerDetail = () => {
                     </Box>
                   </Grid>
                 </Grid>
-
-
-
-
-              {/* <Grid container justifyContent="center">
-                <Grid item xs={12} md={6}>
-                  <Box
-                    sx={{
-                      backgroundColor: 'white',
-                      borderRadius: '10px',
-                      padding: '20px',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                      textAlign: 'center'
-                    }}
-                  >
-                    <AccountCircleIcon sx={{ fontSize: 80, color: 'gray' }} />
-
-                    <Typography variant="h5" fontWeight="bold" mt={2}>
-                      {DataCustomer?.firstName} {DataCustomer?.lastName}
-                    </Typography>
-
-                    <Box display="flex" alignItems="center" gap={1} justifyContent="center" mt={1}>
-                      <Email sx={{ fontSize: 20, color: 'gray' }} />
-                      <Typography variant="body1" color="gray">
-                        {DataCustomer?.email}
-                      </Typography>
-                    </Box>
-
-                    <Divider sx={{ my: 2 }} />
-
-                    <Box display="flex" alignItems="center" gap={1} justifyContent="center">
-                      <PhoneIcon sx={{ fontSize: 20, color: 'gray' }} />
-                      <Typography variant="body1">{DataCustomer?.phoneNumber || 'N/A'}</Typography>
-                    </Box>
-
-                    <Box display="flex" alignItems="center" gap={1} justifyContent="center" mt={1}>
-                      <LocationOnIcon sx={{ fontSize: 20, color: 'gray' }} />
-                      <Typography variant="body1">{DataCustomer?.address || 'No Address Provided'}</Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-              </Grid> */}
-            </TabPanel>
+</TabPanel>
 
             <TabPanel value="2">
               <Box

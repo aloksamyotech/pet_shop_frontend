@@ -18,7 +18,7 @@ import { urls } from 'views/Api/constant';
 
 const AddLead = (props) => {
   const { open, handleClose, fetchProduct } = props;
-
+const [filteredSubCategory, setFilteredSubCategory] = useState([])
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -36,11 +36,9 @@ const AddLead = (props) => {
     setSubCategories(response?.data?.data);
   };
 
-  useEffect(() => {
-    fetchCategory();
-    fetchSubCategory();
-    
-  }, []);
+
+
+  
 
   const validationSchema = yup.object({
     productName: yup
@@ -109,7 +107,17 @@ const AddLead = (props) => {
     setSelectedImage(file);
   };
 
+  useEffect(() => {
+    fetchCategory();
+    fetchSubCategory();
 
+    if(formik.values.categoryId){
+      const relatedSubCategory = subcategories.filter((sub) => sub.categoryId === formik.values.categoryId);
+      setFilteredSubCategory(relatedSubCategory);
+    }
+   formik.setFieldValue("SubCategoryId","")
+    
+  }, [formik.values.categoryId]);
 
   return (
     <div>
@@ -208,9 +216,11 @@ const AddLead = (props) => {
                         }
                       }
                     }}
+                    disabled = {!formik.values.categoryId}
                   >
-                    {Array.isArray(subcategories) &&
-                      subcategories.map((category) => (
+                    {Array.isArray(filteredSubCategory) && 
+                      filteredSubCategory.map((category) => (
+                   
                         <MenuItem key={category._id} value={category._id}>
                           {category.name}
                         </MenuItem>
@@ -227,7 +237,7 @@ const AddLead = (props) => {
     fullWidth
     value={formik.values.price}
     onChange={(e) => {
-      const onlyNumbers = e.target.value.replace(/[^0-9]/g, ""); // Keep numbers, strip everything else
+      const onlyNumbers = e.target.value.replace(/[^0-9]/g, "");
       formik.setFieldValue("price", onlyNumbers);
     }}
     error={formik.touched.price && Boolean(formik.errors.price)}

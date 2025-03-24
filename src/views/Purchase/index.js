@@ -32,9 +32,6 @@ const Purchase = () => {
    const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
-
-console.log("purchase",purchase)
-
   const filterData = () => {
     if (!startDate || !endDate) return;
 

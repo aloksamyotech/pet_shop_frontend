@@ -270,34 +270,7 @@ const User = () => {
               </TabList>
               <TabPanel value="1">
                 <Grid container spacing={2}>
-                  {/* <Box
-                      sx={{
-                        backgroundColor: 'white',
-                        borderRadius: '10px',
-                        padding: '20px',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                        textAlign: 'center',
-                        width: '100%'
-                      }}
-                    >
-                      <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Profile Picture</Typography>
-                      <Divider />
-                      <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-                        <Avatar
-                          alt="Profile Image"
-                          src={
-                            'https://png.pngtree.com/png-clipart/20240702/original/pngtree-indian-office-girl-wearing-formal-black-and-white-dress-with-long-png-image_15465282.png'
-                          }
-                          sx={{
-                            width: 130,
-                            height: 130,
-                            borderRadius: '50%',
-                            backgroundColor: '#7760f6'
-                          }}
-                        />
-                      </Box>
-                      <Typography sx={{ color: 'gray', fontSize: '12px', marginBottom: '10px' }}>Admin</Typography>
-                    </Box> */}
+                  
                   <CompanyLogoUploader />
 
                   <Grid item xs={8}>
@@ -361,60 +334,7 @@ const User = () => {
 
               <TabPanel value="2">
                 <CurrencyTabPanel/>
-                {/* <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">
-                  <Box
-                    sx={{
-                      backgroundColor: 'white',
-                      borderRadius: '10px',
-                      padding: '20px',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                      width: '50%'
-                    }}
-                  >
-                    <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Currency Code"
-                          variant="outlined"
-                          value={currencyCode}
-                          onChange={(e) => setCurrencyCode(e.target.value)}
-                         
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Currency Symbol"
-                          variant="outlined"
-                          value={currencySymbol}
-                          onChange={(e) => setCurrencySymbol(e.target.value)}
-                          
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                          <Button
-                            variant="contained"
-                            onClick={handleCurrency}
-                            sx={{
-                              backgroundColor: '#6A9C89',
-                              color: '#ffff',
-                              mt: '10px',
-                              '&:hover': {
-                                backgroundColor: '#8DB3A8'
-                              }
-                            }}
-                          >
-                            Edit Currency
-                          </Button>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid> */}
+                
               </TabPanel>
               <TabPanel value="3">
                 <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center">

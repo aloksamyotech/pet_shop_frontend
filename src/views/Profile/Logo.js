@@ -15,7 +15,7 @@ const CompanyLogoUploader = ({ companyId }) => {
       const response = await getApi(urls.register.get);
       const userData = response?.data.data?.[0];
       setLogo(userData);
-      localStorage.setItem('user', JSON.stringify(userData)); // Update localStorage with latest logo
+      localStorage.setItem('user', JSON.stringify(userData)); 
     } catch (error) {
       console.error('Failed to fetch logo:', error);
     }
