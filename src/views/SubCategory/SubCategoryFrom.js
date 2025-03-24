@@ -44,16 +44,12 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log("data-----------",values)
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('description', values.description);
       formData.append('categoryId',values.categoryId)
 
-      // if (!isEditing && values.categoryImage) {
-      //   formData.append('categoryImage', values.categoryImage);
-      // }
-
+    
       try {
         if (isEditing) {
           await updateApi(urls.Subcategory.update.replace(':id', category._id), values);
@@ -94,7 +90,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="category-dialog-title">
       <DialogTitle id="category-dialog-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{isEditing ? 'Edit Category' : 'Add Category'}</Typography>
+        <Typography variant="h4">{isEditing ? 'Edit Category' : 'Add SubCategory'}</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
 
@@ -118,12 +114,14 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 helperText={formik.touched.name && formik.errors.name}
               />
               </Grid>
-              <Grid item xs={12} sm={6} md={6}>
+              <Grid item xs={12} >
                   <FormLabel>Category</FormLabel>
                   <Select
                     id="categoryId"
                     name="categoryId"
                     size="small"
+                   
+                   
                     fullWidth
                     value={formik.values.categoryId}
                     onChange={formik.handleChange}

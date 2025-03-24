@@ -33,7 +33,7 @@ const CustomerForm = ({ open, handleClose,fetchCustomer}) => {
     
   });
 
-  // Initial form values
+  
   const initialValues = {
     firstName: '',
     email: '',
@@ -41,7 +41,7 @@ const CustomerForm = ({ open, handleClose,fetchCustomer}) => {
   };
 
   
-  // Formik setup
+ 
   const formik = useFormik({
     initialValues,
     validationSchema,

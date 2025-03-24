@@ -4,7 +4,8 @@ import * as yup from 'yup';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import CategoryCheckboxFilter from './SubCategory';
+import { useMemo } from 'react';
+
 import {
   Stack,
   Autocomplete,
@@ -76,6 +77,10 @@ const AddFood = () => {
   const currencySymbol = userObj.currencySymbol;
   const [openForm, setOpenForm] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
+  const [categorySubcategory , setCategorySubcategory] = useState([])
+
+
+
 
   const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
@@ -85,24 +90,88 @@ const AddFood = () => {
     setValue(newValue);
   };
 
+
+
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
     setCustomerData(response?.data?.data);
   };
 
-  const handleSubcategoryClick = (subId) => {
-    setSelectedSubcategories((prev) => (prev.includes(subId) ? prev.filter((id) => id !== subId) : [...prev, subId]));
-  };
-
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prev) => {
       const newSelected = prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId) 
-        : [...prev, categoryId]; 
-const updatedSubcategories = subcategoryData.filter((sub) => newSelected.includes(sub.categoryId));      setVisibleSubcategories(updatedSubcategories);
-return newSelected;
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId];
+  
+      const updatedSubcategories = subcategoryData.filter((sub) =>
+        newSelected.includes(sub.categoryId)
+      );
+      setVisibleSubcategories(updatedSubcategories);
+  
+      setCategorySubcategory((prevState) => {
+        const categoryExists = prevState.find((item) => item.category === categoryId);
+       if (categoryExists) {
+          return prevState.filter((item) => item.category !== categoryId);
+        } else {
+          return [...prevState, { category: categoryId, subcategory: [] }];
+        }
+      });
+  
+      return newSelected;
     });
   };
+  
+
+ 
+  const handleSubcategoryClick = (subId, categoryId) => {
+    setSelectedSubcategories((prev) => {
+      const newSubCategory = prev.includes(subId)
+        ? prev.filter((id) => id !== subId)
+        : [...prev, subId];
+  
+      setCategorySubcategory((prevState) =>
+        prevState.map((item) =>
+          item.category === categoryId
+            ? {
+                ...item,
+                subcategory: item.subcategory.includes(subId)
+                  ? item.subcategory.filter((id) => id !== subId)
+                  : [...item.subcategory, subId],
+              }
+            : item  
+        )
+      );
+  
+      return newSubCategory;
+    });
+  };
+  
+
+ 
+
+  const filterProduct= useMemo(() => {
+    
+    if (categorySubcategory.length === 0) return productData;
+    return productData.filter((product) => {
+      return categorySubcategory.some(({ category, subcategory }) => {
+        const matchCategory = product.categoryId === category;
+  
+        const matchSubcategory =
+          subcategory.length > 0
+            ? subcategory.includes(product.SubCategoryId)
+            : true;
+  
+        const matchSearch = product.productName
+          .toLowerCase()
+          .includes(search.toLowerCase());
+  
+        return matchCategory && matchSubcategory && matchSearch && product.quantity > 0;
+      });
+    });
+  }, [productData, categorySubcategory, search]);
+  
+  
+  
 
   const handleCustomerChange = (event) => {
     const customerId = event.target.value;
@@ -118,7 +187,6 @@ return newSelected;
       )
     );
   };
-
 
   const handleBuyNow = () => {
     if (cartItems.length === 0) {
@@ -230,20 +298,6 @@ return newSelected;
     setProductData(response.data?.data);
   };
 
- 
-  const filterProduct = productData.filter((product) => {
-    const matchCategory = selectedCategories.length > 0 ? selectedCategories.includes(product.categoryId) : true;
-
-    const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
-
-    const isAvailable = product.quantity > 0;
-
-    const matchSubcategory = selectedSubcategories.length > 0 ? selectedSubcategories.includes(product.SubCategoryId) : true; 
-
-    return matchCategory && matchSearch && isAvailable && matchSubcategory;
-  });
-
-
   useEffect(() => {
     const fetchData = async () => {
       await fetchCategory();
@@ -354,24 +408,30 @@ return newSelected;
               }}
             >
               <FormGroup>
-                {categoryData.map((category) => (
-                  <div key={category._id}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={selectedCategories.includes(category._id)}
-                          onChange={() => handleCategoryClick(category._id)}
-                          sx={{
-                            color: '#6A9C89',
-                            '&.Mui-checked': { color: '#6A9C89' }
-                          }}
-                        />
-                      }
-                      label={category.name}
-                      sx={{ cursor: 'pointer', borderRadius: '5px' }}
-                    />
+              {categoryData
+        .filter((category) =>
+          productData.some(
+            (product) =>
+              product.categoryId === category._id && product.quantity > 0
+          )
+        )
+        .map((category) => (
+          <div key={category._id}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedCategories.includes(category._id)}
+                  onChange={() => handleCategoryClick(category._id)}
+                  sx={{
+                    color: '#6A9C89',
+                    '&.Mui-checked': { color: '#6A9C89' },
+                  }}
+                />
+              }
+              label={category.name}
+              sx={{ cursor: 'pointer', borderRadius: '5px' }}
+            />
 
-                  
                     {selectedCategories.includes(category._id) && (
                       <Box sx={{ pl: 2, mt: 1 }}>
                         {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
@@ -383,7 +443,7 @@ return newSelected;
                                 control={
                                   <Checkbox
                                     checked={selectedSubcategories.includes(sub._id)}
-                                    onChange={() => handleSubcategoryClick(sub._id)}
+                                    onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
                                     sx={{
                                       color: '#4A7C59',
                                       '&.Mui-checked': { color: '#4A7C59' }

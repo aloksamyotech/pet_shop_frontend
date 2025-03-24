@@ -2,16 +2,14 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Person } from '@mui/icons-material';
-
-// material-ui
 import { Box, Grid, Typography, Card, CardActionArea } from '@mui/material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import BusinessIcon from '@mui/icons-material/Business';
-// project imports
+
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 
-// Styled card
+
 const StyledCard = ({ children, onClick }) => (
   <Card
     sx={{
@@ -28,13 +26,13 @@ const StyledCard = ({ children, onClick }) => (
   </Card>
 );
 
-// Total Customer Component
+
 const ShowCompany = ({ isLoading }) => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch customer count
+
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.customer.getCount);
@@ -52,7 +50,7 @@ const ShowCompany = ({ isLoading }) => {
     fetchCustomer();
   }, []);
 
-  // Navigate to customer section
+
   const handleNavigate = () => navigate( '/dashboard/supplier');
 
   return (
@@ -62,7 +60,7 @@ const ShowCompany = ({ isLoading }) => {
       ) : (
         <StyledCard onClick={handleNavigate}>
           <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-            {/* Left Icon Section */}
+         
             <Box
               sx={{
                 backgroundColor: '#6A9C89',
@@ -77,7 +75,7 @@ const ShowCompany = ({ isLoading }) => {
               <BusinessIcon sx={{ color: 'white', fontSize: '2rem' }} />
             </Box>
 
-            {/* Right Text Section */}
+           
             <Grid container direction="column" justifyContent="center">
               
               <Typography

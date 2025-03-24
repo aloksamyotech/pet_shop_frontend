@@ -40,12 +40,6 @@ const Checkout = () => {
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj.currencySymbol;
 
-
-
-
-
-  
-
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const fetchProduct = async () => {
