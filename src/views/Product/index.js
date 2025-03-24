@@ -197,14 +197,7 @@ const Lead = () => {
   <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "16px" }}>
     {product.productName}
   </Typography>
-
-  {/* <Box sx={{ display: "flex", alignItems: "center" }}>
-    <Rating value={product.rating || 4} precision={0.5} readOnly size="small" />
-    <Typography variant="body2" sx={{ ml: 1, color: "#757575" }}>
-      {product.reviews || Math.floor(Math.random() * 500) + 1}
-    </Typography>
-  </Box> */}
-
+              
   <Box>
     {product.category.map((cat, index) => (
       <Box key={index}>
