@@ -55,6 +55,9 @@ const PopularCard = ({ isLoading }) => {
     fetchProducts();
   }, []);
 
+
+  console.log("product",products)
+
   return (
     <>
       {isLoading ? (
@@ -95,7 +98,7 @@ const PopularCard = ({ isLoading }) => {
                     mr: 2
                   }}
                 >
-                  {Math.random() > 0.5 ? <TrendingUpIcon color="success" /> : <TrendingDownIcon color="error" />}
+                  {product.quantity > 0 ? <TrendingUpIcon color="success" /> : <TrendingDownIcon color="error" />}
                 </Avatar>
                 <Box flexGrow={1}>
                   <Typography variant="body1" fontWeight="bold">

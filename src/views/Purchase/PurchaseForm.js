@@ -39,18 +39,21 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
     fetchCompany();
   }, []);
 
+
   useEffect(() => {
     if (purchase) {
       formik.setValues({
-        productId: purchase.productId?._id || '',
-        companyId: purchase.companyId?._id || '',
+        productId: purchase.productId || '',
+        companyId: purchase.companyId || '',
         quantity: purchase.quantity || '',
         totalPrice: purchase.totalPrice || '',
         discount: purchase.discount || '0',
         paymentStatus: purchase.paymentStatus || 'Pending',
-
+        PurchaseImage : purchase.imageUrl || '',
         price:purchase.price || '',
       });
+
+      setSelectedImage( purchase.imageUrl)
     } else {
       formik.resetForm();
     }
@@ -122,7 +125,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
       formData.append('PurchaseImage', values.PurchaseImage);
       try {
         if (purchase) {
-          await updateApi(urls.purchase.update.replace(':id', purchase._id), values);
+          await updateApi(urls.purchase.update.replace(':id', purchase._id), formData);
           toast.success('Purchase updated successfully!');
         } else {
           await postApiImage(urls.purchase.create, formData);
@@ -147,10 +150,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
     const totalPrice = Math.max(formik.values.price * formik.values.quantity - formik.values.discount, 0);
     formik.setFieldValue('totalPrice', totalPrice);
   
-
-    // formik.setFieldValue('productPrice', productPrice);
-    // formik.setFieldValue('totalPrice', totalPrice);
-  }, [formik.values.price, formik.values.quantity, formik.values.discount]);
+}, [formik.values.price, formik.values.quantity, formik.values.discount]);
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="purchase-dialog-title">

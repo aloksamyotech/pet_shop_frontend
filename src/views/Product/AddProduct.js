@@ -78,7 +78,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
       formData.append('SubCategoryId',values.SubCategoryId);
       
       if (values.image) {
-        console.log("image",values)
+      
         formData.append('image', values.image);
       }
     
@@ -143,15 +143,8 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
         <DialogContent dividers>
           <form onSubmit={formik.handleSubmit}>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-              <Typography variant="h5" style={{ marginBottom: '65px' }}>
-                Basic Information
-              </Typography>
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }} style={{ marginBottom: '15px' }}></Grid>
-
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}></Grid>
-
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-              <Grid item xs={12} sm={6} md={6}>
+              <Grid item xs={12} >
   <FormLabel>Product Name</FormLabel>
   <TextField
     id="productName"

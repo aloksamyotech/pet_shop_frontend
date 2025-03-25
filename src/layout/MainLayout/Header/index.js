@@ -22,7 +22,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
 
-  console.log(userObj.imageUrl);
+  
 
   return (
     <>
@@ -32,7 +32,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
           display: 'flex',
           [theme.breakpoints.down('md')]: {
             width: 'auto'
-          }
+          },
+        
         }}
       >
          <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -75,8 +76,9 @@ const Header = ({ handleLeftDrawerToggle }) => {
       >
         <Typography sx={{ fontSize: '18px', fontWeight: 800, fontFamily: 'Playfair Display, serif' }}>Welcome back !</Typography>
         <Typography variant="body2" sx={{ fontStyle: 'italic', color: theme.palette.text.secondary }}>
-          {userObj.email}
-        </Typography>
+  {userObj?.email || 'No email available'}
+</Typography>
+
       </Box>
       {/* notification & profile */}
       <ProfileSection />

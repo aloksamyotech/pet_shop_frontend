@@ -28,12 +28,7 @@ const AddEdit = (props) => {
   const { open, handleClose, product, fetchProduct } = props;
   const [categories, setCategories] = useState([]);
 const [subcategories, setSubCategories] = useState([]);
-
-
-
-
-
-
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const validationSchema = yup.object({
     productName: yup
@@ -58,18 +53,24 @@ const [subcategories, setSubCategories] = useState([]);
     SubCategoryId:''
   };
   const formik = useFormik({
+    
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
-      const updatedProduct = {
-        productName: values.productName,
-        categoryId: values.categoryId,
-        price: values.price,
-        discount: values.discount,
-        SubCategoryId: values.SubCategoryId
+      const formData = new FormData();
+      formData.append('productName', values.productName);
+      formData.append('categoryId', values.categoryId);
+      formData.append('price', values.price);
+      formData.append('discount', values.discount);
+      formData.append('SubCategoryId',values.SubCategoryId);
 
-      };
-      await updateApi(urls.product.update.replace(':id', product._id), updatedProduct);
+     if (values.image) {
+      
+        formData.append('image', values.image);
+      }
+      await updateApi(urls.product.update.replace(':id', product._id), formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       toast.success('product updated successfully!');
       await fetchProduct();
       await handleClose();
@@ -85,20 +86,47 @@ const [subcategories, setSubCategories] = useState([]);
     setSubCategories(response?.data?.data);
   };
 
+
+
   useEffect(() => {
     if (product) {
       formik.setValues({
         productName: product?.productName || '',
         description: product?.description || '',
         price: product?.price || '',
-        categoryId: product?.categoryId || '', 
+        categoryId: product?.categoryId || '',
         discount: product?.discount || '',
-        SubCategoryId:product?.SubCategoryId || ''
+        SubCategoryId: product?.SubCategoryId || '',
+        image: product?.imageUrl || null  
       });
+    
+      setSelectedImage(product?.imageUrl || null);  
     }
-    fetchCategory();
+    
+
+   fetchCategory();
     fetchSubCategory();
   }, [product, open]);
+
+
+ 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      formik.setFieldValue('image', file); 
+      setSelectedImage(URL.createObjectURL(file));
+    }
+  };
+  
+
+
+  useEffect(() => {
+    return () => {
+      if (selectedImage && selectedImage.startsWith('blob:')) {
+        URL.revokeObjectURL(selectedImage);
+      }
+    };
+  }, [selectedImage]);
 
   return (
     <div>
@@ -234,6 +262,37 @@ const [subcategories, setSubCategories] = useState([]);
                     />
                   </FormControl>
                 </Grid>
+                  <Grid item xs={12} sm={6} sx={{ marginTop: '15px' }}>
+                  <Box
+  display="flex"
+  alignItems="center"
+  justifyContent="center"
+  minHeight="200px"
+  border={1}
+  borderColor="grey.300"
+  borderRadius={1}
+  bgcolor="background.paper"
+  position="relative"
+>
+  {selectedImage ? ( // Use selectedImage, not formik.values.image
+    <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+  ) : (
+    <Typography variant="body2" color="textSecondary">
+      Preview Image
+    </Typography>
+  )}
+  <Box position="absolute" left={0} bottom={0} p={2}>
+    <input
+      type="file"
+      name="image"
+      accept="image/*"
+      onChange={handleFileChange}
+      style={{ display: 'block' }}
+    />
+  </Box>
+</Box>
+
+                                </Grid>
               </Grid>
             </DialogContentText>
           </form>

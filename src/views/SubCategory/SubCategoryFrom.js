@@ -98,11 +98,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Grid sx={6}>
+              <Grid xs={12} >
+              <FormLabel sx={{mb:'1px'}}>SubCategory Name</FormLabel>
               <TextField
                 id="name"
                 name="name"
-                label="Sub Category Name"
                 fullWidth
                 size="small"
                 value={formik.values.name}
@@ -112,17 +112,16 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 }}
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
+                sx={{mb:'6px'}}
               />
               </Grid>
-              <Grid item xs={12} >
-                  <FormLabel>Category</FormLabel>
+              <Grid item xs={12} sx={{mt:'4px'}} >
+                  <FormLabel sx={{mt:'1px'}}>Category</FormLabel>
                   <Select
                     id="categoryId"
                     name="categoryId"
                     size="small"
-                   
-                   
-                    fullWidth
+                  fullWidth
                     value={formik.values.categoryId}
                     onChange={formik.handleChange}
                     error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
@@ -146,11 +145,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
             </Grid>
 
             <Grid item xs={12}>
+            <FormLabel>Description</FormLabel>
               <TextField
                 id="description"
                 name="description"
-                label="Description"
-                fullWidth
+              fullWidth
                 size="small"
                 multiline
                 rows={3}

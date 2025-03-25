@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
 import { ButtonBase, Typography } from '@mui/material';
-
+import PET from 'assets/images/pet-logo.jpg'
 // project imports
 import config from 'config';
 import Logo from 'ui-component/Logo';
@@ -24,14 +24,13 @@ const LogoSection = () => {
     <ButtonBase>
     <img
       alt="Company Logo"
-      src={userObj?.imageUrl||"https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg"}
-      // src={"https://www.vecteezy.com/vector-art/10355753-pet-shop-logo-with-dog-rabbit-cat-birds-vector-illustration-circle-shape-petshop-logo-template"}
+      src={userObj?.imageUrl|| PET}
+     
       style={{
         height: '50px',
-      
-        width: '180px', // Prevent it from growing too large
-        objectFit: 'cover', // Ensure the whole image fits
-        display: 'block', // Remove extra space below the image
+    width: '180px', 
+        objectFit: 'cover', 
+        display: 'block', 
       }}
     />
     
