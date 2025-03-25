@@ -420,16 +420,18 @@ const AddFood = () => {
             <FormControlLabel
               control={
                 <Checkbox
+                size='small'
                   checked={selectedCategories.includes(category._id)}
                   onChange={() => handleCategoryClick(category._id)}
                   sx={{
                     color: '#6A9C89',
                     '&.Mui-checked': { color: '#6A9C89' },
-                  }}
+                   
+                }}
                 />
               }
               label={category.name}
-              sx={{ cursor: 'pointer', borderRadius: '5px' }}
+              sx={{ cursor: 'pointer', borderRadius: '5px' , fontSize:'12px'}}
             />
 
                     {selectedCategories.includes(category._id) && (
@@ -442,16 +444,18 @@ const AddFood = () => {
                                 key={sub._id}
                                 control={
                                   <Checkbox
+                                  size='small'
                                     checked={selectedSubcategories.includes(sub._id)}
                                     onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
                                     sx={{
                                       color: '#4A7C59',
-                                      '&.Mui-checked': { color: '#4A7C59' }
+                                      '&.Mui-checked': { color: '#4A7C59' },
+                                   
                                     }}
                                   />
                                 }
-                                label={sub.name}
-                                sx={{ ml: 1, color: '#555' }}
+                                label={<span style={{fontSize:'12px'}}>{sub.name}</span>}
+                                sx={{ ml: 1, color: '#555',fontSize:'5px' }}
                               />
                             ))
                         ) : (

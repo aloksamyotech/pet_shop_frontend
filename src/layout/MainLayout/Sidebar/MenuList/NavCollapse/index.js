@@ -79,7 +79,7 @@ const NavCollapse = ({ menu, level }) => {
 
   const Icon = menu.icon;
   const menuIcon = menu.icon ? (
-    <Icon strokeWidth={1.5} size="1.3rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+    <Icon strokeWidth={1.5} size="1.0rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
   ) : (
     <FiberManualRecordIcon
       sx={{
@@ -114,7 +114,7 @@ const NavCollapse = ({ menu, level }) => {
         <ListItemIcon
             sx={{
               my: 'auto',
-              minWidth: !menu.icon ? 18 : 36,
+              minWidth: !menu.icon ? 12 : 32,
               color: '#155724', // Ensure icon is green
               '&.MuiListItemIcon-root': {
                 color: '#155724 !important' // Overrides default MUI styles
@@ -136,7 +136,7 @@ const NavCollapse = ({ menu, level }) => {
               variant={selected === menu.id ? 'h5' : 'body1'}
               sx={{
                 my: 'auto',
-                // minWidth: !item?.icon ? 18 : 36,
+                // minWidth: !item?.icon ? 12 : 32,
                 color: '#155724', // Ensure icon is green
                 '&.MuiListItemIcon-root': {
                   color: '#155724 !important' // Overrides default MUI styles

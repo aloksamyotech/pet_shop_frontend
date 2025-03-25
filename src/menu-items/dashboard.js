@@ -12,7 +12,13 @@ import {
   IconPhoneCheck,
   IconUsers,
   IconCategory,
-  IconStackPop
+  IconStackPop,
+  IconShoppingCart,
+  IconCategory2,
+  IconTruckReturn,
+  IconFileDescription,
+  IconBuildingStore,
+  IconHistoryToggle
   
 } from '@tabler/icons';
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -37,12 +43,17 @@ const icons = {
   IconUsers,
   SummarizeIcon,
   HistoryIcon,
-  ShoppingBagIcon,
+  IconShoppingCart,
   InventoryIcon,
   StorefrontIcon,
   ShoppingCartIcon,
   IconCategory,
-  IconStackPop
+  IconStackPop,
+  IconCategory2,
+  IconTruckReturn,
+  IconFileDescription,
+  IconBuildingStore,
+  IconHistoryToggle
 };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -72,7 +83,7 @@ const dashboard = {
       title: 'Subcategory',
       type: 'item',
       url: '/dashboard/subcategory',
-      icon: icons.StorefrontIcon,
+      icon: icons.IconCategory2,
       breadcrumbs: false
     },
     
@@ -82,7 +93,7 @@ const dashboard = {
       title: 'POS',
       type: 'item',
       url: '/dashboard/addToCard',
-      icon: icons.ShoppingCartIcon,
+      icon: icons.IconShoppingCart,
       breadcrumbs: false
     },
     {
@@ -105,7 +116,7 @@ const dashboard = {
           title: 'Supplier',
           type: 'item',
           url: '/dashboard/supplier',
-          icon: icons.StorefrontIcon,
+          icon: icons.IconBuildingStore,
           breadcrumbs: false
         },
         {
@@ -131,7 +142,7 @@ const dashboard = {
       title: 'Purchase',
       type: 'item',
       url: '/dashboard/purchase',
-      icon: icons.InventoryIcon,
+      icon: icons.IconTruckReturn,
       breadcrumbs: false
     },
 
@@ -140,7 +151,7 @@ const dashboard = {
       title: ' Order History',
       type: 'item',
       url: '/dashboard/history',
-      icon: icons.HistoryIcon,
+      icon: icons.IconHistoryToggle,
       breadcrumbs: false
     },
     
@@ -149,7 +160,7 @@ const dashboard = {
       title: 'Report',
       type: 'item',
       url: '/dashboard/report',
-      icon: icons.SummarizeIcon,
+      icon: icons.IconFileDescription,
       breadcrumbs: false
     },
     {
