@@ -18,7 +18,9 @@ import {
   IconTruckReturn,
   IconFileDescription,
   IconBuildingStore,
-  IconHistoryToggle
+  IconHistoryToggle,
+  IconPentagram
+  
   
 } from '@tabler/icons';
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -53,7 +55,8 @@ const icons = {
   IconTruckReturn,
   IconFileDescription,
   IconBuildingStore,
-  IconHistoryToggle
+  IconHistoryToggle,
+  IconPentagram
 };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -68,6 +71,15 @@ const dashboard = {
       url: '/dashboard/default',
       icon: icons.IconHome,
       breadcrumbs: false
+    },
+    {
+      id: '18',
+      title: 'AI',
+      type: 'item',
+      url: '/dashboard/AIChatBord',
+      icon: icons.IconPentagram,
+      breadcrumbs: false,
+    
     },
     {
       id: '08',

@@ -1,6 +1,6 @@
 import { register } from 'numeral';
 
-const base = 'https://petstore.samyotech.in/api';
+const base = 'http://localhost:7200/api';
 export const urls = Object.freeze({
   product: {
     create: base + '/product/save',
@@ -103,6 +103,12 @@ email :{
   get : base +'/Email/fetch',
   update : base +'/Email/update'
 
+}
+
+,
+chat :{
+  create : base + '/chat/save',
+  
 }
 
 

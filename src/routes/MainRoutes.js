@@ -21,6 +21,7 @@ const History = Loadable(lazy(() => import('views/History/index')))
 const Order =  Loadable(lazy(() => import('views/Order/index')))
 const Employee = Loadable(lazy(()=> import('views/Employee')))
 const SunCategory = Loadable(lazy(()=> import('views/SubCategory')))
+const AIChatBord = Loadable(lazy(()=> import('views/AIChatBord')))
 
 
 
@@ -115,6 +116,10 @@ const MainRoutes = {
         {
           path: 'Order',
           element: <Order/>
+        },
+        {
+          path: 'AIChatBord',
+          element: <AIChatBord/>
         }
 
       ]
