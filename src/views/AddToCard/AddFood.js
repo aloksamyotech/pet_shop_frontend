@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { useMemo } from 'react';
 
 import {
-  Stack,
+  Stack,InputLabel,
   Autocomplete,
   Button,
   InputBase,
@@ -27,7 +27,10 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
-  Rating
+  Rating,
+  Menu,
+  MenuItem,
+  FormControl
 } from '@mui/material';
 import Iconify from 'ui-component/iconify';
 import SearchIcon from '@mui/icons-material/Search';
@@ -47,6 +50,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import './cart.css';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { toast } from 'react-toastify';
+import SearchBar from 'views/Search';
 
 const AddFood = () => {
   const validationSchema = yup.object({
@@ -77,12 +81,17 @@ const AddFood = () => {
   const currencySymbol = userObj.currencySymbol;
   const [openForm, setOpenForm] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
-  const [categorySubcategory , setCategorySubcategory] = useState([])
+  const [categorySubcategory , setCategorySubcategory] = useState([]);
+  const [productPrice,setProductPrice] = useState('')
 
 
 
+  const handlePrice =  (event) =>{
+   setProductPrice(event.target.value)
+ 
+}
 
-  const fetchPurchase = async () => {
+const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
     setPurchaseProduct(response?.data?.data);
   };
@@ -147,28 +156,32 @@ const AddFood = () => {
   };
   
 
+
  
 
-  const filterProduct= useMemo(() => {
+  const filterProduct = useMemo(() => {
+    if (!search && categorySubcategory.length === 0) return productData;
     
-    if (categorySubcategory.length === 0) return productData;
     return productData.filter((product) => {
-      return categorySubcategory.some(({ category, subcategory }) => {
-        const matchCategory = product.categoryId === category;
+      const matchSearch = product.productName
+        .toLowerCase()
+        .includes(search.toLowerCase());
   
-        const matchSubcategory =
-          subcategory.length > 0
-            ? subcategory.includes(product.SubCategoryId)
-            : true;
+      if (!matchSearch) return false; 
   
-        const matchSearch = product.productName
-          .toLowerCase()
-          .includes(search.toLowerCase());
-  
-        return matchCategory && matchSubcategory && matchSearch && product.quantity > 0;
-      });
+      return categorySubcategory.length === 0
+        ? true
+        : categorySubcategory.some(({ category, subcategory }) => {
+            const matchCategory = product.categoryId === category;
+            const matchSubcategory =
+              subcategory.length > 0
+                ? subcategory.includes(product.SubCategoryId)
+                : true;
+            return matchCategory && matchSubcategory;
+          });
     });
   }, [productData, categorySubcategory, search]);
+  
   
   
   
@@ -283,6 +296,18 @@ const AddFood = () => {
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
+  // const handleSearch = (searchItem) => {
+  //   if (!searchItem) {
+  //     setSearch(productData);
+  //   } else {
+  //     const filter = productData.filter((pro) =>
+  //       pro.productName.toLowerCase().includes(searchItem.toLowerCase())
+  //     );
+  //     setSearch(filter);
+  //   }
+  // };
+  
+
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
@@ -294,8 +319,14 @@ const AddFood = () => {
   };
 
   const fetchProduct = async () => {
+    if(!productPrice){
     const response = await getApi(urls.product.get);
     setProductData(response.data?.data);
+    }
+    else{
+      const response = await getApi(`${urls.product.get}?sort=${productPrice}`);
+      setProductData(response.data?.data);
+    }
   };
 
   useEffect(() => {
@@ -307,7 +338,7 @@ const AddFood = () => {
       await fetchPurchase();
     };
     fetchData();
-  }, []);
+  }, [productPrice]);
 
   const handleClick = () => {
     navigate('/dashboard/default');
@@ -361,6 +392,7 @@ const AddFood = () => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <SearchIcon />
+              {/* <SearchBar onSearch={handleSearch} /> */}
             <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
           </Box>
 
@@ -371,8 +403,22 @@ const AddFood = () => {
               onChange={(event, newValue) => setSelectedCustomer(newValue)}
               getOptionLabel={(option) => `${option.firstName} (${option.email})`}
               renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
-              sx={{ width: '300px' }}
+              sx={{ width: '250px' }}
             />
+             <Card>
+             <FormControl sx={{ width: 200 }} size="small">
+      <Select
+        value={productPrice}
+        onChange={handlePrice}
+        displayEmpty
+        renderValue={(selected) => (selected ? selected : "Sort By Price")}
+      >
+        <MenuItem disabled value="">Sort By Price</MenuItem> 
+        <MenuItem value="High to Low">High to Low</MenuItem>
+        <MenuItem value="Low to High">Low to High</MenuItem>
+      </Select>
+    </FormControl>  
+            </Card>
             <Card>
               <Button
                 variant="contained"
@@ -390,6 +436,7 @@ const AddFood = () => {
                 New Customer
               </Button>
             </Card>
+           
           </Box>
         </Box>
 
@@ -403,8 +450,9 @@ const AddFood = () => {
                 width: '100%',
                 backgroundColor: '#fff',
                 border: '1px solid #d3d3d3',
-                padding: '5px',
-                borderRadius: '10px'
+                padding: '3px',
+                borderRadius: '10px',
+              
               }}
             >
               <FormGroup>
@@ -426,16 +474,16 @@ const AddFood = () => {
                   sx={{
                     color: '#6A9C89',
                     '&.Mui-checked': { color: '#6A9C89' },
-                   
+                   ml:'2px'
                 }}
                 />
               }
               label={category.name}
-              sx={{ cursor: 'pointer', borderRadius: '5px' , fontSize:'12px'}}
+              sx={{ cursor: 'pointer', fontSize:'12px'}}
             />
 
                     {selectedCategories.includes(category._id) && (
-                      <Box sx={{ pl: 2, mt: 1 }}>
+                      <Box> 
                         {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
                           visibleSubcategories
                             .filter((sub) => sub.categoryId === category._id)
@@ -455,7 +503,7 @@ const AddFood = () => {
                                   />
                                 }
                                 label={<span style={{fontSize:'12px'}}>{sub.name}</span>}
-                                sx={{ ml: 1, color: '#555',fontSize:'5px' }}
+                                sx={{ color: '#555',fontSize:'4px' , mt:'-15px' }}
                               />
                             ))
                         ) : (
@@ -493,7 +541,7 @@ const AddFood = () => {
                         transition: 'box-shadow 1s, transform 1s',
                         cursor: 'pointer',
                         width: '100%',
-                        height: '25vh',
+                        height: '20vh',
                         border: '1px solid #d3d3d3',
                         display: 'flex',
                         flexDirection: 'column',
@@ -502,15 +550,15 @@ const AddFood = () => {
                     >
                       <CardMedia
                         component="img"
-                        height="90vh"
+                        height="70vh"
                         image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                        sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
+                        sx={{ objectFit: 'cover', width: '100%', borderRadius: '8px' }}
                       />
 
-                      <Box sx={{ p: '4px' }}>
+                      <Box sx={{ p: '2px' }}>
                         <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>{product.productName}</Typography>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                           <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
                             {currencySymbol} {product.price}
                           </Typography>

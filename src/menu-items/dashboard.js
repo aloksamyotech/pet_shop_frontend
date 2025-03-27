@@ -72,15 +72,15 @@ const dashboard = {
       icon: icons.IconHome,
       breadcrumbs: false
     },
-    {
-      id: '18',
-      title: 'AI',
-      type: 'item',
-      url: '/dashboard/AIChatBord',
-      icon: icons.IconPentagram,
-      breadcrumbs: false,
+    // {
+    //   id: '18',
+    //   title: 'AI',
+    //   type: 'item',
+    //   url: '/dashboard/AIChatBord',
+    //   icon: icons.IconPentagram,
+    //   breadcrumbs: false,
     
-    },
+    // },
     {
       id: '08',
       title: 'Category',
