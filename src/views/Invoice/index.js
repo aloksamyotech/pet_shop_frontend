@@ -224,7 +224,7 @@ const Invoice = () => {
                 <strong>Email :</strong> {AllData.customerEmail}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Phone Number :</strong> {AllData.customerPhone}
+                <strong>Phone Number :</strong> {AllData?AllData.customerPhone : 'N/A'}
               </Typography>
             </Box>
           </Box>
@@ -247,7 +247,7 @@ const Invoice = () => {
                       <TableCell >Product Name</TableCell>
                       <TableCell >Quantity</TableCell>
                       <TableCell >Rate ({currencySymbol} )</TableCell>
-                      <TableCell >Discount ({currencySymbol} )</TableCell>
+                      {/* <TableCell >Discount ({currencySymbol} )</TableCell> */}
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
                   </TableHead>
@@ -257,7 +257,7 @@ const Invoice = () => {
                         <TableCell>{item.productName}</TableCell>
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell>{item.price}</TableCell>
-                        <TableCell>0</TableCell>
+                        {/* <TableCell>0</TableCell> */}
                         {/* <TableCell>{item.category[0]?.name || 'N/A'}</TableCell> */}
                       </TableRow>
                     ))}

@@ -24,7 +24,7 @@ const NavItem = ({ item, level }) => {
 
   const Icon = item.icon;
   const itemIcon = item?.icon ? (
-    <Icon stroke={1.5} size="1.3rem" />
+    <Icon stroke={1.5} size="1.0rem" />
   ) : (
     <FiberManualRecordIcon
       sx={{
@@ -89,7 +89,7 @@ const NavItem = ({ item, level }) => {
     >
       <ListItemIcon sx={{
           my: 'auto',
-          minWidth: !item?.icon ? 18 : 36,
+          minWidth: !item?.icon ? 12 : 32,
           color: '#155724', // Ensure icon is green
           '&.MuiListItemIcon-root': {
             color: '#155724 !important' // Overrides default MUI styles
@@ -107,7 +107,7 @@ const NavItem = ({ item, level }) => {
             variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'}
             sx={{
               my: 'auto',
-              minWidth: !item?.icon ? 18 : 36,
+              minWidth: !item?.icon ? 12 : 32,
               color: '#155724', // Ensure icon is green
               '&.MuiListItemIcon-root': {
                 color: '#155724 !important' // Overrides default MUI styles

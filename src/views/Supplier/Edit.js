@@ -37,8 +37,7 @@ const AddEdit = ({ open, handleClose, company, fetchSupplier }) => {
 
     phoneNumber: yup
       .string()
-      .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
-      .required('Phone Number is required'),
+     .required('Phone Number is required'),
 
     email: yup.string().email('Invalid email format').required('Email is required'),
 

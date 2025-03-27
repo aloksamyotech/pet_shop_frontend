@@ -105,6 +105,12 @@ email :{
 
 }
 
+,
+chat :{
+  create : base + '/chat/save',
+  
+}
+
 
 
 
