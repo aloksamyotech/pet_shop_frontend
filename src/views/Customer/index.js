@@ -78,6 +78,7 @@ const handleCloseActions = () => {
         try {
           await deleteApi(urls.customer.delete.replace(':id', id));
           setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
+          setFilteredCustomer((prev) => prev.filter((customer) => customer._id !== id));
         
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete customer.', 'error');

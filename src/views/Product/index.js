@@ -43,15 +43,11 @@ const Lead = () => {
       setSearch(filter);
     }
   };
-  
-
-
-  
-
   const fetchProducts = async () => {
     const response = await getApi(urls.product.get);
     setProducts(response?.data?.data || []);
     setSearch(response?.data?.data || [])
+    setFilteredProduct(response?.data?.data || []);
   };
   
 
@@ -82,6 +78,8 @@ const Lead = () => {
         try {
           await deleteApi(urls.product.delete.replace(":id", id));
           setProducts((prev) => prev.filter((product) => product._id !== id));
+          setFilteredProduct((prev) => prev.filter((product) => product._id !== id));
+          setSearch((prev) => prev.filter((product) => product._id !== id));
         
         } catch (error) {
           Swal.fire("Error!", "Failed to delete Product.", "error");
@@ -177,7 +175,7 @@ const Lead = () => {
                 borderRadius: 2,
                 boxShadow: 2,
                 "&:hover": { boxShadow: 5 },
-                height: "300px",
+                height: "270px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -187,13 +185,13 @@ const Lead = () => {
             >
               <CardMedia
                 component="img"
-                height="140"
+                height="100"
                 image={product.imageUrl || "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg"}
                 alt={product.productName}
                 sx={{ objectFit: "cover", borderRadius: 2 }}
               />
 
-<CardContent sx={{mt:"-15px"}}>
+<CardContent sx={{mt:"-17px"}}>
   <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "16px" }}>
     {product.productName}
   </Typography>
@@ -239,7 +237,7 @@ const Lead = () => {
   </Typography>
 
  
-  <Box sx={{ display: "flex", flexDirection: "row" , gap:'2px',mt:'2px'}}>
+  <Box sx={{ display: "flex", flexDirection: "row" , gap:'2px',mb:'2px'}}>
 
 
 
@@ -250,6 +248,7 @@ const Lead = () => {
     color: "#FF9800",
     paddingRight: "8px",
     paddingLeft:'8px',
+  
     borderRadius: "30px",
     display: "flex",
     alignItems: "center",

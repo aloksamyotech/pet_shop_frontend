@@ -12,7 +12,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
-
 import { getApi, postApi ,postApiImage} from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 
@@ -35,10 +34,6 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
     const response = await getApi(urls.Subcategory.get);
     setSubCategories(response?.data?.data);
   };
-
-
-
-  
 
   const validationSchema = yup.object({
     productName: yup
@@ -99,9 +94,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
     }
   });
 
- 
-
-  const handleFileChange = (event) => {
+ const handleFileChange = (event) => {
     const file = event.target.files[0];
   formik.setFieldValue('image', file);
     setSelectedImage(file);
@@ -326,7 +319,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
             }}
           >
             Cancel
-          </Button>
+          </Button> 
         </DialogActions>
       </Dialog>
     </div>

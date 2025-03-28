@@ -2,22 +2,8 @@ import * as React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useEffect } from 'react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  TextField,
-  Button,
-  Box,
-  Typography,
-  DialogContentText,
-  MenuItem,
-  FormControl,
-  FormLabel,
-  Select
-} from '@mui/material';
+import {Dialog, DialogActions,DialogContent,DialogTitle,Grid, TextField,Button,Box,Typography,DialogContentText,
+  MenuItem,FormControl,FormLabel,Select} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { getApi, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
@@ -29,6 +15,10 @@ const AddEdit = (props) => {
   const [categories, setCategories] = useState([]);
 const [subcategories, setSubCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+
 
   const validationSchema = yup.object({
     productName: yup
@@ -86,8 +76,6 @@ const [subcategories, setSubCategories] = useState([]);
     setSubCategories(response?.data?.data);
   };
 
-
-
   useEffect(() => {
     if (product) {
       formik.setValues({
@@ -108,9 +96,7 @@ const [subcategories, setSubCategories] = useState([]);
     fetchSubCategory();
   }, [product, open]);
 
-
- 
-  const handleFileChange = (event) => {
+const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       formik.setFieldValue('image', file); 
@@ -118,9 +104,7 @@ const [subcategories, setSubCategories] = useState([]);
     }
   };
   
-
-
-  useEffect(() => {
+ useEffect(() => {
     return () => {
       if (selectedImage && selectedImage.startsWith('blob:')) {
         URL.revokeObjectURL(selectedImage);
@@ -152,15 +136,8 @@ const [subcategories, setSubCategories] = useState([]);
         <DialogContent dividers>
           <form onSubmit={formik.handleSubmit}>
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-              <Typography variant="h6" style={{ marginBottom: '65px' }}>
-                Product Information
-              </Typography>
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }} style={{ marginBottom: '15px' }}></Grid>
-
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}></Grid>
-
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-                <Grid item xs={12} sm={6} md={6}>
+                    <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+                <Grid item xs={12}>
                   <FormLabel>Product Name</FormLabel>
                   <TextField
                     id="productName"
@@ -228,7 +205,7 @@ const [subcategories, setSubCategories] = useState([]);
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Product Price</FormLabel>
+                  <FormLabel>Product Price ({currencySymbol })</FormLabel>
                   <TextField
                     id="price"
                     name="price"
@@ -242,7 +219,7 @@ const [subcategories, setSubCategories] = useState([]);
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount</FormLabel>
+                    <FormLabel>Discount({currencySymbol})</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"
@@ -274,7 +251,7 @@ const [subcategories, setSubCategories] = useState([]);
   bgcolor="background.paper"
   position="relative"
 >
-  {selectedImage ? ( // Use selectedImage, not formik.values.image
+  {selectedImage ? ( 
     <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
   ) : (
     <Typography variant="body2" color="textSecondary">
@@ -290,9 +267,7 @@ const [subcategories, setSubCategories] = useState([]);
       style={{ display: 'block' }}
     />
   </Box>
-</Box>
-
-                                </Grid>
+</Box>   </Grid>
               </Grid>
             </DialogContentText>
           </form>
