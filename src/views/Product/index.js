@@ -43,15 +43,11 @@ const Lead = () => {
       setSearch(filter);
     }
   };
-  
-
-
-  
-
   const fetchProducts = async () => {
     const response = await getApi(urls.product.get);
     setProducts(response?.data?.data || []);
     setSearch(response?.data?.data || [])
+    setFilteredProduct(response?.data?.data || []);
   };
   
 
@@ -82,6 +78,8 @@ const Lead = () => {
         try {
           await deleteApi(urls.product.delete.replace(":id", id));
           setProducts((prev) => prev.filter((product) => product._id !== id));
+          setFilteredProduct((prev) => prev.filter((product) => product._id !== id));
+          setSearch((prev) => prev.filter((product) => product._id !== id));
         
         } catch (error) {
           Swal.fire("Error!", "Failed to delete Product.", "error");

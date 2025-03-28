@@ -5,9 +5,9 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useMemo } from 'react';
-
 import {
-  Stack,InputLabel,
+  Stack,
+  InputLabel,
   Autocomplete,
   Button,
   InputBase,
@@ -51,7 +51,6 @@ import './cart.css';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { toast } from 'react-toastify';
 import SearchBar from 'views/Search';
-
 const AddFood = () => {
   const validationSchema = yup.object({
     firstName: yup
@@ -81,25 +80,20 @@ const AddFood = () => {
   const currencySymbol = userObj.currencySymbol;
   const [openForm, setOpenForm] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
-  const [categorySubcategory , setCategorySubcategory] = useState([]);
-  const [productPrice,setProductPrice] = useState('')
+  const [categorySubcategory, setCategorySubcategory] = useState([]);
+  const [productPrice, setProductPrice] = useState('');
 
+  const handlePrice = (event) => {
+    setProductPrice(event.target.value);
+  };
 
-
-  const handlePrice =  (event) =>{
-   setProductPrice(event.target.value)
- 
-}
-
-const fetchPurchase = async () => {
+  const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
     setPurchaseProduct(response?.data?.data);
   };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-
 
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
@@ -108,83 +102,54 @@ const fetchPurchase = async () => {
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prev) => {
-      const newSelected = prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId];
-  
-      const updatedSubcategories = subcategoryData.filter((sub) =>
-        newSelected.includes(sub.categoryId)
-      );
+      const newSelected = prev.includes(categoryId) ? prev.filter((id) => id !== categoryId) : [...prev, categoryId];
+      const updatedSubcategories = subcategoryData.filter((sub) => newSelected.includes(sub.categoryId));
       setVisibleSubcategories(updatedSubcategories);
-  
       setCategorySubcategory((prevState) => {
         const categoryExists = prevState.find((item) => item.category === categoryId);
-       if (categoryExists) {
+        if (categoryExists) {
           return prevState.filter((item) => item.category !== categoryId);
         } else {
           return [...prevState, { category: categoryId, subcategory: [] }];
         }
       });
-  
+
       return newSelected;
     });
   };
-  
 
- 
   const handleSubcategoryClick = (subId, categoryId) => {
     setSelectedSubcategories((prev) => {
-      const newSubCategory = prev.includes(subId)
-        ? prev.filter((id) => id !== subId)
-        : [...prev, subId];
-  
+      const newSubCategory = prev.includes(subId) ? prev.filter((id) => id !== subId) : [...prev, subId];
+
       setCategorySubcategory((prevState) =>
         prevState.map((item) =>
           item.category === categoryId
             ? {
                 ...item,
-                subcategory: item.subcategory.includes(subId)
-                  ? item.subcategory.filter((id) => id !== subId)
-                  : [...item.subcategory, subId],
+                subcategory: item.subcategory.includes(subId) ? item.subcategory.filter((id) => id !== subId) : [...item.subcategory, subId]
               }
-            : item  
+            : item
         )
       );
-  
       return newSubCategory;
     });
   };
-  
-
-
- 
 
   const filterProduct = useMemo(() => {
     if (!search && categorySubcategory.length === 0) return productData;
-    
     return productData.filter((product) => {
-      const matchSearch = product.productName
-        .toLowerCase()
-        .includes(search.toLowerCase());
-  
-      if (!matchSearch) return false; 
-  
+      const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
+      if (!matchSearch) return false;
       return categorySubcategory.length === 0
         ? true
         : categorySubcategory.some(({ category, subcategory }) => {
             const matchCategory = product.categoryId === category;
-            const matchSubcategory =
-              subcategory.length > 0
-                ? subcategory.includes(product.SubCategoryId)
-                : true;
+            const matchSubcategory = subcategory.length > 0 ? subcategory.includes(product.SubCategoryId) : true;
             return matchCategory && matchSubcategory;
           });
     });
   }, [productData, categorySubcategory, search]);
-  
-  
-  
-  
 
   const handleCustomerChange = (event) => {
     const customerId = event.target.value;
@@ -296,19 +261,6 @@ const fetchPurchase = async () => {
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
-  // const handleSearch = (searchItem) => {
-  //   if (!searchItem) {
-  //     setSearch(productData);
-  //   } else {
-  //     const filter = productData.filter((pro) =>
-  //       pro.productName.toLowerCase().includes(searchItem.toLowerCase())
-  //     );
-  //     setSearch(filter);
-  //   }
-  // };
-  
-
-
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
     setCategoryData(response.data?.data);
@@ -319,11 +271,10 @@ const fetchPurchase = async () => {
   };
 
   const fetchProduct = async () => {
-    if(!productPrice){
-    const response = await getApi(urls.product.get);
-    setProductData(response.data?.data);
-    }
-    else{
+    if (!productPrice) {
+      const response = await getApi(urls.product.get);
+      setProductData(response.data?.data);
+    } else {
       const response = await getApi(`${urls.product.get}?sort=${productPrice}`);
       setProductData(response.data?.data);
     }
@@ -392,7 +343,7 @@ const fetchPurchase = async () => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <SearchIcon />
-              {/* <SearchBar onSearch={handleSearch} /> */}
+            {/* <SearchBar onSearch={handleSearch} /> */}
             <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
           </Box>
 
@@ -405,19 +356,21 @@ const fetchPurchase = async () => {
               renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
               sx={{ width: '250px' }}
             />
-             <Card>
-             <FormControl sx={{ width: 200 }} size="small">
-      <Select
-        value={productPrice}
-        onChange={handlePrice}
-        displayEmpty
-        renderValue={(selected) => (selected ? selected : "Sort By Price")}
-      >
-        <MenuItem disabled value="">Sort By Price</MenuItem> 
-        <MenuItem value="High to Low">High to Low</MenuItem>
-        <MenuItem value="Low to High">Low to High</MenuItem>
-      </Select>
-    </FormControl>  
+            <Card>
+              <FormControl sx={{ width: 200 }} size="small">
+                <Select
+                  value={productPrice}
+                  onChange={handlePrice}
+                  displayEmpty
+                  renderValue={(selected) => (selected ? selected : 'Sort By Price')}
+                >
+                  <MenuItem disabled value="">
+                    Sort By Price
+                  </MenuItem>
+                  <MenuItem value="High to Low">High to Low</MenuItem>
+                  <MenuItem value="Low to High">Low to High</MenuItem>
+                </Select>
+              </FormControl>
             </Card>
             <Card>
               <Button
@@ -436,7 +389,6 @@ const fetchPurchase = async () => {
                 New Customer
               </Button>
             </Card>
-           
           </Box>
         </Box>
 
@@ -451,70 +403,63 @@ const fetchPurchase = async () => {
                 backgroundColor: '#fff',
                 border: '1px solid #d3d3d3',
                 padding: '3px',
-                borderRadius: '10px',
-              
+                borderRadius: '10px'
               }}
             >
               <FormGroup>
-              {categoryData
-        .filter((category) =>
-          productData.some(
-            (product) =>
-              product.categoryId === category._id && product.quantity > 0
-          )
-        )
-        .map((category) => (
-          <div key={category._id}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                size='small'
-                  checked={selectedCategories.includes(category._id)}
-                  onChange={() => handleCategoryClick(category._id)}
-                  sx={{
-                    color: '#6A9C89',
-                    '&.Mui-checked': { color: '#6A9C89' },
-                   ml:'2px'
-                }}
-                />
-              }
-              label={category.name}
-              sx={{ cursor: 'pointer', fontSize:'12px'}}
-            />
+                {categoryData
+                  .filter((category) => productData.some((product) => product.categoryId === category._id && product.quantity > 0))
+                  .map((category) => (
+                    <div key={category._id}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={selectedCategories.includes(category._id)}
+                            onChange={() => handleCategoryClick(category._id)}
+                            sx={{
+                              color: '#6A9C89',
+                              '&.Mui-checked': { color: '#6A9C89' },
+                              ml: '2px'
+                            }}
+                          />
+                        }
+                        label={category.name}
+                        sx={{ cursor: 'pointer', fontSize: '12px' }}
+                      />
 
-                    {selectedCategories.includes(category._id) && (
-                      <Box> 
-                        {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
-                          visibleSubcategories
-                            .filter((sub) => sub.categoryId === category._id)
-                            .map((sub) => (
-                              <FormControlLabel
-                                key={sub._id}
-                                control={
-                                  <Checkbox
-                                  size='small'
-                                    checked={selectedSubcategories.includes(sub._id)}
-                                    onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
-                                    sx={{
-                                      color: '#4A7C59',
-                                      '&.Mui-checked': { color: '#4A7C59' },
-                                   
-                                    }}
-                                  />
-                                }
-                                label={<span style={{fontSize:'12px'}}>{sub.name}</span>}
-                                sx={{ color: '#555',fontSize:'4px' , mt:'-15px' }}
-                              />
-                            ))
-                        ) : (
-                          <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
-                            No subcategories available
-                          </Typography>
-                        )}
-                      </Box>
-                    )}
-                  </div>
-                ))}
+                      {selectedCategories.includes(category._id) && (
+                        <Box>
+                          {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
+                            visibleSubcategories
+                              .filter((sub) => sub.categoryId === category._id)
+                              .map((sub) => (
+                                <FormControlLabel
+                                  key={sub._id}
+                                  control={
+                                    <Checkbox
+                                      size="small"
+                                      checked={selectedSubcategories.includes(sub._id)}
+                                      onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
+                                      sx={{
+                                        color: '#4A7C59',
+                                        '&.Mui-checked': { color: '#4A7C59' }
+                                      }}
+                                    />
+                                  }
+                                  label={<span style={{ fontSize: '12px' }}>{sub.name}</span>}
+                                  sx={{ color: '#555', fontSize: '4px', mt: '-15px' }}
+                                />
+                              ))
+                          ) : (
+                            <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
+                              No subcategories available
+                            </Typography>
+                          )}
+                        </Box>
+                      )}
+                    </div>
+                  ))}
               </FormGroup>
             </Box>
           </Grid>

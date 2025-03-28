@@ -1,25 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  Container,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Button,
-  Typography,
-  Box,
-  Divider,
-  Card,
-  CardMedia,
-  Breadcrumbs,
-  Stack
-} from '@mui/material';
+import {Container,Grid,Table,TableBody,  TableCell,TableContainer, TableHead,TableRow,Paper, IconButton, Button,
+  Typography,Box,Divider,Card,CardMedia,Breadcrumbs,Stack} from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { Remove, Add, Delete } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -97,13 +79,12 @@ const Checkout = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         removeItem(cartItem._id);
-      
-      } 
+      }
     });
   };
 
   const handleCreateInvoice = async () => {
-    if (!selectedCustomer ) {
+    if (!selectedCustomer) {
       Swal.fire('Error', 'Please select a customer!', 'error');
       return;
     }
@@ -112,7 +93,7 @@ const Checkout = () => {
         title: 'Your cart is empty!',
         text: 'Please add items to the cart before proceeding to invoice.',
         icon: 'warning',
-        confirmButtonText: 'Okay',
+        confirmButtonText: 'Okay'
       });
       return;
     }
@@ -150,52 +131,49 @@ const Checkout = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Stack direction="row" alignItems="center" mb={5}>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            height: '50px',
+            width: '100%',
+            display: 'flex',
+            borderRadius: '10px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 25px'
+          }}
+        >
+          <Stack direction="row" alignItems="center">
+            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
+              <HomeIcon />
+            </IconButton>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
 
-<Stack direction="row" alignItems="center" mb={5}>
-            <Box
+            <Typography
+              onClick={() => navigate(-1)}
               sx={{
-                backgroundColor: 'white',
-                height: '50px',
-                width: '100%',
-                display: 'flex',
-                borderRadius: '10px',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '0 25px',
-                
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontSize: '15px',
+                mx: 1,
+                '&:hover': { color: '#2067db' }
               }}
             >
-              <Stack direction="row" alignItems="center">
-                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
-                  <HomeIcon />
-                </IconButton>
-                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+              POS
+            </Typography>
 
-                <Typography
-                  onClick={() => navigate(-1)}
-                  sx={{
-                    cursor: 'pointer',
-                    textDecoration: 'underline',
-                    fontSize: '15px',
-                    mx: 1,
-                    '&:hover': { color: '#2067db' }
-                  }}
-                >
-                  POS
-                </Typography>
-
-                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-                <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
-                 Checkout Page
-                </Typography>
-              </Stack>
-            </Box>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+            <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
+              Checkout Page
+            </Typography>
           </Stack>
-     
+        </Box>
+      </Stack>
 
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <TableContainer component={Paper} sx={{ mb: 3  , mt:'-20px'}}>
+          <TableContainer component={Paper} sx={{ mb: 3, mt: '-20px' }}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -286,7 +264,7 @@ const Checkout = () => {
         </Grid>
 
         <Grid item xs={4}>
-          <Box sx={{ p: 3, bgcolor: 'white', borderRadius: 2, boxShadow: 3 , mt:'-20px'}}>
+          <Box sx={{ p: 3, bgcolor: 'white', borderRadius: 2, boxShadow: 3, mt: '-20px' }}>
             <Typography variant="h5">Order Summary</Typography>
             <Divider sx={{ my: 2 }} />
 
@@ -307,13 +285,18 @@ const Checkout = () => {
             <Divider sx={{ my: 2 }} />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '4px' }}>
-              <Button fullWidth variant="contained"  sx={{
-            backgroundColor: '#6A9C89',
-            color: '#ffff',
-            '&:hover': {
-              backgroundColor: '#8DB3A8'
-            }
-          }} onClick={handleCreateInvoice}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8'
+                  }
+                }}
+                onClick={handleCreateInvoice}
+              >
                 Confirm
               </Button>
               <Button

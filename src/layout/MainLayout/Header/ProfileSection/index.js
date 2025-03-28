@@ -3,15 +3,17 @@ import { Box, Button, Stack, SwipeableDrawer, Tooltip } from "@mui/material";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { IconLogout } from "@tabler/icons";
 import { toast } from "react-toastify";
-import ChatAI from "views/AIChatBord/index";
+import ChatGPTClone from "views/AIChatBord/index";
+import { useNavigate } from "react-router";
 
 const ProfileSection = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const navigate = useNavigate()
 
   const handleLogout = () => {
+    navigate("/login");
     localStorage.clear();
     toast.success("Logged out successfully");
-    navigate("/login");
   };
 
   return (
@@ -31,7 +33,7 @@ const ProfileSection = () => {
         >
           <Box sx={{ width: 400, padding: 2, bgcolor: "white" }}>
            
-            <ChatAI />
+            <ChatGPTClone />
           </Box>
         </SwipeableDrawer>
 

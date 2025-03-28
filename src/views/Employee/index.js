@@ -83,6 +83,7 @@ const Customer = () => {
           await deleteApi(urls.employee.delete.replace(':id', id));
          
           setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
+          setFilteredCustomer((prev) => prev.filter((customer) => customer._id !== id));
         } catch (error) {
           Swal.fire('Error!', 'Failed to delete customer.', 'error');
         }

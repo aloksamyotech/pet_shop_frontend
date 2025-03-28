@@ -7,6 +7,8 @@ const CompanyLogoUploader = ({ companyId }) => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [logo, setLogo] = useState(null);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
 
   const UserID = JSON.parse(localStorage.getItem('user'));
 
@@ -69,9 +71,7 @@ const CompanyLogoUploader = ({ companyId }) => {
           <Avatar
             alt="Logo Image"
             src={
-              logo?.logoImage
-                ? `http://localhost:7200/${logo.logoImage.replace('\\', '/')}`
-                : 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'
+              userObj?.imageUrl || 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'
             }
             sx={{ width: 130, height: 130, borderRadius: '50%', backgroundColor: '#7760f6' }}
           />

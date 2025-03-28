@@ -19,10 +19,9 @@ const LogoSection = () => {
     const user = localStorage.getItem('user');
     const userObj = user ? JSON.parse(user) : null;
   
-   
+
   
-  
-  return (
+ return (
     <ButtonBase>
     <img
       alt="Company Logo"
