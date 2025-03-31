@@ -51,6 +51,19 @@ import './cart.css';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { toast } from 'react-toastify';
 import SearchBar from 'views/Search';
+import Accordion, { accordionClasses } from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails, {
+  accordionDetailsClasses,
+} from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+
+
+
+
+
+
 const AddFood = () => {
   const validationSchema = yup.object({
     firstName: yup
@@ -393,76 +406,62 @@ const AddFood = () => {
         </Box>
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={2}>
-            <Box
-              sx={{
-                flex: 1,
-                overflowY: 'auto',
-                height: '70vh',
-                width: '100%',
-                backgroundColor: '#fff',
-                border: '1px solid #d3d3d3',
-                padding: '3px',
-                borderRadius: '10px'
-              }}
-            >
-              <FormGroup>
-                {categoryData
-                  .filter((category) => productData.some((product) => product.categoryId === category._id && product.quantity > 0))
-                  .map((category) => (
-                    <div key={category._id}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            size="small"
-                            checked={selectedCategories.includes(category._id)}
-                            onChange={() => handleCategoryClick(category._id)}
-                            sx={{
-                              color: '#6A9C89',
-                              '&.Mui-checked': { color: '#6A9C89' },
-                              ml: '2px'
-                            }}
-                          />
-                        }
-                        label={category.name}
-                        sx={{ cursor: 'pointer', fontSize: '12px' }}
-                      />
+        <Grid item xs={12} md={2}>
+  <Box
+    sx={{
+      flex: 1,
+      overflowY: 'auto',
+      height: '70vh',
+      width: '100%',
+      backgroundColor: '#fff',
+      border: '1px solid #d3d3d3',
+      padding: '3px',
+      borderRadius: '10px',
+    }}
+  >
+    <FormGroup>
+      {categoryData
+        .filter((category) => productData.some((product) => product.categoryId === category._id && product.quantity > 0))
+        .map((category) => (
+          <Accordion  key={category._id} expanded={selectedCategories.includes(category._id)} onChange={() => handleCategoryClick(category._id)} sx={{ margin: 0, boxShadow: 'none', '&:before': { display: 'none' } }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ paddingLeft: '5px 10px', fontWeight: 'bold', margin:'-10px'}}>
+              {category.name}
+            </AccordionSummary>
 
-                      {selectedCategories.includes(category._id) && (
-                        <Box>
-                          {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
-                            visibleSubcategories
-                              .filter((sub) => sub.categoryId === category._id)
-                              .map((sub) => (
-                                <FormControlLabel
-                                  key={sub._id}
-                                  control={
-                                    <Checkbox
-                                      size="small"
-                                      checked={selectedSubcategories.includes(sub._id)}
-                                      onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
-                                      sx={{
-                                        color: '#4A7C59',
-                                        '&.Mui-checked': { color: '#4A7C59' }
-                                      }}
-                                    />
-                                  }
-                                  label={<span style={{ fontSize: '12px' }}>{sub.name}</span>}
-                                  sx={{ color: '#555', fontSize: '4px', mt: '-15px' }}
-                                />
-                              ))
-                          ) : (
-                            <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
-                              No subcategories available
-                            </Typography>
-                          )}
-                        </Box>
-                      )}
-                    </div>
-                  ))}
-              </FormGroup>
-            </Box>
-          </Grid>
+            <AccordionDetails sx={{ padding: '5px 10px', margin: 0, mb:'-32px' }} >
+              {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
+                visibleSubcategories
+                  .filter((sub) => sub.categoryId === category._id)
+                  .map((sub) => (
+                    <FormControlLabel
+                      key={sub._id}
+                      control={
+                        <Checkbox
+                          size="small"
+                          checked={selectedSubcategories.includes(sub._id)}
+                          onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
+                          sx={{
+                            color: '#4A7C59',
+                            '&.Mui-checked': { color: '#4A7C59' },
+                          }}
+                        />
+                      }
+                      label={<span style={{ fontSize: '12px' }}>{sub.name}</span>}
+                      sx={{ color: '#555', fontSize: '4px' ,mt:'-15px'}}
+                    />  
+                  ))
+              ) : (
+                <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
+                  No subcategories available
+                </Typography>
+              )}
+            </AccordionDetails>
+          </Accordion>
+        ))}
+    </FormGroup>
+  </Box>
+</Grid>
+
 
           <Grid item xs={12} md={6}>
             <Box

@@ -87,146 +87,150 @@ const AddEdit = ({ open, handleClose, company, fetchSupplier }) => {
   }, [company, open]);
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title">
-      <DialogTitle
-        id="dialog-title"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}
-      >
-        <Typography variant="h4">Update Supplier</Typography>
-        <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
-      </DialogTitle>
+    <div>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="scroll-dialog-title" aria-describedby="scroll-dialog-description">
+        <DialogTitle
+          id="scroll-dialog-title"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Typography variant="h4">Add Supplier</Typography>
+          <Typography>
+            <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
+          </Typography>
+        </DialogTitle>
+        <DialogContent dividers>
+          <form>
+            <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
+             <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Name</FormLabel>
+                  <TextField
+                    id="companyName"
+                    name="companyName"
+                    size="small"
+                    fullWidth
+                    value={formik.values.companyName}
+                    onChange={formik.handleChange}
+                    onInput={(e) => {
+                      const regex = /^[A-Za-z\s]*$/; 
+                      if (!regex.test(e.target.value)) {
+                        e.target.value = e.target.value.replace(/[^A-Za-z\s]/g, "");
+                      }
+                      formik.setFieldValue("companyName", e.target.value);
+                    }}
+                    error={formik.touched.companyName && Boolean(formik.errors.companyName)}
+                    helperText={formik.touched.companyName && formik.errors.companyName}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormControl fullWidth>
+                    <FormLabel>Email</FormLabel>
+                    <TextField
+                      id="email"
+                      name="email"
+                      size="small"
+                      fullWidth
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={formik.touched.email && Boolean(formik.errors.email)}
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </FormControl>
+                </Grid>
+             
 
-      <DialogContent dividers>
-        <form onSubmit={formik.handleSubmit}>
-          <DialogContentText tabIndex={-1}>
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-              <Grid item xs={12} sm={6}>
-                <FormLabel>Company Name</FormLabel>
-                <TextField
-                  id="companyName"
-                  name="companyName"
-                  size="small"
-                  fullWidth
-                  value={formik.values.companyName}
-                  onChange={formik.handleChange}
-                  error={formik.touched.companyName && Boolean(formik.errors.companyName)}
-                  helperText={formik.touched.companyName && formik.errors.companyName}
-                />
+              
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Phone Number</FormLabel>
+                  <TextField
+                    name="phoneNumber"
+                    type="phoneNumber"
+                    size="small"
+                    fullWidth
+                    value={formik.values.phoneNumber}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, "");
+                      if (onlyNumbers.length <= 10) {
+                      formik.setFieldValue("phoneNumber", onlyNumbers);}
+                    }}
+                    
+                    error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
+                    helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Address</FormLabel>
+                  <TextField
+                    id="address"
+                    name="address"
+                    size="small"
+                    fullWidth
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                    error={formik.touched.address && Boolean(formik.errors.address)}
+                    helperText={formik.touched.address && formik.errors.address}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Description</FormLabel>
+                  <TextField
+                    id="description"
+                    name="description"
+                    size="small"
+                    fullWidth
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    error={formik.touched.description && Boolean(formik.errors.description)}
+                    helperText={formik.touched.description && formik.errors.description}
+                  />
+                </Grid>
+               
+                <Grid item xs={12} sm={6} md={6}>
+                  <FormLabel>Status</FormLabel>
+                  <Select id="status" name="status" size="small" fullWidth value={formik.values.status} onChange={formik.handleChange}>
+                    <MenuItem value="Active">Active</MenuItem>
+                    <MenuItem value="Inactive">Inactive</MenuItem>
+                    <MenuItem value="Blocked">Blocked</MenuItem>
+                  </Select>
+                </Grid>
               </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormLabel>Email</FormLabel>
-                <TextField
-                  id="email"
-                  name="email"
-                  size="small"
-                  fullWidth
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
-              <Grid item xs={12} sm={6}>
-                <FormLabel>Phone Number</FormLabel>
-                <TextField
-                  name="phoneNumber"
-                  size="small"
-                  fullWidth
-                  value={formik.values.phoneNumber}
-                  onChange={(e) => {
-                    const sanitizedValue = e.target.value.replace(/[^0-9]/g, '');
-                    formik.setFieldValue('phoneNumber', sanitizedValue);
-                  }}
-                  error={formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)}
-                  helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormLabel>Address</FormLabel>
-                <TextField
-                  id="address"
-                  name="address"
-                  size="small"
-                  fullWidth
-                  value={formik.values.address}
-                  onChange={formik.handleChange}
-                  error={formik.touched.address && Boolean(formik.errors.address)}
-                  helperText={formik.touched.address && formik.errors.address}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormLabel>Description</FormLabel>
-                <TextField
-                  id="description"
-                  name="description"
-                  size="small"
-                  fullWidth
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  error={formik.touched.description && Boolean(formik.errors.description)}
-                  helperText={formik.touched.description && formik.errors.description}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  id="status"
-                  name="status"
-                  size="small"
-                  fullWidth
-                  value={formik.values.status}
-                  onChange={formik.handleChange}
-                >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Inactive">Inactive</MenuItem>
-                  <MenuItem value="Blocked">Blocked</MenuItem>
-                </Select>
-              </Grid>
-            </Grid>
-          </DialogContentText>
-
-          <DialogActions>
-            <Button type="submit" variant="contained" sx={{ backgroundColor: '#6A9C89',
-            color: '#ffff',
-            '&:hover': {
-              backgroundColor: '#8DB3A8'
-            }
-          }}>
-              Update
-            </Button>
-            <Button
-              onClick={() => {
-                formik.resetForm();
-                handleClose();
-              }}
-              variant="outlined"
-              color="error"
-              sx={{
-                border: '1px solid #6A9C89',
-                color: '#6A9C89',
-                '&:hover': {
-                  border: '1px solid #6A9C89',
-                  color: '#6A9C89'
-                }
-              }}
-            >
-              Cancel
-            </Button>
-          </DialogActions>
-        </form>
-      </DialogContent>
-    </Dialog>
+            </DialogContentText>
+          </form>
+        </DialogContent>
+        <DialogActions>
+        <Button type="submit" variant="contained" onClick={formik.handleSubmit}   sx={{ backgroundColor: '#6A9C89',
+  color: '#ffff',
+  '&:hover': {
+    backgroundColor: '#8DB3A8'
+  }
+}}>
+    Update
+  </Button>
+  <Button
+    onClick={() => {
+      formik.resetForm();
+      handleClose();
+    }}
+    variant="outlined"
+    color="error"
+    sx={{
+      border: '1px solid #6A9C89',
+      color: '#6A9C89',
+      '&:hover': {
+        border: '1px solid #6A9C89',
+        color: '#6A9C89'
+      }
+    }}
+  >
+    Cancel
+  </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };
 

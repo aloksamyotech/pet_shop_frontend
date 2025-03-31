@@ -31,13 +31,13 @@ const ProfileSection = () => {
           onClose={() => setOpenDrawer(false)}
           onOpen={() => setOpenDrawer(true)}
         >
-          <Box sx={{ width: 400, padding: 2, bgcolor: "white" }}>
+          <Box sx={{ width: 800, padding: 2, bgcolor: "white" }}>
            
             <ChatGPTClone />
           </Box>
         </SwipeableDrawer>
 
-        <Button variant="contained" onClick={handleLogout} sx={{ background: "#6A9C89", borderRadius: "10px" }}>
+        <Button variant="contained" onClick={handleLogout} sx={{ background: "#6A9C89", borderRadius: "10px",  "&:hover": { backgroundColor: "#6A9C89" }, }}>
           <IconLogout size="1.5rem" />
           Logout
         </Button>

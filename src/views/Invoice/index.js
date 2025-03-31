@@ -47,19 +47,8 @@ const Invoice = () => {
     navigate('/');
   };
 
-  const fetchOrderDate = async () => {
-    const response = await getApi(urls.order.get);
-   setOrderDate(response.data.data[0].createdAt);
-  };
-
-  useEffect(() => {
-    fetchOrderDate();
-  }, []);
-
-  const date = new Date(orderDate);
-  const formattedDate = orderDate ? new Date(orderDate).toLocaleDateString() : 'N/A';
-
-  const printInvoice = () => {
+   const todayDate = new Date().toISOString().split('T')[0];
+ const printInvoice = () => {
     const content = document.getElementById('invoice-content');
     const printWindow = window.open('', '', 'width=800,height=600');
 
@@ -173,7 +162,7 @@ const Invoice = () => {
           >
             <Box>
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpJYkrPXmUAtG_7-3eByMmjjd8B-i3C0LLUg&s"
+                src= {userObj.imageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpJYkrPXmUAtG_7-3eByMmjjd8B-i3C0LLUg&s"}
                 alt="Sample"
                 style={{ width: '20%', height: 'auto' }}
               />
@@ -183,7 +172,7 @@ const Invoice = () => {
                   {AllData.orderId}
                 </Typography>
                 <Typography>
-                  <strong>Date:</strong> {formattedDate}
+                  <strong>Date:</strong> {todayDate}
                 </Typography>
                 <Typography>
                   <strong>Time:</strong>{' '}
