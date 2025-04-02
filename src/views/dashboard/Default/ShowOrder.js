@@ -8,7 +8,7 @@ import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import BusinessIcon from '@mui/icons-material/Business';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
-
+import { useTranslation } from 'react-i18next';
 const StyledCard = ({ children, onClick }) => (
   <Card
     sx={{
@@ -31,7 +31,7 @@ const ShowOrder = ({ isLoading }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
- 
+  const { t } = useTranslation();
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.customer.getCount);
@@ -84,7 +84,7 @@ const ShowOrder = ({ isLoading }) => {
                   fontWeight: 600
                 }}
               >
-              POS
+              {t("POS")}
               </Typography>
             </Grid>
           </Box>

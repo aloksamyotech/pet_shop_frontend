@@ -1,4 +1,4 @@
-const getChartData = (salesData, soldQuantities, value, currencySymbol) => {
+const getChartData = (salesData, soldQuantities, value, currencySymbol, t) => {
   let data = [];
   let name = '';
   let color = '#6A9C89';
@@ -6,14 +6,14 @@ const getChartData = (salesData, soldQuantities, value, currencySymbol) => {
 
   if (value === 'sales_amount') {
     data = salesData;
-    name = 'Sales Amount';
+    name = t('Sales Amount');
     color = '#6A9C89';
     yAxisLabel = `Amount (${currencySymbol})`;
   } else if (value === 'sold_quantity') {
     data = soldQuantities;
-    name = 'Sold Quantity';
+    name = t('Sold Quantity');
     color = '#A6CDC6';
-    yAxisLabel = 'Quantity';
+    yAxisLabel = t('Quantity');
   }
 
   return {
@@ -72,7 +72,6 @@ const getChartData = (salesData, soldQuantities, value, currencySymbol) => {
           },
         },
       },
-
       yaxis: {
         title: {
           text: yAxisLabel,
@@ -110,24 +109,24 @@ const getChartData = (salesData, soldQuantities, value, currencySymbol) => {
       states: {
         hover: {
           filter: {
-            type: 'none', // Prevents the color from changing on hover
+            type: 'none',
           },
         },
         active: {
           filter: {
-            type: 'none', // Ensures click stays the same color too
+            type: 'none',
           },
         },
       },
-    },
-    tooltip: {
-      y: {
-        formatter: (val) => {
-          if (value === 'sales_amount') {
-            return `${val.toLocaleString()}`;
-          } else if (value === 'sold_quantity') {
-            return `${val.toLocaleString()} units`;
-          }
+      tooltip: {  // Moved tooltip inside options
+        y: {
+          formatter: (val) => {
+            if (value === 'sales_amount') {
+              return `${val.toLocaleString()}`;
+            } else if (value === 'sold_quantity') {
+              return `${val.toLocaleString()} units`;
+            }
+          },
         },
       },
     },

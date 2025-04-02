@@ -7,6 +7,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import BusinessIcon from '@mui/icons-material/Business';
+import { useTranslation } from 'react-i18next';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -62,6 +63,7 @@ const TotalProduct = ({ isLoading }) => {
     }
   };
 
+    const { t } = useTranslation();
   useEffect(() => {
     fetchCustomer();
   }, []);
@@ -100,7 +102,7 @@ const TotalProduct = ({ isLoading }) => {
                       mt: 1
                     }}
                     >
-                      Total Company
+                      {t("Total Company")}
                     </Typography>
                   </Grid>
                 </Grid>

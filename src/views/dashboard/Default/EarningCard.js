@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Grid, Typography } from '@mui/material';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-
+import { useTranslation } from 'react-i18next';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
@@ -52,6 +52,7 @@ const EarningCard = ({ isLoading }) => {
     fetchOrder();
   }, []);
 
+  const { t } = useTranslation();
   return (
     <>
       {isLoading ? (
@@ -91,7 +92,7 @@ const EarningCard = ({ isLoading }) => {
                     mt: 1
                   }}
                 >
-                  Total Orders
+                 {t('Total Orders')}
                 </Typography>
               </Grid>
             </Grid>

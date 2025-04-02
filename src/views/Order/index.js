@@ -11,6 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const Checkout = () => {
   const location = useLocation();
@@ -24,6 +25,8 @@ const Checkout = () => {
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+
+   const { t } = useTranslation();
   const fetchProduct = async () => {
     try {
       const response = await getApi(urls.product.get);
@@ -160,12 +163,12 @@ const Checkout = () => {
                 '&:hover': { color: '#2067db' }
               }}
             >
-              POS
+              {t("POS")}
             </Typography>
 
             <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
             <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
-              Checkout Page
+             {t("Checkout Page")}
             </Typography>
           </Stack>
         </Box>
@@ -177,12 +180,12 @@ const Checkout = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Image</TableCell>
-                  <TableCell>Product Name</TableCell>
-                  <TableCell align="center">Price</TableCell>
-                  <TableCell align="center">Quantity</TableCell>
-                  <TableCell align="center">Total</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell>{t("Image")}</TableCell>
+                  <TableCell>{t("Product Name")}</TableCell>
+                  <TableCell align="center">{t("Price")}</TableCell>
+                  <TableCell align="center">{t("Quantity")}</TableCell>
+                  <TableCell align="center">{t("Total")}</TableCell>
+                  <TableCell align="center">{t("Actions")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -265,18 +268,18 @@ const Checkout = () => {
 
         <Grid item xs={4}>
           <Box sx={{ p: 3, bgcolor: 'white', borderRadius: 2, boxShadow: 3, mt: '-20px' }}>
-            <Typography variant="h5">Order Summary</Typography>
+            <Typography variant="h5">{t("Order Summary")}</Typography>
             <Divider sx={{ my: 2 }} />
 
             <Typography variant="h">
-              Total Items:
+              {t("Total Items")}:
               <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold', ml: 1 }}>
                 {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
               </Typography>
             </Typography>
 
             <Typography variant="h6" sx={{ mt: 2 }}>
-              Total Price:
+             {t("Total Price")} :
               <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold', ml: 1 }}>
                 {currencySymbol} {totalPrice.toFixed(2)}
               </Typography>
@@ -297,7 +300,7 @@ const Checkout = () => {
                 }}
                 onClick={handleCreateInvoice}
               >
-                Confirm
+               {t("Confirm")}
               </Button>
               <Button
                 fullWidth
@@ -312,7 +315,7 @@ const Checkout = () => {
                 }}
                 onClick={() => setCartItems([])}
               >
-                Cancel
+               {t("Cancel")}
               </Button>
             </Box>
           </Box>

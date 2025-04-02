@@ -1,48 +1,27 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  TextField,
-  Button,
-  Typography,
-  FormControl,
-  FormLabel,
-  Select,
-  MenuItem
-} from '@mui/material';
+import {Dialog,DialogActions,DialogContent,DialogTitle,Grid,TextField,Button,Typography, FormControl,FormLabel, Select,  MenuItem} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { postApi, getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-
 const CustomerForm = ({ open, handleClose,fetchCustomer}) => {
-
-  const validationSchema = yup.object({
+const validationSchema = yup.object({
     firstName: yup
       .string()
       .required('First Name is required')
       .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
       .max(50, 'First Name cannot be more than 50 characters'),
     email: yup.string().required('Email is required').email('Invalid email address'),
-    
-  });
-
-  
-  const initialValues = {
+     });
+const initialValues = {
     firstName: '',
     email: '',
-   
   };
 
-  
- 
-  const formik = useFormik({
+const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
@@ -51,13 +30,10 @@ const CustomerForm = ({ open, handleClose,fetchCustomer}) => {
         formik.resetForm();
      handleClose();
         toast.success('Customer added successfully!');
-      
-    },
+      },
   });
 
-
-
-  return (
+return (
     <Dialog open={open} fullWidth maxWidth="sm" aria-labelledby="customer-dialog-title">
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h4">Create Customer</Typography>
@@ -87,8 +63,7 @@ const CustomerForm = ({ open, handleClose,fetchCustomer}) => {
                 </FormControl>
               </Grid>
             ))}
-           
-          </Grid>
+             </Grid>
         </form>
       </DialogContent>
       <DialogActions>

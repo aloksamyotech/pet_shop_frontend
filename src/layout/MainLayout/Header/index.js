@@ -9,6 +9,7 @@ import LogoSection from '../LogoSection';
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
 import NotificationSection from './NotificationSection';
+import { useTranslation } from 'react-i18next';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
@@ -22,7 +23,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
 
-  
+   const { t } = useTranslation();
 
   return (
     <>
@@ -74,7 +75,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
           paddingTop: '7px'
         }}
       >
-        <Typography sx={{ fontSize: '18px', fontWeight: 800, fontFamily: 'Playfair Display, serif' }}>Welcome back !</Typography>
+        <Typography sx={{ fontSize: '18px', fontWeight: 800, fontFamily: 'Playfair Display, serif' }}>
+          {t("Welcome back!")}</Typography>
         <Typography variant="body2" sx={{ fontStyle: 'italic', color: theme.palette.text.secondary }}>
   {userObj?.email || 'No email available'}
 </Typography>

@@ -18,6 +18,7 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ViewEmployee from './View';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useTranslation } from 'react-i18next';
 
 
 const Customer = () => {
@@ -28,7 +29,7 @@ const Customer = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [Customer, setFilteredCustomer] = useState([]);
   const [popoverState, setPopoverState] = useState({ anchorEl: null, row: null });
-  
+  const { t } = useTranslation();
   
   const handleOpenActions = (event, row) => {
     setPopoverState({ anchorEl: event.currentTarget, row });
@@ -68,15 +69,13 @@ const Customer = () => {
   //   };
 
   const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this customer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel'
+   Swal.fire({
+              title: t('Are you sure?'),
+              text: t('Do you want to remove this category?'),
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: t('Yes, remove it!'),
+              cancelButtonText: t('Cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -85,7 +84,7 @@ const Customer = () => {
           setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
           setFilteredCustomer((prev) => prev.filter((customer) => customer._id !== id));
         } catch (error) {
-          Swal.fire('Error!', 'Failed to delete customer.', 'error');
+          Swal.fire('Error!', 'Failed to delete employee.', 'error');
         }
       }
     });
@@ -115,13 +114,13 @@ const Customer = () => {
   const columns = [
 {
   field:'EId',
-  headerName:'ID',
+  headerName:t('ID'),
   flex:0.5
 }
     ,
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: t('Name'),
       flex: 0.5,
       renderCell: (params) => (
         <Stack direction="row" alignItems="center" spacing={1}>
@@ -131,12 +130,12 @@ const Customer = () => {
         </Stack>
       )
     },
-    { field: 'email', headerName: 'Email', flex: 0.5 },
-    { field: 'address', headerName: 'Address', flex: 0.5 },
-    { field: 'phoneNumber', headerName: 'Phone Number', flex: 0.5 },
+    { field: 'email', headerName: t('Email'), flex: 0.5 },
+    { field: 'address', headerName: t('Address'), flex: 0.5 },
+    { field: 'phoneNumber', headerName: t('Phone Number'), flex: 0.5 },
     {
       field: 'salary',
-      headerName: 'Salary',
+      headerName: t('Salary'),
       flex: 0.5,
       renderCell: (params) => (
         <>
@@ -147,7 +146,7 @@ const Customer = () => {
     },
     {
       field: 'actions',
-      headerName: 'Actions',
+      headerName: t('Actions'),
       flex: 0.5,
       sortable: false,
       renderCell: (params) => {
@@ -166,17 +165,7 @@ const Customer = () => {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               PaperProps={{ sx: { boxShadow: 3, borderRadius: '20px' } }}
             >
-              {/* View action */}
-              {/* <MenuItem
-                onClick={() => {
-                  handleView(popoverState.row);
-                  handleCloseActions();
-                }}
-              >
-                <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
-              </MenuItem> */}
-    
-              {/* Edit action */}
+             
               <MenuItem
                 onClick={() => {
                   handleEdit(popoverState.row);
@@ -186,7 +175,7 @@ const Customer = () => {
                 <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
               </MenuItem>
     
-              {/* Delete action */}
+             
               <MenuItem
                 onClick={() => {
                   handleDelete(popoverState.row._id);
@@ -227,7 +216,7 @@ const Customer = () => {
               <HomeIcon />
             </IconButton>
             <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
-            <Typography variant="h5">Employee</Typography>{' '}
+            <Typography variant="h5">{t("Employee")}</Typography>{' '}
           </Stack>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Card>
@@ -238,7 +227,7 @@ const Customer = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                New Employee
+               {t("New Employee")} 
               </Button>
             </Card>
           </Stack>

@@ -18,6 +18,7 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import SearchBar from 'views/Search';
 import ProductAdd from './ProductAdd';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useTranslation } from 'react-i18next';
 
 const Supplier = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const Supplier = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [open, setOpen] = useState(false);
   
+  const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState(null);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -83,14 +85,12 @@ const handleCloseActions = () => {
 
   const handleDelete = (id) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this company?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel'
+         title: t('Are you sure?'),
+         text: t('Do you want to remove this category?'),
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonText: t('Yes, remove it!'),
+         cancelButtonText: t('Cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -99,7 +99,7 @@ const handleCloseActions = () => {
           setFilteredCompany((prev) => prev.filter((sup) => sup._id !== id));
         
         } catch (error) {
-          Swal.fire('Error!', 'Failed to delete company.', 'error');
+        Swal.fire(t('Error!'), t('Failed to delete category.'), 'error');
         }
       }
     });
@@ -108,19 +108,19 @@ const handleCloseActions = () => {
 
 
   const columns = [
-    { field: 'companyName', headerName: 'Supplier', flex: 1 , renderCell: (params) => (
+    { field: 'companyName', headerName: t('Supplier'), flex: 1 , renderCell: (params) => (
       <Stack direction="row" alignItems="center" spacing={1}>
        <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
         <Typography>{params.value}</Typography>
       </Stack>
     ),},
-    { field: 'email', headerName: 'Email', flex: 1 },
-    { field: 'phoneNumber', headerName: 'Phone Number', flex: 1 },
-    { field: 'address', headerName: 'Address', flex: 1 },
-    { field: 'description', headerName: 'Description', flex: 1 },
+    { field: 'email', headerName: t('Email'), flex: 1 },
+    { field: 'phoneNumber', headerName:t('Phone Number'), flex: 1 },
+    { field: 'address', headerName: t('Address'), flex: 1 },
+    { field: 'description', headerName: t('Description'), flex: 1 },
     {
       field: 'Action',
-      headerName: 'Action',
+      headerName: t('Action'),
       flex: 1,
       sortable: false,
       renderCell: (params) => (
@@ -202,9 +202,9 @@ const handleCloseActions = () => {
                 <HomeIcon />
               </IconButton>
               <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-              <Typography>Clients</Typography>
+              <Typography>{t("Clients")}</Typography>
               <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>Supplier Information</Typography>
+              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>{t("Supplier Information")}</Typography>
             </Stack>
 
             <Stack direction="row" alignItems="center" spacing={2}>
@@ -216,7 +216,7 @@ const handleCloseActions = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                  New Supplier
+                 {t( "New Supplier")}
                 </Button>
               </Card>
             </Stack>

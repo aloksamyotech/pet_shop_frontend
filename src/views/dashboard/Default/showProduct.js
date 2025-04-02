@@ -7,6 +7,7 @@ import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import StoreIcon from '@mui/icons-material/Store';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
+import { useTranslation } from 'react-i18next';
 
 
 const StyledCard = ({ children, onClick }) => (
@@ -31,7 +32,7 @@ const ShowProduct = ({ isLoading }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
- 
+  const { t } = useTranslation();
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.customer.getCount);

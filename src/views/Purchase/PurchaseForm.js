@@ -19,11 +19,12 @@ import { toast } from 'react-toastify';
 import { getApi, postApi, updateApi,postApiImage } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 import ClearIcon from '@mui/icons-material/Clear';
-
+import { useTranslation } from 'react-i18next';
 const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymbol}) => {
   const [product, setProduct] = useState([]);
   const [company, setCompany] = useState([]);
  const [selectedImage, setSelectedImage] = useState(null);
+
 
 
   const handleFileChange = (event) => {
@@ -69,31 +70,33 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
     setCompany(response?.data?.data || []);
   };
 
+  const { t } = useTranslation();
+
   const validationSchema = yup.object({
-    productId: yup.string().required('Product Name is required'),
-    companyId: yup.string().required('Company is required'),
+    productId: yup.string().required(t('productIdRequired')),
+    companyId: yup.string().required(t('companyIdRequired')),
     quantity: yup
       .number()
-      .positive('Quantity must be a positive number')
-      .integer('Quantity must be an integer')
-      .required('Quantity is required') 
-      .max(10000, 'Max 10000 quantity allowed'),
-    totalPrice: yup.number().positive('Total Price must be greater than 0').required('Total Price is required'),
+      .positive(t('quantityPositive'))
+      .integer(t('quantityInteger'))
+      .required(t('quantityRequired'))
+      .max(10000, t('quantityMax')),
+    totalPrice: yup.number().positive(t('totalPricePositive')).required(t('totalPriceRequired')),
     discount: yup
       .number()
-      .integer('Discount must be an integer')
-      .min(0, 'Discount cannot be negative')
-      .test('discount-check', 'Discount cannot be more than the total amount', function (value) {
+      .integer(t('discountInteger'))
+      .min(0, t('discountMin'))
+      .test('discount-check', t('discountCheck'), function (value) {
         const { quantity, productId } = this.parent;
         const selectedProduct = product.find((p) => p._id === productId);
         const productPrice = selectedProduct ? selectedProduct.price : 0;
         const totalAmount = quantity * productPrice;
         return value <= totalAmount;
       }),
-    paymentStatus: yup.string().required('Payment Status is required'),
-    price: yup.number().positive('Product Price must be a positive number').required('Product Price is required')
-
+    paymentStatus: yup.string().required(t('paymentStatusRequired')),
+    price: yup.number().positive(t('pricePositive')).required(t('priceRequired'))
   });
+  
   
 
   const initialValues = {
@@ -126,15 +129,15 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
       try {
         if (purchase) {
           await updateApi(urls.purchase.update.replace(':id', purchase._id), formData);
-          toast.success('Purchase updated successfully!');
+          toast.success(t('Purchase updated successfully!'));
         } else {
           await postApiImage(urls.purchase.create, formData);
-          toast.success('Purchase added successfully!');
+          toast.success(t('Purchase added successfully!'));
         }
         await fetchPurchase();
         handleClose();
       } catch (error) {
-        toast.error('Failed to save purchase.');
+        toast.error(t('Failed to save purchase.'));
       }
     }
   });
@@ -155,14 +158,14 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="purchase-dialog-title">
       <DialogTitle id="purchase-dialog-title" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{purchase ? 'Edit Purchase' : 'Add Purchase'}</Typography>
+        <Typography variant="h4">{purchase ? t('Edit Purchase') : t('Add Purchase')}</Typography>
         <ClearIcon onClick={handleClose} sx={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <FormLabel>Product Name</FormLabel>
+              <FormLabel>{t("Product Name")}</FormLabel>
               <Autocomplete
                 id="productId"
                 options={product}
@@ -184,7 +187,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <FormLabel>Supplier</FormLabel>
+              <FormLabel>{t("Supplier")}</FormLabel>
               <Autocomplete
                 id="companyId"
                 options={company}
@@ -205,7 +208,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormLabel>Product Price ({currencySymbol})</FormLabel>
+              <FormLabel>{t("Product Price")} ({currencySymbol})</FormLabel>
               <TextField
                 id="price"
                 name="price"
@@ -219,7 +222,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
             </Grid>
 
        <Grid item xs={12} sm={6}>
-  <FormLabel>Quantity</FormLabel>
+  <FormLabel>{t("Quantity")}</FormLabel>
   <TextField
     id="quantity"
     name="quantity"
@@ -244,7 +247,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
 
 
             <Grid item xs={12} sm={6}>
-              <FormLabel>Discount  ({currencySymbol})</FormLabel>
+              <FormLabel> {t("Discount")}  ({currencySymbol})</FormLabel>
               <TextField
                 id="discount"
                 name="discount"
@@ -258,7 +261,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <FormLabel>Payment Status</FormLabel>
+              <FormLabel>{t("Payment Status")}</FormLabel>
               <Select
                 id="paymentStatus"
                 name="paymentStatus"
@@ -273,7 +276,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
               </Select>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormLabel>Total Amount ({currencySymbol})</FormLabel>
+              <FormLabel>{t("Total Amount")} ({currencySymbol})</FormLabel>
               <TextField
                 id="totalPrice"
                 name="totalPrice"
@@ -301,7 +304,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
                                 <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
                               ) : (
                                 <Typography variant="body2" color="textSecondary">
-                                  Preview Image
+                                  {t("Preview Image")}
                                 </Typography>
                               )}
                               <Box position="absolute" left={0} bottom={0} p={2}>
@@ -322,7 +325,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
               backgroundColor: '#8DB3A8'
             }
           }}>
-          {purchase ? 'Update' : 'Save'}
+          {purchase ? t('Update') : t('Save')}
         </Button>
         <Button
           onClick={() => {
@@ -339,7 +342,7 @@ const PurchaseForm = ({ open, handleClose, purchase, fetchPurchase ,currencySymb
             }
           }}
         >
-          Cancel
+          {t("Cancel")}
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,18 +1,6 @@
 import HomeIcon from '@mui/icons-material/Home';
-import {
-  Stack,
-  Button,
-  Box,
-  Grid,
-  Breadcrumbs,
-  Avatar,
-  Typography,
-  Divider,
-  TextField,
-  Tab,
-  IconButton,
-  InputAdornment
-} from '@mui/material';
+import { Stack,Button,Box,Grid,Breadcrumbs,Avatar,Typography,Divider,TextField,Tab,IconButton, InputAdornment} from '@mui/material';
+import { FaWhatsapp } from 'react-icons/fa';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +17,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import CurrencyTabPanel from './Currency';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import { useTranslation } from 'react-i18next';
 
 const User = () => {
   const navigate = useNavigate();
@@ -52,6 +41,7 @@ const User = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [settings, setSettings] = useState({});
 
+   const { t } = useTranslation();
   useEffect(() => {
     const fetchSettings = async () => {
       const data = await getApi(urls.email.get);
@@ -96,7 +86,7 @@ const User = () => {
 
   const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword) {
-      alert('Please fill in all fields.');
+      alert(t('Please fill in all fields.'));
       return;
     }
 
@@ -106,13 +96,13 @@ const User = () => {
       if (response.success) {
         setCurrentPassword('');
         setNewPassword('');
-        toast.success('Password updated successfully!');
+        toast.success(t('passwordUpdated'));
       } else {
         alert(response.message || 'Failed to update password.');
       }
     } catch (error) {
       console.error('Error updating password:', error);
-      toast.error('Current password is incorrect!');
+      toast.error(t('currentPasswordIncorrect'));
     }
   };
 
@@ -152,7 +142,7 @@ const User = () => {
 
                   <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
                   <Typography variant="h5" sx={{ fontWeight: 600, color: 'black' }}>
-                    Profile Information
+                   {t("Profile Information")}
                   </Typography>
                 </Stack>
               </Box>
@@ -202,13 +192,12 @@ const User = () => {
                             padding: '4px'
                         }}
                       />
-                      Profile
+                      {t("Profile")}
                     </Box>
                   }
                 />
 
-<Tab
-                  value="2"
+<Tab    value="2"
                   label={
                     <Box display="flex" alignItems="center" sx={{ color: '#6A9C89' }}>
                       <CurrencyExchangeIcon 
@@ -223,7 +212,7 @@ const User = () => {
                             padding: '4px'
                         }}
                       />
-                    Currency                   </Box>
+                  {t("Currency")}                 </Box>
                   }
                 />
                 <Tab
@@ -242,7 +231,7 @@ const User = () => {
                             padding: '4px'
                         }}
                       />
-                      Update Password
+                     {t("Update Password")}
                     </Box>
                   }
                 />
@@ -262,10 +251,39 @@ const User = () => {
                             padding: '4px'
                         }}
                       />
-                     Manage Email
+                    {t("Manage Email")}
                     </Box>
                   }
                 />
+                <Tab
+      value="5"
+      label={
+        <Box display="flex" alignItems="center" sx={{ color: '#6A9C89' }}>
+          <Box
+            sx={{
+              width: 25,
+              height: 25,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#6A9C89',
+              borderRadius: '50%',
+              padding: '2px',
+              mr: 1,
+              color: 'white',
+            }}
+          >
+            <FaWhatsapp
+              sx={{
+                color: 'white',
+                fontSize: '28px', 
+              }}
+            />
+          </Box>
+        {t("Manage Whatsapp")}
+        </Box>
+      }
+    />
                 <Divider />
               </TabList>
               <TabPanel value="1">
@@ -284,14 +302,14 @@ const User = () => {
                         height: '100%'
                       }}
                     >
-                      <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>Account Details</Typography>
+                      <Typography sx={{ fontWeight: 'bold', marginBottom: 1 }}>{t("Account Details")}</Typography>
                       <Divider />
 
                       <Grid container spacing={2} sx={{ marginTop: 2 }}>
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
-                            label="Company"
+                            label={t("Company")}
                             variant="outlined"
                             defaultValue={storedCompany}
                             InputProps={{ readOnly: true }}
@@ -301,7 +319,7 @@ const User = () => {
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
-                            label="Email Address"
+                            label={t("Email Address")}
                             variant="outlined"
                             defaultValue={storedEmail}
                             InputProps={{ readOnly: true }}
@@ -311,7 +329,7 @@ const User = () => {
                         <Grid item xs={12} sm={6}>
                           <TextField
                             fullWidth
-                            label="Country"
+                            label={t("Country")}
                             variant="outlined"
                             defaultValue={storedCountry}
                             InputProps={{ readOnly: true }}
@@ -320,7 +338,7 @@ const User = () => {
                         <Grid item xs={12} sm={6}>
                           <TextField
                             fullWidth
-                            label="Phone Number"
+                            label={t("Phone Number")}
                             variant="outlined"
                             defaultValue={storedPhoneNumber}
                             InputProps={{ readOnly: true }}
@@ -351,7 +369,7 @@ const User = () => {
                       <Grid item xs={12}>
                         <TextField
                           fullWidth
-                          label="Enter Current Password"
+                          label={t("Enter Current Password")}
                           variant="outlined"
                           value={currentPassword}
                           onChange={(e) => setCurrentPassword(e.target.value)}
@@ -371,7 +389,7 @@ const User = () => {
                       <Grid item xs={12}>
                         <TextField
                           fullWidth
-                          label="Enter New Password"
+                          label={t("Enter New Password")}
                           variant="outlined"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
@@ -402,7 +420,7 @@ const User = () => {
                               }
                             }}
                           >
-                            Update
+                          {t("Update")}
                           </Button>
                         </Box>
                       </Grid>
@@ -413,7 +431,7 @@ const User = () => {
               <TabPanel value="4">
                 <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center" alignItems="center" textAlign="center">
                   <Box display="flex" alignItems="center" gap={1} sx={{ padding: '8px', borderRadius: '8px' }}>
-                    <Typography>Login</Typography>
+                    <Typography>{t("Login")}</Typography>
 
                     <Switch
                       checked={settings.login}
@@ -428,7 +446,7 @@ const User = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>Supplier</Typography>
+                    <Typography>{t("Supplier")}</Typography>
                     <Switch
                       checked={settings.purchase}
                       onChange={() => handleSwitchChange('purchase')}
@@ -442,13 +460,13 @@ const User = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>Customer Add</Typography>
+                    <Typography>{t("Customer Add")}</Typography>
                     <Switch
                       checked={settings.customerAdd}
                       onChange={() => handleSwitchChange('customerAdd')}
                       sx={{
                         '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
-                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, 
                         '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
                         '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
                       }}
@@ -456,13 +474,48 @@ const User = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>Order</Typography>
+                    <Typography>{t("Order")}</Typography>
                     <Switch
                       checked={settings.order}
                       onChange={() => handleSwitchChange('order')}
                       sx={{
                         '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
-                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, 
+                        '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              </TabPanel>
+              <TabPanel  value='5'>
+              <Grid item xs={12} sm={12} display="flex" height="auto" justifyContent="center" alignItems="center" textAlign="center">
+                 
+
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography>{t("Supplier")}</Typography>
+                    <Switch
+                      checked={settings.purchase}
+                      onChange={() => handleSwitchChange('purchase')}
+                      sx={{
+                        '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' },
+                        '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
+                      }}
+                    />
+                  </Box>
+
+                 
+
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography>{t("Order")}</Typography>
+                    <Switch
+                      checked={settings.order}
+                      onChange={() => handleSwitchChange('order')}
+                      sx={{
+                        '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, 
                         '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
                         '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
                       }}

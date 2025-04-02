@@ -6,6 +6,7 @@ import { Box, Grid, Typography, Card, CardActionArea } from '@mui/material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import BusinessIcon from '@mui/icons-material/Business';
+import { useTranslation } from 'react-i18next';
 
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 
@@ -32,7 +33,7 @@ const ShowCompany = ({ isLoading }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-
+  const { t } = useTranslation();
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.customer.getCount);
@@ -85,7 +86,7 @@ const ShowCompany = ({ isLoading }) => {
                   fontWeight: 600
                 }}
               >
-           Order History
+         {t("Order History")}
               </Typography>
             </Grid>
           </Box>

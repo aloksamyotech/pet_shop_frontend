@@ -161,7 +161,7 @@ const AuthLogin = ({ ...others }) => {
                   cursor: 'pointer',
                   p: 2
                 }}
-                onClick={() => handleCredentialClick('priti.sahu@samyotech.com', '12345678', setFieldValue, handleSubmit)}
+                onClick={() => handleCredentialClick("admin@gmail.com","12345678", setFieldValue, handleSubmit)}
               >
                 <Typography variant="h5">Admin Credentials</Typography>
               </Box>

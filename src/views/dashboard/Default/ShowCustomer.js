@@ -6,7 +6,7 @@ import { Box, Grid, Typography, Card, CardActionArea } from '@mui/material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
-
+import { useTranslation } from 'react-i18next';
 
 const StyledCard = ({ children, onClick }) => (
   <Card
@@ -28,7 +28,7 @@ const   ShowCustomer = ({ isLoading }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-
+ const { t } = useTranslation();
   const fetchCustomer = async () => {
     try {
       const response = await getApi(urls.customer.getCount);
@@ -81,7 +81,7 @@ const   ShowCustomer = ({ isLoading }) => {
                   fontWeight: 600
                 }}
               >
-           Add Customers 
+           {t("Add Customers")}
               </Typography>
             </Grid>
           </Box>

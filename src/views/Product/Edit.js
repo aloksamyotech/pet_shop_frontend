@@ -9,6 +9,7 @@ import { getApi, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const AddEdit = (props) => {
   const { open, handleClose, product, fetchProduct } = props;
@@ -20,20 +21,23 @@ const [subcategories, setSubCategories] = useState([]);
   const currencySymbol = userObj.currencySymbol;
 
 
+  const { t } = useTranslation();
   const validationSchema = yup.object({
     productName: yup
       .string()
-      .required('Product Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
-      .max(50, 'product name cannot be more then 50 letter'),
-
-    categoryId: yup.string().required('category  is required'),
-
-    price: yup.number().required('Price is required').max(1000000, 'product price less then 1000000'),
-
-    discount: yup.number().integer('discount must be an integer'),
-    SubCategoryId:yup.string().required('subcategory   is required'),
+      .required(t('Product Name is required'))
+      .matches(/^[A-Za-z\s]+$/, t('Product Name must only contain letters'))
+      .max(50, t('product name cannot be more then 50 letter')),
+  
+    categoryId: yup.string().required(t('category is required')),
+  
+    price: yup.number().required(t('Price is required')).max(1000000, t('product price less then 1000000')),
+  
+    discount: yup.number().integer(t('discount must be an integer')),
+  
+    SubCategoryId: yup.string().required(t('subcategory is required')),
   });
+  
 
   const initialValues = {
     productName: '',
@@ -61,7 +65,7 @@ const [subcategories, setSubCategories] = useState([]);
       await updateApi(urls.product.update.replace(':id', product._id), formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      toast.success('product updated successfully!');
+      toast.success(t("Product updated successfully!"));
       await fetchProduct();
       await handleClose();
     }
@@ -128,7 +132,7 @@ const handleFileChange = (event) => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h4">Updated Product</Typography>
+          <Typography variant="h4">{t("Updated Product")}</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -138,7 +142,7 @@ const handleFileChange = (event) => {
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
                     <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12}>
-                  <FormLabel>Product Name</FormLabel>
+                  <FormLabel>{t("Product Name")}</FormLabel>
                   <TextField
                     id="productName"
                     name="productName"
@@ -152,7 +156,7 @@ const handleFileChange = (event) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>{t("Category")}</FormLabel>
                   <Select
                     id="categoryId"
                     name="categoryId"
@@ -178,7 +182,7 @@ const handleFileChange = (event) => {
                   </Select>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel> Sub Category</FormLabel>
+                  <FormLabel>{t("Sub Category")}</FormLabel>
                   <Select
                     id="SubCategoryId"
                     name="SubCategoryId"
@@ -205,7 +209,7 @@ const handleFileChange = (event) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Product Price ({currencySymbol })</FormLabel>
+                  <FormLabel>{t("Product Price ")}({currencySymbol })</FormLabel>
                   <TextField
                     id="price"
                     name="price"
@@ -219,7 +223,7 @@ const handleFileChange = (event) => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount({currencySymbol})</FormLabel>
+                    <FormLabel>{t("Discount")}({currencySymbol})</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"
@@ -255,7 +259,7 @@ const handleFileChange = (event) => {
     <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
   ) : (
     <Typography variant="body2" color="textSecondary">
-      Preview Image
+    {t("Preview Image")}
     </Typography>
   )}
   <Box position="absolute" left={0} bottom={0} p={2}>
@@ -279,7 +283,7 @@ const handleFileChange = (event) => {
               backgroundColor: '#8DB3A8'
             }
           }}>
-            Update
+          {t("Update")}
           </Button>
           <Button
             onClick={() => {
@@ -297,7 +301,7 @@ const handleFileChange = (event) => {
               }
             }}
           >
-            Cancel
+           {t("Cancel")}
           </Button>
         </DialogActions>
       </Dialog>

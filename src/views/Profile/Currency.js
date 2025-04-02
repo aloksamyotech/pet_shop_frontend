@@ -3,6 +3,7 @@ import { Box, Button, Grid, TextField, MenuItem, Snackbar, Alert } from "@mui/ma
 import { updateApi, getApi } from "views/Api/comman";
 import { urls } from "views/Api/constant";
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 
 const currencyList = [
@@ -12,6 +13,7 @@ const currencyList = [
   { code: "INR", symbol: "₹" },
   { code: "JPY", symbol: "¥" },
 ];
+
 
 const CurrencyTabPanel = () => {
   const [currencyCode, setCurrencyCode] = useState("");
@@ -36,6 +38,9 @@ const CurrencyTabPanel = () => {
     fetchSettings();
   }, []);
 
+  
+  const { t } = useTranslation();
+
   const handleCurrencyChange = (e) => {
     const selectedCode = e.target.value;
     const selectedCurrency = currencyList.find((c) => c.code === selectedCode);
@@ -54,13 +59,13 @@ const CurrencyTabPanel = () => {
         const updatedUser = { ...userObj, currencyCode, currencySymbol };
         localStorage.setItem("user", JSON.stringify(updatedUser));
         setIsEditing(false);
-          toast.success('Currency Updated successfully');
+          toast.success(t('currencyUpdated'));
        
       } else {
-      toast.success('Currency is not update successfully');
+      toast.success(t('currencyNotUpdated'));
       }
     } catch (error) {
-      console.error("Error updating currency:", error);
+      console.error(t("errorUpdatingCurrency"), error);
   
     }
   };
@@ -81,7 +86,7 @@ const CurrencyTabPanel = () => {
             <TextField
               fullWidth
               select
-              label="Currency Code"
+              label={t("Currency Code")}
               variant="outlined"
               value={currencyCode}
               onChange={handleCurrencyChange}
@@ -100,7 +105,7 @@ const CurrencyTabPanel = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Currency Symbol"
+              label={t("Currency Symbol")}
               variant="outlined"
               value={currencySymbol}
               InputProps={{ readOnly: true }}
@@ -115,7 +120,7 @@ const CurrencyTabPanel = () => {
                   onClick={handleCurrencySave}
                   sx={{ backgroundColor: "#6A9C89", color: "#ffff", mt: "10px" }}
                 >
-                  Save Currency
+                {t("Save Currency")}
                 </Button>
           
             </Box>

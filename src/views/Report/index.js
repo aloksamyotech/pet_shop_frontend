@@ -18,6 +18,7 @@ import {
   TextField,
   Button
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
@@ -54,6 +55,8 @@ const Checkout = () => {
     setFilteredProduct(orders);
     setFilteredPurchase(purchases);
   };
+
+  const { t } = useTranslation();
 
   const filterData = () => {
     if (!startDate || !endDate) return;
@@ -103,7 +106,7 @@ const Checkout = () => {
               mr: 1
             }}
           />
-          <Typography variant="h5">Report</Typography>
+          <Typography variant="h5">{t("Report")}</Typography>
         </Box>
 
    
@@ -120,7 +123,7 @@ const Checkout = () => {
   }}
 >
   <TextField
-    label="Start Date"
+    label={t("Start Date")}
     type="date"
     value={startDate}
     onChange={(e) => setStartDate(e.target.value)}
@@ -128,7 +131,7 @@ const Checkout = () => {
   />
 
   <TextField
-    label="End Date"
+    label={t("End Date")}
     type="date"
     value={endDate}
     onChange={(e) => {
@@ -153,7 +156,7 @@ const Checkout = () => {
     }}
     onClick={filterData}
   >
-    Apply Filter
+    {t("Apply Filter")}
   </Button>
 
   <Button
@@ -173,7 +176,7 @@ const Checkout = () => {
       setFilteredProduct(orders);
     }}
   >
-    Clear Filter
+      {t("Clear Filter")}
   </Button>
 </Box>
 
@@ -199,7 +202,7 @@ const Checkout = () => {
     value="1"
     label={
       <Box display="flex" alignItems="center " sx={{color:'#6A9C89'}}>
-        <ShoppingCartIcon sx={{ fontSize: '20px', mr: 1 }} /> Sales
+        <ShoppingCartIcon sx={{ fontSize: '20px', mr: 1 }} /> {t("Sales")}
       </Box>
     }
   />
@@ -207,7 +210,7 @@ const Checkout = () => {
     value="2"
     label={
       <Box display="flex" alignItems="center" sx={{color:'#6A9C89'}}>
-        <InventoryIcon sx={{ fontSize: '20px', mr: 1 }} /> Purchase
+        <InventoryIcon sx={{ fontSize: '20px', mr: 1 }} /> {t("Purchase")}
       </Box>
     }
   />
@@ -221,12 +224,12 @@ const Checkout = () => {
               <Table>
                 <TableHead >
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>Phone</TableCell>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Total Amount</TableCell>
+                    <TableCell>{t("Date")}</TableCell>
+                    <TableCell>{t("Customer")}</TableCell>
+                    <TableCell>{t("Phone")}</TableCell>
+                    <TableCell>{t("Product Name")}</TableCell>
+                    <TableCell>{t("Quantity")}</TableCell>
+                    <TableCell>{t("Total Amount")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -250,12 +253,12 @@ const Checkout = () => {
               <Table>
                 <TableHead >
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Supplier</TableCell>
-                    <TableCell>Phone</TableCell>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Total Price</TableCell>
+                    <TableCell>{t("Date")}</TableCell>
+                    <TableCell>{t("Supplier")}</TableCell>
+                    <TableCell>{t("Phone")}</TableCell>
+                    <TableCell>{t("Product Name")}</TableCell>
+                    <TableCell>{t("Quantity")}</TableCell>
+                    <TableCell>{t("Total Price")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

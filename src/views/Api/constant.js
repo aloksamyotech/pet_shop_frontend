@@ -104,16 +104,8 @@ email :{
   get : base +'/Email/fetch',
   update : base +'/Email/update'
 
-}
-
-,
+},
 chat :{
   create : base + '/chat/save',
-  
-}
-
-
-
-
-
+  }
 });

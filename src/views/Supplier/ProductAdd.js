@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useTranslation } from 'react-i18next';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -20,32 +21,32 @@ import { urls } from 'views/Api/constant';
 
 const ProductAdd = (props) => {
   const { open, handleClose, fetchSupplier } = props;
+  const { t } = useTranslation();
 
-  // -----------  validationSchema
   const validationSchema = yup.object({
     companyName: yup
-  .string()
-  .required('Company Name is required')
-  .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters and spaces')
-  .max(50, 'Company Name cannot be more than 50 characters'),
-
-  address: yup.string().required('Address is required').max(50, 'Company Address cannot be more than 50 characters'),
-   
-
+      .string()
+      .required(t('Company Name is required'))
+      .matches(/^[A-Za-z\s]+$/, t('Company Name must only contain letters and spaces'))
+      .max(50, t('Company Name cannot be more than 50 characters')),
+  
+    address: yup
+      .string()
+      .required(t('Address is required'))
+      .max(50, t('Company Address cannot be more than 50 characters')),
+  
     phoneNumber: yup
       .string()
-      .matches(/^[0-9]{10}$/, 'Phone number must be a valid 10-digit number')
-      .required('Phone Number is required'),
-
-    email: yup.string().email('Invalid email format').required('Email is required'),
-
-    status: yup.string().required('Status is required'),
-
-   
-
-    description: yup.string().max(100 , 'Description cannot be more then 100'),
+      .matches(/^[0-9]{10}$/, t('Phone number must be a valid 10-digit number'))
+      .required(t('Phone Number is required')),
+  
+    email: yup.string().email(t('Invalid email format')).required(t('Email is required')),
+  
+    status: yup.string().required(t('Status is required')),
+  
+    description: yup.string().max(100, t('Description cannot be more then 100')),
   });
-
+  
   const initialValues = {
     companyName: '',
     phoneNumber: '',
@@ -63,7 +64,7 @@ const ProductAdd = (props) => {
       await postApi(urls.company.create, values);
       await fetchSupplier();
       formik.resetForm();
-      toast.success('Company Add successfully');
+      toast.success(t('Company Add successfully'));
       handleClose();
       formik.resetForm();
     }
@@ -79,7 +80,7 @@ const ProductAdd = (props) => {
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h4">Add Supplier</Typography>
+          <Typography variant="h4">{t("Add Supplier")}</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -89,7 +90,7 @@ const ProductAdd = (props) => {
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
              <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t("Name")}</FormLabel>
                   <TextField
                     id="companyName"
                     name="companyName"
@@ -110,7 +111,7 @@ const ProductAdd = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("Email")}</FormLabel>
                     <TextField
                       id="email"
                       name="email"
@@ -127,7 +128,7 @@ const ProductAdd = (props) => {
 
               
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>{t("Phone Number")}</FormLabel>
                   <TextField
                     name="phoneNumber"
                     type="phoneNumber"
@@ -145,7 +146,7 @@ const ProductAdd = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>{t("Address")}</FormLabel>
                   <TextField
                     id="address"
                     name="address"
@@ -159,7 +160,7 @@ const ProductAdd = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t("Description")}</FormLabel>
                   <TextField
                     id="description"
                     name="description"
@@ -173,7 +174,7 @@ const ProductAdd = (props) => {
                 </Grid>
                
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t("Status")}</FormLabel>
                   <Select id="status" name="status" size="small" fullWidth value={formik.values.status} onChange={formik.handleChange}>
                     <MenuItem value="Active">Active</MenuItem>
                     <MenuItem value="Inactive">Inactive</MenuItem>
@@ -192,7 +193,7 @@ const ProductAdd = (props) => {
               backgroundColor: '#8DB3A8'
             }
           }}>
-            Save
+            {t("Save")}
           </Button>
           <Button
             onClick={() => {
@@ -210,7 +211,7 @@ const ProductAdd = (props) => {
               }
             }}
           >
-            Cancel
+            {t("Cancel")}
           </Button>
         </DialogActions>
       </Dialog>

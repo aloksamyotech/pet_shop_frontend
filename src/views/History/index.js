@@ -20,14 +20,14 @@ import { useNavigate } from 'react-router-dom';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
 import SearchBar from 'views/Search';
-
+import { useTranslation } from 'react-i18next';
 const History = () => {
   const [product, setProduct] = useState([]);
   const [order, setOrder] = useState([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj?.currencySymbol || '$';
@@ -60,10 +60,10 @@ const History = () => {
 
   const isFilterDisabled = !startDate || !endDate;
 
-  // Search filter function
+ 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
-      setOrder(product); // Reset to original data
+      setOrder(product); 
     } else {
       const filtered = product.filter((sup) =>
         sup.customerName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -72,17 +72,17 @@ const History = () => {
     }
   };
 
-  // Navigate to home/dashboard
+ 
   const handleClick = () => {
     navigate('/dashboard/default');
   };
 
-  // View Invoice Button Action
+  
   const handleViewInvoice = (Data) => {
     navigate('/dashboard/ProductType', { state: { Data } });
   };
 
-  // Date Formatter
+  
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], {
@@ -91,11 +91,11 @@ const History = () => {
     })}`;
   };
 
-  // DataGrid columns
+ 
   const columns = [
     {
       field: 'customerName',
-      headerName: 'Customer Name',
+      headerName: t('Customer Name'),
       flex: 1,
       renderCell: (params) => (
         <span>
@@ -104,23 +104,23 @@ const History = () => {
         </span>
       )
     },
-    { field: 'customerEmail', headerName: 'Email', flex: 1 },
-    { field: 'customerPhone', headerName: 'Phone', flex: 1 },
+    { field: 'customerEmail', headerName: t('Email'), flex: 1 },
+    { field: 'customerPhone', headerName: t('Phone'), flex: 1 },
     {
       field: 'totalAmount',
-      headerName: 'Paid Amount',
+      headerName: t('Paid Amount'),
       flex: 1,
       renderCell: (params) => <>{currencySymbol} {params.value.toFixed(2)}</>
     },
     {
       field: 'orderDate',
-      headerName: 'Order Date',
+      headerName: t('Order Date'),
       flex: 1,
       renderCell: (params) => (params.row?.createdAt ? formatDateTime(params.row.createdAt) : '')
     },
     {
       field: 'invoice',
-      headerName: 'Invoice',
+      headerName: t('Invoice'),
       flex: 1,
       renderCell: (params) => (
         <Button onClick={() => handleViewInvoice(params.row)}>
@@ -154,13 +154,13 @@ const History = () => {
                 sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }}
               />
               <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
-                History
+                {t("History")}
               </Typography>
             </Stack>
           </Box>
         </Stack>
 
-        {/* Date Filter Section */}
+        
         <Stack
   direction="row"
   justifyContent="flex-end"
@@ -168,7 +168,7 @@ const History = () => {
   sx={{ backgroundColor: 'white', borderRadius: '10px', padding: '15px' }}
 >
   <TextField
-    label="Start Date"
+    label={t("Start Date")}
     type="date"
     value={startDate}
     onChange={(e) => setStartDate(e.target.value)}
@@ -176,7 +176,7 @@ const History = () => {
     sx={{ mr: 2 }}
   />
   <TextField
-    label="End Date"
+    label={t("End Date")}
     type="date"
     value={endDate}
     onChange={(e) => {
@@ -200,10 +200,10 @@ const History = () => {
     }}
     onClick={filterData}
   >
-    Apply Filter
+   {t("Apply Filter")}
   </Button>
 
-  {/* Clear Filter Button */}
+  
   <Button
     variant="outlined"
     sx={{ ml: 1, color: '#6A9C89', borderColor: '#6A9C89' }}
@@ -213,13 +213,12 @@ const History = () => {
       setOrder(product);
     }}
   >
-    Clear Filter
+   {t("Clear Filter")}
   </Button>
 </Stack>
 
 
-        {/* Data Table Section */}
-        <TableStyle>
+       <TableStyle>
           <Box width="100%">
             <Card style={{ height: '600px', marginTop: '-45px' }}>
               <SearchBar onSearch={handleSearch} />

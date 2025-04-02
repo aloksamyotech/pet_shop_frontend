@@ -5,33 +5,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useMemo } from 'react';
-import {
-  Stack,
-  InputLabel,
-  Autocomplete,
-  Button,
-  InputBase,
-  Grid,
-  Card,
-  Box,
-  CardMedia,
-  Typography,
-  Container,
-  Breadcrumbs,
-  Select,
-  CustomTabPanel,
-  TextField,
-  FormLabel,
-  Tab,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  Rating,
-  Menu,
-  MenuItem,
-  FormControl
-} from '@mui/material';
+import {Stack,InputLabel,Autocomplete, Button,InputBase,Grid,Card, Box,CardMedia,Typography,Container,Breadcrumbs,Select,  CustomTabPanel,TextField,FormLabel, Tab, Dialog,DialogTitle,DialogActions,DialogContent, Rating,Menu,
+  MenuItem,FormControl} from '@mui/material';
 import Iconify from 'ui-component/iconify';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
@@ -57,12 +32,7 @@ import AccordionDetails, {
   accordionDetailsClasses,
 } from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-
-
-
-
-
+import { useTranslation } from 'react-i18next';
 
 const AddFood = () => {
   const validationSchema = yup.object({
@@ -96,6 +66,8 @@ const AddFood = () => {
   const [categorySubcategory, setCategorySubcategory] = useState([]);
   const [productPrice, setProductPrice] = useState('');
 
+  const { t } = useTranslation();
+
   const handlePrice = (event) => {
     setProductPrice(event.target.value);
   };
@@ -126,7 +98,6 @@ const AddFood = () => {
           return [...prevState, { category: categoryId, subcategory: [] }];
         }
       });
-
       return newSelected;
     });
   };
@@ -198,8 +169,7 @@ const AddFood = () => {
       });
       return;
     }
-
-    navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
+   navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
   };
 
   const handleIncrementQuantity = (_id) => {
@@ -329,17 +299,15 @@ const AddFood = () => {
           padding: '0 25px',
           mb: '40px'
         }}
-      >
-        <Stack direction="row" alignItems="center">
+      >  <Stack direction="row" alignItems="center">
           <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
             <HomeIcon />
           </IconButton>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
-          <Typography variant="h5">POS</Typography>{' '}
+          <Typography variant="h5">{t("POS")}</Typography>{' '}
         </Stack>
       </Box>
-
-      <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px', borderRadius: '10px' }}>
+   <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px', borderRadius: '10px' }}>
         <Box
           sx={{
             backgroundColor: 'white',
@@ -366,7 +334,7 @@ const AddFood = () => {
               value={selectedCustomer}
               onChange={(event, newValue) => setSelectedCustomer(newValue)}
               getOptionLabel={(option) => `${option.firstName} (${option.email})`}
-              renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
+              renderInput={(params) => <TextField {...params} label={t("Customer")} size="small" />}
               sx={{ width: '250px' }}
             />
             <Card>
@@ -378,10 +346,10 @@ const AddFood = () => {
                   renderValue={(selected) => (selected ? selected : 'Sort By Price')}
                 >
                   <MenuItem disabled value="">
-                    Sort By Price
+                 {t("Sort By Price")}
                   </MenuItem>
-                  <MenuItem value="High to Low">High to Low</MenuItem>
-                  <MenuItem value="Low to High">Low to High</MenuItem>
+                  <MenuItem value="High to Low">{t("High to Low")}</MenuItem>
+                  <MenuItem value="Low to High">{t("Low to High")}</MenuItem>
                 </Select>
               </FormControl>
             </Card>
@@ -399,7 +367,7 @@ const AddFood = () => {
                   }
                 }}
               >
-                New Customer
+              {t("New Customer")}
               </Button>
             </Card>
           </Box>
@@ -427,7 +395,6 @@ const AddFood = () => {
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ paddingLeft: '5px 10px', fontWeight: 'bold', margin:'-10px'}}>
               {category.name}
             </AccordionSummary>
-
             <AccordionDetails sx={{ padding: '5px 10px', margin: 0, mb:'-32px' }} >
               {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
                 visibleSubcategories
@@ -649,7 +616,7 @@ const AddFood = () => {
               }}
             >
               <Typography variant="h6" color="secondary">
-                Total: {currencySymbol} {totalPrice.toFixed(2)}
+             {t("Total")}: {currencySymbol} {totalPrice.toFixed(2)}
               </Typography>
               <Box sx={{ marginRight: '-40px' }}>
                 <Button
@@ -662,7 +629,7 @@ const AddFood = () => {
                   }}
                   onClick={handleBuyNow}
                 >
-                  Checkout
+                 {t("Checkout")}
                 </Button>
               </Box>
               <Box>
@@ -677,7 +644,7 @@ const AddFood = () => {
                   }}
                   onClick={deleteAll}
                 >
-                  Clear Cart
+                {t("Clear Cart")}
                 </Button>
               </Box>
             </Box>

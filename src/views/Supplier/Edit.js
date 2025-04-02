@@ -21,33 +21,34 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const AddEdit = ({ open, handleClose, company, fetchSupplier }) => {
-  const validationSchema = yup.object({
-    companyName: yup
-      .string()
-      .required('Company Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Company Name must only contain letters')
-      .max(30, 'Company Name cannot be more than 30 characters'),
-
-    address: yup
-      .string()
-      .required('Address is required')
-      .max(50, 'Address cannot be more than 50 characters'),
-
-    phoneNumber: yup
-      .string()
-     .required('Phone Number is required'),
-
-    email: yup.string().email('Invalid email format').required('Email is required'),
-
-    status: yup.string().required('Status is required'),
-
-    description: yup
-      .string()
-      .required('Description is required')
-      .max(50, 'Description cannot be more than 50 characters')
-  });
+    const { t } = useTranslation();
+ 
+   const validationSchema = yup.object({
+     companyName: yup
+       .string()
+       .required(t('Company Name is required'))
+       .matches(/^[A-Za-z\s]+$/, t('Company Name must only contain letters and spaces'))
+       .max(50, t('Company Name cannot be more than 50 characters')),
+   
+     address: yup
+       .string()
+       .required(t('Address is required'))
+       .max(50, t('Company Address cannot be more than 50 characters')),
+   
+     phoneNumber: yup
+       .string()
+       .matches(/^[0-9]{10}$/, t('Phone number must be a valid 10-digit number'))
+       .required(t('Phone Number is required')),
+   
+     email: yup.string().email(t('Invalid email format')).required(t('Email is required')),
+   
+     status: yup.string().required(t('Status is required')),
+   
+     description: yup.string().max(100, t('Description cannot be more then 100')),
+   });
 
   const initialValues = {
     companyName: '',
@@ -64,11 +65,11 @@ const AddEdit = ({ open, handleClose, company, fetchSupplier }) => {
     onSubmit: async (values) => {
       try {
         await updateApi(urls.company.update.replace(':id', company._id), values);
-        toast.success('Company updated successfully!');
+        toast.success(t('supplier updated successfully!'));
         await fetchSupplier();
         handleClose();
       } catch (error) {
-        toast.error('Failed to update company.');
+        toast.error(t('Failed to update supplier.'));
       }
     }
   });

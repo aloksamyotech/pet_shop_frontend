@@ -17,6 +17,7 @@ import Iconify from 'ui-component/iconify';
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import AddIcon from "@mui/icons-material/Add"; // Import Plus icon
 import SearchBar from "views/Search/index.js";
+import { useTranslation } from 'react-i18next';
 const Lead = () => {
   const [products, setProducts] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
@@ -33,6 +34,7 @@ const Lead = () => {
    const [filteredProduct, setFilteredProduct] = useState([]);
   const [search, setSearch] = useState([]);
   
+const { t } = useTranslation();
   const handleSearch = (searchItem) => {
     if (!searchItem) {
       setSearch(products);
@@ -130,7 +132,7 @@ const Lead = () => {
                   <HomeIcon />
                 </IconButton>
                 <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
-                <Typography variant='h5'>Product Information</Typography> </Stack>
+                <Typography variant='h5'>{t("Product Information")}</Typography> </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
               <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}  onClick={() => setOpen(true)} size="small"sx={{
@@ -140,7 +142,7 @@ const Lead = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                Bulk Upload
+               {t("Bulk Upload")}
                 </Button>
             </Card>
             <Card>  <Button variant="contained" onClick={() => setOpenAdd(true)} startIcon={<Iconify icon="eva:plus-fill" />}  size="small" sx={{
@@ -150,7 +152,7 @@ const Lead = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-            Add Product
+          {t("Add Product")}
           </Button></Card>
             </Stack>
           </Box>
@@ -200,7 +202,7 @@ const Lead = () => {
     {product.category.map((cat, index) => (
       <Box key={index}>
         <Typography sx={{ color: "#757575", fontSize: "14px" }}>
-          <strong>Category:</strong> {cat.name}
+          <strong>{t("Category")}:</strong> {cat.name}
         </Typography>
       </Box>
     ))}
@@ -209,7 +211,7 @@ const Lead = () => {
     {product.SubCategory.map((cat, index) => (
       <Box key={index}>
         <Typography sx={{ color: "#757575", fontSize: "14px" }}>
-          <strong>SubCategory:</strong> {cat.name}
+          <strong>{t("SubCategory")}:</strong> {cat.name}
         </Typography>
       </Box>
     ))}
@@ -223,17 +225,17 @@ const Lead = () => {
     fontWeight: product.quantity <= 5 ? "bold" : "normal", 
   }}
 >
-  <strong>Stock:</strong> {product.quantity > 0 ? product.quantity : "Out of Stock"}
+  <strong>{t("Stock")}:</strong> {product.quantity > 0 ? product.quantity : "Out of Stock"}
 </Typography>
 
 
 
   <Typography variant="h6" sx={{ color:'#6A9C89' , fontWeight: "bold"}}>
-  <strong>Price:</strong> {currencySymbol} {product.price || "N/A"}
+  <strong>{t("Price")}:</strong> {currencySymbol} {product.price || "N/A"}
   </Typography>
   
   <Typography variant="h6" sx={{ color:'#6A9C89'  , fontWeight: "bold"}}>
-  <strong>Discount:</strong> {currencySymbol} {product.discount || "N/A"}
+  <strong>{t("Discount")}:</strong> {currencySymbol} {product.discount || "N/A"}
   </Typography>
 
  
@@ -248,8 +250,7 @@ const Lead = () => {
     color: "#FF9800",
     paddingRight: "8px",
     paddingLeft:'8px',
-  
-    borderRadius: "30px",
+   borderRadius: "30px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -271,7 +272,7 @@ const Lead = () => {
   }}
   onClick={() => handleUpdate(product)}
 >
-  Edit
+ {t("Edit")}
 </Box>
 
 <Box
@@ -302,7 +303,7 @@ const Lead = () => {
   }}
   onClick={() => handleDelete(product._id)}
 >
-  Delete
+ {t("Delete")}
 </Box>
 
 

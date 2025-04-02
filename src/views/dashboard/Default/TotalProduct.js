@@ -8,6 +8,7 @@ import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import StoreIcon from '@mui/icons-material/Store';
+import { useTranslation } from 'react-i18next';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -60,6 +61,7 @@ const TotalProduct = ({ isLoading }) => {
       setLoading(false);
     }
   };
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchCustomer();
@@ -97,7 +99,7 @@ const TotalProduct = ({ isLoading }) => {
                       mt: 1
                     }}
                     >
-                      Total Product
+                   {t("Total Product")}
                     </Typography>
                   </Grid>
                 </Grid>

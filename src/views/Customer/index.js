@@ -17,6 +17,7 @@ import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useTranslation } from 'react-i18next';
 
 const Customer = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Customer = () => {
    const [anchorEl, setAnchorEl] = useState(null);
    const [actionAnchor, setActionAnchor] = useState({ anchorEl: null, rowId: null });
 
-
+ const { t } = useTranslation();
 const handleOpenActions = (event, rowId) => {
   setActionAnchor({ anchorEl: event.currentTarget, rowId });
 };
@@ -64,15 +65,13 @@ const handleCloseActions = () => {
   };
 
   const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this customer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel',
+     Swal.fire({
+            title: t('Are you sure?'),
+            text: t('Do you want to remove this category?'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: t('Yes, remove it!'),
+            cancelButtonText: t('Cancel')
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -104,7 +103,7 @@ const handleCloseActions = () => {
   const columns = [
     { 
       field: 'firstName', 
-      headerName: 'Name', 
+      headerName: t('Name'), 
       flex: 1,
       renderCell: (params) => (
         <Stack direction="row" alignItems="center" spacing={1}>
@@ -114,20 +113,20 @@ const handleCloseActions = () => {
         </Stack>
       ),
     },
-    { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'email', headerName: t('Email'), flex: 1 },
     {
       field: 'address',
-      headerName: 'Address',
+      headerName: t('Address'),
       flex: 1,
       valueGetter: (params) => params.row.address || 'N/A',
     }
     ,
-    { field: 'phoneNumber', headerName: 'Phone Number', flex: 1 ,
+    { field: 'phoneNumber', headerName: t('Phone Number'), flex: 1 ,
       valueGetter: (params) => params.row.phoneNumber || 'N/A',
     },
     {
       field: 'status',
-      headerName: 'Status',
+      headerName: t('Status'),
       flex: 1,
       renderCell: (params) => {
         return(
@@ -153,7 +152,7 @@ const handleCloseActions = () => {
     },
     {
       field: 'Action',
-      headerName: 'Action',
+      headerName: t('Action'),
       flex: 1,
       sortable: false,
       renderCell: (params) => (
@@ -224,7 +223,7 @@ const handleCloseActions = () => {
                   <HomeIcon />
                 </IconButton>
                 <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
-              <Typography variant="h5">Customer</Typography> </Stack>
+              <Typography variant="h5">{t("Customer")}</Typography> </Stack>
               
           
            
@@ -237,7 +236,7 @@ const handleCloseActions = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                  New Customer
+                  {t("New Customer")}
                 </Button>
               </Card>
             </Stack>

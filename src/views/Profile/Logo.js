@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Button, Divider, Grid, Typography, Avatar } from '@mui/material';
 import { urls } from 'views/Api/constant';
 import { getApi, updateApiFormData } from 'views/Api/comman';
+import { useTranslation } from 'react-i18next';
 
 const CompanyLogoUploader = ({ companyId }) => {
   const [image, setImage] = useState(null);
@@ -9,6 +10,7 @@ const CompanyLogoUploader = ({ companyId }) => {
   const [logo, setLogo] = useState(null);
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
+   const { t } = useTranslation();
 
   const UserID = JSON.parse(localStorage.getItem('user'));
 
@@ -36,7 +38,7 @@ const CompanyLogoUploader = ({ companyId }) => {
 
   const handleUpload = async () => {
     if (!file) {
-      alert('Please select an image first!');
+      alert(t('selectImageFirst'));
       return;
     }
 
@@ -49,7 +51,7 @@ const CompanyLogoUploader = ({ companyId }) => {
       await fetchLogo();
     } catch (error) {
       console.error('Error uploading logo:', error);
-      alert('Failed to upload logo!');
+      alert(t('failedUploadLogo'));
     }
   };
 
@@ -65,7 +67,7 @@ const CompanyLogoUploader = ({ companyId }) => {
           width: '100%',
         }}
       >
-        <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Company Logo</Typography>
+        <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>{t("Company Logo")}</Typography>
         <Divider />
         <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
           <Avatar
@@ -91,7 +93,7 @@ const CompanyLogoUploader = ({ companyId }) => {
             },
           }}
         >
-          Upload Logo
+         {t("Upload Logo")}
         </Button>
       </Box>
     </Grid>

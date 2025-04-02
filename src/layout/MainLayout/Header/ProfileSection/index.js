@@ -5,10 +5,13 @@ import { IconLogout } from "@tabler/icons";
 import { toast } from "react-toastify";
 import ChatGPTClone from "views/AIChatBord/index";
 import { useNavigate } from "react-router";
+import LanguageSwitcher from "views/Switchlaguage/laguageswitcher.js";
+import { useTranslation } from "react-i18next";
 
 const ProfileSection = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const navigate = useNavigate()
+  const {t}=useTranslation();
 
   const handleLogout = () => {
     navigate("/login");
@@ -18,6 +21,8 @@ const ProfileSection = () => {
 
   return (
     <>
+
+<LanguageSwitcher/>
       <Stack direction="row" spacing={3} alignItems="center">
         <Tooltip title="Chat with AI expert" arrow>
           <Button onClick={() => setOpenDrawer(true)} sx={{ background: "transparent", border: "none" }}>
@@ -39,7 +44,7 @@ const ProfileSection = () => {
 
         <Button variant="contained" onClick={handleLogout} sx={{ background: "#6A9C89", borderRadius: "10px",  "&:hover": { backgroundColor: "#6A9C89" }, }}>
           <IconLogout size="1.5rem" />
-          Logout
+          {t("Logout")}
         </Button>
       </Stack>
     </>
