@@ -35,9 +35,9 @@
   "SubCategory Name": "Nombre de SubCategoría",
   "Update": "Actualizar",
   "Save": "Guardar",
- 
+   "error_fetching_data": "Error al obtener datos del proveedor.",
   "Do you want to remove this company?": "¿Quieres eliminar esta empresa?",
- 
+   "employee_added_successfully": "¡Empleado agregado con éxito!",
 
   "Failed to delete company.": "No se pudo eliminar la empresa.",
   "Supplier": "Proveedor",
@@ -220,6 +220,7 @@
       "Product Information": "Información del Producto",
   "Bulk Upload": "Carga Masiva",
   "Add Product": "Agregar Producto",
+  "Search..............":"Buscar",
   
   "Stock": "Existencias",
  "Sales Report": "Informe de Ventas",

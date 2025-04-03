@@ -63,7 +63,6 @@ const icons = {
   IconPentagram
 };
 
-// ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
   title:i18n.t('DashBoard-Menu'),
@@ -78,15 +77,7 @@ const dashboard = {
       icon: icons.IconHome,
       breadcrumbs: false
     },
-    // {
-    //   id: '18',
-    //   title: 'AI',
-    //   type: 'item',
-    //   url: '/dashboard/AIChatBord',
-    //   icon: icons.IconPentagram,
-    //   breadcrumbs: false,
     
-    // },
     {
       id: '08',
       title: i18n.t('Category'),

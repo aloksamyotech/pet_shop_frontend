@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from 'react-toastify';
 import Employee from './addEmployee';
-import Swal from 'sweetalert2';
+
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -69,25 +69,25 @@ const Customer = () => {
   //   };
 
   const handleDelete = (id) => {
-   Swal.fire({
-              title: t('Are you sure?'),
-              text: t('Do you want to remove this category?'),
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonText: t('Yes, remove it!'),
-              cancelButtonText: t('Cancel')
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.employee.delete.replace(':id', id));
+  //  Swal.fire({
+  //             title: t('Are you sure?'),
+  //             text: t('Do you want to remove this category?'),
+  //             icon: 'warning',
+  //             showCancelButton: true,
+  //             confirmButtonText: t('Yes, remove it!'),
+  //             cancelButtonText: t('Cancel')
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       try {
+  //         await deleteApi(urls.employee.delete.replace(':id', id));
          
-          setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
-          setFilteredCustomer((prev) => prev.filter((customer) => customer._id !== id));
-        } catch (error) {
-          Swal.fire('Error!', 'Failed to delete employee.', 'error');
-        }
-      }
-    });
+  //         setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
+  //         setFilteredCustomer((prev) => prev.filter((customer) => customer._id !== id));
+  //       } catch (error) {
+  //         Swal.fire('Error!', 'Failed to delete employee.', 'error');
+  //       }
+  //     }
+  //   });
   };
 
   const handleEdit = (customer) => {

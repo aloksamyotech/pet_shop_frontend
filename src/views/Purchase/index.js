@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Swal from 'sweetalert2';
+
 import ViewPurchase from './ViewPurchase';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -108,26 +108,26 @@ const Purchase = () => {
   };
 
   const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this purchase?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.purchase.delete.replace(':id', id));
-          setPurchase((prevPurchase) => prevPurchase.filter((p) => p._id !== id));
+    // Swal.fire({
+    //   title: 'Are you sure?',
+    //   text: 'Do you want to remove this purchase?',
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonColor: '#3085d6',
+    //   cancelButtonColor: '#d33',
+    //   confirmButtonText: 'Yes, remove it!',
+    //   cancelButtonText: 'Cancel'
+    // }).then(async (result) => {
+    //   if (result.isConfirmed) {
+    //     try {
+    //       await deleteApi(urls.purchase.delete.replace(':id', id));
+    //       setPurchase((prevPurchase) => prevPurchase.filter((p) => p._id !== id));
         
-        } catch (error) {
-          Swal.fire('Error!', 'Failed to delete purchase.', 'error');
-        }
-      }
-    });
+    //     } catch (error) {
+    //       Swal.fire('Error!', 'Failed to delete purchase.', 'error');
+    //     }
+    //   }
+    // });
   };
 
   

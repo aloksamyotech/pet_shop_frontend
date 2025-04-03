@@ -139,7 +139,7 @@
   "error_delete": "Failed to delete purchase.",
   "Edit Purchase": "Edit Purchase",
   "Add Purchase": "Add Purchase",
- 
+  "error_fetching_data": "Error fetching supplier data.",
  
   
   "Product Name": "Product Name",
@@ -295,7 +295,7 @@
   "Salary is required": "Salary is required",
 
    "employee updated successfully!": "Employee updated successfully!",
-  "employee added successfully!": "Employee added successfully!",
+  "employee_added_successfully": "Employee added successfully!",
   "productIdRequired": "Product Name is required",
   "companyIdRequired": "Company is required",
   "quantityPositive": "Quantity must be a positive number",
@@ -321,7 +321,8 @@
     
   "currencyUpdated": "Currency updated successfully!",
   "currencyNotUpdated": "Currency is not updated successfully.",
-  "errorUpdatingCurrency": "Error updating currency:"
+  "errorUpdatingCurrency": "Error updating currency:",
+  "Search..............":"Search"
 
   
   

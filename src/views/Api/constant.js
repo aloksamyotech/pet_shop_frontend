@@ -1,6 +1,6 @@
 import { register } from 'numeral';
 
-// const base = 'https://petstore.samyotech.in/api';
+//const base = 'https://petstore.samyotech.in/api';
 const base = 'http://localhost:7200/api';
 export const urls = Object.freeze({
   product: {

@@ -13,7 +13,7 @@ import ViewCompany from './ViewSupplier';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddEdit from './Edit';
-import Swal from 'sweetalert2';
+
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import SearchBar from 'views/Search';
 import ProductAdd from './ProductAdd';
@@ -54,7 +54,7 @@ const handleCloseActions = () => {
       setSupplier(data);
       setFilteredCompany(data); 
     } catch (error) {
-      console.error('Error fetching supplier data:', error);
+      console.error("error_fetching_data", error);
     }
   };
 
@@ -84,25 +84,25 @@ const handleCloseActions = () => {
   };
 
   const handleDelete = (id) => {
-    Swal.fire({
-         title: t('Are you sure?'),
-         text: t('Do you want to remove this category?'),
-         icon: 'warning',
-         showCancelButton: true,
-         confirmButtonText: t('Yes, remove it!'),
-         cancelButtonText: t('Cancel')
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.company.delete.replace(':id', id));
-          setSupplier((prev) => prev.filter((sup) => sup._id !== id));
-          setFilteredCompany((prev) => prev.filter((sup) => sup._id !== id));
+    // Swal.fire({
+    //      title: t('Are you sure?'),
+    //      text: t('Do you want to remove this category?'),
+    //      icon: 'warning',
+    //      showCancelButton: true,
+    //      confirmButtonText: t('Yes, remove it!'),
+    //      cancelButtonText: t('Cancel')
+    // }).then(async (result) => {
+    //   if (result.isConfirmed) {
+    //     try {
+    //       await deleteApi(urls.company.delete.replace(':id', id));
+    //       setSupplier((prev) => prev.filter((sup) => sup._id !== id));
+    //       setFilteredCompany((prev) => prev.filter((sup) => sup._id !== id));
         
-        } catch (error) {
-        Swal.fire(t('Error!'), t('Failed to delete category.'), 'error');
-        }
-      }
-    });
+    //     } catch (error) {
+    //     Swal.fire(t('Error!'), t('Failed to delete category.'), 'error');
+    //     }
+    //   }
+    // });
   };
 
 
@@ -137,14 +137,7 @@ const handleCloseActions = () => {
               sx: { boxShadow: 3, borderRadius: '20px' },
             }}
           >
-            {/* <MenuItem
-              onClick={() => {
-                handleView(params.row);
-                handleCloseActions();
-              }}
-            >
-              <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
-            </MenuItem> */}
+           
             <MenuItem
               onClick={() => {
                 handleUpdate(params.row);

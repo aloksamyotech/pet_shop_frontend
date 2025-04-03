@@ -69,7 +69,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
         toast.success(t('employee updated successfully!'));
       } else {
         await postApi(urls.employee.create, values);
-        toast.success(t('employee added successfully!'));
+        toast.success(t("employee_added_successfully"));
       }
       await fetchCustomer();
       handleClose();

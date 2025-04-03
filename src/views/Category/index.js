@@ -8,7 +8,7 @@ import ViewCategory from './viewCategory.js';
 import { urls } from 'views/Api/constant.js';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import EditIcon from '@mui/icons-material/Edit';
-import Swal from 'sweetalert2';
+
 import CategoryForm from './CategoryForm';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -62,27 +62,7 @@ const Customer = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: t('Are you sure?'),
-      text: t('Do you want to remove this category?'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: t('Yes, remove it!'),
-      cancelButtonText: t('Cancel')
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.category.delete.replace(':id', id));
-          setCategory((prev) => prev.filter((cat) => cat._id !== id));
-          setFilteredCategory((prev) => prev.filter((cat) => cat._id !== id));
-          Swal.fire(t('Removed!'), t('The category has been deleted.'), 'success');
-        } catch (error) {
-          Swal.fire(t('Error!'), t('Failed to delete category.'), 'error');
-        }
-      }
-    });
-  };
+ 
 
   const handleOpenForm = (category = null) => {
     setCategoryUpdated(category);

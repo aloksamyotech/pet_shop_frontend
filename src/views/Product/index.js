@@ -11,7 +11,7 @@ import AddBulkUpload from "./productBulkUpload.js";
 import AddEdit from "./Edit.js";
 import { getApi, deleteApi } from "views/Api/comman.js";
 import { urls } from "views/Api/constant";
-import Swal from "sweetalert2";
+
 import { useNavigate } from "react-router-dom";
 import Iconify from 'ui-component/iconify';
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
@@ -66,28 +66,28 @@ const { t } = useTranslation();
   };
 
   const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to remove this product?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, remove it!",
-      cancelButtonText: "Cancel",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.product.delete.replace(":id", id));
-          setProducts((prev) => prev.filter((product) => product._id !== id));
-          setFilteredProduct((prev) => prev.filter((product) => product._id !== id));
-          setSearch((prev) => prev.filter((product) => product._id !== id));
+    // Swal.fire({
+    //   title: "Are you sure?",
+    //   text: "Do you want to remove this product?",
+    //   icon: "warning",
+    //   showCancelButton: true,
+    //   confirmButtonColor: "#3085d6",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Yes, remove it!",
+    //   cancelButtonText: "Cancel",
+    // }).then(async (result) => {
+    //   if (result.isConfirmed) {
+    //     try {
+    //       await deleteApi(urls.product.delete.replace(":id", id));
+    //       setProducts((prev) => prev.filter((product) => product._id !== id));
+    //       setFilteredProduct((prev) => prev.filter((product) => product._id !== id));
+    //       setSearch((prev) => prev.filter((product) => product._id !== id));
         
-        } catch (error) {
-          Swal.fire("Error!", "Failed to delete Product.", "error");
-        }
-      }
-    });
+    //     } catch (error) {
+    //       Swal.fire("Error!", "Failed to delete Product.", "error");
+    //     }
+    //   }
+    // });
   };
 
   const handleUpdate = (product) => {

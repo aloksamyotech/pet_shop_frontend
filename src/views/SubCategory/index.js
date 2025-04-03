@@ -11,7 +11,6 @@ import { urls } from 'views/Api/constant.js';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import CategoryForm from './SubCategoryFrom';
 import SearchBar from 'views/Search';
