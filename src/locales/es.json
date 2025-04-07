@@ -354,7 +354,13 @@
       "thank_you": "¡Gracias por visitar nuestra tienda! Apreciamos sinceramente su confianza en nosotros para cuidar de sus queridas mascotas. ¡Esperamos atenderle nuevamente pronto!",
       "delete_confirmation": "¿Estás seguro de que quieres eliminarlo?",
       "delete_warning": "No podrás revertir esto.",
-      "confirm_delete": "¡Sí, bórralo!"
+      "confirm_delete": "¡Sí, bórralo!",
+       "search_product": "Buscar producto...",
+    "sort_by_price": "Ordenar por precio",
+    "add_supplier": "Agregar proveedor",
+  "add_customer": "Agregar cliente",
+  "create_order": "Crear pedido",
+  "welcome_back": "¡Bienvenido de nuevo!"
     
 
 

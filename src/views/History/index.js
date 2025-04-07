@@ -218,9 +218,18 @@ const History = () => {
 
        <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-45px' }}>
+            <Card style={{ height: 'auto', marginTop: '-45px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={order} columns={columns} getRowId={(row) => row._id} />
+              <DataGrid rows={order} columns={columns} getRowId={(row) => row._id}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[10]}
+  />
             </Card>
           </Box>
         </TableStyle>

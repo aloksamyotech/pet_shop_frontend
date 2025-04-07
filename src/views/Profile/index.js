@@ -446,7 +446,7 @@ const User = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>{t("Supplier")}</Typography>
+                    <Typography>{t("add_supplier")}</Typography>
                     <Switch
                       checked={settings.purchase}
                       onChange={() => handleSwitchChange('purchase')}
@@ -460,7 +460,7 @@ const User = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>{t("Customer Add")}</Typography>
+                    <Typography>{t("add_customer")}</Typography>
                     <Switch
                       checked={settings.customerAdd}
                       onChange={() => handleSwitchChange('customerAdd')}
@@ -474,7 +474,7 @@ const User = () => {
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>{t("Order")}</Typography>
+                    <Typography>{t("create_order")}</Typography>
                     <Switch
                       checked={settings.order}
                       onChange={() => handleSwitchChange('order')}
@@ -493,7 +493,7 @@ const User = () => {
                  
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>{t("Supplier")}</Typography>
+                    <Typography>{t("add_supplier")}</Typography>
                     <Switch
                       checked={settings.purchase}
                       onChange={() => handleSwitchChange('purchase')}
@@ -509,7 +509,7 @@ const User = () => {
                  
 
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography>{t("Order")}</Typography>
+                    <Typography>{t("create_order")}</Typography>
                     <Switch
                       checked={settings.order}
                       onChange={() => handleSwitchChange('order')}

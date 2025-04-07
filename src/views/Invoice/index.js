@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Pet from 'assets/images/pet-logo.jpg';
 // @mui
 import {
   Paper,
@@ -48,7 +49,24 @@ const { t } = useTranslation();
     navigate('/');
   };
 
-   const todayDate = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+  const yyyy = today.getFullYear();
+  
+  const todayDate = `${dd}-${mm}-${yyyy}`;
+  
+
+
+  const now = new Date();
+  const hours = String(now.getHours());
+  const minutes = String(now.getMinutes());
+  const seconds = String(now.getSeconds());
+
+  const currentTime = `${hours}:${minutes}:${seconds}`;
+  
+
+   
  const printInvoice = () => {
     const content = document.getElementById('invoice-content');
     const printWindow = window.open('', '', 'width=800,height=600');
@@ -163,7 +181,7 @@ const { t } = useTranslation();
           >
             <Box>
               <img
-                src= {userObj.imageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpJYkrPXmUAtG_7-3eByMmjjd8B-i3C0LLUg&s"}
+                src={userObj?.imageUrl || Pet}
                 alt="Sample"
                 style={{ width: '20%', height: 'auto' }}
               />
@@ -177,9 +195,7 @@ const { t } = useTranslation();
                 </Typography>
                 <Typography>
                   <strong>{t("time")}:</strong>{' '}
-                  {orderDate
-                    ? new Date(orderDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-                    : 'N/A'}
+                  {todayDate ? currentTime : 'N/A'}
                 </Typography>
               </Box>
             </Box>

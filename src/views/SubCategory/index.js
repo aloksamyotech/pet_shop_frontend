@@ -124,9 +124,18 @@ const Customer = () => {
         </Box>
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-25px' }}>
+            <Card style={{ height: 'auto', marginTop: '-25px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id} />
+              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id} 
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 10
+                      }
+                    }
+                  }}
+                  pageSizeOptions={[10]}
+   />
             </Card>
           </Box>
         </TableStyle>

@@ -11,7 +11,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
 import ViewPurchase from './ViewPurchase';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -382,9 +381,18 @@ const Purchase = () => {
 
         <TableStyle>
           <Box width="100%">
-          <Card style={{ height: '600px', marginTop: '-45px' }}>
+          <Card style={{ height: 'auto', marginTop: '-45px' }}>
             <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} />
+              <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} 
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[10]}
+  />
             </Card>
           </Box>
         </TableStyle>

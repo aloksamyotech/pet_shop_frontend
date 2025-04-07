@@ -289,9 +289,16 @@
  
  
  
-
-
+ "search_product": "Search Product...",
  
+
+    
+      "add_supplier": "Add Supplier",
+      "add_customer": "Add Customer",
+      "create_order": "Create Order",
+      "welcome_back": "Welcome back!",
+
+    
    "Customer updated successfully!": "Customer updated successfully!",
   "Customer added successfully!": "Customer added successfully!",
   "First Name is required": "First Name is required",
@@ -364,8 +371,8 @@
       "thank_you": "Thank you for visiting our shop! We truly appreciate your trust in us to care for your beloved pets. We look forward to serving you again soon!",
       "delete_confirmation": "Are you sure you want to delete?",
     "delete_warning": "You won't be able to revert this.",
-    "confirm_delete": "Yes, delete it!"
-   
+    "confirm_delete": "Yes, delete it!",
+    "sort_by_price": "Sort By Price"
     
 
   

@@ -118,7 +118,7 @@ const CurrencyTabPanel = () => {
                 <Button
                   variant="contained"
                   onClick={handleCurrencySave}
-                  sx={{ backgroundColor: "#6A9C89", color: "#ffff", mt: "10px" }}
+                  sx={{ backgroundColor: "#6A9C89", color: "#ffff", mt: "10px",'&:hover':{ backgroundColor: "#6A9C89"} }}
                 >
                 {t("Save Currency")}
                 </Button>

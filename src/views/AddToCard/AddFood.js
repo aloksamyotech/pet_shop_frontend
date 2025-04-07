@@ -325,7 +325,7 @@ const AddFood = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <SearchIcon />
             {/* <SearchBar onSearch={handleSearch} /> */}
-            <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
+            <InputBase placeholder= {t("search_product")} onChange={handleSearch} value={search} />
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -343,10 +343,10 @@ const AddFood = () => {
                   value={productPrice}
                   onChange={handlePrice}
                   displayEmpty
-                  renderValue={(selected) => (selected ? selected : 'Sort By Price')}
+                  renderValue={(selected) => (selected ? selected : t("sort_by_price"))}
                 >
                   <MenuItem disabled value="">
-                 {t("Sort By Price")}
+                {t("sort_by_price")}
                   </MenuItem>
                   <MenuItem value="High to Low">{t("High to Low")}</MenuItem>
                   <MenuItem value="Low to High">{t("Low to High")}</MenuItem>

@@ -76,7 +76,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
         }}
       >
         <Typography sx={{ fontSize: '18px', fontWeight: 800, fontFamily: 'Playfair Display, serif' }}>
-          {t("Welcome back!")}</Typography>
+          {t("welcome_back")}</Typography>
         <Typography variant="body2" sx={{ fontStyle: 'italic', color: theme.palette.text.secondary }}>
   {userObj?.email || 'No email available'}
 </Typography>

@@ -72,18 +72,18 @@ const Customer = () => {
   const columns = [
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'description', headerName: t('Description'), flex: 1 },
-    {
-      field: 'categoryImage',
-      headerName: t('Image'),
-      flex: 1,
-      renderCell: (params) => (
-        <img
-          src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-          alt="product"
-          style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '50%', padding: '4px' }}
-        />
-      )
-    },
+    // {
+    //   field: 'categoryImage',
+    //   headerName: t('Image'),
+    //   flex: 1,
+    //   renderCell: (params) => (
+    //     <img
+    //       src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
+    //       alt="product"
+    //       style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '50%', padding: '4px' }}
+    //     />
+    //   )
+    // },
     {
       field: 'Action',
       headerName: t('Action'),
@@ -163,9 +163,18 @@ const Customer = () => {
         </Box>
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-25px' }}>
+            <Card style={{ height: 'auto', marginTop: '-25px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id} />
+              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[10]}
+  />
             </Card>
           </Box>
         </TableStyle>

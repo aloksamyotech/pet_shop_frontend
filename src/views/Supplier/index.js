@@ -220,9 +220,18 @@ const handleCloseActions = () => {
         </Stack>
 
      <TableStyle>
-          <Card sx={{ height: '600px', marginTop: '-10px' }}>
+          <Card sx={{ height: 'auto', marginTop: '-10px' }}>
           <SearchBar onSearch={handleSearch} />
-            <DataGrid rows={filteredCompany} columns={columns} getRowId={(row) => row._id} />
+            <DataGrid rows={filteredCompany} columns={columns} getRowId={(row) => row._id} 
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[10]}
+ />
           </Card>
         </TableStyle>
       </Grid>
