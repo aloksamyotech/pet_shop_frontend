@@ -183,7 +183,7 @@ const { t } = useTranslation();
               <img
                 src={userObj?.imageUrl || Pet}
                 alt="Sample"
-                style={{ width: '20%', height: 'auto' }}
+                style={{ width: '15%', height: 'auto' }}
               />
               <Box>
                 <Typography >

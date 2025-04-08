@@ -384,14 +384,14 @@ const Purchase = () => {
           <Card style={{ height: 'auto', marginTop: '-45px' }}>
             <SearchBar onSearch={handleSearch} />
               <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} 
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 10
-                    }
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10
                   }
-                }}
-                pageSizeOptions={[10]}
+                }
+              }}
+              pageSizeOptions={[10]}
   />
             </Card>
           </Box>

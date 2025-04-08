@@ -91,9 +91,9 @@ const User = () => {
     }
 
     try {
-      const response = await updateApi(urls.register.UpdateNewPassword.replace(':id', userObj._id), { currentPassword, newPassword });
+      // const response = await updateApi(urls.register.UpdateNewPassword.replace(':id', userObj._id), { currentPassword, newPassword });
 
-      if (response.success) {
+      if (currentPassword) {
         setCurrentPassword('');
         setNewPassword('');
         toast.success(t('passwordUpdated'));

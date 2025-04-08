@@ -35,7 +35,7 @@ const History = () => {
     const fetchOrders = async () => {
       const response = await getApi(urls.order.get);
       const orders = response?.data?.data || [];
-      setProduct(orders);
+        setProduct(orders);
       setOrder(orders);
     };
     fetchOrders();

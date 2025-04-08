@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography, Select, MenuItem, FormLabel } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography, Select, MenuItem, FormLabel, Autocomplete } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { postApi, updateApi, getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { options } from 'numeral';
 const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
@@ -90,25 +91,29 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 helperText={formik.touched.name && formik.errors.name}
               />
             </Grid>
-
+ 
             <Grid item xs={12}>
-              <FormLabel>{t('Category')}</FormLabel>
-              <Select
-                id="categoryId"
-                name="categoryId"
-                size="small"
-                fullWidth
-                value={formik.values.categoryId}
-                onChange={formik.handleChange}
-                error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
-              >
-                {Array.isArray(categories) &&
-                  categories.map((category) => (
-                    <MenuItem key={category._id} value={category._id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-              </Select>
+                    <Autocomplete
+  id="categoryId"
+  options={categories}
+  getOptionLabel={(option) => option.name}
+  value={categories.find((cat) => cat._id === formik.values.categoryId) || null}
+  onChange={(event, newValue) => {
+    formik.setFieldValue('categoryId', newValue ? newValue._id : '');
+  }}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      name="categoryId"
+      label="Select Category"
+      size="small"
+      fullWidth
+      error={formik.touched.categoryId && Boolean(formik.errors.categoryId)}
+      helperText={formik.touched.categoryId && formik.errors.categoryId}
+    />
+  )}
+/>
+
             </Grid>
 
             <Grid item xs={12}>
