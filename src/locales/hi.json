@@ -234,7 +234,8 @@
     "add_supplier": "आपूर्तिकर्ता जोड़ें",
   "add_customer": "ग्राहक जोड़ें",
   "create_order": "ऑर्डर बनाएं",
-  "welcome_back": "वापसी पर स्वागत है!"
+  "welcome_back": "वापसी पर स्वागत है!",
+  "purchaseProduct": "उत्पाद खरीदें"
  
  
   }

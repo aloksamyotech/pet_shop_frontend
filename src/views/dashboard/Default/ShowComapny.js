@@ -52,7 +52,7 @@ const ShowCompany = ({ isLoading }) => {
   }, []);
 
 
-  const handleNavigate = () => navigate( '/dashboard/supplier');
+  const handleNavigate = () => navigate('/dashboard/history');
 
   return (
     <>

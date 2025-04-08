@@ -121,6 +121,46 @@ const handleCloseActions = () => {
     { field: 'address', headerName: t('Address'), flex: 1 },
     { field: 'description', headerName: t('Description'), flex: 1 },
     {
+      field: 'status',
+      headerName: t('Status'),
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              backgroundColor:
+                params.value === 'Active'
+                  ? '#D5FADF'
+                  : params.value === 'Inactive'
+                  ? '#F8E1A1'
+                  : params.value === 'Blocked'
+                  ? '#FBE9E7'
+                  : '',
+              color:
+                params.value === 'Active'
+                  ? '#19AB53'
+                  : params.value === 'Inactive'
+                  ? '#FF9800'
+                  : params.value === 'Blocked'
+                  ? '#F44336'
+                  : '',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingRight: '8px',
+              paddingLeft: '8px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+              maxWidth: '100%',
+              fontSize: '0.8125rem'
+            }}
+          >
+            {params.value}
+          </Box>
+        );
+      }
+    },
+    {
       field: 'Action',
       headerName: t('Action'),
       flex: 1,

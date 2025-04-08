@@ -226,7 +226,7 @@ const Checkout = () => {
       id: index,
       date: new Date(item.createdAt).toLocaleDateString(),
       customer: item?.customerName,
-      phone: item?.customerPhone,
+      phone: item?.customerPhone || 'N/A',
       productName: item?.products?.[0]?.productName,
       quantity: item?.products?.[0]?.quantity,
       totalAmount: `${currencySymbol} ${item?.totalAmount}`,
@@ -255,9 +255,9 @@ const Checkout = () => {
     rows={filteredPurchase.map((item, index) => ({
       id: index,
       date: new Date(item.createdAt).toLocaleDateString(),
-      supplier: item?.CompanyName?.[0]?.companyName || '',
-      phone: item?.CompanyName?.[0]?.phoneNumber || '',
-      product: item?.productName?.[0]?.productName || '',
+      supplier: item?.CompanyName?.[0]?.companyName || 'N/A',
+      phone: item?.CompanyName?.[0]?.phoneNumber || 'N/A',
+      product: item?.productName?.[0]?.productName || 'N/A',
       quantity: item?.quantity,
       totalPrice: `${currencySymbol} ${item?.totalPrice}`,
     }))}

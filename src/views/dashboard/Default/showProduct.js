@@ -85,7 +85,7 @@ const ShowProduct = ({ isLoading }) => {
                   fontWeight: 600
                 }}
               >
-       {t("Add Product")}
+       {t("purchaseProduct")}
               </Typography>
             </Grid>
           </Box>

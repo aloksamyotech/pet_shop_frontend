@@ -360,7 +360,9 @@
     "add_supplier": "Agregar proveedor",
   "add_customer": "Agregar cliente",
   "create_order": "Crear pedido",
-  "welcome_back": "¡Bienvenido de nuevo!"
+  "welcome_back": "¡Bienvenido de nuevo!",
+  "purchaseProduct": "Comprar producto"
+
     
 
 

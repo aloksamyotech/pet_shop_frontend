@@ -372,7 +372,8 @@
       "delete_confirmation": "Are you sure you want to delete?",
     "delete_warning": "You won't be able to revert this.",
     "confirm_delete": "Yes, delete it!",
-    "sort_by_price": "Sort By Price"
+    "sort_by_price": "Sort By Price",
+     "purchaseProduct": "Purchase Product"
     
 
   
