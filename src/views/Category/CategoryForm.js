@@ -6,18 +6,20 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { postApiImage, updateApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState(null);
   const isEditing = Boolean(category);
 
   const validationSchema = yup.object({
     name: yup
       .string()
-      .required('Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
-      .max(50, 'Max 50 characters'),
-    description: yup.string().max(100, 'Max 100 characters')
+      .required(t('name_required'))
+      .matches(/^[A-Za-z\s]+$/, t('only_letters_allowed'))
+      .max(50, t('max_50_characters')),
+    description: yup.string().max(100, t('max_100_characters'))
   });
 
   const formik = useFormik({
@@ -39,17 +41,17 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       try {
         if (isEditing) {
           await updateApi(urls.category.update.replace(':id', category._id), values);
-          toast.success('Category updated successfully!');
+          toast.success(t('category_updated_successfully'));
         } else {
           await postApiImage(urls.category.create, formData);
-          toast.success('Category added successfully!');
+          toast.success(t('category_added_successfully'));
         }
         formik.resetForm();
         await fetchCategories();
         handleClose();
       } catch (error) {
         console.error('Error:', error);
-        toast.error(isEditing ? 'Error updating category' : 'Category already exists');
+        toast.error(isEditing ? t('error_updating_category') : t('category_already_exists'));
       }
     }
   });
@@ -76,7 +78,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="category-dialog-title">
       <DialogTitle id="category-dialog-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{isEditing ? 'Edit Category' : 'Add Category'}</Typography>
+        <Typography variant="h4">{isEditing ? t('edit_category') : t('add_category')}</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
 
@@ -87,7 +89,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
               <TextField
                 id="name"
                 name="name"
-                label="Category Name"
+                label={t('category_name')}
                 fullWidth
                 size="small"
                 value={formik.values.name}
@@ -104,7 +106,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
               <TextField
                 id="description"
                 name="description"
-                label="Description"
+                label={t('description')}
                 fullWidth
                 size="small"
                 multiline
@@ -115,32 +117,6 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
                 helperText={formik.touched.description && formik.errors.description}
               />
             </Grid>
-
-            {!isEditing && (
-              <Grid item xs={12} sm={6}>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  minHeight="100px"
-                  border={1}
-                  borderColor="grey.300"
-                  borderRadius={1}
-                  position="relative"
-                >
-                  {selectedImage ? (
-                    <img src={selectedImage} alt="category preview" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                  ) : (
-                    <Typography variant="body2" color="textSecondary">
-                      Preview Image
-                    </Typography>
-                  )}
-                  <Box position="absolute" left={0} bottom={0} p={2}>
-                    <input type="file" accept="image/*" onChange={handleFileChange} />
-                  </Box>
-                </Box>
-              </Grid>
-            )}
           </Grid>
         </form>
       </DialogContent>
@@ -158,7 +134,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
             }
           }}
         >
-          {isEditing ? 'Update' : 'Save'}
+          {isEditing ? t('update') : t('save')}
         </Button>
         <Button
           variant="outlined"
@@ -175,7 +151,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
             }
           }}
         >
-          Cancel
+          {t('cancel')}
         </Button>
       </DialogActions>
     </Dialog>

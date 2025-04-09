@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
  import { urls } from "views/Api/constant";
  import { postApiLogin } from "views/Api/comman";
+ import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -50,6 +51,8 @@ const AuthLogin = ({ ...others }) => {
       handleSubmit();
     }, 500);
   };
+
+  const { t } = useTranslation();
   return (
     <>
          <Formik
@@ -61,10 +64,11 @@ const AuthLogin = ({ ...others }) => {
            onSubmit={async (values, { setSubmitting, setErrors }) => {
              try {
                const response = await postApiLogin(urls.login.create, values);
+              
                const accessToken = response.data.accessToken;
 
                if (accessToken) {
-                 console.log("Token found, redirecting to dashboard...");
+                
                  localStorage.setItem("accessToken", accessToken);
                  localStorage.setItem("name", response.data.user.firstname);
                  localStorage.setItem("email", response.data.user.email);
@@ -104,7 +108,7 @@ const AuthLogin = ({ ...others }) => {
                 mb: 2
               }}
             >
-              <InputLabel htmlFor="outlined-adornment-email-login">Email Address</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-email-login">{t("Email Address")}</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-email-login"
                 type="email"
@@ -112,7 +116,7 @@ const AuthLogin = ({ ...others }) => {
                 name="email"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="Email Address"
+                label={t("email_Address")}
               />
               {touched.email && errors.email && <FormHelperText error>{errors.email}</FormHelperText>}
             </FormControl>
@@ -130,7 +134,7 @@ const AuthLogin = ({ ...others }) => {
                 }
               }}
             >
-              <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password-login">{t("Password")}</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password-login"
                 type={showPassword ? 'text' : 'password'}
@@ -151,7 +155,7 @@ const AuthLogin = ({ ...others }) => {
                     </IconButton>
                   </InputAdornment>
                 }
-                label="Password"
+                label={t("password")}
               />
               {touched.password && errors.password && <FormHelperText error>{errors.password}</FormHelperText>}
             </FormControl>
@@ -161,20 +165,12 @@ const AuthLogin = ({ ...others }) => {
                   cursor: 'pointer',
                   p: 2
                 }}
-                onClick={() => handleCredentialClick('priti.sahu@samyotech.com', '12345678', setFieldValue, handleSubmit)}
+                onClick={() => handleCredentialClick("admin@gmail.com","admin123", setFieldValue, handleSubmit)}
               >
-                <Typography variant="h5">Admin Credentials</Typography>
+                <Typography variant="h5">{t("admin_credentials")}</Typography>
               </Box>
               <Divider />
-              {/* <Box
-                sx={{
-                  cursor: 'pointer',
-                  p: 2
-                }}
-                onClick={() => handleCredentialClick('samyotech@gmail.com', '123456', setFieldValue, handleSubmit)}
-              >
-                <Typography variant="h5">User Credentials</Typography>
-              </Box> */}
+              
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <AnimateButton>
@@ -194,7 +190,7 @@ const AuthLogin = ({ ...others }) => {
                     }
                   }}
                 >
-                  {isSubmitting ? 'Logging in...' : 'Sign in'}
+                  {isSubmitting ? t("logging_in") : t("sign_in")}
                 </Button>
               </AnimateButton>
             </Box>

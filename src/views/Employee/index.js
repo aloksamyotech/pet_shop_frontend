@@ -12,12 +12,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from 'react-toastify';
 import Employee from './addEmployee';
-import Swal from 'sweetalert2';
+
+import ConfirmDialog from 'confirmDeletion/deletion';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ViewEmployee from './View';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useTranslation } from 'react-i18next';
 
 
 const Customer = () => {
@@ -28,17 +30,25 @@ const Customer = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [Customer, setFilteredCustomer] = useState([]);
   const [popoverState, setPopoverState] = useState({ anchorEl: null, row: null });
-  
+  const { t } = useTranslation();
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   
   const handleOpenActions = (event, row) => {
     setPopoverState({ anchorEl: event.currentTarget, row });
   };
   
  
+   
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setOpenConfirmDialog(true);
+  };
   const handleCloseActions = () => {
     setPopoverState({ anchorEl: null, row: null });
   };
   
+
 
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
@@ -63,32 +73,22 @@ const Customer = () => {
     setFilteredCustomer(response?.data?.data || []);
   };
 
-  //   const handleView = (customer) => {
-  //     navigate(`/dashboard/customer/user`, { state: { customer } });
-  //   };
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this customer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.employee.delete.replace(':id', id));
-         
-          setCustomerList((prev) => prev.filter((customer) => customer._id !== id));
-        } catch (error) {
-          Swal.fire('Error!', 'Failed to delete customer.', 'error');
-        }
-      }
-    });
+    try {
+      await deleteApi(urls.employee.delete.replace(':id', deleteId));
+      setCustomerList((prev) => prev.filter((customer) => customer._id !== deleteId));
+      setFilteredCustomer((prev) => prev.filter((customer) => customer._id !== deleteId));
+      toast.success(t('Employee has been removed successfully'));
+    } catch (error) {
+      toast.error(t('Error! Failed to delete employee'));
+    }
+    setOpenConfirmDialog(false);
+    setDeleteId(null);
   };
+
+ 
 
   const handleEdit = (customer) => {
     setSelectedCustomer(customer);
@@ -114,13 +114,13 @@ const Customer = () => {
   const columns = [
 {
   field:'EId',
-  headerName:'ID',
+  headerName:t('ID'),
   flex:0.5
 }
     ,
     {
       field: 'name',
-      headerName: 'Name',
+      headerName: t('Name'),
       flex: 0.5,
       renderCell: (params) => (
         <Stack direction="row" alignItems="center" spacing={1}>
@@ -130,12 +130,12 @@ const Customer = () => {
         </Stack>
       )
     },
-    { field: 'email', headerName: 'Email', flex: 0.5 },
-    { field: 'address', headerName: 'Address', flex: 0.5 },
-    { field: 'phoneNumber', headerName: 'Phone Number', flex: 0.5 },
+    { field: 'email', headerName: t('Email'), flex: 0.5 },
+    { field: 'address', headerName: t('Address'), flex: 0.5 },
+    { field: 'phoneNumber', headerName: t('Phone Number'), flex: 0.5 },
     {
       field: 'salary',
-      headerName: 'Salary',
+      headerName: t('Salary'),
       flex: 0.5,
       renderCell: (params) => (
         <>
@@ -146,7 +146,7 @@ const Customer = () => {
     },
     {
       field: 'actions',
-      headerName: 'Actions',
+      headerName: t('Actions'),
       flex: 0.5,
       sortable: false,
       renderCell: (params) => {
@@ -165,17 +165,7 @@ const Customer = () => {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               PaperProps={{ sx: { boxShadow: 3, borderRadius: '20px' } }}
             >
-              {/* View action */}
-              {/* <MenuItem
-                onClick={() => {
-                  handleView(popoverState.row);
-                  handleCloseActions();
-                }}
-              >
-                <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
-              </MenuItem> */}
-    
-              {/* Edit action */}
+             
               <MenuItem
                 onClick={() => {
                   handleEdit(popoverState.row);
@@ -185,7 +175,7 @@ const Customer = () => {
                 <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
               </MenuItem>
     
-              {/* Delete action */}
+             
               <MenuItem
                 onClick={() => {
                   handleDelete(popoverState.row._id);
@@ -204,6 +194,7 @@ const Customer = () => {
 
   return (
     <>
+      <ConfirmDialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} onConfirm={confirmDelete} />
     <ViewEmployee open={openView}   handleClose={handleCloseView} customer={selectedCustomer}/>
       <Employee open={openForm} handleClose={handleCloseForm} customer={selectedCustomer} fetchCustomer={fetchCustomers} currencySymbol={currencySymbol} />
 
@@ -226,7 +217,7 @@ const Customer = () => {
               <HomeIcon />
             </IconButton>
             <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
-            <Typography variant="h5">Employee</Typography>{' '}
+            <Typography variant="h5">{t("Employee")}</Typography>{' '}
           </Stack>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Card>
@@ -237,7 +228,7 @@ const Customer = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                New Employee
+               {t("New Employee")} 
               </Button>
             </Card>
           </Stack>
@@ -245,9 +236,18 @@ const Customer = () => {
 
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: '600px', marginTop: '-25px' }}>
+            <Card style={{ height: 'auto', marginTop: '-25px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={Customer} columns={columns} getRowId={(row) => row._id} />
+              <DataGrid rows={Customer} columns={columns} getRowId={(row) => row._id} 
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[10]}
+  />
             </Card>
           </Box>
         </TableStyle>

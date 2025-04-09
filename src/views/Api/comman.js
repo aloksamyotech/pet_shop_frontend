@@ -89,7 +89,7 @@ export const updateApi = async (url, data, headers = {}) => {
 
 export const updateApiFormData = async (url, data, headers = {}) => {
   try {
-    console.log('Sending FormData to API:', data);
+
 
     const response = await axios.put(url, data, {
       headers: {
@@ -98,7 +98,7 @@ export const updateApiFormData = async (url, data, headers = {}) => {
       }
     });
 
-    console.log('Update response:', response.data);
+   
     return response.data;
   } catch (error) {
     console.error('API Update Error:', error);
@@ -107,7 +107,7 @@ export const updateApiFormData = async (url, data, headers = {}) => {
       console.error('Error Response Data:', error.response.data);
       console.error('Error Response Status:', error.response.status);
       console.error('Error Response Headers:', error.response.headers);
-      throw new Error(JSON.stringify(error.response.data)); // Convert to string
+      throw new Error(JSON.stringify(error.response.data)); 
     } else if (error.request) {
       console.error('No response received:', error.request);
       throw new Error('No response from server');

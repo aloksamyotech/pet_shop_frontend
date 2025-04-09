@@ -11,12 +11,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Swal from 'sweetalert2';
 import ViewPurchase from './ViewPurchase';
 import SearchBar from 'views/Search';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import ConfirmDialog from 'confirmDeletion/deletion';
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
   const [selectedPurchase, setSelectedPurchase] = useState(null);
@@ -31,6 +32,15 @@ const Purchase = () => {
   const [anchorEl, setAnchorEl] = useState(null);
    const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+    const { t } = useTranslation();
+    
+    const handleDelete = (id) => {
+      setDeleteId(id);
+      setOpenConfirmDialog(true);
+    };
 
   const filterData = () => {
     if (!startDate || !endDate) return;
@@ -103,47 +113,40 @@ const Purchase = () => {
     setPurchaseUpdated(purchase);
     setOpenAdd(true);
   };
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this purchase?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.purchase.delete.replace(':id', id));
-          setPurchase((prevPurchase) => prevPurchase.filter((p) => p._id !== id));
-        
-        } catch (error) {
-          Swal.fire('Error!', 'Failed to delete purchase.', 'error');
-        }
-      }
-    });
+    try {
+      await deleteApi(urls.purchase.delete.replace(':id', deleteId));
+      setPurchase((prev) => prev.filter((purchase) => purchase._id !== deleteId));
+      setFilteredPurchase((prev) => prev.filter((purchase) => purchase._id !== deleteId));
+
+      toast.success(t('Purchase has been removed successfully'));
+    } catch (error) {
+      toast.error(t('Error! Failed to delete purchase'));
+    }
+
+    setOpenConfirmDialog(false);
+    setDeleteId(null);
   };
 
   
   const columns = [
     {
       field: 'productName',
-      headerName: 'Product',
+      headerName: t('Product'),
       flex: 1,
       valueGetter: (params) => params.row.productName?.[0]?.productName || 'N/A'
     },
     {
       field: 'companyName',
-      headerName: 'Supplier',
+      headerName: t('Supplier'),
       flex: 1,
       valueGetter: (params) => params.row.CompanyName?.[0]?.companyName || 'N/A'
     },
     {
       field:'price',
-      headerName:'Price',
+      headerName:t('Price'),
       flex:1,
       renderCell: (params) => (
         <>
@@ -154,7 +157,7 @@ const Purchase = () => {
     },
     {
       field: 'totalPrice',
-      headerName: 'Amount',
+      headerName: t('Amount'),
       flex: 1,
       renderCell: (params) => (
         <>
@@ -165,17 +168,17 @@ const Purchase = () => {
     },
     {
       field: 'discount',
-      headerName: 'Discount',
+      headerName:t('Discount'),
       flex: 1
     },
     {
       field: 'quantity',
-      headerName: 'Quantity',
+      headerName: t('Quantity'),
       flex: 1
     },
     {
       field: 'paymentStatus',
-      headerName: 'Payment Status',
+      headerName: t('Payment Status'),
       flex: 1,
       renderCell: (params) => {
         return(
@@ -202,17 +205,17 @@ const Purchase = () => {
     },
     {
       field: 'Action',
-      headerName: 'Action',
+      headerName: t('Action'),
       flex: 1,
       sortable: false,
       renderCell: (params) => (
         <>
-          {/* Open button */}
+         
           <IconButton onClick={(e) => handleOpenActions(e, params.row)}>
             <MoreVertIcon />
           </IconButton>
     
-          {/* Popover that only opens for the active row */}
+         
           <Popover
             open={Boolean(anchorEl) && activeRow?._id === params.row._id}
             anchorEl={anchorEl}
@@ -260,6 +263,8 @@ const Purchase = () => {
 
   return (
     <>
+     <ConfirmDialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} onConfirm={confirmDelete} />
+
       <PurchaseForm
         open={openAdd}
         handleClose={() => {
@@ -293,7 +298,7 @@ const Purchase = () => {
               </IconButton>
              
               <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>  Purchase-Information</Typography>
+              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}> {t(" Purchase-Information")}</Typography>
             </Stack>
 
             <Stack direction="row" alignItems="center" spacing={2}>
@@ -305,7 +310,7 @@ const Purchase = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                New Purchase
+               {t(" New Purchase")}
                 </Button>
               </Card>
             </Stack>
@@ -323,14 +328,14 @@ const Purchase = () => {
   }}
 >
   <TextField
-    label="Start Date"
+    label={t("Start Date")}
     type="date"
     value={startDate}
     onChange={(e) => setStartDate(e.target.value)}
     InputLabelProps={{ shrink: true }}
   />
   <TextField
-    label="End Date"
+    label={t("End Date")}
     type="date"
     value={endDate}
     onChange={(e) => {
@@ -353,20 +358,20 @@ const Purchase = () => {
     }}
     onClick={filterData}
   >
-    Apply Filter
+  {t("Apply Filter")}
   </Button>
 
-  {/* Clear Filter Button */}
+ 
   <Button
     variant="outlined"
     sx={{ color: '#6A9C89', borderColor: '#6A9C89' }}
     onClick={() => {
       setStartDate('');
       setEndDate('');
-      setFilteredPurchase(purchase); // Reset to original data
+      setFilteredPurchase(purchase); 
     }}
   >
-    Clear Filter
+    {t("Clear Filter")}
   </Button>
 </Box>
 
@@ -376,9 +381,18 @@ const Purchase = () => {
 
         <TableStyle>
           <Box width="100%">
-          <Card style={{ height: '600px', marginTop: '-45px' }}>
+          <Card style={{ height: 'auto', marginTop: '-45px' }}>
             <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} />
+              <DataGrid rows={purchaseFilter} columns={columns} getRowId={(row) => row._id} 
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10
+                  }
+                }
+              }}
+              pageSizeOptions={[10]}
+  />
             </Card>
           </Box>
         </TableStyle>

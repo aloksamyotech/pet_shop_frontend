@@ -29,6 +29,10 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18n';
+
+
 
 // constant
 const icons = {
@@ -59,31 +63,24 @@ const icons = {
   IconPentagram
 };
 
-// ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
+  title:i18n.t('DashBoard-Menu'),
+  
   type: 'group',
   children: [
     {
       id: 'default',
-      title: 'Dashboard',
+      title: i18n.t('Dashboard'),
       type: 'item',
       url: '/dashboard/default',
       icon: icons.IconHome,
       breadcrumbs: false
     },
-    {
-      id: '18',
-      title: 'AI',
-      type: 'item',
-      url: '/dashboard/AIChatBord',
-      icon: icons.IconPentagram,
-      breadcrumbs: false,
     
-    },
     {
       id: '08',
-      title: 'Category',
+      title: i18n.t('Category'),
       type: 'item',
       url: '/dashboard/category',
       icon: icons.IconCategory,
@@ -92,7 +89,7 @@ const dashboard = {
     },
     {
       id: '16',
-      title: 'Subcategory',
+      title: i18n.t('Subcategory'),
       type: 'item',
       url: '/dashboard/subcategory',
       icon: icons.IconCategory2,
@@ -102,7 +99,7 @@ const dashboard = {
 
     {
       id: '01',
-      title: 'POS',
+      title: i18n.t('POS'),
       type: 'item',
       url: '/dashboard/addToCard',
       icon: icons.IconShoppingCart,
@@ -110,7 +107,7 @@ const dashboard = {
     },
     {
       id: '02',
-      title: 'Product',
+      title: i18n.t('Product'),
       type: 'item',
       url: '/dashboard/product',
       icon: icons.IconStackPop,
@@ -119,13 +116,13 @@ const dashboard = {
 
     {
       id: '11',
-      title: 'Clients',
+      title: i18n.t('Clients'),
       type: 'collapse',
       icon: icons.IconUsers,
       children: [
         {
           id: '06',
-          title: 'Supplier',
+          title: i18n.t('Supplier'),
           type: 'item',
           url: '/dashboard/supplier',
           icon: icons.IconBuildingStore,
@@ -133,7 +130,7 @@ const dashboard = {
         },
         {
           id: '04',
-          title: 'Customer',
+          title: i18n.t('Customer'),
           type: 'item',
           url: '/dashboard/customer',
           icon: icons.IconUsers,
@@ -141,7 +138,7 @@ const dashboard = {
         },
         {
           id: '10',
-          title: 'Employee',
+          title: i18n.t('Employee'),
           type: 'item',
           url: '/dashboard/employee',
           icon: icons.IconUsers,
@@ -151,7 +148,7 @@ const dashboard = {
     },
 {
       id: '07',
-      title: 'Purchase',
+      title: i18n.t('Purchase'),
       type: 'item',
       url: '/dashboard/purchase',
       icon: icons.IconTruckReturn,
@@ -160,7 +157,7 @@ const dashboard = {
 
       {
       id: '03',
-      title: ' Order History',
+      title: i18n.t('Order History'),
       type: 'item',
       url: '/dashboard/history',
       icon: icons.IconHistoryToggle,
@@ -169,7 +166,7 @@ const dashboard = {
     
     {
       id: '09',
-      title: 'Report',
+      title: i18n.t('Report'),
       type: 'item',
       url: '/dashboard/report',
       icon: icons.IconFileDescription,
@@ -177,7 +174,7 @@ const dashboard = {
     },
     {
       id: '05',
-      title: 'Profile',
+      title: i18n.t('Profile'),
       type: 'item',
       url: '/dashboard/profile',
       icon: icons.IconUsers,

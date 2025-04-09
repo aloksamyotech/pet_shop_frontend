@@ -7,24 +7,36 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { getApi, updateApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
   const isEdit = Boolean(customer);
+  const { t } = useTranslation();
 
   const validationSchema = yup.object({
     firstName: yup
       .string()
-      .required('First Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
-      .max(50, 'First Name cannot be more than 50 characters'),
-    email: yup.string().required('Email is required').email('Invalid email address'),
+      .required(t('First Name is required'))
+      .matches(/^[A-Za-z\s]+$/, t('First Name must only contain letters'))
+      .max(50, t('First Name cannot be more than 50 characters')),
+  
+    email: yup
+      .string()
+      .required(t('Email is required'))
+      .email(t('Invalid email address')),
+  
     phoneNumber: yup
       .string(),
-    status: yup.string().required('Status is required'),
+  
+    status: yup
+      .string()
+      .required(t('Status is required')),
+  
     address: yup
       .string()
-      .max(100, 'Address cannot be more than 100 characters'),
+      .max(100, t('Address cannot be more than 100 characters'))
   });
+  
 
   const initialValues = {
     firstName: '',
@@ -40,10 +52,10 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
     onSubmit: async (values) => {
       if (isEdit) {
         await updateApi(urls.customer.update.replace(":id", customer._id), values);
-        toast.success("Customer updated successfully!");
+        toast.success(t("Customer updated successfully!"));
       } else {
         await postApi(urls.customer.create, values);
-        toast.success("Customer added successfully!");
+        toast.success(t("Customer added successfully!"));
       }
       await fetchCustomer();
       handleClose();
@@ -67,7 +79,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
   return (
     <Dialog open={open} aria-labelledby="customer-dialog-title">
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{isEdit ? 'Update Customer' : 'Create Customer'}</Typography>
+        <Typography variant="h4">{isEdit ? t("Update Customer") : t("Create Customer")}</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
@@ -75,7 +87,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t("Name")}</FormLabel>
                 <TextField
                   id="firstName"
                   name="firstName"
@@ -97,7 +109,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("Email")}</FormLabel>
                 <TextField
                   id="email"
                   name="email"
@@ -112,7 +124,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Address</FormLabel>
+                <FormLabel>{t("Address")}</FormLabel>
                 <TextField
                   id="address"
                   name="address"
@@ -127,7 +139,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel>{t("Phone Number")}</FormLabel>
                 <TextField
                   id="phoneNumber"
                   name="phoneNumber"
@@ -147,11 +159,11 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Status</FormLabel>
+                <FormLabel>{t("Status")}</FormLabel>
                 <Select id="status" name="status" size="small" fullWidth value={formik.values.status} onChange={formik.handleChange}>
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Inactive">Inactive</MenuItem>
-                  <MenuItem value="Blocked">Blocked</MenuItem>
+                  <MenuItem value="Active">{t("Active")}</MenuItem>
+                  <MenuItem value="Inactive">{t("Inactive")}</MenuItem>
+                  <MenuItem value="Blocked">{t("Blocked")}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -167,7 +179,8 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
                 backgroundColor: '#8DB3A8'
               }
             }}>
-          {isEdit ? 'Update' : 'Save'}
+        {isEdit ? t("Update") : t("Save")}
+
         </Button>
         <Button variant="outlined" onClick={handleClose} color="error"  sx={{
             border: '1px solid #6A9C89',
@@ -177,7 +190,7 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
               color: '#6A9C89'
             }
           }}>
-          Cancel
+         {t("Cancel")}
         </Button>
       </DialogActions>
     </Dialog>

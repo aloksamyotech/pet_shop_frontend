@@ -2,11 +2,16 @@ import { useState, useEffect } from 'react';
 import { Box, Button, Divider, Grid, Typography, Avatar } from '@mui/material';
 import { urls } from 'views/Api/constant';
 import { getApi, updateApiFormData } from 'views/Api/comman';
+import { useTranslation } from 'react-i18next';
+import Pet from 'assets/images/pet-logo.jpg'
 
 const CompanyLogoUploader = ({ companyId }) => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [logo, setLogo] = useState(null);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+   const { t } = useTranslation();
 
   const UserID = JSON.parse(localStorage.getItem('user'));
 
@@ -34,7 +39,7 @@ const CompanyLogoUploader = ({ companyId }) => {
 
   const handleUpload = async () => {
     if (!file) {
-      alert('Please select an image first!');
+      alert(t('selectImageFirst'));
       return;
     }
 
@@ -47,7 +52,7 @@ const CompanyLogoUploader = ({ companyId }) => {
       await fetchLogo();
     } catch (error) {
       console.error('Error uploading logo:', error);
-      alert('Failed to upload logo!');
+      alert(t('failedUploadLogo'));
     }
   };
 
@@ -63,15 +68,13 @@ const CompanyLogoUploader = ({ companyId }) => {
           width: '100%',
         }}
       >
-        <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>Company Logo</Typography>
+        <Typography sx={{ fontWeight: 'bold', paddingBottom: '10px' }}>{t("Company Logo")}</Typography>
         <Divider />
         <Box sx={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
           <Avatar
             alt="Logo Image"
             src={
-              logo?.logoImage
-                ? `http://localhost:7200/${logo.logoImage.replace('\\', '/')}`
-                : 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'
+              userObj?.imageUrl || Pet
             }
             sx={{ width: 130, height: 130, borderRadius: '50%', backgroundColor: '#7760f6' }}
           />
@@ -91,7 +94,7 @@ const CompanyLogoUploader = ({ companyId }) => {
             },
           }}
         >
-          Upload Logo
+         {t("Upload Logo")}
         </Button>
       </Box>
     </Grid>

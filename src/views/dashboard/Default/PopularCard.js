@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import {
-  Avatar,
-  Box,
+import { Avatar,Box,
   Button,
   Card,
   CardContent,
@@ -25,7 +23,7 @@ import SkeletonPopularCard from 'ui-component/cards/Skeleton/PopularCard';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 // ==============================|| NEW POPULAR STOCKS CARD ||============================== //
 
 const PopularCard = ({ isLoading }) => {
@@ -33,7 +31,7 @@ const PopularCard = ({ isLoading }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
-
+ const { t } = useTranslation();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,7 +65,7 @@ const PopularCard = ({ isLoading }) => {
           <CardContent>
             <Grid container justifyContent="space-between" alignItems="center">
               <Typography variant="h5" fontWeight="bold">
-                Product Stocks
+               {t("Product Stocks")}
               </Typography>
               <IconButton onClick={handleClick}>
                 <MoreHorizIcon />
@@ -79,16 +77,16 @@ const PopularCard = ({ isLoading }) => {
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
-                <MenuItem onClick={handleClose}>Today</MenuItem>
-                <MenuItem onClick={handleClose}>This Month</MenuItem>
-                <MenuItem onClick={handleClose}>This Year</MenuItem>
+                <MenuItem onClick={handleClose}>{t("Today")}</MenuItem>
+                <MenuItem onClick={handleClose}>{t("This Month")}</MenuItem>
+                <MenuItem onClick={handleClose}>{t("This Year")}</MenuItem>
               </Menu>
             </Grid>
 
             <Divider sx={{ my: 2 }} />
 
             <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-              Available Stock
+              {t("Available Stock")}
             </Typography>
             {products.slice(0, 7).map((product) => (
               <Box key={product._id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -105,7 +103,7 @@ const PopularCard = ({ isLoading }) => {
                     {product.productName}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {product.quantity || 'N/A'} in stock
+                    {product.quantity || 'N/A'} {t("in stock")}
                   </Typography>
                 </Box>
               </Box>
@@ -120,7 +118,7 @@ const PopularCard = ({ isLoading }) => {
               backgroundColor: '#8DB3A8'
             }
           }}>
-                  View All Products
+                 {t("View All Products")}
                 </Button>
               </Box>
             )}

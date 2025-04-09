@@ -18,6 +18,8 @@ import {
   TextField,
   Button
 } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { useTranslation } from 'react-i18next';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
@@ -54,6 +56,8 @@ const Checkout = () => {
     setFilteredProduct(orders);
     setFilteredPurchase(purchases);
   };
+
+  const { t } = useTranslation();
 
   const filterData = () => {
     if (!startDate || !endDate) return;
@@ -103,7 +107,7 @@ const Checkout = () => {
               mr: 1
             }}
           />
-          <Typography variant="h5">Report</Typography>
+          <Typography variant="h5">{t("Report")}</Typography>
         </Box>
 
    
@@ -120,7 +124,7 @@ const Checkout = () => {
   }}
 >
   <TextField
-    label="Start Date"
+    label={t("Start Date")}
     type="date"
     value={startDate}
     onChange={(e) => setStartDate(e.target.value)}
@@ -128,7 +132,7 @@ const Checkout = () => {
   />
 
   <TextField
-    label="End Date"
+    label={t("End Date")}
     type="date"
     value={endDate}
     onChange={(e) => {
@@ -153,7 +157,7 @@ const Checkout = () => {
     }}
     onClick={filterData}
   >
-    Apply Filter
+    {t("Apply Filter")}
   </Button>
 
   <Button
@@ -173,7 +177,7 @@ const Checkout = () => {
       setFilteredProduct(orders);
     }}
   >
-    Clear Filter
+      {t("Clear Filter")}
   </Button>
 </Box>
 
@@ -199,7 +203,7 @@ const Checkout = () => {
     value="1"
     label={
       <Box display="flex" alignItems="center " sx={{color:'#6A9C89'}}>
-        <ShoppingCartIcon sx={{ fontSize: '20px', mr: 1 }} /> Sales
+        <ShoppingCartIcon sx={{ fontSize: '20px', mr: 1 }} /> {t("Sales")}
       </Box>
     }
   />
@@ -207,7 +211,7 @@ const Checkout = () => {
     value="2"
     label={
       <Box display="flex" alignItems="center" sx={{color:'#6A9C89'}}>
-        <InventoryIcon sx={{ fontSize: '20px', mr: 1 }} /> Purchase
+        <InventoryIcon sx={{ fontSize: '20px', mr: 1 }} /> {t("Purchase")}
       </Box>
     }
   />
@@ -216,63 +220,65 @@ const Checkout = () => {
 
 
 
-          <TabPanel value="1">
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead >
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>Phone</TableCell>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Total Amount</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredProduct.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-                      <TableCell>{item?.customerName}</TableCell>
-                      <TableCell>{item?.customerPhone}</TableCell>
-                      <TableCell>{item?.products?.[0]?.productName}</TableCell>
-                      <TableCell>{item?.products?.[0]?.quantity}</TableCell>
-                      <TableCell>{currencySymbol} {item?.totalAmount}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </TabPanel>
+<TabPanel value="1">
+  <DataGrid
+    rows={filteredProduct.map((item, index) => ({
+      id: index,
+      date: new Date(item.createdAt).toLocaleDateString(),
+      customer: item?.customerName,
+      phone: item?.customerPhone || 'N/A',
+      productName: item?.products?.[0]?.productName,
+      quantity: item?.products?.[0]?.quantity,
+      totalAmount: `${currencySymbol} ${item?.totalAmount}`,
+    }))}
+    columns={[
+      { field: 'date', headerName: t('Date'), flex: 1 },
+      { field: 'customer', headerName: t('Customer'), flex: 1 },
+      { field: 'phone', headerName: t('Phone'), flex: 1 },
+      { field: 'productName', headerName: t('Product Name'), flex: 1 },
+      { field: 'quantity', headerName: t('Quantity'), flex: 1 },
+      { field: 'totalAmount', headerName: t('Total Amount'), flex: 1 },
+    ]}
+    initialState={{
+      pagination: {
+        paginationModel: { pageSize: 10 }
+      }
+    }}
+    pageSizeOptions={[10]}
+    autoHeight
+  />
+</TabPanel>
 
-          <TabPanel value="2">
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead >
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Supplier</TableCell>
-                    <TableCell>Phone</TableCell>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Quantity</TableCell>
-                    <TableCell>Total Price</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredPurchase.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{new Date(item.createdAt).toLocaleDateString()}</TableCell>
-                      <TableCell>{item?.CompanyName?.[0]?.companyName}</TableCell>
-                      <TableCell>{item?.CompanyName?.[0]?.phoneNumber}</TableCell>
-                      <TableCell>{item?.productName?.[0]?.productName}</TableCell>
-                      <TableCell>{item?.quantity}</TableCell>
-                      <TableCell>{currencySymbol} {item?.totalPrice}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </TabPanel>
+
+<TabPanel value="2">
+  <DataGrid
+    rows={filteredPurchase.map((item, index) => ({
+      id: index,
+      date: new Date(item.createdAt).toLocaleDateString(),
+      supplier: item?.CompanyName?.[0]?.companyName || 'N/A',
+      phone: item?.CompanyName?.[0]?.phoneNumber || 'N/A',
+      product: item?.productName?.[0]?.productName || 'N/A',
+      quantity: item?.quantity,
+      totalPrice: `${currencySymbol} ${item?.totalPrice}`,
+    }))}
+    columns={[
+      { field: 'date', headerName: t('Date'), flex: 1 },
+      { field: 'supplier', headerName: t('Supplier'), flex: 1 },
+      { field: 'phone', headerName: t('Phone'), flex: 1 },
+      { field: 'product', headerName: t('Product Name'), flex: 1 },
+      { field: 'quantity', headerName: t('Quantity'), flex: 1 },
+      { field: 'totalPrice', headerName: t('Total Price'), flex: 1 },
+    ]}
+    initialState={{
+      pagination: {
+        paginationModel: { pageSize: 10 },
+      },
+    }}
+    pageSizeOptions={[10]}
+    autoHeight
+  />
+</TabPanel>
+
         </Box>
       </TabContext>
     </Grid>

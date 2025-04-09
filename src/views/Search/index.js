@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Box, TextField, IconButton, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useTranslation } from 'react-i18next';
 
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
-
+   const { t } = useTranslation();
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
@@ -22,7 +23,7 @@ const SearchBar = ({ onSearch }) => {
       <TextField
         fullWidth
         variant="standard" 
-        placeholder="Search.............."
+        placeholder={t("Search..............")}
         value={searchTerm}
         onChange={handleSearch}
         InputProps={{

@@ -9,32 +9,15 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import ClearIcon from '@mui/icons-material/Clear';
 import { toast } from 'react-toastify';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { urls } from 'views/Api/constant.js';
-import { postApi, getApi } from 'views/Api/comman.js';
+import { postApi } from 'views/Api/comman.js';
 import * as XLSX from 'xlsx';
 
-const AddBulkUpload = (props) => {
-  const { open, handleClose, fetchProduct } = props;
+const AddBulkUpload = ({ open, handleClose, fetchProduct }) => {
   const [data, setData] = useState(null);
-  const [categories, setCategories] = useState([]);
 
-useEffect(() => {
-
-    const fetchCategories = async () => {
-      try {
-        const response = await getApi(urls.category.get);
-        if (response ) {
-          setCategories(response.data.data);
-        }
-      } catch (error) {
-        toast.error('Failed to fetch categories!');
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const selectFile = e.target.files[0];
 
     if (!selectFile) {
@@ -43,30 +26,32 @@ useEffect(() => {
     }
 
     if (!selectFile.name.endsWith('.xlsx')) {
-      toast.error('Please upload a valid Excel (.xlsx) file.');
+      toast.error('Invalid file format! Please upload an Excel file.');
       return;
     }
 
     const reader = new FileReader();
 
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const workbook = XLSX.read(event.target.result, { type: 'binary' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const sheetData = XLSX.utils.sheet_to_json(sheet);
 
-     const transformedData = sheetData.map((product) => {
-          const category = categories.find((c) => c.name === product.categoryId);
+        if (sheetData.length === 0) {
+          toast.error('Uploaded file is empty!');
+          return;
+        }
 
-          if (category) {
-            product.categoryId = category._id;
-            delete product.category;
-          } else {
-            product.categoryId = null;
-          }
-          return product;
-        }); 
+        // Ensure correct format
+        const transformedData = sheetData.map((product) => ({
+          productName: product.productName?.trim() || '',
+          price: product.price || 0,
+          discount: product.discount || 0,
+          categoryId: product.categoryId?.trim() || '',
+          SubCategoryId: product.SubCategoryId?.trim() || '',
+        }));
 
         setData(transformedData);
       } catch (error) {
@@ -78,13 +63,11 @@ useEffect(() => {
     reader.readAsBinaryString(selectFile);
   };
 
-
   const handleSubmit = async () => {
-    if (!data) {
-      toast.error('Please select a valid file.');
+    if (!data || data.length === 0) {
+      toast.error('No valid data to upload.');
       return;
     }
- 
 
     try {
       const response = await postApi(urls.product.bulkSave, data);
@@ -106,7 +89,7 @@ useEffect(() => {
           id="scroll-dialog-title"
           style={{
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
           }}
         >
           <Typography variant="h3">Upload Excel File</Typography>
@@ -120,7 +103,17 @@ useEffect(() => {
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
               <Grid container columnSpacing={{ xs: 0, sm: 5, md: 4 }} spacing={5}>
                 <Grid item xs={12} sm={12} md={12}>
-                  <Button sx={{ backgroundColor: '#650fc7', color: '#fff','&:hover': {backgroundColor:'#650fc7', color: '#fff'}}}  href='/sampleFile.xlsx' download>Download Sample File</Button>
+                  <Button
+                    sx={{
+                      backgroundColor: '#650fc7',
+                      color: '#fff',
+                      '&:hover': { backgroundColor: '#650fc7', color: '#fff' },
+                    }}
+                    href="/sampleFile.xlsx"
+                    download
+                  >
+                    Download Sample File
+                  </Button>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12}>
                   <input type="file" accept=".xlsx" onChange={handleFileChange} />
@@ -129,6 +122,7 @@ useEffect(() => {
             </DialogContentText>
           </form>
         </DialogContent>
+
         <DialogActions>
           <Button variant="contained" onClick={handleSubmit} style={{ textTransform: 'capitalize' }} color="secondary">
             Upload
@@ -137,10 +131,12 @@ useEffect(() => {
             variant="outlined"
             style={{ textTransform: 'capitalize' }}
             onClick={handleClose}
-            sx={{ backgroundColor: '#ff4d4f', color: '#fff' ,'&:hover':{
-                backgroundColor: '#ff4d4f', color: '#fff'
-            }}}
->
+            sx={{
+              backgroundColor: '#ff4d4f',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#ff4d4f', color: '#fff' },
+            }}
+          >
             Cancel
           </Button>
         </DialogActions>

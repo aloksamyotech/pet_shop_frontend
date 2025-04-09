@@ -3,7 +3,7 @@ import { Grid, Card, CardContent, CardMedia, Typography, IconButton, Box, Button
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import MoreVertIcon from "@mui/icons-material/MoreVert"; // Three-dot menu icon
+import MoreVertIcon from "@mui/icons-material/MoreVert"; 
 import HomeIcon from "@mui/icons-material/Home";
 import ViewProduct from "./ViewProduct.js";
 import AddLead from "./AddProduct.js";
@@ -11,12 +11,14 @@ import AddBulkUpload from "./productBulkUpload.js";
 import AddEdit from "./Edit.js";
 import { getApi, deleteApi } from "views/Api/comman.js";
 import { urls } from "views/Api/constant";
-import Swal from "sweetalert2";
+import ConfirmDialog from 'confirmDeletion/deletion';
 import { useNavigate } from "react-router-dom";
 import Iconify from 'ui-component/iconify';
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import AddIcon from "@mui/icons-material/Add"; // Import Plus icon
 import SearchBar from "views/Search/index.js";
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 const Lead = () => {
   const [products, setProducts] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
@@ -32,7 +34,16 @@ const Lead = () => {
   const currencySymbol = userObj.currencySymbol;
    const [filteredProduct, setFilteredProduct] = useState([]);
   const [search, setSearch] = useState([]);
+   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
   
+const { t } = useTranslation();
+
+
+const handleDelete = (id) => {
+  setDeleteId(id);
+  setOpenConfirmDialog(true);
+};
   const handleSearch = (searchItem) => {
     if (!searchItem) {
       setSearch(products);
@@ -43,15 +54,11 @@ const Lead = () => {
       setSearch(filter);
     }
   };
-  
-
-
-  
-
   const fetchProducts = async () => {
     const response = await getApi(urls.product.get);
     setProducts(response?.data?.data || []);
     setSearch(response?.data?.data || [])
+    setFilteredProduct(response?.data?.data || []);
   };
   
 
@@ -67,28 +74,27 @@ const Lead = () => {
     setOpenView(true);
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to remove this product?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, remove it!",
-      cancelButtonText: "Cancel",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.product.delete.replace(":id", id));
-          setProducts((prev) => prev.filter((product) => product._id !== id));
-        
-        } catch (error) {
-          Swal.fire("Error!", "Failed to delete Product.", "error");
-        }
+ 
+   const confirmDelete = async () => {
+      if (!deleteId) return;
+  
+      try {
+        await deleteApi(urls.product.delete.replace(":id", deleteId));
+  
+ 
+              setProducts((prev) => prev.filter((product) => product._id !== deleteId));
+               setFilteredProduct((prev) => prev.filter((product) => product._id !== deleteId));
+               setSearch((prev) => prev.filter((product) => product._id !== deleteId));
+  
+        toast.success(t('Product has been removed successfully'));
+      } catch (error) {
+        toast.error(t('Error! Failed to delete product'));
       }
-    });
-  };
+  
+      setOpenConfirmDialog(false);
+      setDeleteId(null);
+    };
+  
 
   const handleUpdate = (product) => {
     setProductUpdated(product);
@@ -107,6 +113,7 @@ const Lead = () => {
 
   return (
     <>
+      <ConfirmDialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} onConfirm={confirmDelete} />
       <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchProduct={fetchProducts} product={productUpdated} />
       <ViewProduct open={openView} handleClose={() => setOpenView(false)} product={selectedProduct} />
       <AddBulkUpload open={open} handleClose={() => setOpen(false)} fetchProduct={fetchProducts} />
@@ -132,7 +139,7 @@ const Lead = () => {
                   <HomeIcon />
                 </IconButton>
                 <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
-                <Typography variant='h5'>Product Information</Typography> </Stack>
+                <Typography variant='h5'>{t("Product Information")}</Typography> </Stack>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Card>
               <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}  onClick={() => setOpen(true)} size="small"sx={{
@@ -142,7 +149,7 @@ const Lead = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                Bulk Upload
+               {t("Bulk Upload")}
                 </Button>
             </Card>
             <Card>  <Button variant="contained" onClick={() => setOpenAdd(true)} startIcon={<Iconify icon="eva:plus-fill" />}  size="small" sx={{
@@ -152,7 +159,7 @@ const Lead = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-            Add Product
+          {t("Add Product")}
           </Button></Card>
             </Stack>
           </Box>
@@ -177,7 +184,7 @@ const Lead = () => {
                 borderRadius: 2,
                 boxShadow: 2,
                 "&:hover": { boxShadow: 5 },
-                height: "300px",
+                height: "270px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -187,13 +194,13 @@ const Lead = () => {
             >
               <CardMedia
                 component="img"
-                height="140"
+                height="100"
                 image={product.imageUrl || "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg"}
                 alt={product.productName}
                 sx={{ objectFit: "cover", borderRadius: 2 }}
               />
 
-<CardContent sx={{mt:"-15px"}}>
+<CardContent sx={{mt:"-17px"}}>
   <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "16px" }}>
     {product.productName}
   </Typography>
@@ -202,7 +209,7 @@ const Lead = () => {
     {product.category.map((cat, index) => (
       <Box key={index}>
         <Typography sx={{ color: "#757575", fontSize: "14px" }}>
-          <strong>Category:</strong> {cat.name}
+          <strong>{t("Category")}:</strong> {cat.name}
         </Typography>
       </Box>
     ))}
@@ -211,7 +218,7 @@ const Lead = () => {
     {product.SubCategory.map((cat, index) => (
       <Box key={index}>
         <Typography sx={{ color: "#757575", fontSize: "14px" }}>
-          <strong>SubCategory:</strong> {cat.name}
+          <strong>{t("SubCategory")}:</strong> {cat.name}
         </Typography>
       </Box>
     ))}
@@ -225,21 +232,21 @@ const Lead = () => {
     fontWeight: product.quantity <= 5 ? "bold" : "normal", 
   }}
 >
-  <strong>Stock:</strong> {product.quantity > 0 ? product.quantity : "Out of Stock"}
+  <strong>{t("Stock")}:</strong> {product.quantity > 0 ? product.quantity : "Out of Stock"}
 </Typography>
 
 
 
   <Typography variant="h6" sx={{ color:'#6A9C89' , fontWeight: "bold"}}>
-  <strong>Price:</strong> {currencySymbol} {product.price || "N/A"}
+  <strong>{t("Price")}:</strong> {currencySymbol} {product.price || "N/A"}
   </Typography>
   
   <Typography variant="h6" sx={{ color:'#6A9C89'  , fontWeight: "bold"}}>
-  <strong>Discount:</strong> {currencySymbol} {product.discount || "N/A"}
+  <strong>{t("Discount")}:</strong> {currencySymbol} {product.discount || "N/A"}
   </Typography>
 
  
-  <Box sx={{ display: "flex", flexDirection: "row" , gap:'2px',mt:'2px'}}>
+  <Box sx={{ display: "flex", flexDirection: "row" , gap:'2px',mb:'2px'}}>
 
 
 
@@ -250,12 +257,12 @@ const Lead = () => {
     color: "#FF9800",
     paddingRight: "8px",
     paddingLeft:'8px',
-    borderRadius: "30px",
+   borderRadius: "30px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "40px",
-    height: "20px",
+    width: "auto",
+    height: "auto",
     textTransform: "uppercase",
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     gap: "0.5rem",
@@ -272,7 +279,7 @@ const Lead = () => {
   }}
   onClick={() => handleUpdate(product)}
 >
-  Edit
+ {t("Edit")}
 </Box>
 
 <Box
@@ -285,8 +292,8 @@ const Lead = () => {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: "40px",
-    height: "20px",
+    width: "auto",
+    height: "auto",
     textTransform: "uppercase",
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     gap: "0.5rem",
@@ -303,7 +310,7 @@ const Lead = () => {
   }}
   onClick={() => handleDelete(product._id)}
 >
-  Delete
+ {t("Delete")}
 </Box>
 
 

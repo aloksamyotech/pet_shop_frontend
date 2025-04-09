@@ -12,9 +12,9 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
-
 import { getApi, postApi ,postApiImage} from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant';
+import { useTranslation } from 'react-i18next';
 
 const AddLead = (props) => {
   const { open, handleClose, fetchProduct } = props;
@@ -25,6 +25,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj.currencySymbol;
+  const { t } = useTranslation();
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
@@ -36,25 +37,20 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
     setSubCategories(response?.data?.data);
   };
 
-
-
-  
-
   const validationSchema = yup.object({
     productName: yup
       .string()
-      .required('Product Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Product Name must only contain letters')
-      .max(50 , "product name cannot be more then 50 letter"),
-
-    categoryId: yup.string().required('category  is required'),
-
-    price: yup.number().required('Price is required').max(1000000,"product price less then 1000000"),
-
-    discount: yup.number()
-       .integer('discount must be an integer'),
-       SubCategoryId: yup.string().required('subcategory  is required'),
-   
+      .required(t('Product Name is required'))
+      .matches(/^[A-Za-z\s]+$/, t('Product Name must only contain letters'))
+      .max(50, t('product name cannot be more then 50 letter')),
+  
+    categoryId: yup.string().required(t('category is required')),
+  
+    price: yup.number().required(t('Price is required')).max(1000000, t('product price less then 1000000')),
+  
+    discount: yup.number().integer(t('discount must be an integer')),
+  
+    SubCategoryId: yup.string().required(t('subcategory is required')),
   });
 
   const initialValues = {
@@ -91,17 +87,15 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
         formik.resetForm();
         setSelectedImage(null);
         handleClose();
-        toast.success('Product added successfully');
+        toast.success(t('Product added successfully'));
       } catch (error) {
         console.error('Error adding product:', error);
-        toast.error('Failed to add product');
+        toast.error(t('Failed to add product'));
       }
     }
   });
 
- 
-
-  const handleFileChange = (event) => {
+ const handleFileChange = (event) => {
     const file = event.target.files[0];
   formik.setFieldValue('image', file);
     setSelectedImage(file);
@@ -135,7 +129,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
             justifyContent: 'space-between'
           }}
         >
-          <Typography variant="h4">Add Product </Typography>
+          <Typography variant="h4">{t("Add Product")}</Typography>
           <Typography>
             <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
           </Typography>
@@ -145,7 +139,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
             <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
               <Grid container rowSpacing={3} columnSpacing={{ xs: 0, sm: 5, md: 4 }}>
               <Grid item xs={12} >
-  <FormLabel>Product Name</FormLabel>
+  <FormLabel>{t("Product Name")}</FormLabel>
   <TextField
     id="productName"
     name="productName"
@@ -167,7 +161,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>{t("Category")}</FormLabel>
                   <Select
                     id="categoryId"
                     name="categoryId"
@@ -193,7 +187,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
                   </Select>
                 </Grid>
                 <Grid item xs={12} sm={6} md={6}>
-                  <FormLabel>Sub Category</FormLabel>
+                  <FormLabel>{t("Sub Category")}</FormLabel>
                   <Select
                     id="SubCategoryId"
                     name="SubCategoryId"
@@ -222,7 +216,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
                 </Grid>
 
                 <Grid item xs={12} sm={6} md={6}>
-  <FormLabel>Product Price ({currencySymbol})</FormLabel>
+  <FormLabel>{t("Product Price")} ({currencySymbol})</FormLabel>
   <TextField
     id="price"
     name="price"
@@ -240,7 +234,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
 
                 <Grid item xs={12} sm={6} md={6}>
                   <FormControl fullWidth>
-                    <FormLabel>Discount ({currencySymbol})</FormLabel>
+                    <FormLabel>{t("Discount")} ({currencySymbol})</FormLabel>
                     <TextField
                       id="discount"
                       name="discount"
@@ -280,7 +274,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
                       <img src={URL.createObjectURL(formik.values.image)} alt="product" style={{ maxWidth: '100%', maxHeight: '100%' }} />
                     ) : (
                       <Typography variant="body2" color="textSecondary">
-                        Preview Image
+                      {t("Preview Image")}
                       </Typography>
                     )}
                     <Box position="absolute" left={0} bottom={0} p={2}>
@@ -306,7 +300,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
               backgroundColor: '#8DB3A8'
             }
           }}>
-            Save
+           {t("Save")}
           </Button>
           <Button
             onClick={() => {
@@ -325,8 +319,8 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
               }
             }}
           >
-            Cancel
-          </Button>
+          {t("Cancel")}
+          </Button> 
         </DialogActions>
       </Dialog>
     </div>

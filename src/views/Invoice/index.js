@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Pet from 'assets/images/pet-logo.jpg';
 // @mui
 import {
   Paper,
@@ -30,6 +31,7 @@ import axios from 'axios';
 import { urls } from 'views/Api/constant';
 import { getApi } from 'views/Api/comman';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Invoice = () => {
   const location = useLocation();
@@ -41,25 +43,31 @@ const Invoice = () => {
   const user = localStorage.getItem('user');
   const userObj = user ? JSON.parse(user) : null;
   const currencySymbol = userObj.currencySymbol;
-
+const { t } = useTranslation();
 
   const home = () => {
     navigate('/');
   };
 
-  const fetchOrderDate = async () => {
-    const response = await getApi(urls.order.get);
-   setOrderDate(response.data.data[0].createdAt);
-  };
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+  const yyyy = today.getFullYear();
+  
+  const todayDate = `${dd}-${mm}-${yyyy}`;
+  
 
-  useEffect(() => {
-    fetchOrderDate();
-  }, []);
 
-  const date = new Date(orderDate);
-  const formattedDate = orderDate ? new Date(orderDate).toLocaleDateString() : 'N/A';
+  const now = new Date();
+  const hours = String(now.getHours());
+  const minutes = String(now.getMinutes());
+  const seconds = String(now.getSeconds());
 
-  const printInvoice = () => {
+  const currentTime = `${hours}:${minutes}:${seconds}`;
+  
+
+   
+ const printInvoice = () => {
     const content = document.getElementById('invoice-content');
     const printWindow = window.open('', '', 'width=800,height=600');
 
@@ -135,12 +143,12 @@ const Invoice = () => {
               '&:hover': { color: '#2067db' }
             }}
           >
-            Order
+           {t("order")}
           </Typography>
 
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
           <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
-            View Invoice
+          {t("view_invoice")}
           </Typography>
         </Stack>
       </Box>
@@ -173,23 +181,21 @@ const Invoice = () => {
           >
             <Box>
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpJYkrPXmUAtG_7-3eByMmjjd8B-i3C0LLUg&s"
+                src={userObj?.imageUrl || Pet}
                 alt="Sample"
-                style={{ width: '20%', height: 'auto' }}
+                style={{ width: '15%', height: 'auto' }}
               />
               <Box>
                 <Typography >
-                  <strong>Invoice Id:</strong>
+                  <strong>{t("invoice_id")}:</strong>
                   {AllData.orderId}
                 </Typography>
                 <Typography>
-                  <strong>Date:</strong> {formattedDate}
+                  <strong>{t("date")}:</strong> {todayDate}
                 </Typography>
                 <Typography>
-                  <strong>Time:</strong>{' '}
-                  {orderDate
-                    ? new Date(orderDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-                    : 'N/A'}
+                  <strong>{t("time")}:</strong>{' '}
+                  {todayDate ? currentTime : 'N/A'}
                 </Typography>
               </Box>
             </Box>
@@ -203,11 +209,11 @@ const Invoice = () => {
               }}
             >
               <Typography>
-                The Pet Stop
+               {t("store_name")}
                 <br />
-                1234 Happy Paws Street 87876
+                {t("store_address")}
                 <br />
-                United States
+              {t("store_country")}
               </Typography>
             </Box>
           </Box>
@@ -215,16 +221,16 @@ const Invoice = () => {
           <Divider sx={{ mb: 3 }} />
 
           <Box sx={{ marginBottom: '10px' }}>
-            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>Customer Information</Typography>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>{t("customer_info")}</Typography>
             <Box sx={{ padding: '15px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Name :</strong> {AllData.customerName}
+                <strong>{t("name_Invoice")} :</strong> {AllData.customerName}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Email :</strong> {AllData.customerEmail}
+                <strong>{t("Email")} :</strong> {AllData.customerEmail}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>Phone Number :</strong> {AllData?AllData.customerPhone : 'N/A'}
+                <strong>{t("phone")}:</strong> {AllData?AllData.customerPhone : 'N/A'}
               </Typography>
             </Box>
           </Box>
@@ -244,9 +250,9 @@ const Invoice = () => {
                 <Table>
                   <TableHead>
                     <TableRow sx={{ fontWeight: 'bold' }}>
-                      <TableCell >Product Name</TableCell>
-                      <TableCell >Quantity</TableCell>
-                      <TableCell >Rate ({currencySymbol} )</TableCell>
+                      <TableCell>{t("product_name")}</TableCell>
+                      <TableCell >{t("quantity")}</TableCell>
+                      <TableCell >{t("rate")} ({currencySymbol} )</TableCell>
                       {/* <TableCell >Discount ({currencySymbol} )</TableCell> */}
                       {/* <TableCell sx={{ color: 'white' }}>Category Name</TableCell> */}
                     </TableRow>
@@ -283,14 +289,13 @@ const Invoice = () => {
             }}
             onClick={printInvoice}
           >
-            Print
+           {t("print")}
           </Button>
         </Box>
 
         <Box>
           <Typography sx={{ color: 'gray', padding: '10px' }}>
-            Thank you for visiting our shop! We truly appreciate your trust in us to care for your beloved pets. We look forward to serving
-            you again soon!
+           {t("thank_you")}
           </Typography>
         </Box>
       </Box>

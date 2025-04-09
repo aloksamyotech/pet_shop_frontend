@@ -13,11 +13,13 @@ import ViewCompany from './ViewSupplier';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddEdit from './Edit';
-import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import ConfirmDialog from 'confirmDeletion/deletion';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import SearchBar from 'views/Search';
 import ProductAdd from './ProductAdd';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useTranslation } from 'react-i18next';
 
 const Supplier = () => {
   const navigate = useNavigate();
@@ -28,12 +30,18 @@ const Supplier = () => {
   const [companyUpdated, setCompanyUpdated] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [open, setOpen] = useState(false);
-  
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const { t } = useTranslation();
   const [selectedRow, setSelectedRow] = useState(null);
 
   const [anchorEl, setAnchorEl] = useState(null);
 const [currentRowId, setCurrentRowId] = useState(null);
 
+const handleDelete = (id) => {
+  setDeleteId(id);
+  setOpenConfirmDialog(true);
+};
 
 const handleOpenActions = (event, rowId) => {
   setAnchorEl(event.currentTarget);
@@ -52,7 +60,7 @@ const handleCloseActions = () => {
       setSupplier(data);
       setFilteredCompany(data); 
     } catch (error) {
-      console.error('Error fetching supplier data:', error);
+      console.error("error_fetching_data", error);
     }
   };
 
@@ -81,46 +89,80 @@ const handleCloseActions = () => {
     setOpenEdit(true);
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to remove this company?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, remove it!',
-      cancelButtonText: 'Cancel'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteApi(urls.company.delete.replace(':id', id));
-          setSupplier((prev) => prev.filter((sup) => sup._id !== id));
-          setFilteredCompany((prev) => prev.filter((sup) => sup._id !== id));
-        
-        } catch (error) {
-          Swal.fire('Error!', 'Failed to delete company.', 'error');
-        }
-      }
-    });
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+
+    try {
+      await deleteApi(urls.company.delete.replace(':id', deleteId));
+      setSupplier((prev) => prev.filter((sup) => sup._id !== deleteId));
+      setFilteredCompany((prev) => prev.filter((sup) => sup._id !== deleteId));
+      toast.success(t('Supplier has been removed successfully'));
+    } catch (error) {
+      toast.error(t('Error! Failed to delete supplier'));
+    }
+
+    setOpenConfirmDialog(false);
+    setDeleteId(null);
   };
+
+ 
 
 
 
   const columns = [
-    { field: 'companyName', headerName: 'Supplier', flex: 1 , renderCell: (params) => (
+    { field: 'companyName', headerName: t('Supplier'), flex: 1 , renderCell: (params) => (
       <Stack direction="row" alignItems="center" spacing={1}>
        <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
         <Typography>{params.value}</Typography>
       </Stack>
     ),},
-    { field: 'email', headerName: 'Email', flex: 1 },
-    { field: 'phoneNumber', headerName: 'Phone Number', flex: 1 },
-    { field: 'address', headerName: 'Address', flex: 1 },
-    { field: 'description', headerName: 'Description', flex: 1 },
+    { field: 'email', headerName: t('Email'), flex: 1 },
+    { field: 'phoneNumber', headerName:t('Phone Number'), flex: 1 },
+    { field: 'address', headerName: t('Address'), flex: 1 },
+    { field: 'description', headerName: t('Description'), flex: 1 },
+    {
+      field: 'status',
+      headerName: t('Status'),
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              backgroundColor:
+                params.value === 'Active'
+                  ? '#D5FADF'
+                  : params.value === 'Inactive'
+                  ? '#F8E1A1'
+                  : params.value === 'Blocked'
+                  ? '#FBE9E7'
+                  : '',
+              color:
+                params.value === 'Active'
+                  ? '#19AB53'
+                  : params.value === 'Inactive'
+                  ? '#FF9800'
+                  : params.value === 'Blocked'
+                  ? '#F44336'
+                  : '',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingRight: '8px',
+              paddingLeft: '8px',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+              maxWidth: '100%',
+              fontSize: '0.8125rem'
+            }}
+          >
+            {params.value}
+          </Box>
+        );
+      }
+    },
     {
       field: 'Action',
-      headerName: 'Action',
+      headerName: t('Action'),
       flex: 1,
       sortable: false,
       renderCell: (params) => (
@@ -137,14 +179,7 @@ const handleCloseActions = () => {
               sx: { boxShadow: 3, borderRadius: '20px' },
             }}
           >
-            {/* <MenuItem
-              onClick={() => {
-                handleView(params.row);
-                handleCloseActions();
-              }}
-            >
-              <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
-            </MenuItem> */}
+           
             <MenuItem
               onClick={() => {
                 handleUpdate(params.row);
@@ -177,6 +212,7 @@ const handleCloseActions = () => {
 
   return (
     <>
+     <ConfirmDialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} onConfirm={confirmDelete} />
     <ProductAdd open={open} handleClose={() => setOpen(false)} fetchSupplier={fetchSupplier}/>
       <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} company={companyUpdated} fetchSupplier={fetchSupplier} />
       <ViewCompany open={openView} handleClose={() => setOpenView(false)} supplier={selectedCompany} />
@@ -202,9 +238,9 @@ const handleCloseActions = () => {
                 <HomeIcon />
               </IconButton>
               <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-              <Typography>Clients</Typography>
+              <Typography>{t("Clients")}</Typography>
               <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>Supplier Information</Typography>
+              <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>{t("Supplier Information")}</Typography>
             </Stack>
 
             <Stack direction="row" alignItems="center" spacing={2}>
@@ -216,7 +252,7 @@ const handleCloseActions = () => {
                     backgroundColor: '#8DB3A8' 
                   }
                 }}>
-                  New Supplier
+                 {t( "New Supplier")}
                 </Button>
               </Card>
             </Stack>
@@ -224,9 +260,18 @@ const handleCloseActions = () => {
         </Stack>
 
      <TableStyle>
-          <Card sx={{ height: '600px', marginTop: '-10px' }}>
+          <Card sx={{ height: 'auto', marginTop: '-10px' }}>
           <SearchBar onSearch={handleSearch} />
-            <DataGrid rows={filteredCompany} columns={columns} getRowId={(row) => row._id} />
+            <DataGrid rows={filteredCompany} columns={columns} getRowId={(row) => row._id} 
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10
+                    }
+                  }
+                }}
+                pageSizeOptions={[10]}
+ />
           </Card>
         </TableStyle>
       </Grid>

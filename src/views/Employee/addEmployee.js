@@ -20,23 +20,35 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { getApi, updateApi, postApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol }) => {
   const isEdit = Boolean(customer);
-
+  const { t } = useTranslation();
   const validationSchema = yup.object({
     name: yup
       .string()
-      .required('First Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'First Name must only contain letters')
-      .max(50, 'First Name cannot be more than 50 characters'),
-    email: yup.string().required('Email is required').email('Invalid email address'),
-   
+      .required(t('First Name is required'))
+      .matches(/^[A-Za-z\s]+$/, t('First Name must only contain letters'))
+      .max(50, t('First Name cannot be more than 50 characters')),
+  
+    email: yup
+      .string()
+      .required(t('Email is required'))
+      .email(t('Invalid email address')),
+  
     EId: yup
-    .string()
-    .required('Id is required'),
-    address: yup.string().required('Address is required').max(100, 'Address cannot be more than 100 characters'),
-    salary: yup.string().required('Salary is required')
+      .string()
+      .required(t('Id is required')),
+  
+    address: yup
+      .string()
+      .required(t('Address is required'))
+      .max(100, t('Address cannot be more than 100 characters')),
+  
+    salary: yup
+      .string()
+      .required(t('Salary is required'))
   });
 
   const initialValues = {
@@ -54,15 +66,17 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
     onSubmit: async (values) => {
       if (isEdit) {
         await updateApi(urls.employee.update.replace(':id', customer._id), values);
-        toast.success('employee updated successfully!');
+        toast.success(t('employee updated successfully!'));
       } else {
         await postApi(urls.employee.create, values);
-        toast.success('employee added successfully!');
+        toast.success(t("employee_added_successfully"));
       }
       await fetchCustomer();
       handleClose();
     }
   });
+
+ 
 
   useEffect(() => {
     if (isEdit) {
@@ -82,7 +96,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
   return (
     <Dialog open={open} aria-labelledby="customer-dialog-title">
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h4">{isEdit ? 'Update Customer' : 'Create Employee'}</Typography>
+        <Typography variant="h4">{isEdit ? t('Update Customer') : t('Create Employee')}</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <DialogContent dividers>
@@ -90,7 +104,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
           <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Employee Id</FormLabel>
+                <FormLabel>{t("Employee Id")}</FormLabel>
                 <TextField
                   id="EId"
                   EId="EId"
@@ -105,7 +119,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t("Name")}</FormLabel>
                 <TextField
                   id="name"
                   name="name"
@@ -120,7 +134,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("Email")}</FormLabel>
                 <TextField
                   id="email"
                   name="email"
@@ -135,7 +149,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Address</FormLabel>
+                <FormLabel>{t("Address")}</FormLabel>
                 <TextField
                   id="address"
                   name="address"
@@ -150,7 +164,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel>{t("Phone Number")}</FormLabel>
                 <TextField
                   id="phoneNumber"
                   name="phoneNumber"
@@ -168,7 +182,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <FormLabel>Salary ({currencySymbol})</FormLabel>
+                <FormLabel>{t("Salary")} ({currencySymbol})</FormLabel>
                 <TextField
                   id="salary"
                   name="salary"
@@ -195,7 +209,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
                 backgroundColor: '#8DB3A8'
               }
             }}>
-          {isEdit ? 'Update' : 'Save'}
+          {isEdit ? t('Update') : t('Save')}
         </Button>
         <Button variant="outlined" onClick={handleClose}  sx={{
             border: '1px solid #6A9C89',
@@ -205,7 +219,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
               color: '#6A9C89'
             }
           }}>
-          Cancel
+          {t("Cancel")}
         </Button>
       </DialogActions>
     </Dialog>

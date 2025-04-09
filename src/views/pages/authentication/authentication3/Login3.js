@@ -9,11 +9,15 @@ import AuthFooter from 'ui-component/cards/AuthFooter.js';
 import { getApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { useEffect } from 'react';
+import Pet from 'assets/images/pet-logo.jpg';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 
 const Login = () => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
+    const { t } = useTranslation();
 
   const [logo,setLogo] = useState(null)
   
@@ -65,7 +69,7 @@ const Login = () => {
     >
       <Avatar
         alt="Logo Image"
-        src={  logo?.imageUrl || 'https://www.shutterstock.com/image-vector/pet-shop-logo-template-600w-1053368123.jpg'}
+        src={logo?.imageUr||Pet}
         sx={{
           width: 80,
           height: 80,
@@ -79,10 +83,10 @@ const Login = () => {
   <Grid item xs={12}>
     <Stack alignItems="center">
       <Typography variant="h3" sx={{ fontWeight: 700, textAlign: 'center', color:'#6A9C89' }}>
-        Welcome to Pet Shop
+        {t("welcome")}
       </Typography>
       <Typography textAlign="center" variant="body2" sx={{ color: 'black' }}>
-        Login to use the platform
+     {t("login")}
       </Typography>
     </Stack>
   </Grid>
@@ -137,8 +141,8 @@ const Login = () => {
                 marginTop: '16px'
               }}
             >
-              Pet Shop Management System <br />
-              <span style={{ fontSize: '12px' }}>Manage your pet shop with ease and efficiency</span>
+           {t("title")} <br />
+              <span style={{ fontSize: '12px' }}>{t("description_PetShop")}</span>
             </Typography>
           </Box>
         </Grid>

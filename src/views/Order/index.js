@@ -1,25 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  Container,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Button,
-  Typography,
-  Box,
-  Divider,
-  Card,
-  CardMedia,
-  Breadcrumbs,
-  Stack
-} from '@mui/material';
+import {Container,Grid,Table,TableBody,  TableCell,TableContainer, TableHead,TableRow,Paper, IconButton, Button,
+  Typography,Box,Divider,Card,CardMedia,Breadcrumbs,Stack} from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { Remove, Add, Delete } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -29,6 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const Checkout = () => {
   const location = useLocation();
@@ -42,6 +25,8 @@ const Checkout = () => {
 
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
+
+   const { t } = useTranslation();
   const fetchProduct = async () => {
     try {
       const response = await getApi(urls.product.get);
@@ -97,13 +82,12 @@ const Checkout = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         removeItem(cartItem._id);
-      
-      } 
+      }
     });
   };
 
   const handleCreateInvoice = async () => {
-    if (!selectedCustomer ) {
+    if (!selectedCustomer) {
       Swal.fire('Error', 'Please select a customer!', 'error');
       return;
     }
@@ -112,7 +96,7 @@ const Checkout = () => {
         title: 'Your cart is empty!',
         text: 'Please add items to the cart before proceeding to invoice.',
         icon: 'warning',
-        confirmButtonText: 'Okay',
+        confirmButtonText: 'Okay'
       });
       return;
     }
@@ -137,7 +121,7 @@ const Checkout = () => {
       const Data = response.data.data;
       setCartItems([]);
       navigate('/dashboard/ProductType', { state: { Data } });
-      toast.success('Order completed  successfully!');
+      toast.success(t("order_completed"));
     } catch (error) {
       console.error('Error creating invoice:', error);
       Swal.fire('Error', 'There was an issue creating the invoice.', 'error');
@@ -150,61 +134,58 @@ const Checkout = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Stack direction="row" alignItems="center" mb={5}>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            height: '50px',
+            width: '100%',
+            display: 'flex',
+            borderRadius: '10px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '0 25px'
+          }}
+        >
+          <Stack direction="row" alignItems="center">
+            <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
+              <HomeIcon />
+            </IconButton>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
 
-<Stack direction="row" alignItems="center" mb={5}>
-            <Box
+            <Typography
+              onClick={() => navigate(-1)}
               sx={{
-                backgroundColor: 'white',
-                height: '50px',
-                width: '100%',
-                display: 'flex',
-                borderRadius: '10px',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '0 25px',
-                
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontSize: '15px',
+                mx: 1,
+                '&:hover': { color: '#2067db' }
               }}
             >
-              <Stack direction="row" alignItems="center">
-                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
-                  <HomeIcon />
-                </IconButton>
-                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+              {t("POS")}
+            </Typography>
 
-                <Typography
-                  onClick={() => navigate(-1)}
-                  sx={{
-                    cursor: 'pointer',
-                    textDecoration: 'underline',
-                    fontSize: '15px',
-                    mx: 1,
-                    '&:hover': { color: '#2067db' }
-                  }}
-                >
-                  POS
-                </Typography>
-
-                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
-                <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
-                 Checkout Page
-                </Typography>
-              </Stack>
-            </Box>
+            <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+            <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
+             {t("Checkout Page")}
+            </Typography>
           </Stack>
-     
+        </Box>
+      </Stack>
 
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <TableContainer component={Paper} sx={{ mb: 3  , mt:'-20px'}}>
+          <TableContainer component={Paper} sx={{ mb: 3, mt: '-20px' }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Image</TableCell>
-                  <TableCell>Product Name</TableCell>
-                  <TableCell align="center">Price</TableCell>
-                  <TableCell align="center">Quantity</TableCell>
-                  <TableCell align="center">Total</TableCell>
-                  <TableCell align="center">Actions</TableCell>
+                  <TableCell>{t("Image")}</TableCell>
+                  <TableCell>{t("Product Name")}</TableCell>
+                  <TableCell align="center">{t("Price")}</TableCell>
+                  <TableCell align="center">{t("Quantity")}</TableCell>
+                  <TableCell align="center">{t("Total")}</TableCell>
+                  <TableCell align="center">{t("Actions")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -286,19 +267,19 @@ const Checkout = () => {
         </Grid>
 
         <Grid item xs={4}>
-          <Box sx={{ p: 3, bgcolor: 'white', borderRadius: 2, boxShadow: 3 , mt:'-20px'}}>
-            <Typography variant="h5">Order Summary</Typography>
+          <Box sx={{ p: 3, bgcolor: 'white', borderRadius: 2, boxShadow: 3, mt: '-20px' }}>
+            <Typography variant="h5">{t("Order Summary")}</Typography>
             <Divider sx={{ my: 2 }} />
 
             <Typography variant="h">
-              Total Items:
+              {t("Total Items")}:
               <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold', ml: 1 }}>
                 {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
               </Typography>
             </Typography>
 
             <Typography variant="h6" sx={{ mt: 2 }}>
-              Total Price:
+             {t("Total Price")} :
               <Typography component="span" variant="body1" color="#39b2e9" sx={{ fontWeight: 'bold', ml: 1 }}>
                 {currencySymbol} {totalPrice.toFixed(2)}
               </Typography>
@@ -307,14 +288,19 @@ const Checkout = () => {
             <Divider sx={{ my: 2 }} />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '4px' }}>
-              <Button fullWidth variant="contained"  sx={{
-            backgroundColor: '#6A9C89',
-            color: '#ffff',
-            '&:hover': {
-              backgroundColor: '#8DB3A8'
-            }
-          }} onClick={handleCreateInvoice}>
-                Confirm
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8'
+                  }
+                }}
+                onClick={handleCreateInvoice}
+              >
+               {t("Confirm")}
               </Button>
               <Button
                 fullWidth
@@ -329,7 +315,7 @@ const Checkout = () => {
                 }}
                 onClick={() => setCartItems([])}
               >
-                Cancel
+               {t("Cancel")}
               </Button>
             </Box>
           </Box>

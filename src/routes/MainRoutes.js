@@ -1,11 +1,8 @@
 import { lazy } from 'react';
-
-// project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import { element } from 'prop-types';
 
-// dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const Product = Loadable(lazy(() => import('views/Product')));
 const CustomerDetail = Loadable(lazy(() => import('views/CustomerDetail')));
@@ -22,10 +19,6 @@ const Order =  Loadable(lazy(() => import('views/Order/index')))
 const Employee = Loadable(lazy(()=> import('views/Employee')))
 const SunCategory = Loadable(lazy(()=> import('views/SubCategory')))
 const AIChatBord = Loadable(lazy(()=> import('views/AIChatBord')))
-
-
-
-// ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
   path: '/',

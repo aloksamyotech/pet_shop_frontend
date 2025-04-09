@@ -6,6 +6,7 @@ import { useTheme, styled } from '@mui/material/styles';
 import { Box, Grid, Typography } from '@mui/material';
 import { getApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import { useTranslation } from 'react-i18next';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -59,6 +60,7 @@ const TotalCustomer = ({ isLoading }) => {
     }
   };
 
+  const { t } = useTranslation();
   useEffect(() => {
     fetchCustomer();
   }, []);
@@ -95,7 +97,7 @@ const TotalCustomer = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                      Total Customer
+                     {t("Total Customer")}
                     </Typography>
                   </Grid>
                 </Grid>

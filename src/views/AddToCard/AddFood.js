@@ -5,30 +5,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useMemo } from 'react';
-
-import {
-  Stack,
-  Autocomplete,
-  Button,
-  InputBase,
-  Grid,
-  Card,
-  Box,
-  CardMedia,
-  Typography,
-  Container,
-  Breadcrumbs,
-  Select,
-  CustomTabPanel,
-  TextField,
-  FormLabel,
-  Tab,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  Rating
-} from '@mui/material';
+import {Stack,InputLabel,Autocomplete, Button,InputBase,Grid,Card, Box,CardMedia,Typography,Container,Breadcrumbs,Select,  CustomTabPanel,TextField,FormLabel, Tab, Dialog,DialogTitle,DialogActions,DialogContent, Rating,Menu,
+  MenuItem,FormControl} from '@mui/material';
 import Iconify from 'ui-component/iconify';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
@@ -47,6 +25,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import './cart.css';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { toast } from 'react-toastify';
+import SearchBar from 'views/Search';
+import Accordion, { accordionClasses } from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails, {
+  accordionDetailsClasses,
+} from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTranslation } from 'react-i18next';
 
 const AddFood = () => {
   const validationSchema = yup.object({
@@ -77,10 +63,14 @@ const AddFood = () => {
   const currencySymbol = userObj.currencySymbol;
   const [openForm, setOpenForm] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
-  const [categorySubcategory , setCategorySubcategory] = useState([])
+  const [categorySubcategory, setCategorySubcategory] = useState([]);
+  const [productPrice, setProductPrice] = useState('');
 
+  const { t } = useTranslation();
 
-
+  const handlePrice = (event) => {
+    setProductPrice(event.target.value);
+  };
 
   const fetchPurchase = async () => {
     const response = await getApi(urls.purchase.get);
@@ -90,8 +80,6 @@ const AddFood = () => {
     setValue(newValue);
   };
 
-
-
   const fetchCustomer = async () => {
     const response = await getApi(urls.customer.get);
     setCustomerData(response?.data?.data);
@@ -99,79 +87,53 @@ const AddFood = () => {
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategories((prev) => {
-      const newSelected = prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId];
-  
-      const updatedSubcategories = subcategoryData.filter((sub) =>
-        newSelected.includes(sub.categoryId)
-      );
+      const newSelected = prev.includes(categoryId) ? prev.filter((id) => id !== categoryId) : [...prev, categoryId];
+      const updatedSubcategories = subcategoryData.filter((sub) => newSelected.includes(sub.categoryId));
       setVisibleSubcategories(updatedSubcategories);
-  
       setCategorySubcategory((prevState) => {
         const categoryExists = prevState.find((item) => item.category === categoryId);
-       if (categoryExists) {
+        if (categoryExists) {
           return prevState.filter((item) => item.category !== categoryId);
         } else {
           return [...prevState, { category: categoryId, subcategory: [] }];
         }
       });
-  
       return newSelected;
     });
   };
-  
 
- 
   const handleSubcategoryClick = (subId, categoryId) => {
     setSelectedSubcategories((prev) => {
-      const newSubCategory = prev.includes(subId)
-        ? prev.filter((id) => id !== subId)
-        : [...prev, subId];
-  
+      const newSubCategory = prev.includes(subId) ? prev.filter((id) => id !== subId) : [...prev, subId];
+
       setCategorySubcategory((prevState) =>
         prevState.map((item) =>
           item.category === categoryId
             ? {
                 ...item,
-                subcategory: item.subcategory.includes(subId)
-                  ? item.subcategory.filter((id) => id !== subId)
-                  : [...item.subcategory, subId],
+                subcategory: item.subcategory.includes(subId) ? item.subcategory.filter((id) => id !== subId) : [...item.subcategory, subId]
               }
-            : item  
+            : item
         )
       );
-  
       return newSubCategory;
     });
   };
-  
 
- 
-
-  const filterProduct= useMemo(() => {
-    
-    if (categorySubcategory.length === 0) return productData;
+  const filterProduct = useMemo(() => {
+    if (!search && categorySubcategory.length === 0) return productData;
     return productData.filter((product) => {
-      return categorySubcategory.some(({ category, subcategory }) => {
-        const matchCategory = product.categoryId === category;
-  
-        const matchSubcategory =
-          subcategory.length > 0
-            ? subcategory.includes(product.SubCategoryId)
-            : true;
-  
-        const matchSearch = product.productName
-          .toLowerCase()
-          .includes(search.toLowerCase());
-  
-        return matchCategory && matchSubcategory && matchSearch && product.quantity > 0;
-      });
+      const matchSearch = product.productName.toLowerCase().includes(search.toLowerCase());
+      if (!matchSearch) return false;
+      return categorySubcategory.length === 0
+        ? true
+        : categorySubcategory.some(({ category, subcategory }) => {
+            const matchCategory = product.categoryId === category;
+            const matchSubcategory = subcategory.length > 0 ? subcategory.includes(product.SubCategoryId) : true;
+            return matchCategory && matchSubcategory;
+          });
     });
   }, [productData, categorySubcategory, search]);
-  
-  
-  
 
   const handleCustomerChange = (event) => {
     const customerId = event.target.value;
@@ -207,8 +169,7 @@ const AddFood = () => {
       });
       return;
     }
-
-    navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
+   navigate('/dashboard/order', { state: { cartItems, selectedCustomer } });
   };
 
   const handleIncrementQuantity = (_id) => {
@@ -283,7 +244,6 @@ const AddFood = () => {
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
-
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
     setCategoryData(response.data?.data);
@@ -294,8 +254,13 @@ const AddFood = () => {
   };
 
   const fetchProduct = async () => {
-    const response = await getApi(urls.product.get);
-    setProductData(response.data?.data);
+    if (!productPrice) {
+      const response = await getApi(urls.product.get);
+      setProductData(response.data?.data);
+    } else {
+      const response = await getApi(`${urls.product.get}?sort=${productPrice}`);
+      setProductData(response.data?.data);
+    }
   };
 
   useEffect(() => {
@@ -307,7 +272,7 @@ const AddFood = () => {
       await fetchPurchase();
     };
     fetchData();
-  }, []);
+  }, [productPrice]);
 
   const handleClick = () => {
     navigate('/dashboard/default');
@@ -334,17 +299,15 @@ const AddFood = () => {
           padding: '0 25px',
           mb: '40px'
         }}
-      >
-        <Stack direction="row" alignItems="center">
+      >  <Stack direction="row" alignItems="center">
           <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
             <HomeIcon />
           </IconButton>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black', mr: 1 }} />
-          <Typography variant="h5">POS</Typography>{' '}
+          <Typography variant="h5">{t("POS")}</Typography>{' '}
         </Stack>
       </Box>
-
-      <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px', borderRadius: '10px' }}>
+   <Box sx={{ backgroundColor: '#fff', p: '5px', width: '100%', marginTop: '-20px', borderRadius: '10px' }}>
         <Box
           sx={{
             backgroundColor: 'white',
@@ -361,7 +324,8 @@ const AddFood = () => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <SearchIcon />
-            <InputBase placeholder="Search Product..." onChange={handleSearch} value={search} />
+            {/* <SearchBar onSearch={handleSearch} /> */}
+            <InputBase placeholder= {t("search_product")} onChange={handleSearch} value={search} />
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -370,9 +334,25 @@ const AddFood = () => {
               value={selectedCustomer}
               onChange={(event, newValue) => setSelectedCustomer(newValue)}
               getOptionLabel={(option) => `${option.firstName} (${option.email})`}
-              renderInput={(params) => <TextField {...params} label="Customer" size="small" />}
-              sx={{ width: '300px' }}
+              renderInput={(params) => <TextField {...params} label={t("Customer")} size="small" />}
+              sx={{ width: '250px' }}
             />
+            <Card>
+              <FormControl sx={{ width: 200 }} size="small">
+                <Select
+                  value={productPrice}
+                  onChange={handlePrice}
+                  displayEmpty
+                  renderValue={(selected) => (selected ? selected : t("sort_by_price"))}
+                >
+                  <MenuItem disabled value="">
+                {t("sort_by_price")}
+                  </MenuItem>
+                  <MenuItem value="High to Low">{t("High to Low")}</MenuItem>
+                  <MenuItem value="Low to High">{t("Low to High")}</MenuItem>
+                </Select>
+              </FormControl>
+            </Card>
             <Card>
               <Button
                 variant="contained"
@@ -387,89 +367,68 @@ const AddFood = () => {
                   }
                 }}
               >
-                New Customer
+              {t("New Customer")}
               </Button>
             </Card>
           </Box>
         </Box>
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={2}>
-            <Box
-              sx={{
-                flex: 1,
-                overflowY: 'auto',
-                height: '70vh',
-                width: '100%',
-                backgroundColor: '#fff',
-                border: '1px solid #d3d3d3',
-                padding: '5px',
-                borderRadius: '10px'
-              }}
-            >
-              <FormGroup>
-              {categoryData
-        .filter((category) =>
-          productData.some(
-            (product) =>
-              product.categoryId === category._id && product.quantity > 0
-          )
-        )
+        <Grid item xs={12} md={2}>
+  <Box
+    sx={{
+      flex: 1,
+      overflowY: 'auto',
+      height: '70vh',
+      width: '100%',
+      backgroundColor: '#fff',
+      border: '1px solid #d3d3d3',
+      padding: '3px',
+      borderRadius: '10px',
+    }}
+  >
+    <FormGroup>
+      {categoryData
+        .filter((category) => productData.some((product) => product.categoryId === category._id && product.quantity > 0))
         .map((category) => (
-          <div key={category._id}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                size='small'
-                  checked={selectedCategories.includes(category._id)}
-                  onChange={() => handleCategoryClick(category._id)}
-                  sx={{
-                    color: '#6A9C89',
-                    '&.Mui-checked': { color: '#6A9C89' },
-                   
-                }}
-                />
-              }
-              label={category.name}
-              sx={{ cursor: 'pointer', borderRadius: '5px' , fontSize:'12px'}}
-            />
+          <Accordion  key={category._id} expanded={selectedCategories.includes(category._id)} onChange={() => handleCategoryClick(category._id)} sx={{ margin: 0, boxShadow: 'none', '&:before': { display: 'none' } }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ paddingLeft: '5px 10px', fontWeight: 'bold', margin:'-10px'}}>
+              {category.name}
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: '5px 10px', margin: 0, mb:'-32px' }} >
+              {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
+                visibleSubcategories
+                  .filter((sub) => sub.categoryId === category._id)
+                  .map((sub) => (
+                    <FormControlLabel
+                      key={sub._id}
+                      control={
+                        <Checkbox
+                          size="small"
+                          checked={selectedSubcategories.includes(sub._id)}
+                          onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
+                          sx={{
+                            color: '#4A7C59',
+                            '&.Mui-checked': { color: '#4A7C59' },
+                          }}
+                        />
+                      }
+                      label={<span style={{ fontSize: '12px' }}>{sub.name}</span>}
+                      sx={{ color: '#555', fontSize: '4px' ,mt:'-15px'}}
+                    />  
+                  ))
+              ) : (
+                <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
+                  No subcategories available
+                </Typography>
+              )}
+            </AccordionDetails>
+          </Accordion>
+        ))}
+    </FormGroup>
+  </Box>
+</Grid>
 
-                    {selectedCategories.includes(category._id) && (
-                      <Box sx={{ pl: 2, mt: 1 }}>
-                        {visibleSubcategories.filter((sub) => sub.categoryId === category._id).length > 0 ? (
-                          visibleSubcategories
-                            .filter((sub) => sub.categoryId === category._id)
-                            .map((sub) => (
-                              <FormControlLabel
-                                key={sub._id}
-                                control={
-                                  <Checkbox
-                                  size='small'
-                                    checked={selectedSubcategories.includes(sub._id)}
-                                    onChange={() => handleSubcategoryClick(sub._id, sub.categoryId)}
-                                    sx={{
-                                      color: '#4A7C59',
-                                      '&.Mui-checked': { color: '#4A7C59' },
-                                   
-                                    }}
-                                  />
-                                }
-                                label={<span style={{fontSize:'12px'}}>{sub.name}</span>}
-                                sx={{ ml: 1, color: '#555',fontSize:'5px' }}
-                              />
-                            ))
-                        ) : (
-                          <Typography variant="body2" sx={{ ml: 2, color: '#999' }}>
-                            No subcategories available
-                          </Typography>
-                        )}
-                      </Box>
-                    )}
-                  </div>
-                ))}
-              </FormGroup>
-            </Box>
-          </Grid>
 
           <Grid item xs={12} md={6}>
             <Box
@@ -493,7 +452,7 @@ const AddFood = () => {
                         transition: 'box-shadow 1s, transform 1s',
                         cursor: 'pointer',
                         width: '100%',
-                        height: '25vh',
+                        height: '20vh',
                         border: '1px solid #d3d3d3',
                         display: 'flex',
                         flexDirection: 'column',
@@ -502,15 +461,15 @@ const AddFood = () => {
                     >
                       <CardMedia
                         component="img"
-                        height="90vh"
+                        height="70vh"
                         image={product.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-                        sx={{ objectFit: 'cover', width: '100%', p: '4px', borderRadius: '8px' }}
+                        sx={{ objectFit: 'cover', width: '100%', borderRadius: '8px' }}
                       />
 
-                      <Box sx={{ p: '4px' }}>
+                      <Box sx={{ p: '2px' }}>
                         <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>{product.productName}</Typography>
 
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                           <Typography sx={{ color: '#39b2e9', fontWeight: 'bold' }}>
                             {currencySymbol} {product.price}
                           </Typography>
@@ -657,7 +616,7 @@ const AddFood = () => {
               }}
             >
               <Typography variant="h6" color="secondary">
-                Total: {currencySymbol} {totalPrice.toFixed(2)}
+             {t("Total")}: {currencySymbol} {totalPrice.toFixed(2)}
               </Typography>
               <Box sx={{ marginRight: '-40px' }}>
                 <Button
@@ -670,7 +629,7 @@ const AddFood = () => {
                   }}
                   onClick={handleBuyNow}
                 >
-                  Checkout
+                 {t("Checkout")}
                 </Button>
               </Box>
               <Box>
@@ -685,7 +644,7 @@ const AddFood = () => {
                   }}
                   onClick={deleteAll}
                 >
-                  Clear Cart
+                {t("Clear Cart")}
                 </Button>
               </Box>
             </Box>
