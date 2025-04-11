@@ -57,6 +57,8 @@ const Checkout = () => {
     setFilteredPurchase(purchases);
   };
 
+
+
   const { t } = useTranslation();
 
   const filterData = () => {
@@ -222,15 +224,20 @@ const Checkout = () => {
 
 <TabPanel value="1">
   <DataGrid
-    rows={filteredProduct.map((item, index) => ({
-      id: index,
-      date: new Date(item.createdAt).toLocaleDateString(),
-      customer: item?.customerName,
-      phone: item?.customerPhone || 'N/A',
-      productName: item?.products?.[0]?.productName,
-      quantity: item?.products?.[0]?.quantity,
-      totalAmount: `${currencySymbol} ${item?.totalAmount}`,
-    }))}
+   rows={filteredProduct.map((item, index) => ({
+    id: index,
+    date: new Date(item.createdAt).toLocaleDateString(),
+    customer: item?.customerName,
+    phone: item?.customerPhone || 'N/A',
+    productName: item?.products?.map(
+      (product) => `${product?.productName}(${product?.quantity})`
+    ).join(', '),
+    quantity: item?.products?.reduce(
+      (total, product) => total + (product?.quantity || 0), 0
+    ),
+    totalAmount: `${currencySymbol} ${item?.totalAmount}`,
+  }))}
+  
     columns={[
       { field: 'date', headerName: t('Date'), flex: 1 },
       { field: 'customer', headerName: t('Customer'), flex: 1 },
@@ -239,6 +246,7 @@ const Checkout = () => {
       { field: 'quantity', headerName: t('Quantity'), flex: 1 },
       { field: 'totalAmount', headerName: t('Total Amount'), flex: 1 },
     ]}
+    
     initialState={{
       pagination: {
         paginationModel: { pageSize: 10 }
