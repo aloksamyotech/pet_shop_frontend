@@ -23,7 +23,7 @@ const Login = () => {
   
   const fetchLogo = async () => {
     const response = await getApi(urls.register.get);
-    setLogo(response?.data.data?.[0]);
+    setLogo(response?.data.data?.[0] || '');
   };
 
   useEffect(() => {

@@ -15,7 +15,7 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
 
   const fetchCategory = async () => {
     const response = await getApi(urls.category.get);
-    setCategories(response?.data?.data);
+    setCategories(response?.data?.data || []);
   };
 
   useEffect(() => {

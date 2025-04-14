@@ -91,6 +91,7 @@ const History = () => {
 
  
   const columns = [
+    {field:'s_no',headerName:"S_No",flex:0.5},
     {
       field: 'customerName',
       headerName: t('Customer Name'),
@@ -220,7 +221,7 @@ const History = () => {
           <Box width="100%">
             <Card style={{ height: 'auto', marginTop: '-45px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={order} columns={columns} getRowId={(row) => row._id}
+              <DataGrid rows={order.map((row,index)=>({...row,s_no:index+1}))} columns={columns} getRowId={(row) => row._id}
                 initialState={{
                   pagination: {
                     paginationModel: {

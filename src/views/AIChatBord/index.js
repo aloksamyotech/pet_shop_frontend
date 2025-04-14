@@ -12,6 +12,7 @@ import SendIcon from '@mui/icons-material/Send';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { postApi } from 'views/Api/comman';
 import { urls } from 'views/Api/constant';
+import AutoModeIcon from '@mui/icons-material/AutoMode';
 
 const ChatGPTClone = () => {
   const api_key = process.env.REACT_APP_API_KEY;
@@ -58,7 +59,7 @@ const ChatGPTClone = () => {
   };
 
   return (
-    <Paper elevation={4} sx={{ width: 800, height: 550, p: 2, display: 'flex', flexDirection: 'column', borderRadius: 2 }}>
+    <Paper elevation={4} sx={{ width: 700, height: 550, p: 2, display: 'flex', flexDirection: 'column', borderRadius: 2 }}>
       <Typography variant="h6" align="center" sx={{ mb: 2, fontWeight: 'bold' }}>
         AI Chat Assistant
       </Typography>
@@ -67,8 +68,8 @@ const ChatGPTClone = () => {
         {messages.map((msg, index) => (
           <Box key={index} display="flex" justifyContent={msg.sender === 'user' ? 'flex-end' : 'flex-start'} mb={1}>
             {msg.sender === 'bot' && (
-              <Avatar sx={{ backgroundColor: 'secondary.main', mr: 1 }}>
-                <SmartToyIcon />
+              <Avatar sx={{background: "transparent", border: "none"  , mr: 1 }}>
+                          <SmartToyIcon sx={{ fontSize: "2rem", color: "#6A9C89" }} />
               </Avatar>
             )}
            

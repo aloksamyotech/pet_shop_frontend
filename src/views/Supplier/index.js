@@ -110,6 +110,7 @@ const handleCloseActions = () => {
 
 
   const columns = [
+    {field:'s_no',headerName:'S_No',flex:0.5},
     { field: 'companyName', headerName: t('Supplier'), flex: 1 , renderCell: (params) => (
       <Stack direction="row" alignItems="center" spacing={1}>
        <CheckCircleIcon sx={{ color: 'green', fontSize: '15px' }} />
@@ -262,7 +263,7 @@ const handleCloseActions = () => {
      <TableStyle>
           <Card sx={{ height: 'auto', marginTop: '-10px' }}>
           <SearchBar onSearch={handleSearch} />
-            <DataGrid rows={filteredCompany} columns={columns} getRowId={(row) => row._id} 
+            <DataGrid rows={filteredCompany.map((row,index)=>({...row,s_no:index+1}))} columns={columns} getRowId={(row) => row._id} 
                 initialState={{
                   pagination: {
                     paginationModel: {

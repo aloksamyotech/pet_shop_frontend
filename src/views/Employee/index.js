@@ -112,6 +112,7 @@ const Customer = () => {
   };
 
   const columns = [
+    {field:'s_no',headerName:'S_No',flex:0.5},
 {
   field:'EId',
   headerName:t('ID'),
@@ -238,7 +239,7 @@ const Customer = () => {
           <Box width="100%">
             <Card style={{ height: 'auto', marginTop: '-25px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={Customer} columns={columns} getRowId={(row) => row._id} 
+              <DataGrid rows={Customer.map((row,index)=>({...row,s_no:index+1}))} columns={columns} getRowId={(row) => row._id} 
                 initialState={{
                   pagination: {
                     paginationModel: {
