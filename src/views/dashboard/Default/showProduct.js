@@ -35,7 +35,7 @@ const ShowProduct = ({ isLoading }) => {
   const { t } = useTranslation();
   const fetchCustomer = async () => {
     try {
-      const response = await getApi(urls.customer.getCount);
+      const response = await getApi(urls.product.getCount);
       if (response?.data?.count) setCustomer(response.data.count || 0);
       else setCustomer(0);
     } catch (error) {

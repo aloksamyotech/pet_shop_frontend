@@ -7,7 +7,7 @@ import ChatGPTClone from "views/AIChatBord/index";
 import { useNavigate } from "react-router";
 import LanguageSwitcher from "views/Switchlaguage/laguageswitcher.js";
 import { useTranslation } from "react-i18next";
-
+import CloseIcon from '@mui/icons-material/Close';
 const ProfileSection = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const navigate = useNavigate()
@@ -36,7 +36,8 @@ const ProfileSection = () => {
           onClose={() => setOpenDrawer(false)}
           onOpen={() => setOpenDrawer(true)}
         >
-          <Box sx={{ width: 800, padding: 2, bgcolor: "white" }}>
+          <Box sx={{ width: 700, padding: 2, bgcolor: "white" }}>
+            <Box onClick={() => setOpenDrawer(false)}> <CloseIcon /></Box>
            
             <ChatGPTClone />
           </Box>

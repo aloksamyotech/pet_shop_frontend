@@ -236,9 +236,11 @@ const Checkout = () => {
       (total, product) => total + (product?.quantity || 0), 0
     ),
     totalAmount: `${currencySymbol} ${item?.totalAmount}`,
+    s_no:index+1,
   }))}
   
     columns={[
+      {field:'s_no',headerName:'S_No',flex:0.5},
       { field: 'date', headerName: t('Date'), flex: 1 },
       { field: 'customer', headerName: t('Customer'), flex: 1 },
       { field: 'phone', headerName: t('Phone'), flex: 1 },
@@ -268,8 +270,10 @@ const Checkout = () => {
       product: item?.productName?.[0]?.productName || 'N/A',
       quantity: item?.quantity,
       totalPrice: `${currencySymbol} ${item?.totalPrice}`,
+      s_no:index+1,
     }))}
     columns={[
+      {field:'s_no',headerName:'S_No',flex:0.5},
       { field: 'date', headerName: t('Date'), flex: 1 },
       { field: 'supplier', headerName: t('Supplier'), flex: 1 },
       { field: 'phone', headerName: t('Phone'), flex: 1 },

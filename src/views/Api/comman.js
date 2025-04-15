@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 export const postApi = async (url, data, headers = {}) => {
   try {
     const defaultHeaders = {
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       'Content-Type': 'application/json',
       ...headers
     };
@@ -21,6 +22,7 @@ export const postApiLogin = async (url, data, headers = {}) => {
     const response = await axios.post(url, data, {
       headers: {
         ...headers,
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         'Content-Type': 'application/json'
       }
     });
@@ -36,6 +38,7 @@ export const postApiImage = async (url, data, headers = {}) => {
   try {
     const defaultHeaders = {
       ...headers,
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       'Content-Type': 'multipart/form-data'
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
@@ -49,18 +52,20 @@ export const postApiForFormData = async (url, data, headers = {}) => {
   try {
     const defaultHeaders = {
       ...headers,
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       'Content-Type': 'multipart/form-data'
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
     return response.data;
   } catch (error) {
-    throw new Error(error.response ? error.response.data : error.message);
+    // throw new Error(error.response ? error.response.data : error.message);
   }
 };
 
 export const getApi = async (url, params = {}, headers = {}) => {
   try {
     const defaultHeaders = {
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       'Content-Type': 'application/json',
       ...headers
     };
@@ -70,35 +75,39 @@ export const getApi = async (url, params = {}, headers = {}) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response ? error.response.data : error.message);
+  
+
+    // throw new Error(error.response ? error.response.data : error.message);
   }
 };
 export const updateApi = async (url, data, headers = {}) => {
   try {
     const isFormData = data instanceof FormData;
+
     const defaultHeaders = {
       ...headers,
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       ...(isFormData ? {} : { 'Content-Type': 'application/json' })
     };
     const response = await axios.put(url, data, { headers: defaultHeaders });
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data : error.message);
+   
+
   }
 };
 
 export const updateApiFormData = async (url, data, headers = {}) => {
   try {
-
-
     const response = await axios.put(url, data, {
       headers: {
         ...headers,
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         'Content-Type': 'multipart/form-data'
       }
     });
 
-   
     return response.data;
   } catch (error) {
     console.error('API Update Error:', error);
@@ -107,7 +116,7 @@ export const updateApiFormData = async (url, data, headers = {}) => {
       console.error('Error Response Data:', error.response.data);
       console.error('Error Response Status:', error.response.status);
       console.error('Error Response Headers:', error.response.headers);
-      throw new Error(JSON.stringify(error.response.data)); 
+      throw new Error(JSON.stringify(error.response.data));
     } else if (error.request) {
       console.error('No response received:', error.request);
       throw new Error('No response from server');
@@ -122,6 +131,7 @@ export const deleteApi = async (url, headers = {}) => {
   try {
     const defaultHeaders = {
       'Content-Type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       ...headers
     };
     const response = await axios.delete(url, { headers: defaultHeaders });

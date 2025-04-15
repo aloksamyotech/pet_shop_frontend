@@ -70,6 +70,8 @@ const Customer = () => {
   };
 
   const columns = [
+    {field:'s_no',headerName:'S_No',flex:0.5},  
+  
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'description', headerName: t('Description'), flex: 1 },
     // {
@@ -165,7 +167,8 @@ const Customer = () => {
           <Box width="100%">
             <Card style={{ height: 'auto', marginTop: '-25px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id}
+              <DataGrid rows={filteredCategory.map((row,index)=>({...row,s_no:index+1}))} 
+              columns={columns} getRowId={(row) => row._id}
                 initialState={{
                   pagination: {
                     paginationModel: {

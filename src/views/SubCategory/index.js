@@ -48,6 +48,9 @@ const Customer = () => {
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
+    finally{
+      setCategory([])
+    }
   };
 
   useEffect(() => {
@@ -69,6 +72,7 @@ const Customer = () => {
   };
 
   const columns = [
+    {field:'s_no',heardName:'S_No',flex:0.5},
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'categoryId', headerName: t('Category'), flex: 1,
       valueGetter: (params) => params.row.category?.[0].name || 'N/A'
@@ -126,7 +130,7 @@ const Customer = () => {
           <Box width="100%">
             <Card style={{ height: 'auto', marginTop: '-25px' }}>
               <SearchBar onSearch={handleSearch} />
-              <DataGrid rows={filteredCategory} columns={columns} getRowId={(row) => row._id} 
+              <DataGrid rows={filteredCategory.map((row,index)=>({...row,s_no:index+1})) } columns={columns} getRowId={(row) => row._id} 
                   initialState={{
                     pagination: {
                       paginationModel: {

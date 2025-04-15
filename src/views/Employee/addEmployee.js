@@ -37,9 +37,6 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
       .required(t('Email is required'))
       .email(t('Invalid email address')),
   
-    EId: yup
-      .string()
-      .required(t('Id is required')),
   
     address: yup
       .string()
@@ -57,7 +54,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
     address: '',
     phoneNumber: '',
     salary: '',
-    EId:''
+  
   };
 
   const formik = useFormik({
@@ -86,7 +83,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
         address: customer?.address || '',
         phoneNumber: customer?.phoneNumber || '',
         salary: customer?.salary || '',
-        EId: customer?.EId || '',
+       
       });
     } else {
       formik.resetForm();
@@ -102,7 +99,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
       <DialogContent dividers>
         <form>
           <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <FormLabel>{t("Employee Id")}</FormLabel>
                 <TextField
@@ -116,7 +113,7 @@ const Employee = ({ open, handleClose, customer, fetchCustomer,currencySymbol })
                   helperText={formik.touched.EId && formik.errors.EId}
                 />
               </FormControl>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <FormLabel>{t("Name")}</FormLabel>
