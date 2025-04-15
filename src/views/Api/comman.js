@@ -75,7 +75,7 @@ export const getApi = async (url, params = {}, headers = {}) => {
     });
     return response.data;
   } catch (error) {
-    console.log('---------------', error);
+  
 
     // throw new Error(error.response ? error.response.data : error.message);
   }
