@@ -53,6 +53,7 @@
     "recharts": "^2.15.1",
     "redux": "^4.2.0",
     "remark-gfm": "^4.0.1",
+    "sweetalert2": "^11.19.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "yup": "^0.32.11"
   },
