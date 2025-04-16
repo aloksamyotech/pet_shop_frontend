@@ -29,5 +29,5 @@ jobs:
             git checkout prod
             git pull origin prod
             git log -1
-            npm install
+            npm install -f
             npm run build 
