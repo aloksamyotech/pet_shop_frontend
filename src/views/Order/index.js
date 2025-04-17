@@ -15,7 +15,9 @@ import { useTranslation } from 'react-i18next';
 
 const Checkout = () => {
   const location = useLocation();
-  const [cartItems, setCartItems] = useState(location.state?.cartItems || []);
+  const cartItemsData = localStorage.getItem('cartItems');
+  const parsedCartItems = cartItemsData ? JSON.parse(cartItemsData) : [];
+  const [cartItems, setCartItems] = useState(parsedCartItems);
   const selectedCustomer = location.state?.selectedCustomer || null;
   const [productData, setProductData] = useState([]);
   const navigate = useNavigate();
@@ -39,6 +41,31 @@ const Checkout = () => {
   useEffect(() => {
     fetchProduct();
   }, []);
+
+
+  useEffect(() => {
+    const fetchProductAndFilterCart = async () => {
+      try {
+        const response = await getApi(urls.product.get);
+        const fetchedProducts = response.data?.data || [];
+  
+        setProductData(fetchedProducts);
+  
+  
+        setCartItems((prevCartItems) =>
+          prevCartItems.filter((item) =>
+            fetchedProducts.some((product) => product._id === item._id)
+          )
+        );
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+  
+    fetchProductAndFilterCart();
+  }, []);
+  
+  
 
   const handleQuantityChange = (_id, change) => {
     setCartItems((prevCart) =>
@@ -64,6 +91,10 @@ const Checkout = () => {
       })
     );
   };
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const removeItem = (_id) => {
     setCartItems(cartItems.filter((item) => item._id !== _id));
@@ -122,6 +153,8 @@ const Checkout = () => {
       setCartItems([]);
       navigate('/dashboard/ProductType', { state: { Data } });
       toast.success(t("order_completed"));
+      localStorage.removeItem("cartItems")
+      
     } catch (error) {
       console.error('Error creating invoice:', error);
       Swal.fire('Error', 'There was an issue creating the invoice.', 'error');

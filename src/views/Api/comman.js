@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { decryptWithAESKey } from 'common/decrypto';
 
 export const postApi = async (url, data, headers = {}) => {
   try {
@@ -9,7 +10,8 @@ export const postApi = async (url, data, headers = {}) => {
       ...headers
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     console.error('API Error:', error.response || error.message);
     toast.error(error?.response?.data?.message);
@@ -26,8 +28,8 @@ export const postApiLogin = async (url, data, headers = {}) => {
         'Content-Type': 'application/json'
       }
     });
-
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     console.error('API Error:', error.response || error.message);
     throw new Error(error.response ? error.response.data : error.message);
@@ -42,7 +44,8 @@ export const postApiImage = async (url, data, headers = {}) => {
       'Content-Type': 'multipart/form-data'
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     throw new Error(error.response ? error.response.data : error.message);
   }
@@ -56,7 +59,8 @@ export const postApiForFormData = async (url, data, headers = {}) => {
       'Content-Type': 'multipart/form-data'
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     // throw new Error(error.response ? error.response.data : error.message);
   }
@@ -73,10 +77,9 @@ export const getApi = async (url, params = {}, headers = {}) => {
       headers: defaultHeaders,
       params: params
     });
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
-  
-
     // throw new Error(error.response ? error.response.data : error.message);
   }
 };
@@ -90,11 +93,10 @@ export const updateApi = async (url, data, headers = {}) => {
       ...(isFormData ? {} : { 'Content-Type': 'application/json' })
     };
     const response = await axios.put(url, data, { headers: defaultHeaders });
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     throw new Error(error.response ? error.response.data : error.message);
-   
-
   }
 };
 
@@ -108,7 +110,8 @@ export const updateApiFormData = async (url, data, headers = {}) => {
       }
     });
 
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     console.error('API Update Error:', error);
 
@@ -135,7 +138,8 @@ export const deleteApi = async (url, headers = {}) => {
       ...headers
     };
     const response = await axios.delete(url, { headers: defaultHeaders });
-    return response.data;
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
   } catch (error) {
     throw new Error(error.response ? error.response.data : error.message);
   }
