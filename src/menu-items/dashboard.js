@@ -115,6 +115,23 @@ const dashboard = {
     },
 
     {
+      id: '17',
+      title: i18n.t('Booking'),
+      type: 'item',
+      url: '/dashboard/booking',
+      icon: icons.IconStackPop,
+      breadcrumbs: false
+    },
+    {
+      id: '18', 
+      title: i18n.t('PetType'),
+      type: 'item',
+      url: '/dashboard/petType',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    },
+
+    {
       id: '11',
       title: i18n.t('Clients'),
       type: 'collapse',
@@ -180,6 +197,8 @@ const dashboard = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
+  
+    
   
   
    ]

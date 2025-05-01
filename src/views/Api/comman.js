@@ -2,6 +2,35 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { decryptWithAESKey } from 'common/decrypto';
 
+
+
+export const postApiRegistration = async (url, data, headers = {}) => {
+  try {
+    const defaultHeaders = {
+      'Content-Type': 'application/json',
+      ...headers
+    };
+
+    const response = await axios.post(url, data, { headers: defaultHeaders });
+
+    
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error('Failed to register');
+    }
+  } catch (error) {
+   
+    console.error('API Error:', error.response ? error.response.data : error.message);
+    toast.error(error?.response?.data?.message || 'An error occurred');
+    throw new Error(error.response ? error.response.data : error.message);
+  }
+};
+
+
+
+
 export const postApi = async (url, data, headers = {}) => {
   try {
     const defaultHeaders = {
@@ -55,12 +84,12 @@ export const postApiForFormData = async (url, data, headers = {}) => {
   try {
     const defaultHeaders = {
       ...headers,
-      authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      // authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       'Content-Type': 'multipart/form-data'
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
     let responseData = await decryptWithAESKey(response.data);
-    return JSON.parse(responseData);
+    return JSON.parse(response);
   } catch (error) {
     // throw new Error(error.response ? error.response.data : error.message);
   }
