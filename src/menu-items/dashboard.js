@@ -19,7 +19,12 @@ import {
   IconFileDescription,
   IconBuildingStore,
   IconHistoryToggle,
-  IconPentagram
+  IconPentagram,
+  IconPaw ,
+  IconScissors ,
+  IconBox ,
+  IconGift ,
+  IconDroplet
   
   
 } from '@tabler/icons';
@@ -60,7 +65,12 @@ const icons = {
   IconFileDescription,
   IconBuildingStore,
   IconHistoryToggle,
-  IconPentagram
+  IconPentagram,
+  IconScissors ,
+  IconPaw,
+  IconBox ,
+  IconGift ,
+  IconDroplet
 };
 
 
@@ -113,6 +123,40 @@ const dashboard = {
       icon: icons.IconStackPop,
       breadcrumbs: false
     },
+
+   {
+      id: '20',
+      title: i18n.t('Pet Grooming'),
+      type: 'collapse',
+      icon: icons.IconDroplet,
+      children: [
+        {
+          id: '17',
+          title: i18n.t('Booking'),
+          type: 'item',
+          url: '/dashboard/booking',
+          icon: icons.IconStackPop, 
+          breadcrumbs: false
+        },
+        {
+          id: '18', 
+          title: i18n.t('PetType'),
+          type: 'item',
+          url: '/dashboard/petType',
+          icon: icons.IconPaw ,
+          breadcrumbs: false
+        },
+        {
+          id: '19', 
+          title: i18n.t('Package'),
+          type: 'item',
+          url: '/dashboard/package',
+          icon: icons.IconGift ,
+          breadcrumbs: false
+        },
+      ]
+    },
+
 
     {
       id: '11',
@@ -180,6 +224,8 @@ const dashboard = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
+  
+    
   
   
    ]
