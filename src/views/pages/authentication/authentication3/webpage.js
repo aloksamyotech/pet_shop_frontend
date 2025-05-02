@@ -2,29 +2,30 @@ import React from "react";
 import "./PetwearHouse.css";
 import { useState } from "react";
 import { urls } from "views/Api/constant";
-import { postApiRegistration } from "views/Api/comman";
+import { postApiRegistration , getApi} from "views/Api/comman";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router";
 import DatePicker from 'react-datepicker';
 import { TextField } from "@mui/material";
 import 'react-datepicker/dist/react-datepicker.css';
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { useEffect } from "react";
 
 
 
 const dogGroomingServices = [
   {
-    title: "Full Grooming",
+    title: "Basic Packages",
     description: "Includes bath, haircut, nail trimming, ear cleaning and brushing.",
     image: "https://cdn.pixabay.com/photo/2017/09/25/13/12/dog-2785074_960_720.jpg",
   },
   {
-    title: "Bath & Brush",
+    title: "Standard Packages",
     description: "Gentle bathing with pet-friendly shampoo and full body brushing.",
     image: "https://media.istockphoto.com/id/1308719194/photo/golden-retriver-dog-taking-a-shower-in-a-pet-grooming-salon.jpg?s=612x612&w=0&k=20&c=PM8Mnp4J3a8pO0i3aVFmd58JQnDycEOmbZy2kL_hPFo=",
   },
   {
-    title: "Nail Clipping",
+    title: "Premium Packages",
     description: "Safe and careful trimming of your pet's nails.",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7LAr3bV0hYnztSswRqbmOobCw0-ieCM8VsQ&s",
   },
@@ -44,19 +45,19 @@ const PetWarehouse = () => {
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  
+  const [pacKage,setPackage] = useState([]);
+  const [petType, setPetType] = useState([])
 const navigate = useNavigate()
-
 const [formData, setFormData] = useState({
   name: "",
   email: "",
   city: "",
   phone: "",
   petType: "",
-  breed: "",
+  pacKage: "",
   gender: "",
   petAge: "",
-  serviceType: "", 
+  service: "", 
   size: "",
   startDate: "",
   endDate: "",
@@ -77,6 +78,9 @@ const handleSubmit = async (e) => {
     endDate,
   };
 
+console.log("fulldata0000000000000000000000",fullData);
+
+
   try {
     const response = await postApiRegistration(urls.registration.create, fullData, {
       headers: { 'Content-Type': 'application/json' }
@@ -90,10 +94,10 @@ const handleSubmit = async (e) => {
         city: "",
         phone: "",
         petType: "",
-        breed: "",
+        pacKage: "",
         gender: "",
         petAge: "",
-        serviceType: "",
+        service: "",
         size: "",
         startDate: "",
         endDate: "",
@@ -109,6 +113,31 @@ const handleSubmit = async (e) => {
     toast.error('Failed to register');
   }
 };
+
+const fetchData = async () => {
+  try {
+    const res = await getApi(urls.package.get);
+    console.log("res---------", res);
+    setPackage(res?.data?.data || []);
+  } catch (error) {
+    console.error("Error fetching packages:", error);
+  }
+};
+const fetchDataPetType = async () => {
+  try {
+    const res = await getApi(urls.petType.get);
+    console.log("res---------", res);
+    setPetType(res?.data?.data || []);
+  } catch (error) {
+    console.error("Error fetching petType:", error);
+  }
+};
+
+useEffect(() => {
+ 
+  fetchDataPetType()
+  fetchData();
+}, []);
 
   
 
@@ -206,7 +235,19 @@ const handleSubmit = async (e) => {
                 onChange={handleChange}
                 placeholder="Phone Number"
               />
-            <select
+              <select
+  name="petType"
+  value={formData.petType}
+  onChange={handleChange}
+>
+  <option value="">Select petType</option>
+  {petType.map((pet) => (
+    <option key={pet._id} value={pet.name}>
+      {pet.name}
+    </option>
+  ))}
+</select>
+            {/* <select
   name="petType"
   value={formData.petType}
   onChange={handleChange}
@@ -215,15 +256,21 @@ const handleSubmit = async (e) => {
   <option value="dogs">Dogs</option>
   <option value="cat">Cat</option>
   <option value="small-pet">Small Pet</option>
+</select> */}
+
+<select
+  name="pacKage"
+  value={formData.pacKage}
+  onChange={handleChange}
+>
+  <option value="">Select Package</option>
+  {pacKage.map((pkg) => (
+    <option key={pkg._id} value={pkg._id}>
+      {pkg.name}
+    </option>
+  ))}
 </select>
 
-              <input
-                type="text"
-                name="breed"
-                value={formData.breed}
-                onChange={handleChange}
-                placeholder="Breed"
-              />
               <select
                 name="gender"
                 value={formData.gender}
@@ -247,8 +294,8 @@ const handleSubmit = async (e) => {
 </select>
 
              <select
-  name="serviceType"
-  value={formData.serviceType}
+  name="service"
+  value={formData.service}
   onChange={handleChange}
 >
   <option value="">Service</option>
@@ -256,7 +303,7 @@ const handleSubmit = async (e) => {
   <option value="staff">Staff</option>
 </select>
 
-{formData.serviceType === "staff" && (
+{formData.service === "staff" && (
   <input
     type="text"
     name="pickupLocation"

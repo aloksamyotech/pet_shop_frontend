@@ -23,6 +23,10 @@ const InvoiceUI = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
+  const user = localStorage.getItem('user');
+ const userObj = user ? JSON.parse(user) : null;
+ const currencySymbol = userObj.currencySymbol;
+
 
   const invoiceBookingData = location.state?.invoiceBookingData
     ? location.state.invoiceBookingData
@@ -36,12 +40,12 @@ const InvoiceUI = () => {
     date: "2025-04-29",
     time: "12:45 PM",
     // bookingId:invoiceBookingData.customerID,
-    bookingId:'222',
+    bookingId:invoiceBookingData.customerID,
     petName: invoiceBookingData.petType,
     breed:invoiceBookingData.breed,
     customerName:invoiceBookingData.name,
     bookingStatus:invoiceBookingData.status,
-    packageName: "Full Pet Grooming",
+    packageName:invoiceBookingData.package?.[0]?.name,
     bookingDateTime: "2025-05-01 10:00 AM",
     pickupLocation:'indore',
 
@@ -74,6 +78,9 @@ const InvoiceUI = () => {
 
   const remainingAmount = paymentInfo.price - paymentInfo.paid;
 
+ 
+  
+
   return (
     <>
     
@@ -105,7 +112,7 @@ const InvoiceUI = () => {
               '&:hover': { color: '#2067db' }
             }}
           >
-            Back
+             Booking Details
           </Typography>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
           <Typography
@@ -132,6 +139,7 @@ const InvoiceUI = () => {
           </Box>
         </Grid>
 
+
        
         <Box mb={2}>
           <Typography variant="h4">Booking Details</Typography>
@@ -140,7 +148,6 @@ const InvoiceUI = () => {
             <Grid item xs={6}>
               <LabelValue label="Booking ID" value={bookingId} />
               <LabelValue label="Pet Name" value={petName} />
-              <LabelValue label="Breed" value={breed} />
               <LabelValue label="Booking" value={bookingStatus} />
             </Grid>
             <Grid item xs={6}>
@@ -169,7 +176,7 @@ const InvoiceUI = () => {
           </Grid>
         </Box>
 
-        {/* Payment Info */}
+      
         <Box mb={2}>
           <Typography variant="h4">Payment Information</Typography>
           <Divider sx={{ my: 1 }} />
@@ -205,7 +212,7 @@ const InvoiceUI = () => {
                   <TableRow key={index}>
                   <TableCell>{item.name}</TableCell>
                     <TableCell>{item.description}</TableCell>
-                    <TableCell>₹{item.price}</TableCell>
+                    <TableCell>{currencySymbol}{item.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -216,7 +223,7 @@ const InvoiceUI = () => {
     
         <Box mt={4} textAlign="left">
           <Typography variant="h5">
-            <strong>Total Amount: ₹{totalAmount}</strong>
+            <strong>Total Amount:{currencySymbol}{totalAmount}</strong>
           </Typography>
         </Box>
       </Box>

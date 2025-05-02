@@ -130,6 +130,13 @@ petType :{
   get : base + '/petType/fetch',
   update: base + '/petType/update/:id',
   delete : base + '/petType/:id',
-  }
+  },
+
+package :{
+    create : base + '/package/save',
+    get : base + '/package/fetch',
+    update: base + '/package/update/:id',
+    delete : base + '/package/:id',
+    }
 
 });

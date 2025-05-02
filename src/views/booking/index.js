@@ -112,7 +112,7 @@ const Booking = () => {
   };
 
   const columns = [
-    // { field: 's_no', headerName: 'S_No', flex: 0.5, valueGetter: (params) => params.api.getRowIndex(params.id) + 1 },
+  
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'email', headerName: t('Email'), flex: 1 },
     { field: 'phone', headerName: t('Phone'), flex: 1 },
@@ -184,6 +184,9 @@ const Booking = () => {
           }}
         >
           <Stack direction="row" alignItems="center">
+          <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
+            <HomeIcon />
+          </IconButton>
             <ArrowBackIosNewRoundedIcon
               sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }}
             />
@@ -191,27 +194,7 @@ const Booking = () => {
               {t('Booking Information')}
             </Typography>
           </Stack>
-
-          {/* <Stack direction="row" alignItems="center" spacing={2}>
-            <Card>
-              <Button
-                variant="contained"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-                onClick={() => setOpenAdd(true)}
-                size="small"
-                sx={{
-                  backgroundColor: '#6A9C89',
-                  color: '#fff',
-                  '&:hover': {
-                    backgroundColor: '#8DB3A8',
-                  },
-                }}
-              >
-                {t('New Purchase')}
-              </Button>
-            </Card>
-          </Stack> */}
-        </Box>
+</Box>
       </Stack>
 
       <Box

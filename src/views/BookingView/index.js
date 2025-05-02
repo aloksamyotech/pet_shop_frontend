@@ -31,8 +31,13 @@ const [item , setItem] = useState([])
  const [editData,setEditData] = useState(false)
  const [updatedItem , setUpdatedItem] = useState([])
  const [invoice , setInvoice] = useState(false)
+ const packageName = bookingData.package?.[0]?.name;
+ const packagePrice = bookingData.package?.[0]?.price;
+ const user = localStorage.getItem('user');
+ const userObj = user ? JSON.parse(user) : null;
+ const currencySymbol = userObj.currencySymbol;
 
-
+ 
  const handleInvoice = () => {
   localStorage.setItem('invoiceBookingData', JSON.stringify(bookingData));
   localStorage.setItem('itemData', JSON.stringify(item));
@@ -80,8 +85,11 @@ const fetchData = async () => {
   }
   const userData = await getApi(urls.registration.getById.replace(":id", UserData));
 
+
+  
+
   if (userData?.data?.data) {
-    setBookingData(userData.data.data);
+    setBookingData(userData.data.data[0]);
   } else {
     console.error('Invalid API response:', userData);
   }
@@ -122,6 +130,9 @@ const handleStatus = () =>{
 navigate('/dashboard/ChangeStatus')
 }
 
+
+
+
   return (
  
     
@@ -159,8 +170,21 @@ navigate('/dashboard/ChangeStatus')
       }}>
         <Stack direction="row" alignItems="center" spacing={1}>
           <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
-            <HomeIcon />
+          <HomeIcon />
           </IconButton>
+          <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+          <Typography
+            onClick={() => navigate(-1)}
+            sx={{
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontSize: '15px',
+              mx: 1,
+              '&:hover': { color: '#2067db' }
+            }}
+          >
+            Booking
+          </Typography>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: 18, color: 'black' }} />
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
             Booking Details
@@ -201,18 +225,18 @@ navigate('/dashboard/ChangeStatus')
             <Grid item xs={6}>
               <Stack spacing={1.5}>
                 <Typography><strong>Pet:</strong>{bookingData.petType}</Typography>
-                <Typography><strong>Breed:</strong>{bookingData.breed}</Typography>
-                <Typography><strong>Gender:</strong>{bookingData.gender}</Typography>
+                {/* <Typography><strong>Breed:</strong>{bookingData.breed}</Typography> */}
+                <Typography><strong>Pet Gender:</strong>{bookingData.gender}</Typography>
                 <Typography><strong>Pet Age:</strong>{bookingData.petAge}</Typography>
                 <Typography><strong>Size:</strong>{bookingData.size}</Typography>
                 <Typography><strong>Service:</strong>{bookingData.service}</Typography>
-                <Typography><strong>Total Amount:</strong> $300</Typography>
+                <Typography><strong>Total Amount:</strong>{currencySymbol}300</Typography>
               </Stack>
             </Grid>
             <Grid item xs={6}>
   <Stack spacing={1.5}>
-    <Typography><strong>Package Name:</strong> Premium Grooming Package</Typography>
-    <Typography><strong>Package Price:</strong> $100</Typography>
+    <Typography><strong>Package Name:</strong>{packageName}</Typography>
+    <Typography><strong>Package Price:</strong>{currencySymbol}{packagePrice}</Typography>
 
     <Typography>
       <strong>Booking Status:</strong>{' '}
@@ -356,7 +380,7 @@ navigate('/dashboard/ChangeStatus')
           <TableRow key={row._id}>
             <TableCell>{row.name}</TableCell>
             <TableCell>{row.description}</TableCell>
-            <TableCell>${row.price}</TableCell>
+            <TableCell>{currencySymbol}{row.price}</TableCell>
             <TableCell>
               <IconButton
                 color="primary"
