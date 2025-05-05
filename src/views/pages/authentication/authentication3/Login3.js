@@ -22,9 +22,15 @@ const Login = () => {
   const [logo,setLogo] = useState(null)
   
   const fetchLogo = async () => {
-    const response = await getApi(urls.register.get);
-    setLogo(response?.data.data?.[0] || '');
+    try {
+      const response = await getApi(urls.register.get);
+      setLogo(response?.data?.data?.[0] || '');
+    } catch (error) {
+      console.error('Error fetching logo:', error); 
+      setLogo(null); 
+    }
   };
+  
 
   useEffect(() => {
     fetchLogo();
@@ -67,15 +73,16 @@ const Login = () => {
         marginTop: '10px',
       }}
     >
-      <Avatar
-        alt="Logo Image"
-        src={logo?.imageUr||Pet}
-        sx={{
-          width: 80,
-          height: 80,
-          borderRadius: '50%',
-        }}
-      />
+     <Avatar
+  alt="Logo Image"
+  src={logo?.imageUrl ?? Pet}
+  sx={{
+    width: 80,
+    height: 80,
+    borderRadius: '50%',
+  }}
+/>
+
     </Box>
   </Grid>
 
