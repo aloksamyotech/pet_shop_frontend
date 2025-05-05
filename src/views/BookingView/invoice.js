@@ -76,17 +76,15 @@ const InvoiceUI = () => {
   const { paymentInfo, extraItems } = invoiceData;
   const remainingAmount = paymentInfo.price - paymentInfo.paid;
 
-  // Calculate the total extra items price
+  
   const extraItemsTotal = extraItems.reduce((total, item) => total + item.price, 0);
 
-  // Calculate the total amount (Package Price + Extra Items Price)
+
   const totalAmount = paymentInfo.price + extraItemsTotal;
 
 
 
-  useEffect(()=>{
-    navigate('/dashboard/bookingHistory')
-  },[])
+ 
 
   return (
     <>
