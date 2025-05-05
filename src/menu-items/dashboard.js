@@ -126,7 +126,7 @@ const dashboard = {
 
    {
       id: '20',
-      title: i18n.t('Pet Grooming'),
+      title: i18n.t('Grooming Pets'),
       type: 'collapse',
       icon: icons.IconDroplet,
       children: [
@@ -139,8 +139,16 @@ const dashboard = {
           breadcrumbs: false
         },
         {
+          id: '21',
+          title: i18n.t('TodayBooking'),
+          type: 'item',
+          url: '/dashboard/todayBooking',
+          icon: icons.IconStackPop, 
+          breadcrumbs: false
+        },
+        {
           id: '18', 
-          title: i18n.t('PetType'),
+          title: i18n.t('Grooming Pets'),
           type: 'item',
           url: '/dashboard/petType',
           icon: icons.IconPaw ,
@@ -148,7 +156,7 @@ const dashboard = {
         },
         {
           id: '19', 
-          title: i18n.t('Package'),
+          title: i18n.t('Grooming Services'),
           type: 'item',
           url: '/dashboard/package',
           icon: icons.IconGift ,
