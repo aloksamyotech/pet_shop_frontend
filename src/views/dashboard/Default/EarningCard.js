@@ -43,19 +43,19 @@ const EarningCard = ({ isLoading }) => {
   const [order, setOrder] = useState(0);
 
   const fetchOrder = async () => {
-    try{
-    const response = await getApi(urls.order.getCount);
-    if (response?.data) setOrder(response.data.totalOrders || 0);
-      else setOrder(0);
+    try {
+      const response = await getApi(urls.order.getCount);
+      if (response?.data) {
+        setOrder(response.data.totalOrders || 0);
+      } else {
+        setOrder(0);
+      }
     } catch (error) {
-      console.error('Error fetching customer count:', error);
-      setOrder(0);
-    } finally {
+      console.error('Error fetching order count:', error);
       setOrder(0);
     }
-
   };
-
+  
   useEffect(() => {
     fetchOrder();
   }, []);

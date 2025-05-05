@@ -72,8 +72,7 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
       formData.append('price', values.price);
       formData.append('discount', values.discount);
       formData.append('SubCategoryId',values.SubCategoryId);
-      
-      if (values.image) {
+       if (values.image) {
       
         formData.append('image', values.image);
       }
@@ -83,6 +82,8 @@ const [filteredSubCategory, setFilteredSubCategory] = useState([])
       const response = await postApiImage(urls.product.create, formData, {
                   headers: { 'Content-Type': 'multipart/form-data' }
                 });
+              
+                
         fetchProduct(); 
         formik.resetForm();
         setSelectedImage(null);

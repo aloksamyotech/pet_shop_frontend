@@ -24,7 +24,7 @@ import {
   IconScissors ,
   IconBox ,
   IconGift ,
-  IconDroplet
+  IconDroplet,
   
   
 } from '@tabler/icons';
@@ -143,12 +143,12 @@ const dashboard = {
           title: i18n.t('TodayBooking'),
           type: 'item',
           url: '/dashboard/todayBooking',
-          icon: icons.IconStackPop, 
+          icon: icons.IconCalendarEvent, 
           breadcrumbs: false
         },
         {
           id: '18', 
-          title: i18n.t('Grooming Pets'),
+          title: i18n.t('Pets Type'),
           type: 'item',
           url: '/dashboard/petType',
           icon: icons.IconPaw ,
@@ -156,7 +156,7 @@ const dashboard = {
         },
         {
           id: '19', 
-          title: i18n.t('Grooming Services'),
+          title: i18n.t('Packages'),
           type: 'item',
           url: '/dashboard/package',
           icon: icons.IconGift ,
@@ -214,6 +214,16 @@ const dashboard = {
       url: '/dashboard/history',
       icon: icons.IconHistoryToggle,
       breadcrumbs: false
+    },
+    {
+      id: '22',
+      title: i18n.t('Booking History'),
+      type: 'item',
+      url: '/dashboard/bookingHistory',
+      icon: icons.IconHistoryToggle,
+      breadcrumbs: false
+
+
     },
     
     {

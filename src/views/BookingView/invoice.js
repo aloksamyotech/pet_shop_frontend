@@ -8,6 +8,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { useEffect } from 'react';
 
 const LabelValue = ({ label, value }) => (
   <Typography variant="h6">
@@ -15,84 +16,80 @@ const LabelValue = ({ label, value }) => (
   </Typography>
 );
 
-
 const now = new Date();
 const TodayDate = format(now,'MM/dd/yyyy hh:mm a');
-
-
-
 
 const InvoiceUI = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
   const user = localStorage.getItem('user');
- const userObj = user ? JSON.parse(user) : null;
- const currencySymbol = userObj.currencySymbol;
-
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
 
   const invoiceBookingData = location.state?.invoiceBookingData
     ? location.state.invoiceBookingData
     : JSON.parse(localStorage.getItem('invoiceBookingData'));
-  
+
   const [itemData, setItemData] = useState(
     location.state?.item || JSON.parse(localStorage.getItem('itemData')) || []
   );
+
   const bookingDateISO = invoiceBookingData.createdAt;
-const formattedData = bookingDateISO
-  ? format(new Date(bookingDateISO), 'MM/dd/yyyy hh:mm a')
-  : '';
-
-
+  const formattedData = bookingDateISO
+    ? format(new Date(bookingDateISO), 'MM/dd/yyyy hh:mm a')
+    : '';
 
   const invoiceData = {
     date: "2025-04-29",
     time: "12:45 PM",
-    // bookingId:invoiceBookingData.customerID,
-    bookingId:invoiceBookingData.customerID,
+    bookingId: invoiceBookingData.customerID,
     petName: invoiceBookingData.petType,
-    breed:invoiceBookingData.breed,
-    customerName:invoiceBookingData.name,
-    bookingStatus:invoiceBookingData.status,
-    packageName:invoiceBookingData.package?.[0]?.name,
+    breed: invoiceBookingData.breed,
+    customerName: invoiceBookingData.name,
+    bookingStatus: invoiceBookingData.status,
+    packageName: invoiceBookingData.package?.[0]?.name,
     bookingDateTime: formattedData,
-    pickupLocation:'indore',
-
+    pickupLocation: 'Indore',
     service: invoiceBookingData.service,
     customerInfo: {
-      name:invoiceBookingData.name,
+      name: invoiceBookingData.name,
       email: invoiceBookingData.email,
       phone: invoiceBookingData.phone,
       address: invoiceBookingData.city,
     },
     paymentInfo: {
       status: "Paid",
-      price: 9998,
+      price: invoiceBookingData.package?.[0]?.price,
       type: "Credit Card",
       date: "2025-04-28",
       paid: 9998,
-      advance: 2000
+      advance: 500
     },
-    extraItems: itemData, 
-    totalAmount: 11348
+    extraItems: itemData,
   };
 
-  const {
-    date, time,
-    bookingId, petName, bookingStatus,
-    packName, packageName, bookingDateTime, pickupLocation, service,
-    breed,
-    customerInfo, paymentInfo, extraItems, totalAmount,
-  } = invoiceData;
 
+
+
+
+  const { paymentInfo, extraItems } = invoiceData;
   const remainingAmount = paymentInfo.price - paymentInfo.paid;
 
- 
-  
+  // Calculate the total extra items price
+  const extraItemsTotal = extraItems.reduce((total, item) => total + item.price, 0);
+
+  // Calculate the total amount (Package Price + Extra Items Price)
+  const totalAmount = paymentInfo.price + extraItemsTotal;
+
+
+
+  useEffect(()=>{
+    navigate('/dashboard/bookingHistory')
+  },[])
 
   return (
     <>
-    
       <Box
         sx={{
           backgroundColor: 'white',
@@ -121,7 +118,7 @@ const formattedData = bookingDateISO
               '&:hover': { color: '#2067db' }
             }}
           >
-             Booking Details
+            Booking Details
           </Typography>
           <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
           <Typography
@@ -138,52 +135,46 @@ const formattedData = bookingDateISO
         </Stack>
       </Box>
 
-    
       <Box p={4} sx={{ backgroundColor: '#fff' }}>
         <Grid container justifyContent="space-between" mb={2}>
           <Typography variant="h4">Invoice</Typography>
           <Box textAlign="right">
             <Typography>Date & Time: {TodayDate}</Typography>
-           </Box>
+          </Box>
         </Grid>
 
-
-       
         <Box mb={2}>
           <Typography variant="h4">Booking Details</Typography>
           <Divider sx={{ my: 1 }} />
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <LabelValue label="Booking ID" value={bookingId} />
-              <LabelValue label="Pet Name" value={petName} />
-              <LabelValue label="Booking" value={bookingStatus} />
+              <LabelValue label="Booking ID" value={invoiceData.bookingId} />
+              <LabelValue label="Pet Name" value={invoiceData.petName} />
+              <LabelValue label="Booking" value={invoiceData.bookingStatus} />
             </Grid>
             <Grid item xs={6}>
-           
-              <LabelValue label="Package Name" value={packageName} />
-              <LabelValue label="Booking Date & Time" value={bookingDateTime} />
-              <LabelValue label="Service" value={service} />
+              <LabelValue label="Package Name" value={invoiceData.packageName} />
+              <LabelValue label="Booking Date & Time" value={invoiceData.bookingDateTime} />
+              <LabelValue label="Service" value={invoiceData.service} />
             </Grid>
           </Grid>
         </Box>
 
-      
         <Box mb={2}>
           <Typography variant="h4">Customer Information</Typography>
           <Divider sx={{ my: 1 }} />
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <LabelValue label="Name" value={customerInfo.name} />
-              <LabelValue label="Email" value={customerInfo.email} />
+              <LabelValue label="Name" value={invoiceData.customerInfo.name} />
+              <LabelValue label="Email" value={invoiceData.customerInfo.email} />
             </Grid>
             <Grid item xs={6}>
-              <LabelValue label="Phone" value={customerInfo.phone} />
-              <LabelValue label="Address" value={customerInfo.address} />
+              <LabelValue label="Phone" value={invoiceData.customerInfo.phone} />
+              <LabelValue label="Address" value={invoiceData.customerInfo.address} />
             </Grid>
           </Grid>
         </Box>
 
-      
         <Box mb={2}>
           <Typography variant="h4">Payment Information</Typography>
           <Divider sx={{ my: 1 }} />
@@ -194,14 +185,13 @@ const formattedData = bookingDateISO
               <LabelValue label="Payment Date" value={paymentInfo.date} />
             </Grid>
             <Grid item xs={12} md={6}>
-              <LabelValue label="Package Price" value={`₹${paymentInfo.price}`} />
-              <LabelValue label="Advance Payment" value={`₹${paymentInfo.advance}`} />
-              <LabelValue label="Remaining Payment" value={`₹${remainingAmount}`} />
+              <LabelValue label="Package Price" value={`${currencySymbol}${paymentInfo.price}`} />
+              <LabelValue label="Advance Payment" value={`${currencySymbol}${paymentInfo.advance}`} />
+              <LabelValue label="Remaining Payment" value={`${currencySymbol}${remainingAmount}`} />
             </Grid>
           </Grid>
         </Box>
 
-    \
         {extraItems.length > 0 && (
           <Box mb={2}>
             <Typography variant="h4">Extra Items</Typography>
@@ -217,7 +207,7 @@ const formattedData = bookingDateISO
               <TableBody>
                 {extraItems.map((item, index) => (
                   <TableRow key={index}>
-                  <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.name}</TableCell>
                     <TableCell>{item.description}</TableCell>
                     <TableCell>{currencySymbol}{item.price}</TableCell>
                   </TableRow>
@@ -227,10 +217,9 @@ const formattedData = bookingDateISO
           </Box>
         )}
 
-    
         <Box mt={4} textAlign="left">
           <Typography variant="h5">
-            <strong>Total Amount:{currencySymbol}{totalAmount}</strong>
+            <strong>Total Amount: {currencySymbol}{totalAmount}</strong>
           </Typography>
         </Box>
       </Box>

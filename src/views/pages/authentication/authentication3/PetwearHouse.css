@@ -666,7 +666,7 @@ select {
 }
 
 .form-submit button {
-  background: linear-gradient(120deg, #9bd0e0,#9cd1e1);
+  background: linear-gradient(120deg, #9bd0e0,#2363a6);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -677,6 +677,6 @@ select {
 }
 
 .form-submit button:hover {
-  background: linear-gradient(120deg, #9bd0e0,#9cd1e1);
+  background: linear-gradient(120deg, #9bd0e0,#2363a6);
 }
 

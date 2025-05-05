@@ -16,6 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import InvoiceUI from './invoice';
 import { format } from 'date-fns';
+import { padding } from '@mui/system';
 
 
 const BookingDetails = () => {
@@ -142,7 +143,9 @@ const formattedData = startDateISO
   ? format(new Date(endDateISO), 'MM/dd/yyyy hh:mm a')
   : ''; 
 
-
+  const totalExtraItemPrice = item.reduce((acc, curr) => acc + (curr.price || 0), 0);
+  const totalAmount = (packagePrice || 0) + totalExtraItemPrice;
+  
 
 
 return (
@@ -239,7 +242,7 @@ return (
                 <Typography><strong>Pet Age:</strong>{bookingData.petAge}</Typography>
                 <Typography><strong>Size:</strong>{bookingData.size}</Typography>
                 <Typography><strong>Service:</strong>{bookingData.service}</Typography>
-                <Typography><strong>Total Amount:</strong>{currencySymbol}300</Typography>
+                <Typography><strong>Total Amount:</strong>{currencySymbol}{totalAmount}</Typography>
               </Stack>
             </Grid>
             <Grid item xs={6}>
@@ -292,26 +295,83 @@ return (
           </Grid>
         </Card>
 
-       <Stack direction="row" spacing={2} justifyContent="center" mt={4}>
-         
-            <Button
-            
-              variant="contained"
-              sx={{
-                backgroundColor: '#6A9C89',
-                color: '#ffffff',
-                px: 3,
-                py: 1.5,
-                fontWeight: 600,
-                borderRadius: 2,
-                '&:hover': {
-                  backgroundColor: '#8DB3A8',
-                },
-              }}
-              onClick={handleStatusOpen}
-            >
-            Change Status
-            </Button>
+       <Stack direction="row" spacing={2}  mt={4}>
+       <Box
+  sx={{
+    padding:'10px',
+    backgroundColor: 'transparent',
+    color: 'black',
+   border: '1px solid black', 
+    cursor: 'pointer',
+    textAlign: 'center',
+    transition: 'all 0.3s ease',
+    borderRadius: 2,
+    '&:hover': {
+      backgroundColor: '#8DB3A8',
+    },
+  }}
+  onClick={handleStatusOpen}
+>
+  Change Status
+</Box>
+
+<Box
+  sx={{
+    padding:'10px',
+    backgroundColor: 'transparent',
+    color: 'black',
+   border: '1px solid black', 
+    cursor: 'pointer',
+    textAlign: 'center',
+    transition: 'all 0.3s ease',
+    borderRadius: 2,
+    '&:hover': {
+      backgroundColor: '#8DB3A8',
+    },
+  }}
+  onClick={handleItemOpen}
+>
+Add Extra
+</Box>
+
+<Box
+  sx={{
+    padding:'10px',
+    backgroundColor: 'transparent',
+    color: 'black',
+   border: '1px solid black', 
+    cursor: 'pointer',
+    textAlign: 'center',
+    transition: 'all 0.3s ease',
+    borderRadius: 2,
+    '&:hover': {
+      backgroundColor: '#8DB3A8',
+    },
+  }}
+>
+Payment
+</Box>
+<Box
+  sx={{
+    padding:'10px',
+    backgroundColor: 'transparent',
+    color: 'black',
+   border: '1px solid black', 
+    cursor: 'pointer',
+    textAlign: 'center',
+    transition: 'all 0.3s ease',
+    borderRadius: 2,
+    '&:hover': {
+      backgroundColor: '#8DB3A8',
+    },
+  }}
+  onClick={handleInvoice}
+>
+Invoice
+</Box>
+
+
+{/* 
             <Button
                  variant="contained"
               sx={{
@@ -328,8 +388,8 @@ return (
               onClick={handleItemOpen}
             >
         Add Extra
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
              
               variant="contained"
               sx={{
@@ -345,8 +405,8 @@ return (
               }}
             >
          Payment
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
            
               variant="contained"
               sx={{
@@ -364,7 +424,7 @@ return (
             onClick={handleInvoice}
             >
           Invoice
-            </Button>
+            </Button> */}
         
         </Stack>
 
