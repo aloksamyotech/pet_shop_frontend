@@ -53,6 +53,9 @@ const User = () => {
   }, []);
 
   const handleSwitchChange = async (field) => {
+
+    
+
     const updatedSettings = { ...settings, [field]: !settings[field] };
     setSettings(updatedSettings);
     await updateApi(urls.email.update, updatedSettings);
@@ -438,7 +441,7 @@ const User = () => {
                       onChange={() => handleSwitchChange('login')}
                       sx={{
                         '& .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
-                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, // Optional track color
+                        '& .MuiSwitch-track': { backgroundColor: '#A6CDC6' }, 
                         '&.Mui-checked .MuiSwitch-thumb': { backgroundColor: '#6A9C89' },
                         '&.Mui-checked + .MuiSwitch-track': { backgroundColor: '#A6CDC6' }
                       }}

@@ -106,4 +106,37 @@ email :{
 chat :{
   create : base + '/chat/save',
   }
+,
+
+registration: {
+  create: base + '/registrationData/save',
+  get : base  + '/registrationData/fetch',
+  update : base + '/registrationData/update/:id',
+  delete : base + '/registrationData/:id',
+  updatedStatus : base + '/registrationData/:id',
+  getById : base +'/registrationData/:id'
+}
+,
+AddItem :{
+create : base + '/addItem/save',
+get : base + '/addItem/fetch',
+update: base + '/addItem/update/:id',
+delete : base + '/addItem/:id',
+getById : base + '/addItem/get/:id'
+
+},
+petType :{
+  create : base + '/petType/save',
+  get : base + '/petType/fetch',
+  update: base + '/petType/update/:id',
+  delete : base + '/petType/:id',
+  },
+
+package :{
+    create : base + '/package/save',
+    get : base + '/package/fetch',
+    update: base + '/package/update/:id',
+    delete : base + '/package/:id',
+    }
+
 });

@@ -3,6 +3,7 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import { element } from 'prop-types';
 
+
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const Product = Loadable(lazy(() => import('views/Product')));
 const CustomerDetail = Loadable(lazy(() => import('views/CustomerDetail')));
@@ -19,7 +20,12 @@ const Order =  Loadable(lazy(() => import('views/Order/index')))
 const Employee = Loadable(lazy(()=> import('views/Employee')))
 const SunCategory = Loadable(lazy(()=> import('views/SubCategory')))
 const AIChatBord = Loadable(lazy(()=> import('views/AIChatBord')))
-
+const Booking = Loadable(lazy(()  => import('views/booking')))
+const BookingDetails =Loadable(lazy(() => import('views/BookingView')))
+const ChangeStatus = Loadable(lazy(() => import('views/BookingView/updatedStaus')))
+const PetType = Loadable(lazy(() => import('views/PetType')))
+const InvoiceUI = Loadable(lazy(()=> import('views/BookingView/invoice')))
+const Package = Loadable(lazy(() => import('views/Package')))
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
@@ -61,6 +67,42 @@ const MainRoutes = {
            
           ]
         },
+        {
+          path:'booking',
+          element:<Booking/> ,
+          // children: [
+          //   {
+          //     path:'',
+          //     element:<BookingDetails/>
+  
+          //   },
+  
+            
+           
+          // ]
+         },
+          {
+            path:'bookingView',
+            element:<BookingDetails/>
+
+          },
+          {
+            path:'PetType',
+            element:<PetType/>},
+            {
+              path:'Package',
+              element:<Package/>
+
+            },
+          {
+            path:'invoiceUI',
+            element:<InvoiceUI/>
+
+          },
+          {path:"ChangeStatus",
+            element:<ChangeStatus/>
+          },
+
         {
           path: 'ProductType',
           element: <ProductType />
