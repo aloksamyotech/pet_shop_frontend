@@ -7,7 +7,7 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import HomeIcon from '@mui/icons-material/Home';
 import { useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
-
+import { format } from 'date-fns';
 
 const LabelValue = ({ label, value }) => (
   <Typography variant="h6">
@@ -15,6 +15,9 @@ const LabelValue = ({ label, value }) => (
   </Typography>
 );
 
+
+const now = new Date();
+const TodayDate = format(now,'MM/dd/yyyy hh:mm a');
 
 
 
@@ -35,7 +38,13 @@ const InvoiceUI = () => {
   const [itemData, setItemData] = useState(
     location.state?.item || JSON.parse(localStorage.getItem('itemData')) || []
   );
-  
+  const bookingDateISO = invoiceBookingData.createdAt;
+const formattedData = bookingDateISO
+  ? format(new Date(bookingDateISO), 'MM/dd/yyyy hh:mm a')
+  : '';
+
+
+
   const invoiceData = {
     date: "2025-04-29",
     time: "12:45 PM",
@@ -46,7 +55,7 @@ const InvoiceUI = () => {
     customerName:invoiceBookingData.name,
     bookingStatus:invoiceBookingData.status,
     packageName:invoiceBookingData.package?.[0]?.name,
-    bookingDateTime: "2025-05-01 10:00 AM",
+    bookingDateTime: formattedData,
     pickupLocation:'indore',
 
     service: invoiceBookingData.service,
@@ -134,9 +143,8 @@ const InvoiceUI = () => {
         <Grid container justifyContent="space-between" mb={2}>
           <Typography variant="h4">Invoice</Typography>
           <Box textAlign="right">
-            <Typography>Date: {date}</Typography>
-            <Typography>Time: {time}</Typography>
-          </Box>
+            <Typography>Date & Time: {TodayDate}</Typography>
+           </Box>
         </Grid>
 
 
@@ -154,7 +162,6 @@ const InvoiceUI = () => {
            
               <LabelValue label="Package Name" value={packageName} />
               <LabelValue label="Booking Date & Time" value={bookingDateTime} />
-              <LabelValue label="Pickup Location" value={pickupLocation} />
               <LabelValue label="Service" value={service} />
             </Grid>
           </Grid>

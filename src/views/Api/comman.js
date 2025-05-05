@@ -12,14 +12,13 @@ export const postApiRegistration = async (url, data, headers = {}) => {
     };
 
     const response = await axios.post(url, data, { headers: defaultHeaders });
-
-    
-
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error('Failed to register');
-    }
+    let responseData = await decryptWithAESKey(response.data);
+    return JSON.parse(responseData);
+  // if (response.status === 200) {
+  //     return response.data;
+  //   } else {
+  //     throw new Error('Failed to register');
+  //   }
   } catch (error) {
    
     console.error('API Error:', error.response ? error.response.data : error.message);
@@ -89,7 +88,7 @@ export const postApiForFormData = async (url, data, headers = {}) => {
     };
     const response = await axios.post(url, data, { headers: defaultHeaders });
     let responseData = await decryptWithAESKey(response.data);
-    return JSON.parse(response);
+    return JSON.parse(responseData);
   } catch (error) {
     // throw new Error(error.response ? error.response.data : error.message);
   }
@@ -109,7 +108,7 @@ export const getApi = async (url, params = {}, headers = {}) => {
     let responseData = await decryptWithAESKey(response.data);
     return JSON.parse(responseData);
   } catch (error) {
-    // throw new Error(error.response ? error.response.data : error.message);
+    throw new Error(error.response ? error.response.data : error.message);
   }
 };
 export const updateApi = async (url, data, headers = {}) => {

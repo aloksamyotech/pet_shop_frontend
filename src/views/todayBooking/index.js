@@ -25,7 +25,7 @@ import { urls } from 'views/Api/constant.js';
 import ConfirmDialog from 'confirmDeletion/deletion';
 import BookingDetails from 'views/BookingView';
 
-const Booking = () => {
+const BookingToday = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -39,12 +39,12 @@ const Booking = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [loading, setLoading] = useState(true);
 
- 
 
-
-const fetchData = async () => { 
+const fetchData = async () => {
     try {
-      const res = await getApi(urls.registration.get);
+        const res = await getApi(urls.registration.getTodayBookings);
+       
+        
       if (res?.success) {
         setPurchase(res.data.data);
         setFilteredPurchase(res.data.data);
@@ -58,7 +58,6 @@ const fetchData = async () => {
   
   useEffect(() => {
       fetchData();
-     
     
   }, []);
 
@@ -84,6 +83,7 @@ const fetchData = async () => {
     navigate('/dashboard/bookingView',{state:{UserData:row._id}} )
    
   };
+
 
   const handleUpdate = (row) => {
     navigate('/bookingView')
@@ -199,7 +199,7 @@ const fetchData = async () => {
 </Box>
       </Stack>
 
-      <Box
+      {/* <Box
         sx={{
           backgroundColor: 'white',
           borderRadius: '10px',
@@ -249,12 +249,12 @@ const fetchData = async () => {
         >
           {t('Clear Filter')}
         </Button>
-      </Box>
+      </Box> */}
 
       <TableStyle>
         <Box width="100%">
           <Card style={{ height: 'auto', marginTop: '-45px' }}>
-            <SearchBar onSearch={handleSearch}/>
+            <SearchBar onSearch={handleSearch} />
             <DataGrid
               rows={filteredPurchase}
               columns={columns}
@@ -275,4 +275,4 @@ const fetchData = async () => {
   );
 };
 
-export default Booking;
+export default BookingToday;

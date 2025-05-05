@@ -1,5 +1,5 @@
-// const base = 'https://petstore.samyotech.in/api';
-const base = 'http://localhost:7200/api';
+const base = 'https://petstore.samyotech.in/api';
+// const base = 'http://localhost:7200/api';
 export const urls = Object.freeze({
   product: {
     create: base + '/product/save',
@@ -114,7 +114,9 @@ registration: {
   update : base + '/registrationData/update/:id',
   delete : base + '/registrationData/:id',
   updatedStatus : base + '/registrationData/:id',
-  getById : base +'/registrationData/:id'
+  getById : base +'/registrationData/:id',
+  getTodayBookings: base +'/registrationData/todayBooking',
+  getDataByStatus : base +'/registrationData/status'
 }
 ,
 AddItem :{
