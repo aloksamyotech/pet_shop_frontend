@@ -26,6 +26,7 @@ const ChangeStatus = Loadable(lazy(() => import('views/BookingView/updatedStaus'
 const PetType = Loadable(lazy(() => import('views/PetType')))
 const InvoiceUI = Loadable(lazy(()=> import('views/BookingView/invoice')))
 const Package = Loadable(lazy(() => import('views/Package')))
+const BookingToday = Loadable(lazy(() => import('views/todayBooking')))
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
@@ -80,6 +81,10 @@ const MainRoutes = {
             
            
           // ]
+         },
+         {
+          path:'todayBooking',
+          element:<BookingToday/>
          },
           {
             path:'bookingView',

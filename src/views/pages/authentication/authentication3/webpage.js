@@ -78,7 +78,7 @@ const handleSubmit = async (e) => {
     endDate,
   };
 
-console.log("fulldata0000000000000000000000",fullData);
+
 
 
   try {
@@ -117,7 +117,7 @@ console.log("fulldata0000000000000000000000",fullData);
 const fetchData = async () => {
   try {
     const res = await getApi(urls.package.get);
-    console.log("res---------", res);
+  
     setPackage(res?.data?.data || []);
   } catch (error) {
     console.error("Error fetching packages:", error);
@@ -126,7 +126,7 @@ const fetchData = async () => {
 const fetchDataPetType = async () => {
   try {
     const res = await getApi(urls.petType.get);
-    console.log("res---------", res);
+   
     setPetType(res?.data?.data || []);
   } catch (error) {
     console.error("Error fetching petType:", error);
@@ -346,17 +346,27 @@ useEffect(() => {
 
 
 
-  <DatePicker
-    selected={endDate}
-    onChange={(date) => {
-      setEndDate(date);
-      setFormData((prev) => ({ ...prev, endDate: date }));
-    }}
-    showTimeSelect
-    minDate={startDate}
-    dateFormat="Pp"
-    customInput={<TextField fullWidth label="End Date" />}
-  />
+<DatePicker
+  selected={endDate}
+  onChange={(date) => {
+    setEndDate(date);
+    setFormData((prev) => ({ ...prev, endDate: date }));
+  }}
+  showTimeSelect
+  minDate={startDate}
+  filterTime={(time) => {
+    if (
+      startDate &&
+      new Date(time).toDateString() === new Date(startDate).toDateString()
+    ) {
+      return new Date(time).getTime() > new Date(startDate).getTime();
+    }
+    return true;
+  }}
+  dateFormat="Pp"
+  customInput={<TextField fullWidth label="End Date" />}
+/>
+
 
 
 

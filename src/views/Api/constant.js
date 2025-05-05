@@ -114,7 +114,9 @@ registration: {
   update : base + '/registrationData/update/:id',
   delete : base + '/registrationData/:id',
   updatedStatus : base + '/registrationData/:id',
-  getById : base +'/registrationData/:id'
+  getById : base +'/registrationData/:id',
+  getTodayBookings: base +'/registrationData/todayBooking',
+  getDataByStatus : base +'/registrationData/status'
 }
 ,
 AddItem :{

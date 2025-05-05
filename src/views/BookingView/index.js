@@ -10,14 +10,14 @@ import { getApi ,deleteApi} from 'views/Api/comman';
 import ChangeStatus from './updatedStaus';
 import AddItemDialog from './addItem';
 import ConfirmDialog from 'confirmDeletion/deletion';
-
 import { Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
-
-
 import InvoiceUI from './invoice';
+import { format } from 'date-fns';
+
+
 const BookingDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,8 +60,7 @@ const handleEdit = (row) => {
 
 
 const confirmDelete = async (id) => {
- 
-  if (!deleteId) return;
+ if (!deleteId) return;
    try {
     await deleteApi(urls.AddItem.delete.replace(":id", id));
     toast.success("Item deleted successfully!");
@@ -83,6 +82,8 @@ const fetchData = async () => {
     console.error('No booking ID found!');
     return;
   }
+
+  
   const userData = await getApi(urls.registration.getById.replace(":id", UserData));
 
 
@@ -100,8 +101,6 @@ const AddItemData  = async() =>{
   setItem(AddItem.data.data)
 
 }
-
-
 
 useEffect(()=>{
 fetchData()
@@ -132,13 +131,23 @@ navigate('/dashboard/ChangeStatus')
 
 
 
+const startDateISO = bookingData.startDate;
+const formattedData = startDateISO
+  ? format(new Date(startDateISO), 'MM/dd/yyyy hh:mm a')
+  : '';
 
-  return (
+
+  const endDateISO = bookingData.endDate;
+  const formattedDataEnd = endDateISO 
+  ? format(new Date(endDateISO), 'MM/dd/yyyy hh:mm a')
+  : ''; 
+
+
+
+
+return (
  
-    
-    <Container sx={{  mb: 2 }}>
-    
-
+        <Container sx={{  mb: 2 }}>
       <ConfirmDialog 
   open={openConfirmDialog} 
   onClose={() => setOpenConfirmDialog(false)} 
@@ -274,8 +283,8 @@ navigate('/dashboard/ChangeStatus')
     </Typography>
 
     <Typography><strong>Pickup Location:</strong> Customer Address</Typography>
-    <Typography><strong>Start Date & Time:</strong> {bookingData.startDate}</Typography>
-    <Typography><strong>End Date & Time:</strong> {bookingData.endDate}</Typography>
+    <Typography><strong>Start Date & Time:</strong> {formattedData}</Typography>
+    <Typography><strong>End Date & Time:</strong> {formattedDataEnd}</Typography>
   </Stack>
 </Grid>
 
@@ -301,7 +310,7 @@ navigate('/dashboard/ChangeStatus')
               }}
               onClick={handleStatusOpen}
             >
-            Change Booking Status
+            Change Status
             </Button>
             <Button
                  variant="contained"
@@ -354,7 +363,7 @@ navigate('/dashboard/ChangeStatus')
 
             onClick={handleInvoice}
             >
-            Generate Invoice
+          Invoice
             </Button>
         
         </Stack>
@@ -392,8 +401,7 @@ navigate('/dashboard/ChangeStatus')
                 color="error"
                 onClick={() => {
                   handleDelete(row._id);
-                 
-                }}
+                 }}
               >
                 <DeleteIcon />
               </IconButton>
