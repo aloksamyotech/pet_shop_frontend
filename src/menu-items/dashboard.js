@@ -215,16 +215,16 @@ const dashboard = {
       icon: icons.IconHistoryToggle,
       breadcrumbs: false
     },
-    {
-      id: '22',
-      title: i18n.t('Booking History'),
-      type: 'item',
-      url: '/dashboard/bookingHistory',
-      icon: icons.IconHistoryToggle,
-      breadcrumbs: false
+    // {
+    //   id: '22',
+    //   title: i18n.t('Booking History'),
+    //   type: 'item',
+    //   url: '/dashboard/bookingHistory',
+    //   icon: icons.IconHistoryToggle,
+    //   breadcrumbs: false
 
 
-    },
+    // },
     
     {
       id: '09',
