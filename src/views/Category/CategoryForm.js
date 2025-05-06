@@ -3,14 +3,13 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Button, Box, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { postApiImage, updateApi } from 'views/Api/comman.js';
+import { postApi, updateApi,postApiForFormData } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
 const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const { t } = useTranslation();
-  const [selectedImage, setSelectedImage] = useState(null);
   const isEditing = Boolean(category);
 
   const validationSchema = yup.object({
@@ -25,28 +24,19 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const formik = useFormik({
     initialValues: {
       name: '',
-      description: '',
-      categoryImage: null
+      description: ''
     },
     validationSchema,
     onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('description', values.description);
-
-      if (!isEditing && values.categoryImage) {
-        formData.append('categoryImage', values.categoryImage);
-      }
-
       try {
         if (isEditing) {
           await updateApi(urls.category.update.replace(':id', category._id), values);
           toast.success(t('category_updated_successfully'));
         } else {
-          await postApiImage(urls.category.create, formData);
+          await postApi(urls.category.create, values);
           toast.success(t('category_added_successfully'));
         }
-        formik.resetForm();
+           formik.resetForm();
         await fetchCategories();
         handleClose();
       } catch (error) {
@@ -61,19 +51,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       formik.setValues({
         name: category?.name || '',
         description: category?.description || '',
-        categoryImage: null
-      });
-      setSelectedImage(category?.categoryImage || null);
+       });
+     
     }
   }, [category]);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      formik.setFieldValue('categoryImage', file);
-      setSelectedImage(URL.createObjectURL(file));
-    }
-  };
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="category-dialog-title">
