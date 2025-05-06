@@ -87,7 +87,7 @@ const handleSubmit = async (e) => {
     });
 
     if (response) {
-      toast.success("Registration successful!");
+      toast.success("Booking successful!");
       setFormData({
         name: "",
         email: "",
@@ -372,7 +372,7 @@ useEffect(() => {
 
             </div>
             <div className="form-submit">
-              <button type="submit">Submit</button>
+              <button type="submit"  >Submit</button>
             </div>
           </form>
         </div>

@@ -41,6 +41,8 @@ const Customer = () => {
   const fetchCategories = async () => {
     try {
       const response = await getApi(urls.category.get);
+      
+      
       const categoryData = response?.data?.data || [];
       setCategory(categoryData);
       setFilteredCategory(categoryData);

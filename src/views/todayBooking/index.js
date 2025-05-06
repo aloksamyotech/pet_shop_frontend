@@ -61,12 +61,13 @@ const fetchData = async () => {
     
   }, []);
 
-
-  const handleSearch = (searchText) => {
-    const filtered = purchase.filter(item =>
-      item.Name?.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredPurchase(filtered);
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPurchase(purchase);
+    } else {
+      const filtered = purchase.filter((cat) => cat.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      setFilteredPurchase(filtered);
+    }
   };
 
   const handleOpenActions = (event, row) => {
@@ -174,16 +175,17 @@ const fetchData = async () => {
     <Grid>
       <Stack direction="row" alignItems="center" mb={3}>
         <Box
-          sx={{
-            backgroundColor: 'white',
-            height: '50px',
-            width: '100%',
-            display: 'flex',
-            borderRadius: '10px',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 25px',
-          }}
+         sx={{
+          backgroundColor: 'white',
+          height: '50px',
+          width: '100%',
+          display: 'flex',
+          borderRadius: '10px',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '0 25px',
+          mb: '40px'
+        }}
         >
           <Stack direction="row" alignItems="center">
           <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
@@ -199,61 +201,11 @@ const fetchData = async () => {
 </Box>
       </Stack>
 
-      {/* <Box
-        sx={{
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          padding: '15px',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          gap: 2,
-        }}
-      >
-        <TextField
-          label={t("Start Date")}
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label={t("End Date")}
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-        />
-        <Button
-          variant="contained"
-          disabled={isFilterDisabled}
-          sx={{
-            backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
-            '&:hover': {
-              backgroundColor: isFilterDisabled ? '#ddd' : '#6A9C89',
-            },
-          }}
-          onClick={filterData}
-        >
-          {t('Apply Filter')}
-        </Button>
-
-        <Button
-          variant="outlined"
-          sx={{ color: '#6A9C89', borderColor: '#6A9C89' }}
-          onClick={() => {
-            setStartDate('');
-            setEndDate('');
-            setFilteredPurchase(purchase);
-          }}
-        >
-          {t('Clear Filter')}
-        </Button>
-      </Box> */}
+  
 
       <TableStyle>
         <Box width="100%">
-          <Card style={{ height: 'auto', marginTop: '-45px' }}>
+          <Card style={{ height: 'auto', marginTop: '-30px' }}>
             <SearchBar onSearch={handleSearch} />
             <DataGrid
               rows={filteredPurchase}

@@ -63,13 +63,14 @@ const fetchData = async () => {
   }, []);
 
 
-  const handleSearch = (searchText) => {
-    const filtered = purchase.filter(item =>
-      item.Name?.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredPurchase(filtered);
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredPurchase(purchase);
+    } else {
+      const filtered = purchase.filter((cat) => cat.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      setFilteredPurchase(filtered);
+    }
   };
-
   const handleOpenActions = (event, row) => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
@@ -254,7 +255,7 @@ const fetchData = async () => {
       <TableStyle>
         <Box width="100%">
           <Card style={{ height: 'auto', marginTop: '-45px' }}>
-            <SearchBar onSearch={handleSearch}/>
+          <SearchBar onSearch={handleSearch} />
             <DataGrid
               rows={filteredPurchase}
               columns={columns}
