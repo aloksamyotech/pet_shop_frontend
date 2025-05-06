@@ -1,7 +1,8 @@
 import React from 'react';
+import Iconify from 'ui-component/iconify';
 import {
   Box, Typography, Grid, Divider, Table, TableHead,
-  TableRow, TableCell, TableBody, Stack, IconButton
+  TableRow, TableCell, TableBody, Stack, IconButton,Button
 } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import HomeIcon from '@mui/icons-material/Home';
@@ -9,6 +10,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { useEffect } from 'react';
+import { borderRadius } from '@mui/system';
 
 const LabelValue = ({ label, value }) => (
   <Typography variant="h6">
@@ -88,7 +90,7 @@ const InvoiceUI = () => {
 
   return (
     <>
-      <Box
+      {/* <Box
         sx={{
           backgroundColor: 'white',
           height: '50px',
@@ -131,7 +133,70 @@ const InvoiceUI = () => {
             Invoice
           </Typography>
         </Stack>
-      </Box>
+      </Box> */}
+      <Box
+  sx={{
+    backgroundColor: 'white',
+    height: '50px',
+    width: '100%',
+    display: 'flex',
+    borderRadius: '10px',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0 25px',
+    mb: '25px'
+  }}
+>
+  <Stack direction="row" alignItems="center">
+    <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
+      <HomeIcon />
+    </IconButton>
+    <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+    <Typography
+      onClick={() => navigate(-1)}
+      sx={{
+        cursor: 'pointer',
+        textDecoration: 'underline',
+        fontSize: '15px',
+        mx: 1,
+        '&:hover': { color: '#2067db' }
+      }}
+    >
+      Booking Details
+    </Typography>
+    <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' }} />
+    <Typography
+      sx={{
+        cursor: 'pointer',
+        textDecoration: 'underline',
+        fontSize: '15px',
+        mx: 1,
+        '&:hover': { color: '#2067db' }
+      }}
+    >
+      Invoice
+    </Typography>
+  </Stack>
+
+ 
+  <Button
+    variant="contained"
+    startIcon={<Iconify icon="eva:email-outline" />} 
+    // onClick={handleSendEmail}
+    size="small"
+    sx={{
+      borderRadius:'10px',  
+      backgroundColor: '#6A9C89',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: '#8DB3A8'
+      }
+    }}
+  >
+    Send Email
+  </Button>
+</Box>
+
 
       <Box p={4} sx={{ backgroundColor: '#fff' }}>
         <Grid container justifyContent="space-between" mb={2}>

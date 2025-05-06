@@ -276,32 +276,12 @@ li {
   border: 1px solid #ccc;
 }
 
-.form-submit {
-  width: 100%;
-  margin-top: 20px;
-  text-align: center;
- 
-}
-
-.form-submit button {
-  padding: 12px 30px;
-  font-size: 16px; 
-  background: linear-gradient(120deg, #9bd0e0,#9cd1e1);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-
-
-
-.booking-container {
+/* .booking-container {
   display: flex;
   height: 100vh;
   font-family: 'Segoe UI', sans-serif;
  
-}
+} */
 
 .form-panel {
   flex: 1;
@@ -328,41 +308,26 @@ li {
   flex-direction: column;
 }
 
-.input-group {
+/* .input-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-}
+} */
 
-.input-group input,
+/* .input-group input,
 .input-group select {
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 16px;
-}
+} */
 
-.input-group input:focus,
+/* .input-group input:focus,
 .input-group select:focus {
   border-color: #64c9cf;
   outline: none;
   box-shadow: 0 0 5px #b2ebf2;
-}
-
-.form-submit button {
-  background: linear-gradient(120deg, #8eaca0,  #497363);
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.form-submit button:hover {
-  background: linear-gradient(120deg, #8eaca0,  #497363);
-}
+} */
 
 
 .info-panel {
@@ -661,9 +626,13 @@ select {
 }
 
 .form-submit {
-  text-align: center;
-  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  grid-column: 1 / -1; /* spans both columns */
 }
+
+
 
 .form-submit button {
   background: linear-gradient(120deg, #9bd0e0,#2363a6);
@@ -674,9 +643,26 @@ select {
   font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: inline-block;
+
+ 
 }
 
 .form-submit button:hover {
   background: linear-gradient(120deg, #9bd0e0,#2363a6);
 }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.error {
+  color: red;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+
 
