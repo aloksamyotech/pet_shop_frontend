@@ -20,9 +20,22 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       .required(t('name_required'))
       .matches(/^[A-Za-z\s]+$/, t('only_letters_allowed'))
       .max(50, t('max_50_characters')),
-    description: yup.string().max(100, t('max_100_characters'))
+  
+      description: yup
+      .string()
+      .required(t('description_required'))
+      .test('max-words', t('max_20_words'), function (value) {
+        if (!value || !value.trim()) return false;
+        return value.trim().split(/\s+/).length <= 20;
+      }),
+    
+  
+    price: yup
+      .string() 
+      .required(t('price_required'))
   });
-
+  
+  
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -111,19 +124,21 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                id="price"
-                name="price"
-                label={t('price')}
-                fullWidth
-                size="small"
-                multiline
-                rows={3}
-                value={formik.values.price}
-                onChange={formik.handleChange}
-                error={formik.touched.price && Boolean(formik.errors.price)}
-                helperText={formik.touched.price && formik.errors.price}
-              />
+            <TextField
+  id="price"
+  name="price"
+  label={t('price')}
+  fullWidth
+  size="small"
+  value={formik.values.price}
+  onChange={(e) => {
+    const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+    formik.setFieldValue('price', onlyNumbers);
+  }}
+  error={formik.touched.price && Boolean(formik.errors.price)}
+  helperText={formik.touched.price && formik.errors.price}
+/>
+
             </Grid>
           </Grid>
         </form>

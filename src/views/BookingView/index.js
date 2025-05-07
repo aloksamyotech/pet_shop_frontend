@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Typography, Button, Container, Stack, Card, IconButton } from '@mui/material';
+import { Box, Grid, Typography, Button, Container, Stack, Card, IconButton,Tooltip  } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import HomeIcon from '@mui/icons-material/Home';
 import { useLocation, useNavigate } from 'react-router';
@@ -40,10 +40,16 @@ const [item , setItem] = useState([])
 
  
  const handleInvoice = () => {
+  if (bookingData.status !== 'completed') {
+    toast.warning("Invoice cannot be generated. Status is not completed.");
+    return;
+  }
+
   localStorage.setItem('invoiceBookingData', JSON.stringify(bookingData));
   localStorage.setItem('itemData', JSON.stringify(item));
   navigate('/dashboard/invoiceUI');
 };
+
 
 
  const handleDelete = (id) => {
@@ -429,40 +435,39 @@ Invoice
         </Stack>
 
 
-
         <Box mt={4}>
   <Typography variant="h6" gutterBottom>
     Extra Items
   </Typography>
-  <Table>
+  <Table sx={{ tableLayout: 'fixed', wordWrap: 'break-word' }}>
     <TableHead>
       <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-        <TableCell><strong>Name</strong></TableCell>
-        <TableCell><strong>Description</strong></TableCell>
-        <TableCell><strong>Price</strong></TableCell>
-        <TableCell><strong>Action</strong></TableCell>
+        <TableCell sx={{ width: '20%' }}><strong>Name</strong></TableCell>
+        <TableCell sx={{ width: '40%' }}><strong>Description</strong></TableCell>
+        <TableCell sx={{ width: '20%' }}><strong>Price</strong></TableCell>
+        <TableCell sx={{ width: '20%' }}><strong>Action</strong></TableCell>
       </TableRow>
     </TableHead>
     <TableBody>
       {item.length > 0 ? (
         item.map((row) => (
           <TableRow key={row._id}>
-            <TableCell>{row.name}</TableCell>
-            <TableCell>{row.description}</TableCell>
+            <TableCell sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Tooltip title={row.name}>
+                <span>{row.name}</span>
+              </Tooltip>
+            </TableCell>
+            <TableCell sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Tooltip title={row.description}>
+                <span>{row.description}</span>
+              </Tooltip>
+            </TableCell>
             <TableCell>{currencySymbol}{row.price}</TableCell>
             <TableCell>
-              <IconButton
-                color="primary"
-                onClick={() => handleEdit(row)}
-              >
+              <IconButton color="primary" onClick={() => handleEdit(row)}>
                 <EditIcon />
               </IconButton>
-              <IconButton
-                color="error"
-                onClick={() => {
-                  handleDelete(row._id);
-                 }}
-              >
+              <IconButton color="error" onClick={() => handleDelete(row._id)}>
                 <DeleteIcon />
               </IconButton>
             </TableCell>
@@ -478,7 +483,6 @@ Invoice
     </TableBody>
   </Table>
 </Box>
-
 
       </Box>
     </Container>
