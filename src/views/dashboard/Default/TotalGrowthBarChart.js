@@ -23,7 +23,6 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [salesData, setSalesData] = useState([]);
   const [soldQuantities, setSoldQuantityData] = useState([]);
-  const [currencySymbol, setCurrencySymbol] = useState('');
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const { navType } = customization;
@@ -34,6 +33,9 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const primaryDark = theme.palette.primary.dark;
   const secondaryMain = theme.palette.secondary.main;
   const secondaryLight = theme.palette.secondary.light;
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
 
   const { t } = useTranslation();
 
@@ -50,12 +52,8 @@ const TotalGrowthBarChart = ({ isLoading }) => {
           setSoldQuantityData(quantity.data.data);
         }
 
-        // Fetch currency symbol if required
-        const currency = await getApi(urls.currency.getSymbol);
-        if (currency.data.success) {
-          setCurrencySymbol(currency.data.symbol);
-        }
-      } catch (error) {
+       
+} catch (error) {
         console.error('Error fetching sales data:', error);
       }
     };
@@ -66,7 +64,6 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     if (!isLoading && (salesData.length > 0 || soldQuantities.length > 0)) {
       const newChartData = getChartData(salesData, soldQuantities, value, currencySymbol, t);
 
-      // Ensure chart exists before updating
       if (ApexCharts && ApexCharts.exec) {
         ApexCharts.exec('bar-chart', 'updateOptions', newChartData.options);
         ApexCharts.exec('bar-chart', 'updateSeries', newChartData.series);
