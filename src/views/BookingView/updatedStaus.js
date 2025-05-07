@@ -66,8 +66,8 @@ const ChangeStatus = ({ open, handleClose, id, fetchData,bookingData}) => {
         >
           <FormControlLabel value="pending" control={<Radio />} label="Pending" />
           <FormControlLabel value="approved" control={<Radio />} label="Approved" />
-          <FormControlLabel value="rejected" control={<Radio />} label="rejected" />
-          <FormControlLabel value="completed" control={<Radio />} label="completed" />
+          <FormControlLabel value="rejected" control={<Radio />} label="Rejected" />
+          <FormControlLabel value="completed" control={<Radio />} label="Completed" />
         </RadioGroup>
       </DialogContent>
 
