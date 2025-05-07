@@ -19,9 +19,20 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       .string()
       .required(t('name_required'))
       .matches(/^[A-Za-z\s]+$/, t('only_letters_allowed'))
-      .max(50, t('max_50_characters')),
-    description: yup.string().max(100, t('max_100_characters'))
+      .test('max-words', t('max_5_words'), function (value) {
+        if (!value) return true;
+        return value.trim().split(/\s+/).length <= 5;
+      }),
+  
+    description: yup
+      .string()
+      .required(t('description_required'))
+      .test('max-words', t('max_20_words'), function (value) {
+        if (!value) return true;
+        return value.trim().split(/\s+/).length <= 20;
+      })
   });
+  
 
   const formik = useFormik({
     initialValues: {

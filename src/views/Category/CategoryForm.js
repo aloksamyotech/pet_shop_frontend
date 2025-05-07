@@ -18,9 +18,11 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       .required(t('name_required'))
       .matches(/^[A-Za-z\s]+$/, t('only_letters_allowed'))
       .max(50, t('max_50_characters')),
-    description: yup.string().max(100, t('max_100_characters'))
+    description: yup
+      .string()
+      .max(100, t('max_100_characters')),
   });
-
+  
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -68,36 +70,57 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <TextField
-                id="name"
-                name="name"
-                label={t('category_name')}
-                fullWidth
-                size="small"
-                value={formik.values.name}
-                onChange={(e) => {
-                  const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, '');
-                  formik.setFieldValue('name', onlyLetters);
-                }}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
-              />
+            <TextField
+  id="name"
+  name="name"
+  label={t('category_name')}
+  fullWidth
+  size="small"
+  value={formik.values.name}
+  onChange={(e) => {
+    let value = e.target.value.replace(/[^A-Za-z\s]/g, '');
+    if (value.length <= 50) {
+      formik.setFieldValue('name', value);
+    }
+  }}
+  onBlur={formik.handleBlur} // ensure touched is marked
+  error={formik.touched.name && Boolean(formik.errors.name)}
+  helperText={
+    formik.touched.name && formik.errors.name
+      ? formik.errors.name
+      : `${formik.values.name.length}/50`
+  }
+/>
+
+
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                id="description"
-                name="description"
-                label={t('description')}
-                fullWidth
-                size="small"
-                multiline
-                rows={3}
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                error={formik.touched.description && Boolean(formik.errors.description)}
-                helperText={formik.touched.description && formik.errors.description}
-              />
+            <TextField
+  id="description"
+  name="description"
+  label={t('description')}
+  fullWidth
+  size="small"
+  multiline
+  rows={4}
+  value={formik.values.description}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (value.length <= 100) {
+      formik.setFieldValue('description', value);
+    }
+  }}
+  onBlur={formik.handleBlur}
+  error={formik.touched.description && Boolean(formik.errors.description)}
+  helperText={
+    formik.touched.description && formik.errors.description
+      ? formik.errors.description
+      : `${formik.values.description.length}/100`
+  }
+/>
+
+
             </Grid>
           </Grid>
         </form>

@@ -275,34 +275,6 @@ li {
   border-radius: 6px;
   border: 1px solid #ccc;
 }
-
-.form-submit {
-  width: 100%;
-  margin-top: 20px;
-  text-align: center;
- 
-}
-
-.form-submit button {
-  padding: 12px 30px;
-  font-size: 16px; 
-  background: linear-gradient(120deg, #9bd0e0,#9cd1e1);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-
-
-
-.booking-container {
-  display: flex;
-  height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
- 
-}
-
 .form-panel {
   flex: 1;
   padding: 40px;
@@ -327,43 +299,6 @@ li {
   display: flex;
   flex-direction: column;
 }
-
-.input-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.input-group input,
-.input-group select {
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-.input-group input:focus,
-.input-group select:focus {
-  border-color: #64c9cf;
-  outline: none;
-  box-shadow: 0 0 5px #b2ebf2;
-}
-
-.form-submit button {
-  background: linear-gradient(120deg, #8eaca0,  #497363);
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.form-submit button:hover {
-  background: linear-gradient(120deg, #8eaca0,  #497363);
-}
-
 
 .info-panel {
   flex: 1;
@@ -474,23 +409,6 @@ footer p {
   margin-bottom: 40px;
   font-weight: bold;
 }
-
-
-.intro-section {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  background-image: url('https://img.freepik.com/free-photo/flat-lay-toys-with-food-bowl-fur-brush-dogs_23-2148949620.jpg?t=st=1746089848~exp=1746093448~hmac=daea2351ac65c539c33347853a60d40d63519c4ad212e331d1289d36055afb66&w=1800');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-
 .intro-text h2 {
   color: #fff;
   font-size: 36px;
@@ -591,7 +509,7 @@ html {
   position: relative;
   width: 100%;
   height: 100vh;
-  background-image: url('https://img.freepik.com/free-photo/flat-lay-toys-with-food-bowl-fur-brush-dogs_23-2148949620.jpg?t=st=1746089848~exp=1746093448~hmac=daea2351ac65c539c33347853a60d40d63519c4ad212e331d1289d36055afb66&w=1800');
+  background-image: url('/src/assets/images/backgroundImage.jpg');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -661,9 +579,13 @@ select {
 }
 
 .form-submit {
-  text-align: center;
-  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  grid-column: 1 / -1; 
 }
+
+
 
 .form-submit button {
   background: linear-gradient(120deg, #9bd0e0,#2363a6);
@@ -674,9 +596,26 @@ select {
   font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: inline-block;
+
+ 
 }
 
 .form-submit button:hover {
   background: linear-gradient(120deg, #9bd0e0,#2363a6);
 }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.error {
+  color: red;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+
 

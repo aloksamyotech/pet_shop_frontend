@@ -4,7 +4,7 @@ import {
   Breadcrumbs, TextField, IconButton, MenuItem, Popover
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-
+import ConfirmDialog from 'confirmDeletion/deletion';
 import HomeIcon from '@mui/icons-material/Home';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -22,13 +22,13 @@ import { toast } from 'react-toastify';
 
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
-import ConfirmDialog from 'confirmDeletion/deletion';
+
 import BookingDetails from 'views/BookingView';
 
 const Booking = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
+ const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [purchase, setPurchase] = useState([]);
   const [filteredPurchase, setFilteredPurchase] = useState([]);
   const [startDate, setStartDate] = useState('');
@@ -38,8 +38,8 @@ const Booking = () => {
   const [activeRow, setActiveRow] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [loading, setLoading] = useState(true);
-
- 
+ const [deleteId, setDeleteId] = useState(null);
+  const today = new Date().toISOString().split("T")[0];
 
 
 const fetchData = async () => { 
@@ -61,6 +61,13 @@ const fetchData = async () => {
      
     
   }, []);
+
+
+
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setOpenConfirmDialog(true);
+  };
 
 
   const handleSearch = (searchTerm) => {
@@ -91,37 +98,45 @@ const fetchData = async () => {
  
   };
 
-  const handleDelete = async (id) => {
-    try {
-    const userData  =  await getApi(urls.registration.getById.replace(":id",id))
-  
+  const confirmDelete = async (id) => {
+   if (!deleteId) return;
+     try {
+      const userData  =  await getApi(urls.registration.getById.replace(":id",id))
       await deleteApi(urls.registration.delete.replace(":id",id));
       toast.success('Deleted successfully');
-     const updated = purchase.filter(item => item._id !== id);
+      setDeleteId(null);
+      const updated = purchase.filter(item => item._id !== id);
       setPurchase(updated);
-      setFilteredPurchase(updated);
-    } catch (err) {
-      toast.error('Deletion failed');
+      setFilteredPurchase(updated); 
+    } catch (error) {
+      console.error("Delete Error:", error?.response?.data || error.message || error);
+      toast.error(error?.response?.data?.message || "Failed to delete item");
     }
+    setDeleteId(null);
+    setOpenConfirmDialog(false);
   };
+
+
 
   const filterData = () => {
     const filtered = purchase.filter((item) => {
-      const itemDate = new Date(item.date);
-      return (!startDate || itemDate >= new Date(startDate)) &&
-             (!endDate || itemDate <= new Date(endDate));
+      const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
+  
+      return (
+        (!startDate || itemDate >= startDate) &&
+        (!endDate || itemDate <= endDate)
+      );
     });
+  
     setFilteredPurchase(filtered);
   };
-
-  const columns = [
   
+  const columns = [
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'email', headerName: t('Email'), flex: 1 },
     { field: 'phone', headerName: t('Phone'), flex: 1 },
     { field: 'city', headerName: t('City'), flex: 1 },
- 
-    {
+     {
       field: 'Action',
       headerName: t('Action'),
       flex: 1,
@@ -147,17 +162,7 @@ const fetchData = async () => {
             >
               <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
             </MenuItem>
-
-            {/* <MenuItem
-              onClick={() => {
-                handleUpdate(activeRow);
-                handleCloseActions();
-              }}
-            >
-              <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
-            </MenuItem> */}
-
-            <MenuItem
+<MenuItem
               onClick={() => {
                 handleDelete(activeRow._id);
                 handleCloseActions();
@@ -172,6 +177,12 @@ const fetchData = async () => {
   ];
 
   return (
+    <>  <ConfirmDialog 
+      open={openConfirmDialog} 
+      onClose={() => setOpenConfirmDialog(false)} 
+      onConfirm={() => confirmDelete(deleteId)} 
+    />
+  
     <Grid>
       <Stack direction="row" alignItems="center" mb={3}>
         <Box
@@ -211,20 +222,31 @@ const fetchData = async () => {
           gap: 2,
         }}
       >
-        <TextField
-          label={t("Start Date")}
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label={t("End Date")}
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-        />
+       <TextField
+  label={t("Start Date")}
+  type="date"
+  value={startDate}
+  onChange={(e) => {
+    const selected = e.target.value;
+    setStartDate(selected);
+      if (endDate && endDate < selected) {
+      setEndDate('');
+    }
+  }}
+  InputLabelProps={{ shrink: true }}
+/>
+
+
+<TextField
+  label={t("End Date")}
+  type="date"
+  value={endDate}
+  onChange={(e) => setEndDate(e.target.value)}
+  InputLabelProps={{ shrink: true }}
+  inputProps={{
+    min: startDate
+  }}
+/>
         <Button
           variant="contained"
           disabled={isFilterDisabled}
@@ -273,6 +295,7 @@ const fetchData = async () => {
         </Box>
       </TableStyle>
     </Grid>
+    </>
   );
 };
 
