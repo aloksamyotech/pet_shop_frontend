@@ -13,6 +13,9 @@ const AddItemDialog = ({ open, handleClose, id, AddItemData, updatedItem, editDa
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [errors, setErrors] = useState({});
+  const user = localStorage.getItem('user');
+ const userObj = user ? JSON.parse(user) : null;
+ const currencySymbol = userObj.currencySymbol;
 
   useEffect(() => {
     if (open) {
@@ -33,39 +36,73 @@ const AddItemDialog = ({ open, handleClose, id, AddItemData, updatedItem, editDa
     setErrors({});
   };
 
+  // const validate = () => {
+  //   const newErrors = {};
+
+  //   // Validate Item Name
+  //   const nameWords = itemName.trim().split(/\s+/);
+  //   if (!itemName.trim()) {
+  //     newErrors.itemName = 'Item name is required';
+  //   } else if (nameWords.length > 5) {
+  //     newErrors.itemName = 'Maximum 5 words allowed';
+  //   }
+
+  //   // Validate Description
+  //   const descWords = description.trim().split(/\s+/);
+  //   if (!description.trim()) {
+  //     newErrors.description = 'Description is required';
+  //   } else if (descWords.length > 10) {
+  //     newErrors.description = 'Maximum 10 words allowed';
+  //   }
+
+  //   // Validate Price
+  //   const priceValue = parseFloat(price);
+  //   if (!price.trim()) {
+  //     newErrors.price = 'Price is required';
+  //   } else if (isNaN(priceValue)) {
+  //     newErrors.price = 'Price must be a number';
+  //   } else if (priceValue > 10000) {
+  //     newErrors.price = 'Maximum allowed price is 1000';
+  //   }
+
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
+
+  
   const validate = () => {
     const newErrors = {};
-
-    // Validate Item Name
-    const nameWords = itemName.trim().split(/\s+/);
+  
+ 
     if (!itemName.trim()) {
       newErrors.itemName = 'Item name is required';
-    } else if (nameWords.length > 5) {
-      newErrors.itemName = 'Maximum 5 words allowed';
+    } else if (itemName.length > 20) {
+      newErrors.itemName = 'Maximum 20 characters allowed';
     }
-
-    // Validate Description
-    const descWords = description.trim().split(/\s+/);
+  
+   
     if (!description.trim()) {
       newErrors.description = 'Description is required';
-    } else if (descWords.length > 10) {
-      newErrors.description = 'Maximum 10 words allowed';
+    } else if (description.length > 40) {
+      newErrors.description = 'Maximum 40 characters allowed';
     }
-
-    // Validate Price
-    const priceValue = parseFloat(price);
-    if (!price.trim()) {
+  
+   
+    if (!price) {
       newErrors.price = 'Price is required';
-    } else if (isNaN(priceValue)) {
-      newErrors.price = 'Price must be a number';
-    } else if (priceValue > 10000) {
-      newErrors.price = 'Maximum allowed price is 1000';
+    } else {
+      const priceValue = parseFloat(price);
+      if (isNaN(priceValue)) {
+        newErrors.price = 'Price must be a number';
+      } else if (priceValue > 10000) {
+        newErrors.price = 'Maximum allowed price is 10000';
+      }
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  
   const handleSubmit = async () => {
     if (!validate()) return;
 
@@ -117,20 +154,19 @@ const AddItemDialog = ({ open, handleClose, id, AddItemData, updatedItem, editDa
   onChange={(e) => {
     const value = e.target.value;
     const onlyLetters = /^[A-Za-z\s]*$/;
-    const words = value.trim().split(/\s+/);
 
-    if (onlyLetters.test(value) && words.length <= 5) {
+    if (onlyLetters.test(value)) {
       setItemName(value);
       setErrors((prev) => ({ ...prev, itemName: '' }));
-    } else if (!onlyLetters.test(value)) {
+    } else {
       setErrors((prev) => ({ ...prev, itemName: 'Only letters allowed' }));
-    } else if (words.length > 5) {
-      setErrors((prev) => ({ ...prev, itemName: 'Maximum 5 words allowed' }));
     }
   }}
+  inputProps={{ maxLength: 20 }}
   error={!!errors.itemName}
   helperText={errors.itemName}
 />
+
 
 <TextField
   label="Description"
@@ -140,27 +176,24 @@ const AddItemDialog = ({ open, handleClose, id, AddItemData, updatedItem, editDa
   value={description}
   onChange={(e) => {
     const value = e.target.value;
-    const words = value.trim().split(/\s+/);
-
-    if (words.length <= 10) {
-      setDescription(value);
-      setErrors((prev) => ({ ...prev, description: '' }));
-    } else {
-      setErrors((prev) => ({ ...prev, description: 'Maximum 10 words allowed' }));
-    }
+    setDescription(value);
+    setErrors((prev) => ({ ...prev, description: '' }));
   }}
+  inputProps={{ maxLength: 40 }}
   error={!!errors.description}
   helperText={errors.description}
 />
-          <TextField
-            label="Price"
+
+
+    <TextField
+            label={`Price(${currencySymbol})`}
             fullWidth
             type="number"
-            inputProps={{ min: 0, max: 1000 }}
+            inputProps={{ min: 0, max: 100000}}
             value={price}
             onChange={(e) => {
               const value = e.target.value;
-              if (!isNaN(value) && parseFloat(value) <= 1000) {
+              if (!isNaN(value) && parseFloat(value) <= 100000) {
                 setPrice(value);
               }
             }}

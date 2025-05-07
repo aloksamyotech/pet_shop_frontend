@@ -11,6 +11,11 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { borderRadius } from '@mui/system';
+import { getApi } from 'views/Api/comman';
+import { urls } from 'views/Api/constant';
+import { Add } from '@mui/icons-material';
+import { toast } from 'react-toastify';
+
 
 const LabelValue = ({ label, value }) => (
   <Typography variant="h6">
@@ -83,12 +88,62 @@ const InvoiceUI = () => {
 
 
   const totalAmount = paymentInfo.price + extraItemsTotal;
+  const  useId = invoiceBookingData._id
+
+  const handleSendEmail  = async() =>{
+      const AddItem = await getApi(urls.registration.sendEmailToUser.replace(":id",useId));
+      toast.success('Email is send successfully');
+
+    
+}
 
 
+const printInvoiceBooking = () => {
+  const content = document.getElementById('invoice-content');
+  const printWindow = window.open('', '', 'width=800,height=600');
 
- 
+  const styles = Array.from(document.styleSheets)
+    .map((styleSheet) => {
+      try {
+        return Array.from(styleSheet.cssRules)
+          .map((rule) => rule.cssText)
+          .join('\n');
+      } catch (e) {
+        return '';
+      }
+    })
+    .join('\n');
 
-  return (
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Booking Invoice</title>
+        <style>
+          ${styles}
+          @media print {
+            body {
+              margin: 0;
+              font-family: Arial, sans-serif;
+            }
+            .no-print {
+              display: none;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        ${content.innerHTML}
+      </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+  printWindow.close();
+};
+
+   return (
     <>
       {/* <Box
         sx={{
@@ -178,27 +233,49 @@ const InvoiceUI = () => {
     </Typography>
   </Stack>
 
- 
+  <Stack direction="row" alignItems="center">
   <Button
-    variant="contained"
-    startIcon={<Iconify icon="eva:email-outline" />} 
-    // onClick={handleSendEmail}
-    size="small"
-    sx={{
-      borderRadius:'10px',  
-      backgroundColor: '#6A9C89',
-      color: '#fff',
-      '&:hover': {
-        backgroundColor: '#8DB3A8'
-      }
-    }}
-  >
-    Send Email
-  </Button>
+  variant="outlined"
+  startIcon={<Iconify icon="eva:email-outline" />}
+  onClick={handleSendEmail}
+  size="small"
+  sx={{
+    borderRadius: '10px',
+    color: '#6A9C89',
+    borderColor: '#6A9C89',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      borderColor: '#8DB3A8'
+    },
+    ml: 2
+  }}
+>
+  Send Email
+</Button>
+
+<Button
+  variant="outlined"
+  onClick={printInvoiceBooking}
+  size="small"
+  sx={{
+    borderRadius: '10px',
+    color: '#6A9C89',
+    borderColor: '#6A9C89',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      borderColor: '#8DB3A8'
+    },
+    ml: 2
+  }}
+>
+  Print Invoice
+</Button>
+</Stack>
 </Box>
 
 
-      <Box p={4} sx={{ backgroundColor: '#fff' }}>
+<div id="invoice-content">
+<Box p={4} sx={{ backgroundColor: '#fff' }}>
         <Grid container justifyContent="space-between" mb={2}>
           <Typography variant="h4">Invoice</Typography>
           <Box textAlign="right">
@@ -242,12 +319,12 @@ const InvoiceUI = () => {
           <Typography variant="h4">Payment Information</Typography>
           <Divider sx={{ my: 1 }} />
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6}>
               <LabelValue label="Payment Status" value={paymentInfo.status} />
               <LabelValue label="Payment Type" value={paymentInfo.type} />
               <LabelValue label="Payment Date" value={paymentInfo.date} />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6}>
               <LabelValue label="Package Price" value={`${currencySymbol}${paymentInfo.price}`} />
               <LabelValue label="Advance Payment" value={`${currencySymbol}${paymentInfo.advance}`} />
               <LabelValue label="Remaining Payment" value={`${currencySymbol}${remainingAmount}`} />
@@ -286,6 +363,7 @@ const InvoiceUI = () => {
           </Typography>
         </Box>
       </Box>
+      </div>
     </>
   );
 };

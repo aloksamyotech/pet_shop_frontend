@@ -116,7 +116,8 @@ registration: {
   updatedStatus : base + '/registrationData/:id',
   getById : base +'/registrationData/:id',
   getTodayBookings: base +'/registrationData/todayBooking',
-  getDataByStatus : base +'/registrationData/status'
+  getDataByStatus : base +'/registrationData/status',
+  sendEmailToUser : base +'/registrationData/emailSend/:id'
 }
 ,
 AddItem :{
