@@ -52,11 +52,7 @@ const PopularCard = ({ isLoading }) => {
 
     fetchProducts();
   }, []);
-
-
-  console.log("product",products)
-
-  return (
+return (
     <>
       {isLoading ? (
         <SkeletonPopularCard />
