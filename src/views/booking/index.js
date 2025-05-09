@@ -11,20 +11,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
+ 
 import TableStyle from '../../ui-component/TableStyle';
 import Iconify from '../../ui-component/iconify';
 import SearchBar from 'views/Search';
-
+ 
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-
+ 
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import { urls } from 'views/Api/constant.js';
-
+import BookingDialog from './BookingDialog';
 import BookingDetails from 'views/BookingView';
-
+ 
 const Booking = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -40,9 +40,11 @@ const Booking = () => {
   const [loading, setLoading] = useState(true);
  const [deleteId, setDeleteId] = useState(null);
   const today = new Date().toISOString().split("T")[0];
+  const [editData, setEditData] = useState(null);
 
-
-const fetchData = async () => { 
+ 
+ 
+const fetchData = async () => {
     try {
       const res = await getApi(urls.registration.get);
       if (res?.success) {
@@ -55,21 +57,21 @@ const fetchData = async () => {
       setLoading(false);
     }
   };
-  
+ 
   useEffect(() => {
       fetchData();
      
-    
+   
   }, []);
-
-
-
+ 
+ 
+ 
   const handleDelete = (id) => {
     setDeleteId(id);
     setOpenConfirmDialog(true);
   };
-
-
+ 
+ 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
       setFilteredPurchase(purchase);
@@ -82,22 +84,22 @@ const fetchData = async () => {
     setAnchorEl(event.currentTarget);
     setActiveRow(row);
   };
-
+ 
   const handleCloseActions = () => {
     setAnchorEl(null);
     setActiveRow(null);
   };
-
+ 
   const handleView = (row) => {
     navigate('/dashboard/bookingView',{state:{UserData:row._id}} )
    
   };
-
+ 
   const handleUpdate = (row) => {
     navigate('/bookingView')
  
   };
-
+ 
   const confirmDelete = async (id) => {
    if (!deleteId) return;
      try {
@@ -107,7 +109,7 @@ const fetchData = async () => {
       setDeleteId(null);
       const updated = purchase.filter(item => item._id !== id);
       setPurchase(updated);
-      setFilteredPurchase(updated); 
+      setFilteredPurchase(updated);
     } catch (error) {
       console.error("Delete Error:", error?.response?.data || error.message || error);
       toast.error(error?.response?.data?.message || "Failed to delete item");
@@ -115,22 +117,22 @@ const fetchData = async () => {
     setDeleteId(null);
     setOpenConfirmDialog(false);
   };
-
-
-
+ 
+ 
+ 
   const filterData = () => {
     const filtered = purchase.filter((item) => {
       const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
-  
+ 
       return (
         (!startDate || itemDate >= startDate) &&
         (!endDate || itemDate <= endDate)
       );
     });
-  
+ 
     setFilteredPurchase(filtered);
   };
-  
+ 
   const columns = [
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'email', headerName: t('Email'), flex: 1 },
@@ -146,7 +148,7 @@ const fetchData = async () => {
           <IconButton onClick={(e) => handleOpenActions(e, params.row)}>
             <MoreVertIcon />
           </IconButton>
-
+ 
           <Popover
             open={Boolean(anchorEl) && activeRow?._id === params.row._id}
             anchorEl={anchorEl}
@@ -162,6 +164,18 @@ const fetchData = async () => {
             >
               <VisibilityIcon sx={{ color: '#00bbff', fontSize: '18px' }} />
             </MenuItem>
+
+
+            <MenuItem
+  onClick={() => {
+    setEditData(activeRow); 
+    setOpenAdd(true);      
+    handleCloseActions();
+  }}
+>
+  <EditIcon sx={{ color: '#5f0497', fontSize: '18px' }} />
+</MenuItem>
+
 <MenuItem
               onClick={() => {
                 handleDelete(activeRow._id);
@@ -175,14 +189,24 @@ const fetchData = async () => {
       ),
     },
   ];
-
+ 
   return (
-    <>  <ConfirmDialog 
-      open={openConfirmDialog} 
-      onClose={() => setOpenConfirmDialog(false)} 
-      onConfirm={() => confirmDelete(deleteId)} 
+    <>  <ConfirmDialog
+      open={openConfirmDialog}
+      onClose={() => setOpenConfirmDialog(false)}
+      onConfirm={() => confirmDelete(deleteId)}
     />
-  
+ 
+ <BookingDialog
+  handleClose={() => {
+    setOpenAdd(false);
+    setEditData(null);
+  }}
+  open={openAdd}
+  fetchData={fetchData}
+  booking={editData}
+/>
+
     <Grid>
       <Stack direction="row" alignItems="center" mb={3}>
         <Box
@@ -208,9 +232,22 @@ const fetchData = async () => {
               {t('Booking Information')}
             </Typography>
           </Stack>
+          <Stack direction="row" alignItems="center" spacing={2}>
+                        <Card>
+                          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small"  sx={{
+                            backgroundColor: '#6A9C89',
+                            color: '#ffff',
+                            '&:hover': {
+                              backgroundColor: '#8DB3A8'
+                            }
+                          }}>
+                         {t(" New Booking")}
+                          </Button>
+                        </Card>
+                      </Stack>
 </Box>
       </Stack>
-
+ 
       <Box
         sx={{
           backgroundColor: 'white',
@@ -235,8 +272,8 @@ const fetchData = async () => {
   }}
   InputLabelProps={{ shrink: true }}
 />
-
-
+ 
+ 
 <TextField
   label={t("End Date")}
   type="date"
@@ -260,7 +297,7 @@ const fetchData = async () => {
         >
           {t('Apply Filter')}
         </Button>
-
+ 
         <Button
           variant="outlined"
           sx={{ color: '#6A9C89', borderColor: '#6A9C89' }}
@@ -273,7 +310,7 @@ const fetchData = async () => {
           {t('Clear Filter')}
         </Button>
       </Box>
-
+ 
       <TableStyle>
         <Box width="100%">
           <Card style={{ height: 'auto', marginTop: '-45px' }}>
@@ -298,5 +335,7 @@ const fetchData = async () => {
     </>
   );
 };
-
+ 
 export default Booking;
+ 
+ 
