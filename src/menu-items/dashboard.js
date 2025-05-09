@@ -70,7 +70,7 @@ const icons = {
   IconPaw,
   IconBox ,
   IconGift ,
-  IconDroplet
+  IconDroplet,
 };
 
 

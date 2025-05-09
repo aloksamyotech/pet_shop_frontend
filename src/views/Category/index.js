@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Stack, Button, Container, Typography, Card, Box, IconButton, Grid, MenuItem, Popover } from '@mui/material';
+import { Stack, Button, Container, Typography, Card, Box, IconButton, Grid, MenuItem, Popover ,Link as MuiLink} from '@mui/material';
 import TableStyle from '../../ui-component/TableStyle';
 import { DataGrid } from '@mui/x-data-grid';
 import HomeIcon from '@mui/icons-material/Home';
@@ -8,6 +8,7 @@ import ViewCategory from './viewCategory.js';
 import { urls } from 'views/Api/constant.js';
 import { getApi, deleteApi } from 'views/Api/comman.js';
 import EditIcon from '@mui/icons-material/Edit';
+import { Link } from 'react-router-dom';
 
 import CategoryForm from './CategoryForm';
 import SearchBar from 'views/Search';
@@ -15,6 +16,7 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
 import Iconify from 'ui-component/iconify';
+import { margin } from '@mui/system';
 
 const Customer = () => {
   const navigate = useNavigate();
@@ -76,18 +78,6 @@ const Customer = () => {
   
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'description', headerName: t('Description'), flex: 1 },
-    // {
-    //   field: 'categoryImage',
-    //   headerName: t('Image'),
-    //   flex: 1,
-    //   renderCell: (params) => (
-    //     <img
-    //       src={params.row.imageUrl || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg'}
-    //       alt="product"
-    //       style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '50%', padding: '4px' }}
-    //     />
-    //   )
-    // },
     {
       field: 'Action',
       headerName: t('Action'),
@@ -126,16 +116,13 @@ const Customer = () => {
 
       <Grid>
         <Box
-          sx={{
-            backgroundColor: 'white',
-            height: '50px',
-            width: '100%',
+           sx={{
+            height: '50px', width: '100%',
+            backgroundColor: '#ffff',
+            padding: '10px',
+            borderRadius: '8px',
             display: 'flex',
-            borderRadius: '10px',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 25px',
-            mb: '40px'
+            justifyContent: 'space-between'
           }}
         >
           <Stack direction="row" alignItems="center">
@@ -165,9 +152,11 @@ const Customer = () => {
             </Card>
           </Stack>
         </Box>
+        
+ 
         <TableStyle>
           <Box width="100%">
-            <Card style={{ height: 'auto', marginTop: '-25px' }}>
+            <Card style={{ height: 'auto',marginTop:'20px'}}>
               <SearchBar onSearch={handleSearch} />
               <DataGrid rows={filteredCategory.map((row,index)=>({...row,s_no:index+1}))} 
               columns={columns} getRowId={(row) => row._id}
