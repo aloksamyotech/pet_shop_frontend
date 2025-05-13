@@ -115,7 +115,7 @@ const fetchData = async () => {
   };
 
   const columns = [
-  
+   {field:'s_no',headerName:'S_No',flex:0.5},  
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'email', headerName: t('Email'), flex: 1 },
     { field: 'phone', headerName: t('Phone'), flex: 1 },
@@ -208,7 +208,7 @@ const fetchData = async () => {
           <Card style={{ height: 'auto', marginTop: '-30px' }}>
             <SearchBar onSearch={handleSearch} />
             <DataGrid
-              rows={filteredPurchase}
+               rows={filteredPurchase.map((row, index) => ({ ...row, s_no: index + 1 }))}
               columns={columns}
               getRowId={(row) => row._id}
               loading={loading}

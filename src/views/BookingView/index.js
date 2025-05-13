@@ -267,7 +267,7 @@ return (
         ? '#D5FADF'
         : bookingData.status === 'rejected'
         ? '#F8D7DA'
-        : '',
+        : '#2196F3',
     color:
       bookingData.status === 'pending'
         ? '#FF9800'
@@ -275,7 +275,7 @@ return (
         ? '#19AB53'
         : bookingData.status === 'rejected'
         ? '#C62828'
-        : '',
+        : '#fff',
     borderRadius: '8px',
     padding: '4px 12px',
     fontWeight: 'bold',
@@ -339,24 +339,6 @@ return (
 >
 Add Extra
 </Box>
-
-<Box
-  sx={{
-    padding:'10px',
-    backgroundColor: 'transparent',
-    color: 'black',
-   border: '1px solid black', 
-    cursor: 'pointer',
-    textAlign: 'center',
-    transition: 'all 0.3s ease',
-    borderRadius: 2,
-    '&:hover': {
-      backgroundColor: '#8DB3A8',
-    },
-  }}
->
-Payment
-</Box>
 <Box
   sx={{
     padding:'10px',
@@ -374,65 +356,8 @@ Payment
   onClick={handleInvoice}
 >
 Invoice
-</Box>
-
-
-{/* 
-            <Button
-                 variant="contained"
-              sx={{
-                backgroundColor: '#6A9C89',
-                color: '#ffffff',
-                px: 3,
-                py: 1.5,
-                fontWeight: 600,
-                borderRadius: 2,
-                '&:hover': {
-                  backgroundColor: '#8DB3A8',
-                },
-              }}
-              onClick={handleItemOpen}
-            >
-        Add Extra
-            </Button> */}
-            {/* <Button
-             
-              variant="contained"
-              sx={{
-                backgroundColor: '#6A9C89',
-                color: '#ffffff',
-                px: 3,
-                py: 1.5,
-                fontWeight: 600,
-                borderRadius: 2,
-                '&:hover': {
-                  backgroundColor: '#8DB3A8',
-                },
-              }}
-            >
-         Payment
-            </Button> */}
-            {/* <Button
-           
-              variant="contained"
-              sx={{
-                backgroundColor: '#6A9C89',
-                color: '#ffffff',
-                px: 3,
-                py: 1.5,
-                fontWeight: 600,
-                borderRadius: 2,
-                '&:hover': {
-                  backgroundColor: '#8DB3A8',
-                },
-              }}
-
-            onClick={handleInvoice}
-            >
-          Invoice
-            </Button> */}
-        
-        </Stack>
+</Box>     
+   </Stack>
 
 
         <Box mt={4}>

@@ -41,12 +41,16 @@ const Booking = () => {
  const [deleteId, setDeleteId] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const [editData, setEditData] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState('');
+
 
  
  
 const fetchData = async () => {
     try {
       const res = await getApi(urls.registration.get);
+
+      
       if (res?.success) {
         setPurchase(res.data.data);
         setFilteredPurchase(res.data.data);
@@ -64,6 +68,22 @@ const fetchData = async () => {
    
   }, []);
  
+
+ const getStatusColor = (status) => {
+  switch (status?.toLowerCase()) {
+    case 'pending':
+      return '#F8E1A1';
+    case 'approved':
+      return '#19AB53';
+    case 'rejected':
+      return '#C62828';
+    case 'completed':
+      return '#2196F3';
+    default:
+      return '#BDBDBD';
+  }
+};
+
  
  
   const handleDelete = (id) => {
@@ -120,21 +140,42 @@ const fetchData = async () => {
  
  
  
-  const filterData = () => {
-    const filtered = purchase.filter((item) => {
-      const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
- 
-      return (
-        (!startDate || itemDate >= startDate) &&
-        (!endDate || itemDate <= endDate)
-      );
-    });
- 
-    setFilteredPurchase(filtered);
-  };
+const filterData = () => {
+  const filtered = purchase.filter((item) => {
+    const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
+
+    return (
+      (!startDate || itemDate >= startDate) &&
+      (!endDate || itemDate <= endDate) &&
+      (!selectedStatus || item.status === selectedStatus)
+    );
+  });
+
+  setFilteredPurchase(filtered);
+};
+
+useEffect(() => {
+  filterData();
+}, [selectedStatus]);
+
  
   const columns = [
-    { field: 'name', headerName: t('Name'), flex: 1 },
+        {field:'s_no',headerName:'S_No',flex:0.5},  
+    {
+  field: 'name',
+  headerName: t('Name'),
+  flex: 1,
+  renderCell: (params) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Iconify
+        icon="eva:checkmark-circle-2-fill"
+        sx={{ color: getStatusColor(params.row.status), width: 20, height: 20 }}
+      />
+      {params.row.name}
+    </Box>
+  ),
+},
+
     { field: 'email', headerName: t('Email'), flex: 1 },
     { field: 'phone', headerName: t('Phone'), flex: 1 },
     { field: 'city', headerName: t('City'), flex: 1 },
@@ -233,17 +274,39 @@ const fetchData = async () => {
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={2}>
-                        <Card>
-                          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill"/>}  onClick={() => setOpenAdd(true)} size="small"  sx={{
-                            backgroundColor: '#6A9C89',
-                            color: '#ffff',
-                            '&:hover': {
-                              backgroundColor: '#8DB3A8'
-                            }
-                          }}>
-                         {t(" New Booking")}
-                          </Button>
-                        </Card>
+                        <Card sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+  <Button
+    variant="contained"
+    startIcon={<Iconify icon="eva:plus-fill" />}
+    onClick={() => setOpenAdd(true)}
+    size="small"
+    sx={{
+      backgroundColor: '#6A9C89',
+      color: '#ffff',
+      '&:hover': {
+        backgroundColor: '#8DB3A8'
+      }
+    }}
+  >
+    {t("New Booking")}
+  </Button>
+
+  <TextField
+    select
+    size="small"
+    label="Status"
+    value={selectedStatus}
+    onChange={(e) => setSelectedStatus(e.target.value)}
+    sx={{ minWidth: 150 }}
+  >
+    <MenuItem value="">All</MenuItem>
+    <MenuItem value="pending">Pending</MenuItem>
+    <MenuItem value="approved">Approved</MenuItem>
+    <MenuItem value="rejected">Rejected</MenuItem>
+    <MenuItem value="completed">Completed</MenuItem>
+  </TextField>
+</Card>
+
                       </Stack>
 </Box>
       </Stack>
@@ -316,7 +379,7 @@ const fetchData = async () => {
           <Card style={{ height: 'auto', marginTop: '-45px' }}>
           <SearchBar onSearch={handleSearch} />
             <DataGrid
-              rows={filteredPurchase}
+               rows={filteredPurchase.map((row, index) => ({ ...row, s_no: index + 1 }))}
               columns={columns}
               getRowId={(row) => row._id}
               loading={loading}
