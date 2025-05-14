@@ -203,6 +203,7 @@ const Checkout = () => {
             <Typography variant="h6" sx={{ ml: 1, fontSize: '15px' }}>
              {t("Checkout Page")}
             </Typography>
+            
           </Stack>
         </Box>
       </Stack>

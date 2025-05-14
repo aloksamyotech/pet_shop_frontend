@@ -18,6 +18,8 @@ import {
   TextField,
   Button
 } from '@mui/material';
+import BusinessIcon from '@mui/icons-material/Business'; 
+import PersonIcon from '@mui/icons-material/Person'; 
 import { DataGrid } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -242,7 +244,20 @@ const Checkout = () => {
     columns={[
       {field:'s_no',headerName:'S_No',flex:0.5},
       { field: 'date', headerName: t('Date'), flex: 1 },
-      { field: 'customer', headerName: t('Customer'), flex: 1 },
+     {
+  field: 'customer',
+  headerName: t('Customer'),
+  flex: 1,
+  renderCell: (params) => {
+    const customerName = params.row.customer || 'N/A';
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <PersonIcon fontSize="small" />
+        <span>{customerName}</span>
+      </div>
+    );
+  }
+},
       { field: 'phone', headerName: t('Phone'), flex: 1 },
       { field: 'productName', headerName: t('Product Name'), flex: 1 },
       { field: 'quantity', headerName: t('Quantity'), flex: 1 },
@@ -275,7 +290,20 @@ const Checkout = () => {
     columns={[
       {field:'s_no',headerName:'S_No',flex:0.5},
       { field: 'date', headerName: t('Date'), flex: 1 },
-      { field: 'supplier', headerName: t('Supplier'), flex: 1 },
+    {
+  field: 'supplier',
+  headerName: t('Supplier'),
+  flex: 1,
+  renderCell: (params) => {
+    const supplierName = params.row.supplier || 'N/A';
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <BusinessIcon fontSize="small" />
+        <span>{supplierName}</span>
+      </div>
+    );
+  }
+},
       { field: 'phone', headerName: t('Phone'), flex: 1 },
       { field: 'product', headerName: t('Product Name'), flex: 1 },
       { field: 'quantity', headerName: t('Quantity'), flex: 1 },
