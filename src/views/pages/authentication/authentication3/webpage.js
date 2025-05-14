@@ -379,7 +379,7 @@ const PetWarehouse = () => {
 
         <div className="form-field">
           <Field as="select" name="gender">
-            <option value="">Gender</option>
+            <option value="">Pet Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </Field>
@@ -412,7 +412,7 @@ const PetWarehouse = () => {
 
         <div className="form-field">
           <Field as="select" name="service">
-            <option value="">Service</option>
+            <option value="">  Pickup Service</option>
             <option value="self">Self</option>
             <option value="staff">Staff</option>
           </Field>

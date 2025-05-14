@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Dialog, DialogActions, DialogContent, DialogTitle,
-  Grid, TextField, Button, FormControl, InputLabel, Select, MenuItem,
-  Typography
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+  Box
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, Form, ErrorMessage } from 'formik';
@@ -15,27 +25,49 @@ import { urls } from 'views/Api/constant';
 
 const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
   const isEditing = Boolean(booking);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+
   const [pacKage, setPackage] = useState([]);
   const [petType, setPetType] = useState([]);
 
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .required('Name is required')
-      .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
-      .max(15, 'Maximum 15 characters allowed'),
-    city: Yup.string()
-      .required('City is required')
-      .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
-      .max(15, 'Maximum 15 characters allowed'),
-    phone: Yup.string()
-      .required('Phone number is required')
-      .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
-    email: Yup.string()
-      .email('Invalid email format')
-      .required('Email is required'),
-  });
+ const validationSchema = Yup.object({
+  name: Yup.string()
+    .required('Name is required')
+    .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
+    .max(15, 'Maximum 15 characters allowed'),
+
+  city: Yup.string()
+    .required('City is required')
+    .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
+    .max(15, 'Maximum 15 characters allowed'),
+
+  phone: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
+
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
+
+  petType: Yup.string().required('Please select a pet type'),
+  pacKage: Yup.string().required('Please select a package'),
+  gender: Yup.string().required('Please select a pet gender'),
+  petAge: Yup.string().required('Please select pet age'),
+  size: Yup.string().required('Please select pet size'),
+  service: Yup.string().required('Please select pickup service'),
+
+  // Conditionally require pickupLocation only when service is 'staff'
+  pickupLocation: Yup.string().when('service', {
+    is: 'staff',
+    then: Yup.string().required('Please enter pickup location'),
+    otherwise: Yup.string().notRequired()
+  }),
+
+  startDate: Yup.date().required('Start date is required'),
+  endDate: Yup.date()
+    .required('End date is required')
+    .min(Yup.ref('startDate'), 'End date must be after start date')
+});
+
 
   const fetchDataPackage = async () => {
     try {
@@ -60,16 +92,6 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
     fetchDataPetType();
   }, []);
 
-  useEffect(() => {
-    if (isEditing && booking) {
-      setStartDate(new Date(booking.startDate));
-      setEndDate(new Date(booking.endDate));
-    } else {
-      setStartDate(new Date());
-      setEndDate(new Date());
-    }
-  }, [booking]);
-
   const handleSubmit = async (values, { resetForm }) => {
     try {
       if (isEditing) {
@@ -84,9 +106,7 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
 
       await fetchData();
       resetForm();
-      setStartDate(new Date());
-      setEndDate(new Date());
-      handleClose();
+     handleClose();
     } catch (error) {
       toast.error('Operation failed');
     }
@@ -96,7 +116,7 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
     ? {
         ...booking,
         startDate: new Date(booking.startDate),
-        endDate: new Date(booking.endDate),
+        endDate: new Date(booking.endDate)
       }
     : {
         name: '',
@@ -110,8 +130,8 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
         size: '',
         service: '',
         pickupLocation: '',
-        startDate: startDate,
-        endDate: endDate,
+        startDate: new Date(),
+        endDate: new Date()
       };
 
   return (
@@ -121,12 +141,7 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
         <ClearIcon sx={{ cursor: 'pointer' }} onClick={handleClose} />
       </DialogTitle>
       <DialogContent dividers>
-        <Formik
-          initialValues={initialValues}
-          enableReinitialize
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
+        <Formik initialValues={initialValues} enableReinitialize validationSchema={validationSchema} onSubmit={handleSubmit}>
           {({ values, handleChange, setFieldValue, errors, touched }) => (
             <Form>
               <Grid container spacing={2}>
@@ -162,7 +177,7 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
                 {[
                   { name: 'petType', label: 'Pet Type', options: petType.map((p) => ({ value: p.name, label: p.name })) },
                   { name: 'pacKage', label: 'Package', options: pacKage.map((p) => ({ value: p._id, label: p.name })) },
-                  { name: 'gender', label: 'Gender', options: ['Male', 'Female'].map((v) => ({ value: v.toLowerCase(), label: v })) },
+                  { name: 'gender', label: 'Pet Gender', options: ['Male', 'Female'].map((v) => ({ value: v.toLowerCase(), label: v })) },
                   {
                     name: 'petAge',
                     label: 'Pet Age',
@@ -171,23 +186,21 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
                   {
                     name: 'size',
                     label: 'Pet Size',
-                    options: ['Small', 'Medium', 'Large', 'Extra Large'].map((v) => ({ value: v.toLowerCase().replace(' ', '-'), label: v }))
+                    options: ['Small', 'Medium', 'Large', 'Extra Large'].map((v) => ({
+                      value: v.toLowerCase().replace(' ', '-'),
+                      label: v
+                    }))
                   },
                   {
                     name: 'service',
-                    label: 'Service',
+                    label: ' Pickup Service',
                     options: ['Self', 'Staff'].map((v) => ({ value: v.toLowerCase(), label: v }))
                   }
                 ].map((field) => (
                   <Grid item xs={12} sm={6} key={field.name}>
                     <FormControl fullWidth size="small">
                       <InputLabel>{field.label}</InputLabel>
-                      <Select
-                        name={field.name}
-                        value={values[field.name]}
-                        onChange={handleChange}
-                        label={field.label}
-                      >
+                      <Select name={field.name} value={values[field.name]} onChange={handleChange} label={field.label}>
                         <MenuItem value="">Select {field.label}</MenuItem>
                         {field.options.map((opt) => (
                           <MenuItem key={opt.value} value={opt.value}>
@@ -218,61 +231,71 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
                 )}
 
                 <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => {
-                      setStartDate(date);
-                      setFieldValue('startDate', date);
-                    }}
-                    showTimeSelect
-                    minDate={new Date()}
-                    minTime={new Date()}
-                    maxTime={new Date().setHours(23, 59)}
-                    dateFormat="Pp"
-                    customInput={
-                      <TextField
-                        label="Start Date"
-                        size="small"
-                        fullWidth
-                        error={touched.startDate && Boolean(errors.startDate)}
-                        helperText={touched.startDate && errors.startDate}
-                      />
-                    }
-                  />
+                  <Box sx={{ ml: '65px' }}>
+                    <DatePicker
+                      selected={values.startDate}
+                      onChange={(date) => setFieldValue('startDate', date)}
+                      showTimeSelect
+                      minDate={new Date()}
+                      minTime={
+  values.startDate?.toDateString() === new Date().toDateString()
+    ? new Date()
+    : new Date(new Date().setHours(0, 0, 0, 0))
+}
+
+                      maxTime={new Date().setHours(23, 59)}
+                      dateFormat="Pp"
+                      customInput={
+                        <TextField
+                          label="From Date"
+                          fullWidth
+                           size="small"
+                          error={touched.startDate && Boolean(errors.startDate)}
+                          helperText={touched.startDate && errors.startDate}
+                        />
+                      }
+                    />
+                  </Box>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    selected={endDate}
-                    onChange={(date) => {
-                      setEndDate(date);
-                      setFieldValue('endDate', date);
-                    }}
-                    showTimeSelect
-                    minDate={startDate || new Date()}
-                    filterTime={(time) => {
-                      if (startDate && new Date(time).toDateString() === startDate.toDateString()) {
-                        return new Date(time).getTime() > startDate.getTime();
-                      }
-                      return true;
-                    }}
-                    dateFormat="Pp"
-                    customInput={
-                      <TextField
-                        label="End Date"
-                        size="small"
-                        fullWidth
-                        error={touched.endDate && Boolean(errors.endDate)}
-                        helperText={touched.endDate && errors.endDate}
-                      />
-                    }
-                  />
-                </Grid>
+    <Grid item xs={12} sm={6}>
+  <Box width="100%">
+    <DatePicker
+      selected={values.endDate}
+      onChange={(date) => setFieldValue('endDate', date)}
+      showTimeSelect
+      minDate={values.startDate || new Date()}
+      filterTime={(time) => {
+        if (
+          values.startDate &&
+          new Date(time).toDateString() === values.startDate.toDateString()
+        ) {
+          return new Date(time).getTime() > values.startDate.getTime();
+        }
+        return true;
+      }}
+      dateFormat="Pp"
+      customInput={
+        <TextField
+          label="To Date"
+          fullWidth
+          size="small"
+          error={touched.endDate && Boolean(errors.endDate)}
+          helperText={touched.endDate && errors.endDate}
+        />
+      }
+    />
+  </Box>
+</Grid>
+
+
               </Grid>
 
               <DialogActions sx={{ mt: 2 }}>
-                <Button type="submit" variant="contained" 
-                   sx={{
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
                     backgroundColor: '#6A9C89',
                     color: '#ffff',
                     '&:hover': {
@@ -282,15 +305,18 @@ const BookingDialog = ({ open, handleClose, fetchData, booking }) => {
                 >
                   {isEditing ? 'Update' : 'Submit'}
                 </Button>
-                <Button variant="outlined" onClick={handleClose} 
-                 sx={{
-                  border: '1px solid #6A9C89',
-                  color: '#6A9C89',
-                  '&:hover': {
+                <Button
+                  variant="outlined"
+                  onClick={handleClose}
+                  sx={{
                     border: '1px solid #6A9C89',
-                    color: '#6A9C89'
-                  }
-                }}>
+                    color: '#6A9C89',
+                    '&:hover': {
+                      border: '1px solid #6A9C89',
+                      color: '#6A9C89'
+                    }
+                  }}
+                >
                   Cancel
                 </Button>
               </DialogActions>

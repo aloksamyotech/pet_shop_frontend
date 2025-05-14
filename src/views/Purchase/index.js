@@ -18,6 +18,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import ConfirmDialog from 'confirmDeletion/deletion';
+import PersonIcon from '@mui/icons-material/Person';
 const Purchase = () => {
   const [purchase, setPurchase] = useState([]);
   const [selectedPurchase, setSelectedPurchase] = useState(null);
@@ -74,6 +75,8 @@ const Purchase = () => {
   };
 
 
+  
+ 
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
@@ -133,18 +136,27 @@ const Purchase = () => {
   
   const columns = [
     {field:'s_no',headerName:'S_No',flex:0.5},
+{
+  field: 'companyName',
+  headerName: t('Supplier'),
+  flex: 1,
+  renderCell: (params) => {
+    const name = params.row.CompanyName?.[0]?.companyName || 'N/A';
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <PersonIcon fontSize="small" />
+        <span>{name}</span>
+      </div>
+    );
+  }
+},
     {
       field: 'productName',
       headerName: t('Product'),
       flex: 1,
       valueGetter: (params) => params.row.productName?.[0]?.productName || 'N/A'
     },
-    {
-      field: 'companyName',
-      headerName: t('Supplier'),
-      flex: 1,
-      valueGetter: (params) => params.row.CompanyName?.[0]?.companyName || 'N/A'
-    },
+  
     {
       field:'price',
       headerName:t('Price'),
