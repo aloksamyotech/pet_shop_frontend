@@ -1,0 +1,333 @@
+import { useState, useEffect } from "react";
+import { Grid, Card, CardContent, CardMedia, Typography, IconButton, Box, Button, Stack, Chip, Rating, Popover } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert"; 
+import HomeIcon from "@mui/icons-material/Home";
+import ViewProduct from "./ViewProduct.js";
+import AddLead from "./AddProduct.js";
+import AddBulkUpload from "./productBulkUpload.js";
+import AddEdit from "./Edit.js";
+import { getApi, deleteApi } from "views/Api/comman.js";
+import { urls } from "views/Api/constant";
+import ConfirmDialog from 'confirmDeletion/deletion';
+import { useNavigate } from "react-router-dom";
+import Iconify from 'ui-component/iconify';
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import AddIcon from "@mui/icons-material/Add"; // Import Plus icon
+import SearchBar from "views/Search/index.js";
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+const Lead = () => {
+  const [products, setProducts] = useState([]);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openView, setOpenView] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [productUpdated, setProductUpdated] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeProduct, setActiveProduct] = useState(null);
+  const user = localStorage.getItem('user');
+  const userObj = user ? JSON.parse(user) : null;
+  const currencySymbol = userObj.currencySymbol;
+   const [filteredProduct, setFilteredProduct] = useState([]);
+  const [search, setSearch] = useState([]);
+   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+  
+const { t } = useTranslation();
+
+
+const handleDelete = (id) => {
+  setDeleteId(id);
+  setOpenConfirmDialog(true);
+};
+  const handleSearch = (searchItem) => {
+    if (!searchItem) {
+      setSearch(products);
+    } else {
+      const filter = products.filter((pro) =>
+        pro.productName.toLowerCase().includes(searchItem.toLowerCase())
+      );
+      setSearch(filter);
+    }
+  };
+  const fetchProducts = async () => {
+    const response = await getApi(urls.product.get);
+    setProducts(response?.data?.data || []);
+    setSearch(response?.data?.data || [])
+    setFilteredProduct(response?.data?.data || []);
+  };
+  
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const navigate = useNavigate();
+  const handleClick = () => navigate("/dashboard/default");
+
+  const handleView = (product) => {
+    setSelectedProduct(product);
+    setOpenView(true);
+  };
+
+ 
+   const confirmDelete = async () => {
+      if (!deleteId) return;
+  
+      try {
+        await deleteApi(urls.product.delete.replace(":id", deleteId));
+  
+ 
+              setProducts((prev) => prev.filter((product) => product._id !== deleteId));
+               setFilteredProduct((prev) => prev.filter((product) => product._id !== deleteId));
+               setSearch((prev) => prev.filter((product) => product._id !== deleteId));
+  
+        toast.success(t('Product has been removed successfully'));
+      } catch (error) {
+        toast.error(t('Error! Failed to delete product'));
+      }
+  
+      setOpenConfirmDialog(false);
+      setDeleteId(null);
+    };
+  
+
+  const handleUpdate = (product) => {
+    setProductUpdated(product);
+    setOpenEdit(true);
+  };
+
+  const handlePopoverOpen = (event, product) => {
+    setAnchorEl(event.currentTarget);
+    setActiveProduct(product);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+    setActiveProduct(null);
+  };
+
+  return (
+    <>
+      <ConfirmDialog open={openConfirmDialog} onClose={() => setOpenConfirmDialog(false)} onConfirm={confirmDelete} />
+      <AddEdit open={openEdit} handleClose={() => setOpenEdit(false)} fetchProduct={fetchProducts} product={productUpdated} />
+      <ViewProduct open={openView} handleClose={() => setOpenView(false)} product={selectedProduct} />
+      <AddBulkUpload open={open} handleClose={() => setOpen(false)} fetchProduct={fetchProducts} />
+      <AddLead open={openAdd} handleClose={() => setOpenAdd(false)} fetchProduct={fetchProducts} />
+
+     
+
+      <Box
+            sx={{
+              backgroundColor: 'white',
+              height: '50px',
+              width: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0 25px',
+             mb:'20px'
+            }}
+          >
+              <Stack direction="row" alignItems="center" >
+                <IconButton onClick={() => navigate('/dashboard/default')} sx={{ color: '#6A9C89' }}>
+                  <HomeIcon />
+                </IconButton>
+                <ArrowBackIosNewRoundedIcon sx={{ transform: 'rotate(180deg)', fontSize: '18px', color: 'black' , mr:1 }} />
+                <Typography variant='h5'>{t("Product Information")}</Typography> </Stack>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Card>
+              <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}  onClick={() => setOpen(true)} size="small"sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}>
+               {t("Bulk Upload")}
+                </Button>
+            </Card>
+            <Card>  <Button variant="contained" onClick={() => setOpenAdd(true)} startIcon={<Iconify icon="eva:plus-fill" />}  size="small" sx={{
+                  backgroundColor: '#6A9C89',
+                  color: '#ffff',
+                  '&:hover': {
+                    backgroundColor: '#8DB3A8' 
+                  }
+                }}>
+          {t("Add Product")}
+          </Button></Card>
+            </Stack>
+          </Box>
+          <Box  sx={{
+           
+              height: '30px',
+              width: '20%',
+              display: 'flex',
+              borderRadius: '10px',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+           mb:'40px',
+           ml: 'auto',
+            }}>
+          <SearchBar onSearch={handleSearch} />
+          </Box>
+      <Grid container spacing={1} sx={{marginTop: '-30px'}}>
+        {search.map((product) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={product._id}>
+            <Card
+              sx={{
+                borderRadius: 2,
+                boxShadow: 2,
+                "&:hover": { boxShadow: 5 },
+                height: "270px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                transition: "0.3s",
+                position: "relative",
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="100"
+                image={product.imageUrl || "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg"}
+                alt={product.productName}
+                sx={{ objectFit: "cover", borderRadius: 2 }}
+              />
+
+<CardContent sx={{mt:"-17px"}}>
+  <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "16px" }}>
+    {product.productName}
+  </Typography>
+              
+  <Box>
+    {product.category.map((cat, index) => (
+      <Box key={index}>
+        <Typography sx={{ color: "#757575", fontSize: "14px" }}>
+          <strong>{t("Category")}:</strong> {cat.name}
+        </Typography>
+      </Box>
+    ))}
+  </Box>
+  <Box>
+    {product.SubCategory.map((cat, index) => (
+      <Box key={index}>
+        <Typography sx={{ color: "#757575", fontSize: "14px" }}>
+          <strong>{t("SubCategory")}:</strong> {cat.name}
+        </Typography>
+      </Box>
+    ))}
+  </Box>
+
+  <Typography
+  variant="body2"
+  sx={{
+    color: product.quantity > 5 ? "#757575" : "#f44336", 
+    fontSize: "14px",
+    fontWeight: product.quantity <= 5 ? "bold" : "normal", 
+  }}
+>
+  <strong>{t("Stock")}:</strong> {product.quantity > 0 ? product.quantity : "Out of Stock"}
+</Typography>
+
+
+
+  <Typography variant="h6" sx={{ color:'#6A9C89' , fontWeight: "bold"}}>
+  <strong>{t("Price")}:</strong> {currencySymbol} {product.price || "N/A"}
+  </Typography>
+  
+  <Typography variant="h6" sx={{ color:'#6A9C89'  , fontWeight: "bold"}}>
+  <strong>{t("Discount")}:</strong> {currencySymbol} {product.discount || "N/A"}
+  </Typography>
+
+ 
+  <Box sx={{ display: "flex", flexDirection: "row" , gap:'2px',mb:'2px'}}>
+
+
+
+<Box
+  sx={{
+    mr:'3px',
+    backgroundColor: "#F8E1A1",
+    color: "#FF9800",
+    paddingRight: "8px",
+    paddingLeft:'8px',
+   borderRadius: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "auto",
+    height: "auto",
+    textTransform: "uppercase",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    gap: "0.5rem",
+    fontSize: "10px",
+    cursor: "pointer", 
+    transition: "background-color 0.3s ease, transform 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#F6C768", 
+      transform: "scale(1.05)", 
+    },
+    "&:active": {
+      transform: "scale(0.95)", 
+    }
+  }}
+  onClick={() => handleUpdate(product)}
+>
+ {t("Edit")}
+</Box>
+
+<Box
+  sx={{
+    backgroundColor: "#FBE9E7",
+    color: "#F44336",
+    paddingRight: "8px",
+    paddingLeft:'8px',
+    borderRadius: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "auto",
+    height: "auto",
+    textTransform: "uppercase",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    gap: "0.5rem",
+    fontSize: "10px",
+    cursor: "pointer", 
+    transition: "background-color 0.3s ease, transform 0.2s ease",
+    "&:hover": {
+      backgroundColor: "#F8C1BE", 
+      transform: "scale(1.05)", 
+    },
+    "&:active": {
+      transform: "scale(0.95)", 
+    }
+  }}
+  onClick={() => handleDelete(product._id)}
+>
+ {t("Delete")}
+</Box>
+
+
+  
+  </Box>
+</CardContent>
+
+
+
+             
+             
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </>
+  );
+};
+
+export default Lead;

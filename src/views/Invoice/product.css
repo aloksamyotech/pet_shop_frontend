@@ -1,0 +1,88 @@
+/* General Styles */
+.container {
+    background-color: #fff;
+    width: 80%;
+    min-height: 100vh;
+    padding: 15px;
+    margin-left: 90px;
+  }
+  
+  .invoice-content {
+    background-color: #fff;
+    padding: 15px;
+  }
+  
+  .invoice-header {
+    background-color: #9053bc;
+    height: 20vh;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .invoice-header img {
+    width: 20%;
+    height: auto;
+  }
+  
+  .invoice-details {
+    color: #fff;
+  }
+  
+  .shop-address {
+    width: 30%;
+    display: flex;
+    justify-content: flex-start;
+    text-align: right;
+    color: #fff;
+  }
+  
+  .customer-info {
+    margin-bottom: 10px;
+  }
+  
+  .customer-info-box {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .table-container {
+    overflow-y: auto;
+    max-height: 60vh;
+  }
+  
+  .table-header {
+    background-color: #9053bc;
+    font-weight: bold;
+  }
+  
+  .table-header th {
+    color: white;
+  }
+  
+  .total-price {
+    display: flex;
+    justify-content: end;
+    padding: 10px;
+    font-weight: bold;
+  }
+  
+  .print-button {
+    border: 2px solid;
+    background-color: #6d42b9;
+    padding: 5px;
+    color: #fff;
+  }
+  
+  .print-button:hover {
+    background-color: #6d42b9;
+  }
+  
+  .thank-you {
+    color: gray;
+    padding: 10px;
+  }
+  

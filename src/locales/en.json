@@ -1,0 +1,391 @@
+{
+  "Logout": "Logout",
+  "Category": "Category",
+  "New Category": "New Category",
+  "Are you sure?": "Are you sure?",
+  "Product has been removed successfully": "Product has been removed successfully",
+  "Error! Failed to delete product": "Error! Failed to delete product",
+  "Purchase has been removed successfully": "Purchase has been removed successfully",
+  "Error! Failed to delete purchase": "Error! Failed to delete purchase",
+  "Supplier has been removed successfully": "Supplier has been removed successfully",
+  "Error! Failed to delete supplier": "Error! Failed to delete supplier",
+  "Employee has been removed successfully": "Employee has been removed successfully",
+  "Error! Failed to delete employee": "Error! Failed to delete employee",
+  "Customer has been removed successfully": "Customer has been removed successfully",
+  "Error! Failed to delete customer": "Error! Failed to delete customer",
+  
+  "Yes, remove it!": "Yes, remove it!",
+  "Cancel": "Cancel",
+  "Removed!": "The category has been deleted.",
+  "Error!": "Failed to delete category.",
+  "Name": "Name",
+  "Description": "Description",
+  "Image": "Image",
+  "Action": "Action",
+  "name_required": "Name is required",
+    "only_letters_allowed": "Only letters allowed",
+    "max_50_characters": "Max 50 characters",
+    "max_100_characters": "Max 100 characters",
+    "category_updated_successfully": "Category updated successfully!",
+    "category_added_successfully": "Category added successfully!",
+    "error_updating_category": "Error updating category",
+    "category_already_exists": "Category already exists",
+    "edit_category": "Edit Category",
+    "add_category": "Add Category",
+    "category_name": "Category Name",
+    "description": "Description",
+    "update": "Update",
+    "save": "Save",
+    "cancel": "Cancel",
+    "SubCategory": "SubCategory",
+    "New SubCategory": "New SubCategory",
+    "Edit Category": "Edit Category",
+    "Add SubCategory": "Add SubCategory",
+    "SubCategory Name": "SubCategory Name",
+     "Update": "Update",
+    "Save": "Save",
+   
+    "Do you want to remove this company?": "Do you want to remove this company?",
+    
+   
+    "Failed to delete company.": "Failed to delete company.",
+    "Supplier": "Supplier",
+    "Email": "Email",
+    "Phone Number": "Phone Number",
+    "Address": "Address",
+
+    "Clients": "Clients",
+    "Supplier Information": "Supplier Information",
+    "New Supplier": "New Supplier",
+    "confirm_title": "Are you sure?",
+    "confirm_text": "Do you want to remove this company?",
+    "confirm_yes": "Yes, remove it!",
+    "confirm_cancel": "Cancel",
+    "error_title": "Error!",
+    "error_text": "Failed to delete company.",
+    "clients": "Clients",
+    "supplier_info": "Supplier Information",
+    "new_supplier": "New Supplier",
+    "addSupplier": "Add Supplier",
+  "companyName": "Company Name",
+  "companyNameError": "Company Name is required",
+  "companyNameValidation": "Company Name must only contain letters and spaces",
+  "companyNameMax": "Company Name cannot be more than 50 characters",
+  "email": "Email",
+  "emailError": "Email is required",
+  "invalidEmail": "Invalid email format",
+  "phoneNumber": "Phone Number",
+  "phoneNumberError": "Phone Number is required",
+  "phoneNumberValidation": "Phone number must be a valid 10-digit number",
+  "address": "Address",
+  "addressError": "Address is required",
+  "addressMax": "Company Address cannot be more than 50 characters",
+
+  "descriptionMax": "Description cannot be more than 100 characters",
+  "status": "Status",
+  "active": "Active",
+  "inactive": "Inactive",
+  "blocked": "Blocked",
+  
+  "companyAddedSuccess": "Company added successfully",
+  "Customer": "Customer",
+  "New Customer": "New Customer",
+  "name": "Name",
+  
+ 
+  "action": "Action",
+  "edit": "Edit",
+  "delete": "Delete",
+  "areYouSure": "Are you sure?",
+  "removeCustomer": "Do you want to remove this customer?",
+  "yesRemove": "Yes, remove it!",
+ 
+  "error": "Error!",
+  "deleteFailed": "Failed to delete customer.",
+  "home": "Home",
+  "create": "Create Customer",
+ 
+  "update_button": "Update",
+ 
+    "name_invalid": "First Name must only contain letters",
+    "name_max": "First Name cannot be more than 50 characters",
+    "email_required": "Email is required",
+    "email_invalid": "Invalid email address",
+    "address_max": "Address cannot be more than 100 characters",
+    "status_required": "Status is required",
+     "created": "Customer added successfully!",
+      "updated": "Customer updated successfully!",
+      "Create Customer":"Create Customer",
+     
+  "Failed to delete employee.": "Failed to delete employee.",
+ 
+  "Salary": "Salary",
+  "Actions": "Actions",
+  "Employee": "Employee",
+  "New Employee": "New Employee",
+  "Update Customer": "Update Customer",
+  "Create Employee": "Create Employee",
+  "Employee Id": "Employee Id",
+  " Purchase-Information": "Purchase Information",
+  " New Purchase": "New Purchase",
+  "Start Date": "Start Date",
+  "End Date": "End Date",
+  "Apply Filter": "Apply Filter",
+  "Clear Filter": "Clear Filter",
+  "Product": "Product",
+  "Preview Image": "Preview Image",
+  "Price": "Price",
+  "Amount": "Amount",
+  "Discount": "Discount",
+  "Quantity": "Quantity",
+  "Payment Status": "Payment Status",
+  "success": "Success",
+  "pending": "Pending",
+  "failed": "Failed",
+
+  "remove_purchase": "Do you want to remove this purchase?",
+  "confirm_remove": "Yes, remove it!",
+
+  "error_delete": "Failed to delete purchase.",
+  "Edit Purchase": "Edit Purchase",
+  "Add Purchase": "Add Purchase",
+  "error_fetching_data": "Error fetching supplier data.",
+ 
+  
+  "Product Name": "Product Name",
+  
+ 
+  "Product Price": "Product Price",
+ "Sold Quantity": "Sold Quantity",
+  "Sales Amount": "Sales Amount",
+
+
+   "Sales Report": "Sales Report",
+  "Total Customer": "Total Customer",
+  "Total Product": "Total Product",
+  "Total Company": "Total Company",
+  "Total Orders": "Total Orders",
+  "Order History": "Order History",
+
+ 
+ 
+  "Total Amount": "Total Amount",
+  
+ 
+  "purchase_updated": "Purchase updated successfully!",
+  "purchase_added": "Purchase added successfully!",
+  "purchase_failed": "Failed to save purchase.",
+  "POS": "POS",
+  "Checkout Page": "Checkout Page",
+ 
+  "Total": "Total",
+  
+  "Order Summary": "Order Summary",
+  "Total Items": "Total Items",
+
+  "Confirm": "Confirm"  ,
+  "Customer Name": "Customer Name",
+ 
+  
+  "Paid Amount": "Paid Amount",
+  "Order Date": "Order Date",
+  "Invoice": "Invoice",
+  "History": "History",
+  "Report": "Report",
+  
+  
+  
+ 
+  "Sales": "Sales",
+  "Purchase": "Purchase",
+  "Date": "Date",
+ 
+  "Phone": "Phone",
+ 
+  
+  "Total Price": "Total Price",
+  "Profile Information": "Profile Information",
+  "Profile": "Profile",
+  "Currency": "Currency",
+  "Update Password": "Update Password",
+  "Manage Email": "Manage Email",
+  "Manage Whatsapp": "Manage Whatsapp",
+  "Account Details": "Account Details",
+  "Company": "Company",
+  "Email Address": "Email Address",
+  "Country": "Country",
+ 
+  "Enter Current Password": "Enter Current Password",
+  "Enter New Password": "Enter New Password",
+
+  "Login": "Login",
+
+  "Customer Add": "Customer Add",
+  "Order": "Order",
+  "Company Logo": "Company Logo",
+  "Upload Logo": "Upload Logo",
+  "Please select an image first!": "Please select an image first!",
+  "Failed to upload logo!": "Failed to upload logo!",
+  "Currency Code": "Currency Code",
+  "Currency Symbol": "Currency Symbol",
+  "Save Currency": "Save Currency",
+  "Currency Updated successfully": "Currency updated successfully",
+  "Currency is not update successfully": "Currency update failed",
+  
+  "Sort By Price": "Sort By Price",
+  "High to Low": "High to Low",
+  "Low to High": "Low to High",
+
+  "Search Product": "Search Product...",
+
+
+  "Checkout": "Checkout",
+  "Clear Cart": "Clear Cart",
+  "No subcategories available": "No subcategories available",
+  "Product Information": "Product Information",
+  "Bulk Upload": "Bulk Upload",
+  
+ 
+  "Stock": "Stock",
+ 
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "Updated Product": "Updated Product",
+ 
+ 
+  "Add Product": "Add Product",
+ 
+  "Sub Category": "Sub Category",
+  "Product Stocks": "Product Stocks",
+  "Available Stock": "Available Stock",
+  "View All Products": "View All Products",
+  "in stock": "in stock",
+  "Today": "Today",
+  "This Month": "This Month",
+  "This Year": "This Year",
+   "Welcome back!": "Welcome back!",
+   "Dashboard": "Dashboard",
+   
+   "Subcategory": "Subcategory",
+    "SubCategory updated successfully!": "SubCategory updated successfully!",
+  "SubCategory added successfully!": "SubCategory added successfully!",
+   "Product added successfully": "Product added successfully",
+  "Failed to add product": "Failed to add product",
+   "Product updated successfully!": "Product updated successfully!",
+   "Company Name is required": "Company Name is required",
+   "Company Name must only contain letters and spaces": "Company Name must only contain letters and spaces",
+   "Company Name cannot be more than 50 characters": "Company Name cannot be more than 50 characters",
+   "Address is required": "Address is required",
+   "Company Address cannot be more than 50 characters": "Company Address cannot be more than 50 characters",
+   "Phone number must be a valid 10-digit number": "Phone number must be a valid 10-digit number",
+   "Phone Number is required": "Phone Number is required",
+   "Invalid email format": "Invalid email format",
+   "Email is required": "Email is required",
+   "Status is required": "Status is required",
+   "Description cannot be more then 100": "Description cannot be more than 100 characters",
+    "Company Add successfully": "Company added successfully",
+      "supplier updated successfully!": "Supplier updated successfully!",
+  "Failed to update supplier.": "Failed to update supplier.",
+ 
+ 
+ 
+ "search_product": "Search Product...",
+ 
+
+    
+      "add_supplier": "Add Supplier",
+      "add_customer": "Add Customer",
+      "create_order": "Create Order",
+      "welcome_back": "Welcome back!",
+
+    
+   "Customer updated successfully!": "Customer updated successfully!",
+  "Customer added successfully!": "Customer added successfully!",
+  "First Name is required": "First Name is required",
+  "First Name must only contain letters": "First Name must only contain letters",
+  "First Name cannot be more than 50 characters": "First Name cannot be more than 50 characters",
+ 
+  "Invalid email address": "Invalid email address",
+  "Id is required": "Id is required",
+ 
+  "Address cannot be more than 100 characters": "Address cannot be more than 100 characters",
+  "Salary is required": "Salary is required",
+
+   "employee updated successfully!": "Employee updated successfully!",
+  "employee_added_successfully": "Employee added successfully!",
+  "productIdRequired": "Product Name is required",
+  "companyIdRequired": "Company is required",
+  "quantityPositive": "Quantity must be a positive number",
+  "quantityInteger": "Quantity must be an integer",
+  "quantityRequired": "Quantity is required",
+  "quantityMax": "Max 10000 quantity allowed",
+  "totalPricePositive": "Total Price must be greater than 0",
+  "totalPriceRequired": "Total Price is required",
+  "discountInteger": "Discount must be an integer",
+  "discountMin": "Discount cannot be negative",
+  "discountCheck": "Discount cannot be more than the total amount",
+  "paymentStatusRequired": "Payment Status is required",
+  "pricePositive": "Product Price must be a positive number",
+  "priceRequired": "Product Price is required",
+  "Purchase updated successfully!": "Purchase updated successfully!",
+  "Purchase added successfully!": "Purchase added successfully!",
+  "Failed to save purchase.": "Failed to save purchase.",
+    "passwordUpdated": "Password updated successfully!",
+    "currentPasswordIncorrect": "Current password is incorrect!",
+    "fillAllFields": "Please fill in all fields.",
+    "selectImageFirst": "Please select an image first!",
+    "failedUploadLogo": "Failed to upload logo!",
+    
+  "currencyUpdated": "Currency updated successfully!",
+  "currencyNotUpdated": "Currency is not updated successfully.",
+  "errorUpdatingCurrency": "Error updating currency:",
+  "Search..............":"Search",
+  "welcome": "Welcome to Pet Shop",
+    "login": "Login to use the platform",
+    "title": "Pet Shop Management System",
+    "description_PetShop": "Manage your pet shop with ease and efficiency",
+    "email_Address": "Email Address",
+    "password": "Password",
+    "admin_credentials": "Admin Credentials",
+    "logging_in": "Logging in...",
+    "sign_in": "Sign in",
+     "logged_out": "Logged out successfully",
+      "order_completed": "Order completed successfully!",
+
+
+      "order": "Order",
+      "view_invoice": "View Invoice",
+      "invoice_id": "Invoice Id:",
+      "date": "Date:",
+      "time": "Time:",
+      "store_name": "The Pet Stop",
+      "store_address": "1234 Happy Paws Street 87876",
+      "store_country": "United States",
+      "customer_info": "Customer Information",
+      "name_Invoice": "Name",
+      "phone": "Phone Number",
+      "product_name": "Product Name",
+      "quantity": "Quantity",
+      "rate": "Rate",
+      "print": "Print",
+      "thank_you": "Thank you for visiting our shop! We truly appreciate your trust in us to care for your beloved pets. We look forward to serving you again soon!",
+      "delete_confirmation": "Are you sure you want to delete?",
+    "delete_warning": "You won't be able to revert this.",
+    "confirm_delete": "Yes, delete it!",
+    "sort_by_price": "Sort By Price",
+     "purchaseProduct": "Purchase Product"
+    
+
+  
+  
+  
+  
+  
+  
+ 
+ 
+
+
+  
+   
+}
