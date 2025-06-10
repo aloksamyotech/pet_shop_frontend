@@ -141,7 +141,7 @@ const Purchase = () => {
   headerName: t('Supplier'),
   flex: 1,
   renderCell: (params) => {
-    const name = params.row.CompanyName?.[0]?.companyName || 'N/A';
+    const name = params.row.CompanyName?.[0]?.companyName || '-';
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <PersonIcon fontSize="small" />
@@ -154,7 +154,7 @@ const Purchase = () => {
       field: 'productName',
       headerName: t('Product'),
       flex: 1,
-      valueGetter: (params) => params.row.productName?.[0]?.productName || 'N/A'
+      valueGetter: (params) => params.row.productName?.[0]?.productName || '-'
     },
   
     {

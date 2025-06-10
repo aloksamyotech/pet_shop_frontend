@@ -99,7 +99,7 @@ return (
                     {product.productName}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {product.quantity || 'N/A'} {t("in stock")}
+                    {product.quantity || '-'} {t("in stock")}
                   </Typography>
                 </Box>
               </Box>

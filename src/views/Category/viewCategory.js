@@ -33,7 +33,7 @@ const ViewCategory = ({ open, handleClose, category }) => {
           <Grid item xs={12} sm={7}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant="body1">
-                <strong>Name:</strong> {category.name || 'N/A'}
+                <strong>Name:</strong> {category.name || '-'}
               </Typography>
               <Typography variant="body1">
                 <strong>Description:</strong> {category.description || 'No description available.'}

@@ -88,7 +88,7 @@ const TotalProduct = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                      {customer !== null ? customer : 'N/A'}
+                      {customer !== null ? customer : '-'}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
