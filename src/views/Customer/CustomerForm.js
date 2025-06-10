@@ -65,10 +65,10 @@ const CustomerForm = ({ open, handleClose, customer, fetchCustomer }) => {
   useEffect(() => {
     if (isEdit) {
       formik.setValues({
-        firstName: customer?.firstName || 'N/A',
-        email: customer?.email || 'N/A',
-        address: customer?.address || 'N/A',
-        phoneNumber: customer?.phoneNumber || 'N/A',
+        firstName: customer?.firstName || '-',
+        email: customer?.email || '-',
+        address: customer?.address || '-',
+        phoneNumber: customer?.phoneNumber || '-',
         status: customer?.status || 'Active',
       });
     } else {

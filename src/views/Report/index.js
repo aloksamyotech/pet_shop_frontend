@@ -230,7 +230,7 @@ const Checkout = () => {
     id: index,
     date: new Date(item.createdAt).toLocaleDateString(),
     customer: item?.customerName,
-    phone: item?.customerPhone || 'N/A',
+    phone: item?.customerPhone || '-',
     productName: item?.products?.map(
       (product) => `${product?.productName}(${product?.quantity})`
     ).join(', '),
@@ -249,7 +249,7 @@ const Checkout = () => {
   headerName: t('Customer'),
   flex: 1,
   renderCell: (params) => {
-    const customerName = params.row.customer || 'N/A';
+    const customerName = params.row.customer || '-';
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <PersonIcon fontSize="small" />
@@ -280,9 +280,9 @@ const Checkout = () => {
     rows={filteredPurchase.map((item, index) => ({
       id: index,
       date: new Date(item.createdAt).toLocaleDateString(),
-      supplier: item?.CompanyName?.[0]?.companyName || 'N/A',
-      phone: item?.CompanyName?.[0]?.phoneNumber || 'N/A',
-      product: item?.productName?.[0]?.productName || 'N/A',
+      supplier: item?.CompanyName?.[0]?.companyName || '-',
+      phone: item?.CompanyName?.[0]?.phoneNumber || '-',
+      product: item?.productName?.[0]?.productName || '-',
       quantity: item?.quantity,
       totalPrice: `${currencySymbol} ${item?.totalPrice}`,
       s_no:index+1,
@@ -295,7 +295,7 @@ const Checkout = () => {
   headerName: t('Supplier'),
   flex: 1,
   renderCell: (params) => {
-    const supplierName = params.row.supplier || 'N/A';
+    const supplierName = params.row.supplier || '-';
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <BusinessIcon fontSize="small" />

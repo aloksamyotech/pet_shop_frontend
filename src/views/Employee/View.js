@@ -33,10 +33,10 @@ const ViewEmployee = ({ open, handleClose, customer }) => {
 
            
             <Grid item xs={6}>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{customer?.name || 'N/A'}</Typography>
-              <Typography variant="body1" color="textSecondary">{customer?.email || 'N/A'}</Typography>
-              <Typography variant="body1" color="textSecondary">{customer?.phoneNumber || 'N/A'}</Typography>
-              <Typography variant="body1" color="textSecondary">{customer?.address || 'N/A'}</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{customer?.name || '-'}</Typography>
+              <Typography variant="body1" color="textSecondary">{customer?.email || '-'}</Typography>
+              <Typography variant="body1" color="textSecondary">{customer?.phoneNumber || '-'}</Typography>
+              <Typography variant="body1" color="textSecondary">{customer?.address || '-'}</Typography>
             
             </Grid>
 

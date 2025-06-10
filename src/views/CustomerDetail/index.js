@@ -245,7 +245,7 @@ const CustomerDetail = () => {
                             fullWidth
                             label="Phone Number"
                             variant="outlined"
-                            defaultValue={DataCustomer?.phoneNumber || 'N/A'}
+                            defaultValue={DataCustomer?.phoneNumber || '-'}
                             InputProps={{ readOnly: true }}
                           />
                         </Grid>

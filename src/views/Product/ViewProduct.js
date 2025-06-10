@@ -49,19 +49,19 @@ const ViewProduct = ({ open, handleClose, product }) => {
                 }}
               >
                 <Typography variant="body1">
-                  <strong>Name:</strong> {product?.productName || 'N/A'}
+                  <strong>Name:</strong> {product?.productName || '-'}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Category:</strong> {product?.category?.[0].name || 'N/A'}
+                  <strong>Category:</strong> {product?.category?.[0].name || ''}
                 </Typography>
                 <Typography variant="body1">
                   <strong>Quantity:</strong> {product?.quantity || '0'}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Discount:</strong> {product?.discount || 'N/A'}
+                  <strong>Discount:</strong> {product?.discount || '-'}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Price:</strong> {product?.price ? `$${product.price}` : 'N/A'}
+                  <strong>Price:</strong> {product?.price ? `$${product.price}` : '-'}
                 </Typography>
               </Box>
             </Grid>

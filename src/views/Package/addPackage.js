@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
   const { t } = useTranslation();
   const isEditing = Boolean(category);
+   const [selectedImage, setSelectedImage] = useState(null);
 
   
 
@@ -48,17 +49,27 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
       formData.append('name', values.name);
       formData.append('description', values.description);
       formData.append('price', values.price);
+       if (values.image) {
+      
+        formData.append('PackageImage', values.image);
+      }
+    
 
     try {
         if (isEditing) {
-          await updateApi(urls.package.update.replace(':id', category._id), values);
+          await updateApi(urls.package.update.replace(':id', category._id), formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
           toast.success("Package is Updated successfully");
         } else {
-          await postApiRegistration(urls.package.create, formData);
+          await postApiImage(urls.package.create, formData, {
+                  headers: { 'Content-Type': 'multipart/form-data' }
+                });
           toast.success("Package is add successfully");
         }
         formik.resetForm();
         await fetchCategories();
+         setSelectedImage(null);
         handleClose();
       } catch (error) {
         console.error('Error:', error);
@@ -78,6 +89,12 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
     
     }
   }, [category]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+  formik.setFieldValue('image', file);
+    setSelectedImage(file);
+  };
 
  
 
@@ -140,6 +157,36 @@ const CategoryForm = ({ open, handleClose, category, fetchCategories }) => {
 />
 
             </Grid>
+              <Grid item xs={12} sm={6} sx={{ marginTop: '15px' }}>
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                minHeight="200px"
+                                border={1}
+                                borderColor="grey.300"
+                                borderRadius={1}
+                                bgcolor="background.paper"
+                                position="relative"
+                              >
+                                {formik.values.image ? (
+                                  <img src={URL.createObjectURL(formik.values.image)} alt="product" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                                ) : (
+                                  <Typography variant="body2" color="textSecondary">
+                                  {t("Preview Image")}
+                                  </Typography>
+                                )}
+                                <Box position="absolute" left={0} bottom={0} p={2}>
+                                  <input
+                                    type="file"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={handleFileChange} 
+                                    style={{ display: 'block' }}
+                                  />
+                                </Box>
+                              </Box>
+                            </Grid>
           </Grid>
         </form>
       </DialogContent>

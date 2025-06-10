@@ -75,7 +75,7 @@ const Customer = () => {
     {field:'s_no',heardName:'S_No',flex:0.5},
     { field: 'name', headerName: t('Name'), flex: 1 },
     { field: 'categoryId', headerName: t('Category'), flex: 1,
-      valueGetter: (params) => params.row.category?.[0].name || 'N/A'
+      valueGetter: (params) => params.row.category?.[0].name || '-'
     },
     { field: 'description', headerName: t('Description'), flex: 1 },
     {

@@ -26,11 +26,11 @@ const ViewCompany = ({ open, handleClose, supplier }) => {
 
            
             <Grid item xs={6}>
-              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{supplier?.companyName || 'N/A'}</Typography>
-              <Typography variant="body1" color="textSecondary">{supplier?.email || 'N/A'}</Typography>
-              <Typography variant="body1" color="textSecondary">{supplier?.phoneNumber || 'N/A'}</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{supplier?.companyName || '-'}</Typography>
+              <Typography variant="body1" color="textSecondary">{supplier?.email || '-'}</Typography>
+              <Typography variant="body1" color="textSecondary">{supplier?.phoneNumber || '-'}</Typography>
               <Typography variant="body1" color={supplier?.status === 'Active' ? 'green' : 'red'}>
-                <strong>Status:</strong> {supplier?.status || 'N/A'}
+                <strong>Status:</strong> {supplier?.status || ''}
               </Typography>
             </Grid>
 

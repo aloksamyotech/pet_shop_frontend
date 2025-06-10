@@ -238,11 +238,11 @@ const handleDelete = (id) => {
 
 
   <Typography variant="h6" sx={{ color:'#6A9C89' , fontWeight: "bold"}}>
-  <strong>{t("Price")}:</strong> {currencySymbol} {product.price || "N/A"}
+  <strong>{t("Price")}:</strong> {currencySymbol} {product.price || "-"}
   </Typography>
   
   <Typography variant="h6" sx={{ color:'#6A9C89'  , fontWeight: "bold"}}>
-  <strong>{t("Discount")}:</strong> {currencySymbol} {product.discount || "N/A"}
+  <strong>{t("Discount")}:</strong> {currencySymbol} {product.discount || "-"}
   </Typography>
 
  

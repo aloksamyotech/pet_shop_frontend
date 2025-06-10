@@ -196,7 +196,7 @@ const { t } = useTranslation();
                 </Typography>
                 <Typography>
                   <strong>{t("time")}:</strong>{' '}
-                  {todayDate ? currentTime : 'N/A'}
+                  {todayDate ? currentTime : '-'}
                 </Typography>
               </Box>
             </Box>
@@ -231,7 +231,7 @@ const { t } = useTranslation();
                 <strong>{t("Email")} :</strong> {AllData.customerEmail}
               </Typography>
               <Typography sx={{ marginBottom: '10px' }}>
-                <strong>{t("phone")}:</strong> {AllData?AllData.customerPhone : 'N/A'}
+                <strong>{t("phone")}:</strong> {AllData?AllData.customerPhone : '-'}
               </Typography>
             </Box>
           </Box>
@@ -265,7 +265,7 @@ const { t } = useTranslation();
                         <TableCell>{item.quantity}</TableCell>
                         <TableCell>{item.price}</TableCell>
                         {/* <TableCell>0</TableCell> */}
-                        {/* <TableCell>{item.category[0]?.name || 'N/A'}</TableCell> */}
+                        {/* <TableCell>{item.category[0]?.name || '-'}</TableCell> */}
                       </TableRow>
                     ))}
                   </TableBody>

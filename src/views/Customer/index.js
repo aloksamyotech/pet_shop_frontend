@@ -116,7 +116,7 @@ const Customer = () => {
       field: 'address',
       headerName: t('Address'),
       flex: 1,
-      valueGetter: (params) => params.row.address || 'N/A'
+      valueGetter: (params) => params.row.address || ''
     },
     { field: 'phoneNumber', headerName: t('Phone Number'), flex: 1, valueGetter: (params) => params.row.phoneNumber || 'N/A' },
     {
