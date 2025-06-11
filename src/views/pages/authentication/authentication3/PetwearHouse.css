@@ -1,14 +1,17 @@
-General styling
-body, .container {
+General styling body,
+.container {
   font-family: Arial, sans-serif;
   background-color: #fff7f7;
 }
 
-
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: #fff;
 }
-
 
 .top-bar {
   display: flex;
@@ -35,7 +38,6 @@ nav a {
   font-weight: bold;
 }
 
-
 main {
   padding: 20px;
 }
@@ -47,7 +49,6 @@ section {
 h2 {
   margin-top: 20px;
   margin-bottom: 10px;
- 
 }
 
 ul {
@@ -94,8 +95,6 @@ li {
   transform: scale(1.05);
 }
 
-
-
 .intro-container {
   display: flex;
   align-items: center;
@@ -123,8 +122,6 @@ li {
   min-width: 300px;
   padding: 20px;
 }
-
-
 
 .intro-background {
   position: absolute;
@@ -162,7 +159,6 @@ li {
   object-fit: cover;
   border-radius: 10px;
 }
-
 
 .grooming-section {
   padding: 10px 10px;
@@ -213,11 +209,9 @@ li {
   color: #666;
 }
 
-
 .share-section {
   padding: 20px 20px;
   text-align: center;
- 
 }
 
 .share-section h2 {
@@ -225,7 +219,6 @@ li {
   margin-bottom: 20px;
   color: #9cd1e1;
 }
-
 
 .form-section {
   display: flex;
@@ -261,7 +254,8 @@ li {
   flex-wrap: wrap;
 }
 
-.form-left, .form-right {
+.form-left,
+.form-right {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -278,11 +272,10 @@ li {
 .form-panel {
   flex: 1;
   padding: 40px;
- 
+
   display: flex;
   flex-direction: column;
   justify-content: center;
- 
 }
 
 .form-header h2 {
@@ -328,17 +321,17 @@ li {
 footer {
   background: linear-gradient(120deg, #9bd0e0, #9cd1e1);
   color: #fefefe;
- font-size: 16px;
+  font-size: 16px;
   line-height: 1.8;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  position: relative; 
+  position: relative;
 }
 
 .footer-container {
   display: flex;
   justify-content: flex-start;
-flex-wrap: wrap;
-width: 20px;
+  flex-wrap: wrap;
+  width: 20px;
 }
 
 .footer-left,
@@ -382,16 +375,11 @@ footer p {
   background-color: #6db8cd;
 }
 
-
-
-
-
 .intro-container {
   max-width: 800px;
 }
 
 .intro-text h2 {
- 
   margin-bottom: 20px;
   color: #2d4d46;
   font-weight: bold;
@@ -441,7 +429,6 @@ footer p {
   color: #497363;
 }
 
-
 html {
   scroll-behavior: smooth;
 }
@@ -450,25 +437,24 @@ html {
   width: 100%;
 }
 .custom-datepicker .MuiInputBase-root {
-  height: 56px; 
+  height: 56px;
   box-sizing: border-box;
 }
 
 .top-bar {
-  position: absolute; 
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  background: transparent; 
+  background: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   z-index: 10;
-  border-bottom: none; 
-  box-shadow: none;     
+  border-bottom: none;
+  box-shadow: none;
 }
-
 
 .top-bar a {
   color: white;
@@ -481,12 +467,10 @@ html {
   text-decoration: underline;
 }
 
-
-
 .intro-section {
   position: relative;
   height: 100vh;
- 
+
   display: flex;
   align-items: center;
 }
@@ -494,7 +478,7 @@ html {
 .intro-overlay {
   width: 50%;
   height: 50%;
- display: flex;
+  display: flex;
   align-items: center;
 }
 
@@ -514,8 +498,8 @@ html {
   background-position: center;
   display: flex;
   align-items: center;
-  justify-content: flex-start; 
-  padding-left: 60px; 
+  justify-content: flex-start;
+  padding-left: 60px;
 }
 
 .intro-overlay {
@@ -582,13 +566,11 @@ select {
   display: flex;
   justify-content: center;
   margin-top: 2rem;
-  grid-column: 1 / -1; 
+  grid-column: 1 / -1;
 }
 
-
-
 .form-submit button {
-  background: linear-gradient(120deg, #9bd0e0,#2363a6);
+  background: linear-gradient(120deg, #9bd0e0, #2363a6);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -597,18 +579,15 @@ select {
   cursor: pointer;
   transition: background-color 0.3s ease;
   display: inline-block;
-
- 
 }
 
 .form-submit button:hover {
-  background: linear-gradient(120deg, #9bd0e0,#2363a6);
+  background: linear-gradient(120deg, #9bd0e0, #2363a6);
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-
 }
 
 .error {
@@ -618,4 +597,12 @@ select {
   margin-left: 2px;
 }
 
-
+.view-all-button {
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  background: linear-gradient(120deg, #9bd0e0, #2363a6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

@@ -12,25 +12,6 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-const dogGroomingServices = [
-  {
-    title: 'Basic Packages',
-    description: 'Includes bath, haircut, nail trimming, ear cleaning and brushing.',
-    image: 'https://cdn.pixabay.com/photo/2017/09/25/13/12/dog-2785074_960_720.jpg'
-  },
-  {
-    title: 'Standard Packages',
-    description: 'Gentle bathing with pet-friendly shampoo and full body brushing.',
-    image:
-      'https://media.istockphoto.com/id/1308719194/photo/golden-retriver-dog-taking-a-shower-in-a-pet-grooming-salon.jpg?s=612x612&w=0&k=20&c=PM8Mnp4J3a8pO0i3aVFmd58JQnDycEOmbZy2kL_hPFo='
-  },
-  {
-    title: 'Premium Packages',
-    description: "Safe and careful trimming of your pet's nails.",
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7LAr3bV0hYnztSswRqbmOobCw0-ieCM8VsQ&s'
-  }
-];
-
 const shareImages = [
   'https://media.istockphoto.com/id/1060529042/photo/young-woman-with-dog.jpg?s=612x612&w=0&k=20&c=s0AlJrCZUUX4EXzwpwxobfUbeqUnghp0FpdHXHx3mpk=',
   'https://media.istockphoto.com/id/1332433294/photo/puppy-and-man.jpg?s=612x612&w=0&k=20&c=63Xdp6sbjijY3AV8O_7yLafVbIrQQwtp2dRiy4aJiVs=',
@@ -43,9 +24,13 @@ const shareImages = [
 
 const PetWarehouse = () => {
   const [startDate, setStartDate] = useState(new Date());
+  const [showAll, setShowAll] = useState(false);
+  const [pacKageData, setPackageData] = useState([]);
   const [endDate, setEndDate] = useState(new Date());
   const [pacKage, setPackage] = useState([]);
+  const visibleData = showAll ? pacKageData : pacKageData.slice(0, 6);
   const [petType, setPetType] = useState([]);
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -65,38 +50,44 @@ const PetWarehouse = () => {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
-    .max(20, 'You cannot enter more than 20 characters')
-    .required('Customer name is required'),
-  
+      .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
+      .max(20, 'You cannot enter more than 20 characters')
+      .required('Customer name is required'),
 
     email: Yup.string().email('Invalid email').required('email is required'),
     city: Yup.string()
-  .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
-  .max(20, 'You cannot enter more than 20 characters')
-  .required('City name is required'),
+      .matches(/^[A-Za-z\s]+$/, 'Only letters allowed')
+      .max(20, 'You cannot enter more than 20 characters')
+      .required('City name is required'),
 
     phone: Yup.string()
       .matches(/^[0-9]+$/, 'Only numbers allowed')
       .length(10, 'Must be exactly 10 digits')
       .required('phone number is required'),
-    petType: Yup.string().required("Please select pet type"),
-    pacKage: Yup.string().required("Please select package"),
-    gender: Yup.string().required("Please select pet gender"),
-    petAge: Yup.string().required("Please select petAge"),
-    service: Yup.string().required("Please select service"),
-    size: Yup.string().required("Please select pet size"),
+    petType: Yup.string().required('Please select pet type'),
+    pacKage: Yup.string().required('Please select package'),
+    gender: Yup.string().required('Please select pet gender'),
+    petAge: Yup.string().required('Please select petAge'),
+    service: Yup.string().required('Please select service'),
+    size: Yup.string().required('Please select pet size'),
     pickupLocation: Yup.string().when('service', {
       is: 'staff',
       then: Yup.string().required('"Please select pickupLocation')
     }),
-    startDate: Yup.date().min(new Date()).required("Please select stat date"),
-    endDate: Yup.date()
-      .min(Yup.ref('startDate'), 'End date must be after start date')
-      .required("Please select end date")
+    startDate: Yup.date().min(new Date()).required('Please select stat date'),
+    endDate: Yup.date().min(Yup.ref('startDate'), 'End date must be after start date').required('Please select end date')
   });
-  
-  
+
+  const fetchPackageData = async () => {
+    try {
+      const response = await getApi(urls.package.get);
+
+      const categoryData = response?.data?.data || [];
+      setPackageData(categoryData);
+    } catch (error) {
+      console.error('Error fetching package:', error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -166,6 +157,7 @@ const PetWarehouse = () => {
   useEffect(() => {
     fetchDataPetType();
     fetchData();
+    fetchPackageData();
   }, []);
 
   return (
@@ -196,15 +188,30 @@ const PetWarehouse = () => {
 
       <section className="grooming-section" id="grooming">
         <h2>🐶 Grooming Services</h2>
+
         <div className="grooming-cards">
-          {dogGroomingServices.map((service, index) => (
+          {visibleData.map((item, index) => (
             <div className="card" key={index}>
-              <img src={service.image} alt={service.title} />
-              <h3>{service.title}</h3>
-              <p>{service.description}</p>
+              <img
+                src={
+                  item.imageUrl ||
+                  'https://media.istockphoto.com/id/1308719194/photo/golden-retriver-dog-taking-a-shower-in-a-pet-grooming-salon.jpg?s=612x612&w=0&k=20&c=PM8Mnp4J3a8pO0i3aVFmd58JQnDycEOmbZy2kL_hPFo='
+                }
+                alt={item.name}
+              />
+              <h3>{item.name}</h3>
+              <p>{item.description}</p>
             </div>
           ))}
         </div>
+
+        {pacKageData.length > 6 && (
+          <div className="view-all-btn-wrapper" style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <button onClick={() => setShowAll(!showAll)} className="view-all-button">
+              {showAll ? 'Close' : 'View All'}
+            </button>
+          </div>
+        )}
       </section>
 
       <section className="share-section" id="happy-customers">
@@ -222,260 +229,248 @@ const PetWarehouse = () => {
         <div className="form-panel">
           <h2 className="form-title">Book Now</h2>
           <Formik
-  initialValues={{
-    name: '',
-    email: '',
-    city: '',
-    phone: '',
-    petType: '',
-    pacKage: '',
-    gender: '',
-    petAge: '',
-    service: '',
-    size: '',
-    pickupLocation: '',
-    startDate: startDate,
-    endDate: endDate
-  }}
-  validationSchema={validationSchema}
-  onSubmit={async (values, { resetForm }) => {
-    const fullData = {
-      ...values,
-      startDate,
-      endDate
-    };
+            initialValues={{
+              name: '',
+              email: '',
+              city: '',
+              phone: '',
+              petType: '',
+              pacKage: '',
+              gender: '',
+              petAge: '',
+              service: '',
+              size: '',
+              pickupLocation: '',
+              startDate: startDate,
+              endDate: endDate
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values, { resetForm }) => {
+              const fullData = {
+                ...values,
+                startDate,
+                endDate
+              };
 
-    try {
-      const response = await postApiRegistration(urls.registration.create, fullData, {
-        headers: { 'Content-Type': 'application/json' }
-      });
+              try {
+                const response = await postApiRegistration(urls.registration.create, fullData, {
+                  headers: { 'Content-Type': 'application/json' }
+                });
 
-      if (response) {
-        toast.success('Booking successful!');
-        resetForm(); 
-        setStartDate(new Date()); 
-        setEndDate(new Date());  
-      } else {
-        throw new Error('Failed to register');
-      }
-    } catch (error) {
-      console.error('Error during registration:', error);
-      toast.error('Failed to register');
-    }
-  }}
->
-{({ values, handleChange, setFieldValue, errors, touched, handleSubmit }) => (
-     <Form onSubmit={handleSubmit}>
-      <div className="input-group">
-
-      <div className="form-field">
-  <Field name="name">
-    {({ field, form }) => {
-      const value = form.values.name || '';
-      const maxLength = 20;
-
-      return (
-        <>
-          <input
-            {...field}
-            placeholder="Name"
-            value={value}
-            onChange={(e) => {
-              const cleaned = e.target.value.replace(/[^A-Za-z\s]/g, '');
-
-              if (cleaned.length <= maxLength) {
-                form.setFieldValue('name', cleaned);
-                form.setFieldError('name', ''); 
-              } else {
-                form.setFieldError('name', 'You cannot enter more than 20 characters');
+                if (response) {
+                  toast.success('Booking successful!');
+                  resetForm();
+                  setStartDate(new Date());
+                  setEndDate(new Date());
+                } else {
+                  throw new Error('Failed to register');
+                }
+              } catch (error) {
+                console.error('Error during registration:', error);
+                toast.error('Failed to register');
               }
             }}
-          />
-        </>
-      );
-    }}
-  </Field>
-  <ErrorMessage name="name" component="div" className="error" />
-</div>
+          >
+            {({ values, handleChange, setFieldValue, errors, touched, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <div className="input-group">
+                  <div className="form-field">
+                    <Field name="name">
+                      {({ field, form }) => {
+                        const value = form.values.name || '';
+                        const maxLength = 20;
 
+                        return (
+                          <>
+                            <input
+                              {...field}
+                              placeholder="Name"
+                              value={value}
+                              onChange={(e) => {
+                                const cleaned = e.target.value.replace(/[^A-Za-z\s]/g, '');
 
-        <div className="form-field">
-          <Field name="email" placeholder="Email" type="email" />
-          <ErrorMessage name="email" component="div" className="error" />
-        </div>
+                                if (cleaned.length <= maxLength) {
+                                  form.setFieldValue('name', cleaned);
+                                  form.setFieldError('name', '');
+                                } else {
+                                  form.setFieldError('name', 'You cannot enter more than 20 characters');
+                                }
+                              }}
+                            />
+                          </>
+                        );
+                      }}
+                    </Field>
+                    <ErrorMessage name="name" component="div" className="error" />
+                  </div>
 
-        <div className="form-field">
-  <Field name="city">
-    {({ field, form }) => {
-      const value = form.values.city || '';
-      const maxLength = 20;
+                  <div className="form-field">
+                    <Field name="email" placeholder="Email" type="email" />
+                    <ErrorMessage name="email" component="div" className="error" />
+                  </div>
 
-      return (
-        <>
-          <input
-            {...field}
-            placeholder="City"
-            value={value}
-            onChange={(e) => {
-              const cleaned = e.target.value.replace(/[^A-Za-z\s]/g, '');
+                  <div className="form-field">
+                    <Field name="city">
+                      {({ field, form }) => {
+                        const value = form.values.city || '';
+                        const maxLength = 20;
 
-              if (cleaned.length <= maxLength) {
-                form.setFieldValue('city', cleaned);
-                form.setFieldError('city', ''); 
-              } else {
-                form.setFieldError('city', 'You cannot enter more than 20 characters');
-              }
-            }}
-          />
-        </>
-      );
-    }}
-  </Field>
-  <ErrorMessage name="city" component="div" className="error" />
-</div>
+                        return (
+                          <>
+                            <input
+                              {...field}
+                              placeholder="City"
+                              value={value}
+                              onChange={(e) => {
+                                const cleaned = e.target.value.replace(/[^A-Za-z\s]/g, '');
 
+                                if (cleaned.length <= maxLength) {
+                                  form.setFieldValue('city', cleaned);
+                                  form.setFieldError('city', '');
+                                } else {
+                                  form.setFieldError('city', 'You cannot enter more than 20 characters');
+                                }
+                              }}
+                            />
+                          </>
+                        );
+                      }}
+                    </Field>
+                    <ErrorMessage name="city" component="div" className="error" />
+                  </div>
 
-        <div className="form-field">
-        <Field name="phone">
-  {({ field, form }) => (
-    <input
-      {...field}
-      placeholder="Phone Number"
-      maxLength="10"
-      onChange={(e) => {
-        const value = e.target.value.replace(/[^0-9]/g, '');
-        form.setFieldValue('phone', value);
-      }}
-    />
-  )}
-</Field>
-<ErrorMessage name="phone" component="div" className="error" />
+                  <div className="form-field">
+                    <Field name="phone">
+                      {({ field, form }) => (
+                        <input
+                          {...field}
+                          placeholder="Phone Number"
+                          maxLength="10"
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, '');
+                            form.setFieldValue('phone', value);
+                          }}
+                        />
+                      )}
+                    </Field>
+                    <ErrorMessage name="phone" component="div" className="error" />
+                  </div>
 
-        </div>
+                  <div className="form-field">
+                    <Field as="select" name="petType">
+                      <option value="">Select petType</option>
+                      {petType.map((pet) => (
+                        <option key={pet._id} value={pet.name}>
+                          {pet.name}
+                        </option>
+                      ))}
+                    </Field>
+                    <ErrorMessage name="petType" component="div" className="error" />
+                  </div>
 
-        <div className="form-field">
-          <Field as="select" name="petType">
-            <option value="">Select petType</option>
-            {petType.map((pet) => (
-              <option key={pet._id} value={pet.name}>
-                {pet.name}
-              </option>
-            ))}
-          </Field>
-          <ErrorMessage name="petType" component="div" className="error" />
-        </div>
+                  <div className="form-field">
+                    <Field as="select" name="pacKage">
+                      <option value="">Select Package</option>
+                      {pacKage.map((pkg) => (
+                        <option key={pkg._id} value={pkg._id}>
+                          {pkg.name}
+                        </option>
+                      ))}
+                    </Field>
+                    <ErrorMessage name="pacKage" component="div" className="error" />
+                  </div>
 
-        <div className="form-field">
-          <Field as="select" name="pacKage">
-            <option value="">Select Package</option>
-            {pacKage.map((pkg) => (
-              <option key={pkg._id} value={pkg._id}>
-                {pkg.name}
-              </option>
-            ))}
-          </Field>
-          <ErrorMessage name="pacKage" component="div" className="error" />
-        </div>
+                  <div className="form-field">
+                    <Field as="select" name="gender">
+                      <option value="">Pet Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </Field>
+                    <ErrorMessage name="gender" component="div" className="error" />
+                  </div>
+                  <div className="form-field">
+                    <Field as="select" name="petAge">
+                      <option value="">Select Pet Age</option>
+                      <option value="1-6 months">1-6 Months</option>
+                      <option value="6-12 months">6-12 Months</option>
+                      <option value="1-2 years">1-2 Years</option>
+                      <option value="2-5 years">2-5 Years</option>
+                      <option value="5+ years">5+ Years</option>
+                    </Field>
+                    <ErrorMessage name="petAge" component="div" className="error" />
+                  </div>
 
-        <div className="form-field">
-          <Field as="select" name="gender">
-            <option value="">Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </Field>
-          <ErrorMessage name="gender" component="div" className="error" />
-        </div>
-        <div className="form-field">
+                  <div className="form-field">
+                    <Field as="select" name="size">
+                      <option value="">Select Pet Size</option>
+                      <option value="small">Small</option>
+                      <option value="medium">Medium</option>
+                      <option value="large">Large</option>
+                      <option value="extra-large">Extra Large</option>
+                    </Field>
+                    <ErrorMessage name="size" component="div" className="error" />
+                  </div>
 
-<Field as="select" name="petAge">
-  <option value="">Select Pet Age</option>
-  <option value="1-6 months">1-6 Months</option>
-  <option value="6-12 months">6-12 Months</option>
-  <option value="1-2 years">1-2 Years</option>
-  <option value="2-5 years">2-5 Years</option>
-  <option value="5+ years">5+ Years</option>
-</Field>
-<ErrorMessage name="petAge" component="div" className="error" />
-</div>
+                  <div className="form-field">
+                    <Field as="select" name="service">
+                      <option value=""> Pickup Service</option>
+                      <option value="self">Self</option>
+                      <option value="staff">Staff</option>
+                    </Field>
+                    <ErrorMessage name="service" component="div" className="error" />
+                  </div>
 
+                  {values.service === 'staff' && (
+                    <div className="form-field">
+                      <Field name="pickupLocation" placeholder="Pickup Location" />
+                      <ErrorMessage name="pickupLocation" component="div" className="error" />
+                    </div>
+                  )}
 
-        <div className="form-field">
-          <Field as="select" name="size">
-            <option value="">Select Pet Size</option>
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-            <option value="extra-large">Extra Large</option>
-          </Field>
-          <ErrorMessage name="size" component="div" className="error" />
-        </div>
+                  <div className="form-field">
+                    <DatePicker
+                      selected={values.startDate}
+                      onChange={(date) => setFieldValue('startDate', date)}
+                      showTimeSelect
+                      minDate={new Date()}
+                      minTime={
+                        values.startDate && new Date(values.startDate).toDateString() === new Date().toDateString()
+                          ? new Date()
+                          : new Date().setHours(0, 0, 0)
+                      }
+                      maxTime={new Date().setHours(23, 59)}
+                      dateFormat="Pp"
+                      customInput={<TextField fullWidth label="Start Date" />}
+                    />
 
-        <div className="form-field">
-          <Field as="select" name="service">
-            <option value="">Service</option>
-            <option value="self">Self</option>
-            <option value="staff">Staff</option>
-          </Field>
-          <ErrorMessage name="service" component="div" className="error" />
-        </div>
+                    <ErrorMessage name="startDate" component="div" className="error" />
+                  </div>
 
-        {values.service === 'staff' && (
-          <div className="form-field">
-            <Field name="pickupLocation" placeholder="Pickup Location" />
-            <ErrorMessage name="pickupLocation" component="div" className="error" />
-          </div>
-        )}
+                  <div className="form-field">
+                    <DatePicker
+                      selected={values.endDate}
+                      onChange={(date) => setFieldValue('endDate', date)}
+                      showTimeSelect
+                      minDate={values.startDate || new Date()}
+                      filterTime={(time) => {
+                        if (values.startDate && new Date(time).toDateString() === new Date(values.startDate).toDateString()) {
+                          return new Date(time).getTime() > new Date(values.startDate).getTime();
+                        }
+                        return true;
+                      }}
+                      dateFormat="Pp"
+                      customInput={<TextField fullWidth label="End Date" />}
+                    />
+                    <ErrorMessage name="endDate" component="div" className="error" />
+                  </div>
 
-        <div className="form-field">
-        <DatePicker
-  selected={values.startDate}
-  onChange={(date) => setFieldValue('startDate', date)}
-  showTimeSelect
-  minDate={new Date()}
-  minTime={
-    values.startDate && new Date(values.startDate).toDateString() === new Date().toDateString()
-      ? new Date()
-      : new Date().setHours(0, 0, 0)
-  }
-  maxTime={new Date().setHours(23, 59)}
-  dateFormat="Pp"
-  customInput={<TextField fullWidth label="Start Date" />}
-/>
-
-          <ErrorMessage name="startDate" component="div" className="error" />
-        </div>
-
-        <div className="form-field">
-          <DatePicker
-            selected={values.endDate}
-            onChange={(date) => setFieldValue('endDate', date)}
-            showTimeSelect
-            minDate={values.startDate || new Date()}
-            filterTime={(time) => {
-              if (
-                values.startDate &&
-                new Date(time).toDateString() === new Date(values.startDate).toDateString()
-              ) {
-                return new Date(time).getTime() > new Date(values.startDate).getTime();
-              }
-              return true;
-            }}
-            dateFormat="Pp"
-            customInput={<TextField fullWidth label="End Date" />}
-          />
-          <ErrorMessage name="endDate" component="div" className="error" />
-        </div>
-
-        <div className="form-submit">
-  <button type="submit" >Submit</button>
-</div>
-
-
-      </div>
-    </Form>
-  )}
-</Formik>
-
+                  <div className="form-submit">
+                    <button type="submit">Submit</button>
+                  </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
 
         <div className="info-panel">
